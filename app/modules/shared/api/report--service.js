@@ -37,6 +37,30 @@
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
+                },
+
+
+                reportBundle:{
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report-bundle/:id')
+                },
+
+                reportBundleUpdate:{
+                    method: 'PATCH',
+                    url: environment.apiUrl.concat('/v1/data/report-bundle/:id')
+                },
+
+                createReportBundle:{
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/report-bundle')
+                },
+
+                projectReport:{
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/reports')
                 }
             });
         });

@@ -88,6 +88,8 @@ angular.module('FieldDoc')
                     //
                     project.$promise.then(function(successResponse) {
 
+                        console.log("project success response",successResponse);
+
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
 
@@ -227,29 +229,66 @@ angular.module('FieldDoc')
 
                 self.project = data;
 
-                if (self.project.program) {
+                if (self.project.programs) {
 
-                    self.program = self.project.program;
+                    self.programs = self.project.programs;
 
                 }
 
+                self.project.program_id = [];
+                self.project.programs.forEach(function(program){
+                    self.project.program_id.push(program.id);
+
+                });
+
                 self.tempPartners = self.project.partners;
+
+                console.log("self.tempPartners",self.tempPartners)
 
                 self.status.processing = false;
 
             };
 
+            /*self.setProgram: This need to handle an array*/
             self.setProgram = function(item, model, label) {
 
-                self.project.program_id = item.id;
+                console.log("NEW PROGRAM");
+                console.log("ITEM",item);
+                console.log("MODEL",model);
+                console.log("LABEL",label);
+
+                self.project.program_id.push(item.id);
+               // self.project.program_id = item.id;
+
+                delete item.category;
+                delete item.subcategory;
+                self.project.programs.push(item);
 
             };
 
-            self.unsetProgram = function() {
+            self.unsetProgram = function(index) {
 
-                self.project.program_id = null;
+                self.project.programs.splice(index,1);
+                self.project.program_id.splice(index,1);
 
-                self.program = null;
+//                i = 0;
+//                self.project.programs.forEach(function(program){
+//                    if(program.id = id){
+//                        self.project.programs.splice(i,1);
+//                        self.project.program_id.splice(i,1);
+//
+//      //                  delete self.project.programs[i];
+//      //                  delete self.project.program_id[i];
+//
+//                    }
+//                    i = i+1;
+//                });
+
+                self.programs = self.project.programs;
+
+             //   self.project.program_id = null;
+
+             // q   self.program = null;
 
             };
 
@@ -297,13 +336,34 @@ angular.module('FieldDoc')
 
             self.saveProject = function() {
 
+                console.log("SAVING PROJECT");
+
+
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
 
                 self.project.partners = self.processRelations(self.tempPartners);
 
+                console.log("self.project ->>",self.project);
+
+                var i = 0;
+                self.project.programs.forEach(function(program){
+
+                      delete program.centroid;
+
+                //    if(program.centroid != undefined){
+
+                //         delete self.project.programs[i][centroid];
+
+                //    }
+
+                    i = i+1;
+                });
+
                 self.project.workflow_state = "Draft";
+
+                 console.log("self.project ->>",self.project);
 
                 var exclude = [
                     'centroid',

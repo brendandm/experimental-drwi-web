@@ -428,8 +428,58 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/batchDelete', {
-                    templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsBatchDeleteController',
+                 templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
+                 controller: 'ProjectsBatchDeleteController',
+                 controllerAs: 'page',
+                 resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        project: function(Project, $route) {
+                            return Project.get({
+                                id: $route.current.params.projectId,
+                                format: 'geojson'
+                            });
+                        },
+
+                  }
+             })
+             .when('/projects/:projectId/reports', {
+                    templateUrl: '/modules/components/projects/views/projectsReports--view.html?t=' + environment.version,
+                    controller: 'ProjectsReportsController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        project: function(Project, $route) {
+                            return Project.get({
+                                id: $route.current.params.projectId,
+                                format: 'geojson'
+                            });
+                        },
+
+                    }
+                })
+             .when('/projects/:projectId/reports/:reportId', {
+                    templateUrl: '/modules/components/projects/views/projectsReportsEdit--view.html?t=' + environment.version,
+                    controller: 'ProjectsReportsEditController',
                     controllerAs: 'page',
                     resolve: {
                         user: function(Account, $rootScope, $document) {

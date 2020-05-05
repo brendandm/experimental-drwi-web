@@ -81,15 +81,15 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+                  //  console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                         console.log('COLOR 1');
+                     //    console.log('COLOR 1');
                     }else{
-                         console.log('COLOR 2');
+                    //     console.log('COLOR 2');
                     }
                 }else{
-                     console.log('COLOR 3');
+                  //   console.log('COLOR 3');
                 }
 
                 var styledFeature = {
@@ -106,7 +106,7 @@ angular.module('FieldDoc')
                     }
                 };
                 // Build static map URL for Mapbox API
-                console.log('buildStaticMapURL->styledFeature',styledFeature);
+             //   console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
