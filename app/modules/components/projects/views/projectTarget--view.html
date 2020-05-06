@@ -4,7 +4,19 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" >
+
+          <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This project is private.</p>
+
+        </section>
 
          <div class="main--ui breadcrumb-ui">
            <div class="group">
