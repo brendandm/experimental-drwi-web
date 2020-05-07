@@ -132,13 +132,13 @@
                                             <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
                                                 <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
                                         </td>
-                                        <!-- Program Target Set-->
-                                        <td data-ng-if="(model.datum.show_progress || metric.show_progress) && (metric.target > 0)">
+
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <strong class="metrics--metric--percentage">
-                                                {{ metric.selfProgress.value * 100 | number:1 }} %
+                                                {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
-                                        <td data-ng-if="(model.datum.show_progress || metric.show_progress) && (metric.target > 0)">
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"
@@ -148,13 +148,7 @@
                                                 background="rgba(0,0,0,0.2)">
                                             </progress-arc>
 
-                                          <!-- Program Target NOT Set-->
-                                        <td data-ng-if="(model.datum.show_progress || metric.show_progress) && (metric.target === 0)">
 
-                                        </td>
-                                        <td data-ng-if="(model.datum.show_progress || metric.show_progress) && (metric.target === 0)">
-                                                No Program Target Set
-                                        </td>
                                     </tr>
                                 </tbody>
 
@@ -184,12 +178,12 @@
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
                                             of {{ metric.self_target | number:2 }}</span>
                                     </td>
-                                    <td>
+                                    <td data-ng-if="metric.self_target > 0">
                                         <strong class="metrics--metric--percentage">
                                             {{ metric.selfProgress.value * 100 | number:1 }}%
                                         </strong>
                                     </td>
-                                    <td>
+                                    <td data-ng-if="metric.self_target > 0">
                                         <progress-arc
                                             size="32"
                                             stroke="#2196F3"
@@ -199,6 +193,15 @@
                                             background="rgba(0,0,0,0.2)">
                                         </progress-arc>
                                     </td>
+
+                                      <!-- Program Target NOT Set-->
+
+                                        <td data-ng-if="metric.self_target == 0">
+
+                                        </td>
+                                        <td data-ng-if="metric.self_target == 0">
+                                                No Program Target Set
+                                        </td>
                                 </tr>
                             </tbody>
 
