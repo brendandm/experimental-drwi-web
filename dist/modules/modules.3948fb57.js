@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1589210158047})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1589212054210})
 
 ;
 /**
@@ -8362,6 +8362,7 @@ angular.module('FieldDoc')
 
                 var params = {
                   //  name: self.partnerQuery.name,
+                    project_id: self.project.id,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -8410,7 +8411,8 @@ angular.module('FieldDoc')
                 self.scrubFeature(self.targetFeature);
 
                 Partnership.update({
-                    id: self.targetFeature.id
+                    id: self.targetFeature.id,
+                    project_id: self.project.id
                 }, self.targetFeature).$promise.then(function(successResponse) {
 
                     self.alerts = [{

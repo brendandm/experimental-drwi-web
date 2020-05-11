@@ -278,6 +278,7 @@ angular.module('FieldDoc')
 
                 var params = {
                   //  name: self.partnerQuery.name,
+                    project_id: self.project.id,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -326,7 +327,8 @@ angular.module('FieldDoc')
                 self.scrubFeature(self.targetFeature);
 
                 Partnership.update({
-                    id: self.targetFeature.id
+                    id: self.targetFeature.id,
+                    project_id: self.project.id
                 }, self.targetFeature).$promise.then(function(successResponse) {
 
                     self.alerts = [{
