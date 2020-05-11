@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1588882038625})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1589208918775})
 
 ;
 /**
@@ -8404,6 +8404,8 @@ angular.module('FieldDoc')
             };
 
             self.updatePartnership = function() {
+
+                console.log("self.targetFeature-->",self.targetFeature);
 
                 self.scrubFeature(self.targetFeature);
 

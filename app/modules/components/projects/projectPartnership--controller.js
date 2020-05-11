@@ -321,6 +321,8 @@ angular.module('FieldDoc')
 
             self.updatePartnership = function() {
 
+                console.log("self.targetFeature-->",self.targetFeature);
+
                 self.scrubFeature(self.targetFeature);
 
                 Partnership.update({
