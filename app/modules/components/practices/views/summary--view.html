@@ -521,13 +521,37 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+             <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.copyTarget && page.copyTarget.feature.id === page.practice.id && page.copyTarget.collection === 'practice'">
+                    <p>Make a copy of this practice?</p>
+                    <div class="actions">
+                        <a class="snapshot--title"
+                           href="#"
+                           style="background-color:#29cc82"
+                           title="Copy"
+                           data-ng-click="page.copyFeature('practice')"
+                        >
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelCopy()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmCopy(page.practice, 'practice')" title="Delete">
+                    <i class="material-icons">
+                        file_copy
+                    </i>
+                </a>
+            </li>
+          <!--  <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
                 <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
                     <i class="material-icons">
                         insert_photo
                     </i>
                 </a>
             </li>
+            -->
             <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
                 <a href="/practices/{{ page.practice.id }}/partnerships">
                     <i class="material-icons">
