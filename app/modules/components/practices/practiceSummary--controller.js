@@ -294,8 +294,8 @@
 
                     console.log("COPIED PRACTICE DATA", data)
 
-                    if (typeof index === 'number' &&
-                        featureType === 'practice') {
+           //         if (typeof index === 'number' &&
+           //             featureType === 'practice') {
 
                  //       self.practices.unshift(data);
 
@@ -303,12 +303,12 @@
 
                         $timeout(closeAlerts, 2000);
 
-                    } else {
+           //         } else {
 
 
                         $timeout(closeRoute, 2000);
 
-                    }
+           //         }
 
                 }).catch(function(errorResponse) {
 
