@@ -84,8 +84,11 @@
                 }
 
                 function closeRoute() {
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-                    $location.path(self.practice.links.site.html);
+                    } $location.path("/projects/"+self.project.id);
 
                 }
 
