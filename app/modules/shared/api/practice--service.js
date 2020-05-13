@@ -107,6 +107,11 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/status')
+                },
+                copy: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('')
                 }
 
             });

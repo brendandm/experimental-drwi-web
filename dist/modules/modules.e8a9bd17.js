@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589389980136})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589390871682})
 
 ;
 /**
@@ -5518,7 +5518,7 @@ angular.module('FieldDoc')
 
                 }
 
-                targetCollection.delete({
+                Practice.copy({
                     id: +targetId
                 }).$promise.then(function(data) {
 
@@ -5529,13 +5529,14 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    if (index !== null &&
-                        typeof index === 'number' &&
-                        featureType === 'site') {
+                    console.log("COPIED PRACTICE DATA", data)
 
-                        self.sites.splice(index, 1);
+                    if (typeof index === 'number' &&
+                        featureType === 'practice') {
 
-                        self.cancelDelete();
+                        self.practices.unshift(data);
+
+                        self.cancelCopy();
 
                         $timeout(closeAlerts, 2000);
 
@@ -5555,7 +5556,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
                             'prompt': 'OK'
                         }];
 
@@ -5564,7 +5565,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
                             'prompt': 'OK'
                         }];
 
@@ -5573,7 +5574,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
                             'prompt': 'OK'
                         }];
 
@@ -36874,6 +36875,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/status')
+                },
+                copy: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('')
                 }
 
             });
