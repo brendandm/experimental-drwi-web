@@ -466,6 +466,17 @@
                                         </a>
                                     </div>
                                 </div>
+                                <div class="confirm--delete" data-ng-if="page.copyTarget && page.copyTarget.feature.properties.id === practice.properties.id && page.copyTarget.collection === 'practice'">
+                                    <p>Make a copy of this practice?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" style="background-color:#29cc82" title="Copy" data-ng-click="page.copyFeature('practice', $index)">
+                                            Yes
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelCopy()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
                                 <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
@@ -473,11 +484,14 @@
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
+
+
+                                   <!-- <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
                                         <i class="material-icons">
                                             insert_photo
                                         </i>
                                     </a>
+                                    -->
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
@@ -486,6 +500,11 @@
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" data-ng-click="page.confirmCopy(practice, 'practice')" title="Copy practice" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            file_copy
                                         </i>
                                     </a>
                                     <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')" data-ng-if="page.permissions.can_edit">

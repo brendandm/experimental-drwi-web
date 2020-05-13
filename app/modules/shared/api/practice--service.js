@@ -109,9 +109,9 @@
                     url: environment.apiUrl.concat('/v1/practice/:id/status')
                 },
                 copy: {
-                    method: 'GET',
+                    method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('')
+                    url: environment.apiUrl.concat('/v1/practice/:id/clone')    
                 }
 
             });
