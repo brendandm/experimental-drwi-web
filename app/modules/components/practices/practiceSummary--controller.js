@@ -306,7 +306,7 @@
            //         } else {
 
 
-                        $timeout(closeRoute, 2000);
+             //           $timeout(closeRoute, 2000);
 
            //         }
 
