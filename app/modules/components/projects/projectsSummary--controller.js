@@ -640,10 +640,10 @@ angular.module('FieldDoc')
                     if (typeof index === 'number' &&
                         featureType === 'practice') {
 
-                        var practice = angular.toJSON(data);
+                     //   var practice = angular.toJSON(data);
 
 
-                        self.practices.unshift(practice);
+                        self.practices.unshift(data);
 
                         self.cancelCopy();
 
