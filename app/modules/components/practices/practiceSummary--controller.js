@@ -294,21 +294,10 @@
 
                     console.log("COPIED PRACTICE DATA", data)
 
-           //         if (typeof index === 'number' &&
-           //             featureType === 'practice') {
-
-                 //       self.practices.unshift(data);
-
                         self.cancelCopy();
 
                         $timeout(closeAlerts, 2000);
 
-           //         } else {
-
-
-             //           $timeout(closeRoute, 2000);
-
-           //         }
 
                 }).catch(function(errorResponse) {
 

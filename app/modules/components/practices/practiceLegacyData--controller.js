@@ -63,6 +63,8 @@ angular.module('FieldDoc')
 
             };
 
+
+
             self.loadPractice = function() {
 
                 var exclude = [
