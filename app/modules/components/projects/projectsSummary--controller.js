@@ -654,7 +654,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(errorResponse) {
 
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
+                    console.log('self.copyFeature.errorResponse', errorResponse);
 
                     if (errorResponse.status === 409) {
 
