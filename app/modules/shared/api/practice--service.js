@@ -111,7 +111,7 @@
                 copy: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/clone')    
+                    url: environment.apiUrl.concat('/v1/practice/:id/clone')
                 }
 
             });
