@@ -636,9 +636,14 @@ angular.module('FieldDoc')
 
                     console.log("COPIED PRACTICE DATA", data)
                     console.log("self.practices-->",self.practices)
+
                     if (typeof index === 'number' &&
                         featureType === 'practice') {
-                        var practice = data;
+
+                        var practice = data.toString;
+
+                  
+
                         self.practices.unshift(practice);
 
                         self.cancelCopy();
