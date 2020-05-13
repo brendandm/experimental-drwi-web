@@ -634,7 +634,7 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
-                    } else if (index !== null &&
+                    } else {
 
 
                         $timeout(closeRoute, 2000);
