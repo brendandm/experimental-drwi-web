@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589388127383})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589389178405})
 
 ;
 /**
@@ -5310,7 +5310,9 @@ angular.module('FieldDoc')
 
             };
 
-            self.confirmDelete = function(obj, targetCollection) {
+/*START DELETE LOGIC*/
+
+            self.confirmCopy = function(obj, targetCollection) {
 
                 console.log('self.confirmDelete', obj, targetCollection);
 
@@ -5367,7 +5369,9 @@ angular.module('FieldDoc')
 
                     targetId = self.deletionTarget.feature.properties.id;
 
-                } else {
+                }
+
+                 else {
 
                     targetId = self.deletionTarget.feature.id;
 
@@ -5395,7 +5399,7 @@ angular.module('FieldDoc')
                         $timeout(closeAlerts, 2000);
 
                     } else {
-
+                        console.log("CLOSE ROUTE");
                         $timeout(closeRoute, 2000);
 
                     }
@@ -5439,6 +5443,138 @@ angular.module('FieldDoc')
 
             };
 
+/*END DELETE LOGIC*/
+
+            self.confirmDelete = function(obj, targetCollection) {
+
+                console.log('self.confirmCopy', obj, targetCollection);
+
+                if (self.copyTarget &&
+                    self.copyTarget.collection === 'project') {
+
+                    self.cancelCopy();
+
+                } else {
+
+                    self.deletionTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelCopy = function() {
+
+                self.copyTarget = null;
+
+            };
+
+            self.copyFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.copyTarget.feature.properties) {
+
+                    targetId = self.copyTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.copyTarget.feature.id;
+
+                }
+
+                targetCollection.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully copied this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'site') {
+
+                        self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else if (index !== null &&
+
+
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+       /*END COPY LOGIC*/
 
  /* START SITES PANEL */
 
