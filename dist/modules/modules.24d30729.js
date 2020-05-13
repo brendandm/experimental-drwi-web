@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589395931322})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589396850113})
 
 ;
 /**
@@ -12249,7 +12249,7 @@ angular.module('FieldDoc')
                     $location.path(self.site.links.project.html);
 
                 }
-
+/*DELETE LOGIC*/
                 self.confirmDelete = function(obj, targetCollection) {
 
                     console.log('self.confirmDelete', obj, targetCollection);
@@ -12380,7 +12380,150 @@ angular.module('FieldDoc')
                     });
 
                 };
+/*END DELETE LOGIC*/
 
+/*COPY LOGIC */
+            self.confirmCopy = function(obj, targetCollection) {
+
+                console.log('self.confirmCopy', obj, targetCollection);
+
+                if (self.copyTarget &&
+                    self.copyTarget.collection === 'project') {
+
+                    self.cancelCopy();
+
+                } else {
+
+                    self.copyTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelCopy = function() {
+
+                self.copyTarget = null;
+
+            };
+
+            self.copyFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.copyTarget.feature.properties) {
+
+                    targetId = self.copyTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.copyTarget.feature.id;
+
+                }
+
+                Practice.copy({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully copied this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    console.log("COPIED PRACTICE DATA", data)
+                    console.log("self.practices-->",self.practices)
+
+                    if (typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                     //   var practice = angular.toJSON(data);
+
+                        data.properties = data;
+
+                        self.practices.unshift(data);
+
+                        self.practices.pop();
+
+                        self.createStaticMapURLs(self.practices,"practice");
+
+                        self.cancelCopy();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.copyFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+       /*END COPY LOGIC*/
+/*END COPY LOGIC*/
                 self.cleanName = function(string_) {
                     return Utility.machineName(string_);
                 };
