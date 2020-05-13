@@ -88,7 +88,7 @@
                          $location.path(self.practice.links.site.html);
                     }else{
 
-                    } $location.path("/projects/"+self.project.id);
+                    } $location.path("/projects/"+self.practice.project.id);
 
                 }
 
