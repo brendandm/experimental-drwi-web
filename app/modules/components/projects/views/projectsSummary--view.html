@@ -498,11 +498,12 @@
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
+                                 <!--   <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
                                         <i class="material-icons">
                                             insert_photo
                                         </i>
                                     </a>
+                                    -->
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
@@ -511,6 +512,11 @@
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
+                                        </i>
+                                    </a>
+                                     <a class="snapshot--title" href="#" data-ng-click="page.copyPractice(practice, 'practice') title="Copy practice" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            copy_file
                                         </i>
                                     </a>
                                     <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')" data-ng-if="page.permissions.can_edit">
