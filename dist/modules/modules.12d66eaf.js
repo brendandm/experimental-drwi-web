@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589397283375})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589397738321})
 
 ;
 /**
@@ -5541,7 +5541,9 @@ angular.module('FieldDoc')
 
                         self.practices.unshift(data);
 
-                        self.practices.pop();
+                        if(self.practices.length > self.limit){
+                            self.practices.pop();
+                        }
 
                         self.createStaticMapURLs(self.practices,"practice");
 
@@ -12457,8 +12459,9 @@ angular.module('FieldDoc')
 
                         self.practices.unshift(data);
 
-                        self.practices.pop();
-
+                        if(self.practices.length > self.limit){
+                            self.practices.pop();
+                        }
                         self.createStaticMapURLs(self.practices,"practice");
 
                         self.cancelCopy();

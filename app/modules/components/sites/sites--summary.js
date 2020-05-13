@@ -373,8 +373,9 @@
 
                         self.practices.unshift(data);
 
-                        self.practices.pop();
-
+                        if(self.practices.length > self.limit){
+                            self.practices.pop();
+                        }
                         self.createStaticMapURLs(self.practices,"practice");
 
                         self.cancelCopy();
