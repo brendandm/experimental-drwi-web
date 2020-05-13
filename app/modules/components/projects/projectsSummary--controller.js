@@ -646,6 +646,8 @@ angular.module('FieldDoc')
 
                         self.practices.unshift(data);
 
+                        self.practices.pop();
+
                         self.cancelCopy();
 
                         $timeout(closeAlerts, 2000);
