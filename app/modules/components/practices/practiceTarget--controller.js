@@ -141,7 +141,7 @@ angular.module('FieldDoc')
 
                         self.cancelCopy();
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
 
                 }).catch(function(errorResponse) {
