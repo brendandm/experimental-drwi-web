@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image,$location,
-        $log, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
+        $log, $location, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;

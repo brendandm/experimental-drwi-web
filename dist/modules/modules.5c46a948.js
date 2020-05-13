@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589400577183})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589400961883})
 
 ;
 /**
@@ -17075,7 +17075,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image,$location,
-        $log, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
+        $log, $location, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
