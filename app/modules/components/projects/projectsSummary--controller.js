@@ -881,20 +881,13 @@ angular.module('FieldDoc')
                 console.log("createStaticMapURLS -> arr", arr)
 
                 arr.forEach(function(feature, index) {
-                     console.log(
-                        'self.createStaticMapUrls --> feature, index',
-                        feature,
-                        index);
-                    // console.log();
-                      //   if (feature.properties.project.extent) {
-                            console.log("A 3");
-                            console.log("geometry", feature.geometry);
+
                             if(feature.geometry != null){
-                                console.log("A 4");
+
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
 
                                 if(feature.staticURL.length >= 4096){
-                                        console.log("A 5");
+
                                        feature.staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
@@ -904,14 +897,13 @@ angular.module('FieldDoc')
                                 console.log('feature.staticURL',feature.staticURL);
 
                                 if(feature_type == "site"){
-                                    console.log("A 7");
+
                                      self.sites[index].staticURL = feature.staticURL;
 
                                      console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
                                 }
                                 if(feature_type == "practice"){
-                                     console.log("A 8");
                                      self.practices[index].staticURL = feature.staticURL;
 
                                      console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
@@ -921,25 +913,21 @@ angular.module('FieldDoc')
 
 
                             }else{
-                                console.log("A 6");
+
                                  if(feature_type == "site"){
-                                     console.log("A 9");
                                     self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                                 '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                             ].join('');
 
-                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
                                  }
                                  if(feature_type == "practice"){
-                                    console.log("A 10");
                                      self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                                 '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                             ].join('');
 
-                                    console.log("self.sites"+index+".staticURL",self.practices[index].staticURL);
                                  }
 
                             }

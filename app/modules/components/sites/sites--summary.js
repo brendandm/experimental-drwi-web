@@ -737,7 +737,7 @@
 
                     arr.forEach(function(feature, index) {
 
-                         if (feature.properties.project.extent) {
+                   //      if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
@@ -760,7 +760,7 @@
                                                         ].join('');
                             }
 
-                        }
+                   //     }
 
                     });
                 }
