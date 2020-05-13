@@ -642,6 +642,7 @@ angular.module('FieldDoc')
 
                      //   var practice = angular.toJSON(data);
 
+                        data.properties = data;
 
                         self.practices.unshift(data);
 
