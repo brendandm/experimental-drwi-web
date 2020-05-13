@@ -560,7 +560,7 @@ angular.module('FieldDoc')
 
 /*END DELETE LOGIC*/
 
-            self.confirmDelete = function(obj, targetCollection) {
+            self.confirmCopy = function(obj, targetCollection) {
 
                 console.log('self.confirmCopy', obj, targetCollection);
 
