@@ -640,9 +640,9 @@ angular.module('FieldDoc')
                     if (typeof index === 'number' &&
                         featureType === 'practice') {
 
-                        var practice = data.toString;
+                        var practice = toString(data);
 
-                  
+
 
                         self.practices.unshift(practice);
 
