@@ -503,6 +503,16 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
+                    } else if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                        self.practices.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
                     } else {
                         console.log("CLOSE ROUTE");
                         $timeout(closeRoute, 2000);

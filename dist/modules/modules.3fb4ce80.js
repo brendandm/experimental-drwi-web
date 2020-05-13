@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589389772023})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589389980136})
 
 ;
 /**
@@ -5393,6 +5393,16 @@ angular.module('FieldDoc')
                         featureType === 'site') {
 
                         self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                        self.practices.splice(index, 1);
 
                         self.cancelDelete();
 
