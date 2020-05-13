@@ -571,7 +571,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    self.deletionTarget = {
+                    self.copyTarget = {
                         'collection': targetCollection,
                         'feature': obj
                     };
