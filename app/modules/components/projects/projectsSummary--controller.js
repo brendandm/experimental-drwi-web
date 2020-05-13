@@ -648,6 +648,8 @@ angular.module('FieldDoc')
 
                         self.practices.pop();
 
+                        self.createStaticMapURLs(self.practices,"practice");
+
                         self.cancelCopy();
 
                         $timeout(closeAlerts, 2000);
