@@ -44,12 +44,16 @@
                     self.alerts = [];
 
                 };
+                
+            function closeRoute() {
 
-                function closeRoute() {
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-                    $location.path('/practices/' + self.practice.id);
+                    } $location.path("/projects/"+self.practice.project.id);
 
-                }
+            }
 
                 self.confirmDelete = function(obj) {
 

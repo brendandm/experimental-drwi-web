@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589399057105})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589399790925})
 
 ;
 /**
@@ -17099,11 +17099,15 @@ angular.module('FieldDoc')
 
         }
 
-        function closeRoute() {
+         function closeRoute() {
 
-            $location.path(self.practice.links.site.html);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-        }
+                    } $location.path("/projects/"+self.practice.project.id);
+
+         }
 
         self.confirmDelete = function(obj) {
 
@@ -18667,7 +18671,11 @@ angular.module('FieldDoc')
 
             function closeRoute() {
 
-                $location.path(self.practice.links.site.html);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
+
+                    } $location.path("/projects/"+self.practice.project.id);
 
             }
 
@@ -19294,11 +19302,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.closeRoute = function() {
+            function closeRoute() {
 
-                $location.path('/sites/' + self.practice.site_id);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-            };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
             self.confirmDelete = function(obj) {
 
@@ -19518,11 +19530,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.closeRoute = function() {
+            function closeRoute() {
 
-                $location.path('/sites/' + self.practice.site_id);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-            };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
             self.confirmDelete = function(obj) {
 
@@ -20190,11 +20206,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.closeRoute = function() {
+            function closeRoute() {
 
-                $location.path('/practices');
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-            };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
             self.confirmDelete = function(obj) {
 
@@ -20742,11 +20762,15 @@ angular.module('FieldDoc')
 
         };
 
-        self.closeRoute = function() {
+       function closeRoute() {
 
-            $location.path(self.practice.links.site.html);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-        };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
         self.processPractice = function(data) {
 
@@ -21086,7 +21110,11 @@ angular.module('FieldDoc')
 
             function closeRoute() {
 
-                $location.path(self.practice.links.site.html);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
+
+                    } $location.path("/projects/"+self.practice.project.id);
 
             }
 
@@ -21638,11 +21666,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.closeRoute = function() {
+            function closeRoute() {
 
-                $location.path('/sites/' + self.practice.site_id);
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-            };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
             self.confirmDelete = function(obj) {
 
@@ -22452,12 +22484,16 @@ angular.module('FieldDoc')
                     self.alerts = [];
 
                 };
+                
+            function closeRoute() {
 
-                function closeRoute() {
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-                    $location.path('/practices/' + self.practice.id);
+                    } $location.path("/projects/"+self.practice.project.id);
 
-                }
+            }
 
                 self.confirmDelete = function(obj) {
 

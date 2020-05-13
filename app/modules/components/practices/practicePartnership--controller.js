@@ -44,11 +44,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.closeRoute = function() {
+            function closeRoute() {
 
-                $location.path('/practices');
+                    if(self.practice.site != null){
+                         $location.path(self.practice.links.site.html);
+                    }else{
 
-            };
+                    } $location.path("/projects/"+self.practice.project.id);
+
+            }
 
             self.confirmDelete = function(obj) {
 
