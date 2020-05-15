@@ -77,11 +77,14 @@ angular.module('FieldDoc')
 
             self.assignOrganization = function() {
 
+                console.log("ASSIGN")
                 console.log('self.organizationSelection', self.organizationSelection);
 
       //          self.status.processing = true;
 
                 if (typeof self.organizationSelection === 'string') {
+                    console.log("STRING");
+                    console.log(self.organizationSelectio);
 
                   //  var _organization = new Organization({
                  //       'name': self.organizationSelection
@@ -107,7 +110,7 @@ angular.module('FieldDoc')
              //       });
 
                 } else {
-
+                    console.log("NOT STRING");
                     self.updateRelation(self.organizationSelection);
 
           //      }

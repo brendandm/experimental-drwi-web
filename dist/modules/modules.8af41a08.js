@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589561616036})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589562242576})
 
 ;
 /**
@@ -10995,11 +10995,14 @@ angular.module('FieldDoc')
 
             self.assignOrganization = function() {
 
+                console.log("ASSIGN")
                 console.log('self.organizationSelection', self.organizationSelection);
 
       //          self.status.processing = true;
 
                 if (typeof self.organizationSelection === 'string') {
+                    console.log("STRING");
+                    console.log(self.organizationSelectio);
 
                   //  var _organization = new Organization({
                  //       'name': self.organizationSelection
@@ -11025,7 +11028,7 @@ angular.module('FieldDoc')
              //       });
 
                 } else {
-
+                    console.log("NOT STRING");
                     self.updateRelation(self.organizationSelection);
 
           //      }
