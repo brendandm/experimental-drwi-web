@@ -122,6 +122,8 @@ angular.module('FieldDoc')
 
             self.searchOrganizations = function(value) {
 
+                 self.createAlert = false;
+
                 return SearchService.organization({
                     q: value
                 }).$promise.then(function(response) {
