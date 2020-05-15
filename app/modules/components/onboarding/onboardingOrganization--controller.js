@@ -23,6 +23,8 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.createAlert = false;
+
             function closeAlerts() {
 
                 self.alerts = [];
@@ -86,6 +88,7 @@ angular.module('FieldDoc')
                     console.log("STRING");
                     console.log(self.organizationSelectio);
 
+                     self.createAlert = true;
                   //  var _organization = new Organization({
                  //       'name': self.organizationSelection
                  //   });

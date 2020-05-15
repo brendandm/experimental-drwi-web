@@ -52,14 +52,17 @@
 
                 <h2>Find an organization</h2>
 
-                <p style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">Join an existing FieldDoc organization or create a new one by typing in the box below. Since organization names are unique, we’ll check for matches to make sure you end up in the right place. If no matches are found, FieldDoc will start a new organization based on the name you enter.</p>
+                <p style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">
+                    Join an existing FieldDoc organization by typing in the box below.
+                    We’ll check for matches to make sure you end up in the right place.
+                    If you can't find your organization or want to create a new organization, please email <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.
+                </p>
 
                 <div class="classification--search" style="position: relative;">
                     <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
                 </div>
-                <p style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">
-
-                    If you can't find your organization or want to create a new organization, please email <a href="mailto:support@fielddoc.org">support@fielddoc.org</a> .
+                <p data-ng-if="createAlert" style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">
+                    Please email to <a href="mailto:support@fielddoc.org">support@fielddoc.org</a> if you'd like us to create this organization.
                 </p>
 
                 <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9;">
