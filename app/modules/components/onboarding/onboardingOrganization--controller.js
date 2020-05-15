@@ -113,7 +113,7 @@ angular.module('FieldDoc')
                     console.log("NOT STRING");
                     self.updateRelation(self.organizationSelection);
 
-          //      }
+                }
 
             };
 
