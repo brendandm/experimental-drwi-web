@@ -81,7 +81,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                if (typeof self.organizationSelection === 'string') {
+      /*          if (typeof self.organizationSelection === 'string') {
 
                     var _organization = new Organization({
                         'name': self.organizationSelection
@@ -107,10 +107,10 @@ angular.module('FieldDoc')
                     });
 
                 } else {
-
+        */
                     self.updateRelation(self.organizationSelection);
 
-                }
+          //      }
 
             };
 
