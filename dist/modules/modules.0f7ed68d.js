@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589560996715})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589561616036})
 
 ;
 /**
@@ -10997,35 +10997,35 @@ angular.module('FieldDoc')
 
                 console.log('self.organizationSelection', self.organizationSelection);
 
-                self.status.processing = true;
+      //          self.status.processing = true;
 
-      /*          if (typeof self.organizationSelection === 'string') {
+                if (typeof self.organizationSelection === 'string') {
 
-                    var _organization = new Organization({
-                        'name': self.organizationSelection
-                    });
+                  //  var _organization = new Organization({
+                 //       'name': self.organizationSelection
+                 //   });
 
-                    _organization.$save(function(successResponse) {
+           //         _organization.$save(function(successResponse) {
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                            'msg': 'Select an organization to join.',
                             'prompt': 'OK'
                         }];
 
                         $timeout(closeAlerts, 2000);
 
-                        self.updateRelation(successResponse.properties);
+                //        self.updateRelation(successResponse.properties);
 
-                    }, function(errorResponse) {
+            //        }, function(errorResponse) {
 
-                        self.status.processing = false;
+            //            self.status.processing = false;
 
-                    });
+             //       });
 
                 } else {
-        */
+
                     self.updateRelation(self.organizationSelection);
 
           //      }
