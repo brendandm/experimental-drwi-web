@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589748526985})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589748981453})
 
 ;
 /**
@@ -11713,6 +11713,10 @@ angular.module('FieldDoc')
                 'profile': true
             };
 
+        //    self.member = {
+        //                    picture : null
+        //                   };
+
             self.status = {
                 loading: true,
                 processing: false,
@@ -11760,8 +11764,10 @@ angular.module('FieldDoc')
                                self.actions.getMember();
                         }else{
                             self.member = self.user.properties;
+                            console.log("self.member -->",self.member);
                             var picture = self.member.picture;
                             self.member.picture = picture.replace("original", "square");
+
                         }
 
 
