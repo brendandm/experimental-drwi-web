@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589751395068})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589751814456})
 
 ;
 /**
@@ -11488,7 +11488,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope, $routeParams,
-            $route, user, User, Image, $timeout) {
+            $route, user, User, Image, SearchService, $timeout) {
 
             var self = this;
 
@@ -11528,6 +11528,8 @@ angular.module('FieldDoc')
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
 
+                        self.organizationSelection = self.user.organization;
+
                         console.log("self.user", self.user);
 
                         self.permissions = {
@@ -11560,6 +11562,29 @@ angular.module('FieldDoc')
                 self.actions.exit();
 
             }
+
+            self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
 
             self.actions = {
 

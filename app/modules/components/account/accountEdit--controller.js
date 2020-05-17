@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope, $routeParams,
-            $route, user, User, Image, $timeout) {
+            $route, user, User, Image, SearchService, $timeout) {
 
             var self = this;
 
@@ -48,6 +48,8 @@ angular.module('FieldDoc')
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
 
+                        self.organizationSelection = self.user.organization;
+
                         console.log("self.user", self.user);
 
                         self.permissions = {
@@ -80,6 +82,29 @@ angular.module('FieldDoc')
                 self.actions.exit();
 
             }
+
+            self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
 
             self.actions = {
 
