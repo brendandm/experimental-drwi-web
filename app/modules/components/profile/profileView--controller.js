@@ -102,7 +102,7 @@ angular.module('FieldDoc')
                                }
 
                                  self.status.loading = false;
-
+                                console.log("self.member", self.member);
                        }, function(errorResponse) {
 
                             self.status.processing = false;
