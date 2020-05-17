@@ -63,7 +63,7 @@
 
                                 <p class="flow2-b">
                                     <span ng-if="page.member.title">
-                                        {{page.member.title}}
+                                        <b>{{page.member.title}}<b>
                                     </span>
                                     <br>
                                      <span ng-if="page.member.organization.properties.name" style="clear:left;">
@@ -86,7 +86,7 @@
                         <div class='flow2-text-container' ng-if="page.member.email">
 
                             <p class="flow2-b">
-                                {{page.member.email}}
+                                <a href="mailto:{page.member.email"{{page.member.email}}</a>
                             </p>
                         </div>
                         <div class='flow2-text-container' ng-if="page.member.bio">
