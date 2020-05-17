@@ -61,12 +61,18 @@
                         </div>
                         <div class='flow2-text-container' style="margin-right:3em;" ng-if="page.member.title || page.member.organization">
 
-                                <p class="flow2-b" ng-if="page.member.title">
-                                   {{page.member.title}}
+                                <p class="flow2-b">
+                                    <span ng-if="page.member.title">
+                                        {{page.member.title}}
+                                    </span>
+                                     <span ng-if="page.member.organization.properties.name" style="clear:left;">
+                                         {{page.member.organization.properties.name}}
+                                     </span>
                                 </p>
-                             <p class="flow2-b" ng-if="page.member.organization.properties.name">
-                                {{page.member.organization.properties.name}}
+                          <!--   <p class="flow2-b" >
+                                 <span>{{page.member.organization.properties.name}}</span>
                             </p>
+                            -->
 
                         </div>
                   <!--     <div class='flow2-text-container' ng-if="page.member.organization">
@@ -84,7 +90,7 @@
                         </div>
                         <div class='flow2-text-container' ng-if="page.member.bio">
 
-                            <p class="flow2-b" style="text-align: justify;  text-align-last: center; ">
+                            <p class="flow2-b" style="text-align: left;  text-align-last: left; ">
                                 {{page.user.properties.bio}}
                             </p>
                         </div>
