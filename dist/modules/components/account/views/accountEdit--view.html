@@ -90,6 +90,10 @@
                                 typeahead-template-url="templates/search--tpl.html"
                                 tabindex="1"
                         />
+                         <p data-ng-if="page.createAlert" style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">
+                             Please email to <a href="mailto:support@fielddoc.org">support@fielddoc.org</a> if you'd like us to create this organization.
+                         </p>
+
                      <!--   <input type="search" class="search" value="page.user.properties.organization.properties.name" placeholder="page.user.organization.properties.name" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
                     -->
                     </div>

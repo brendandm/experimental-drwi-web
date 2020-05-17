@@ -28,6 +28,8 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.createAlert = false;
+
             function closeAlerts() {
 
                 self.alerts = [];
@@ -136,7 +138,7 @@ angular.module('FieldDoc')
                             }];
 
                             $timeout(closeAlerts, 2000);
-                            self.processing = false;
+                            self.status.processing = false;
 
                       } else {
                             console.log("NOT STRING");
