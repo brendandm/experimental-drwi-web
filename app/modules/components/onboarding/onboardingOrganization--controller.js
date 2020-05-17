@@ -86,7 +86,7 @@ angular.module('FieldDoc')
 
                 if (typeof self.organizationSelection === 'string') {
                     console.log("STRING");
-                    console.log(self.organizationSelectio);
+                    console.log(self.organizationSelection);
 
                      self.createAlert = true;
                   //  var _organization = new Organization({

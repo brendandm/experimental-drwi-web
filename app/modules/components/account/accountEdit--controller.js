@@ -32,6 +32,7 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
+
             }
              var featureId = $routeParams.id;
       
@@ -121,27 +122,49 @@ angular.module('FieldDoc')
                 save: function() {
                       self.status.processing = true;
 
-                      if (self.image) {
+                      if (typeof self.organizationSelection === 'string' || self.organizationSelection === null) {
+                            console.log("STRING");
+                            console.log(self.organizationSelection);
 
-                        var fileData = new FormData();
+                            self.createAlert = true;
 
-                        fileData.append('image', self.image);
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Select an organization to join.',
+                                'prompt': 'OK'
+                            }];
 
-                        Image.upload({
-
-                        }, fileData).$promise.then(function(successResponse) {
-                            console.log('YO YO ');
-                            console.log('successResponse', successResponse);
-
-                            self.user.properties.picture = successResponse.original;
-
-                            self.updateUser();
-
-                        });
+                            $timeout(closeAlerts, 2000);
+                            self.processing = false;
 
                       } else {
-                             self.updateUser();
+                            console.log("NOT STRING");
+                             if (self.image) {
+
+                                var fileData = new FormData();
+
+                                fileData.append('image', self.image);
+
+                                Image.upload({
+
+                                }, fileData).$promise.then(function(successResponse) {
+
+                                    console.log('successResponse', successResponse);
+
+                                    self.user.properties.picture = successResponse.original;
+
+                                    self.updateUser();
+
+                                });
+
+                              } else {
+                                     self.updateUser();
+                              }
                       }
+
+
+
 
 
                 },
@@ -162,6 +185,7 @@ angular.module('FieldDoc')
                         'picture': self.user.properties.picture,
                         'bio': self.user.properties.bio,
                         'title': self.user.properties.title
+                        'organization_id': self.organizationSelection.id
                     });
 
                     _user.$update(function(successResponse) {
