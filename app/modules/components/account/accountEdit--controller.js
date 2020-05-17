@@ -48,7 +48,7 @@ angular.module('FieldDoc')
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
 
-                        self.organizationSelection = self.user.organization;
+                        self.organizationSelection = self.user.properties.organization;
 
                         console.log("self.organizationSelection",self.organizationSelection);
 
