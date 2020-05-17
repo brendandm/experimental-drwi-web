@@ -50,6 +50,8 @@ angular.module('FieldDoc')
 
                         self.organizationSelection = self.user.organization;
 
+                        console.log("self.organizationSelection",self.organizationSelection);
+
                         console.log("self.user", self.user);
 
                         self.permissions = {
