@@ -49,6 +49,14 @@
                                 {{page.organizationProfile.email}}
                             </p>
                         </div>
+                        <div class="flow2--profileItem" style="clear:left;" ng-if="page.organizationProfile.description">
+                            <p class="flow2-h">
+                                <i>Description:</i>
+                            </p>
+                            <p class="flow2-b">
+                                {{page.organizationProfile.description}}
+                            </p>
+                        </div>
                         <div class="flow2--profileItem" style="clear:left;" ng-if="page.organizationProfile.created_on">
                             <p class="flow2-h">
                                 <i>Last Modified:</i>
@@ -58,10 +66,10 @@
                             </p>
                         </div>
                         <div class="flow2--profileItem"
-                             style="clear:left;"
+                             style="clear:left;  position: absolute; bottom: 0;"
                              data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id"
                         >
-                            <p class="flow2-b">
+                            <p class="flow2-h">
                               To request changes to your organization, please contact <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>
                             </p>
                         </div>
