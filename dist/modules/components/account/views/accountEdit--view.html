@@ -77,9 +77,9 @@
                     <input type="text" class="form-control form-control-half" id="title" name="title" placeholder="Title" data-ng-model="page.user.properties.title" tabindex="3" />
                 </div>
                  <div class="form-element">
-                    <span class="meta-label"><b>Title</b></span>
+                    <span class="meta-label"><b>Organization</b></span>
                      <div class="classification--search" style="position: relative;">
-                        <input type="search" class="search" value="" placeholder="Search organizations" placeholder="page.user.organization.properties.name" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
+                        <input type="search" class="search" value="page.user.properties.organization.properties.name" placeholder="page.user.organization.properties.name" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
                     </div>
                  </div>
                 <div class="form-element">
