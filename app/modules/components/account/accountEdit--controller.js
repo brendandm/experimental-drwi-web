@@ -184,7 +184,7 @@ angular.module('FieldDoc')
                         'last_name': self.user.properties.last_name,
                         'picture': self.user.properties.picture,
                         'bio': self.user.properties.bio,
-                        'title': self.user.properties.title
+                        'title': self.user.properties.title,
                         'organization_id': self.organizationSelection.id
                     });
 
