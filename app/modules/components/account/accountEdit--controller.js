@@ -52,8 +52,8 @@ angular.module('FieldDoc')
 
                         self.organizationSelection =
                                                     {
-                                                        id: self.user.properties.organization.id
-                                                        name: self.user.properties.organization.properties.name
+                                                        id: self.user.properties.organization.id,
+                                                        name: self.user.properties.organization.properties.name,
                                                         category: self.user.properties.organization.properties.category_id
 
                                                     }
