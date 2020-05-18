@@ -13,7 +13,7 @@ angular.module('FieldDoc')
 
         $routeProvider
             .when('/:feature_type/:feature_id/changeLog/', {
-                         templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
+                templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
                 controller: 'ChangeLogController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
