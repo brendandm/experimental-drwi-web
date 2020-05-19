@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589905057931})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589906017899})
 
 ;
 /**
@@ -10906,7 +10906,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/:feature_type/:id/changelog', {
+            .when('/:feature_type/:id/history', {
                 templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
                 controller: 'ChangeLogController',
                 controllerAs: 'page',
@@ -10944,16 +10944,13 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.parseRouteParams();
+
             function closeAlerts() {
 
                 self.alerts = [];
 
             }
-
-            self.featureId = $routeParams.id;
-            console.log("featureId-->",self.featureId);
-            self.featureType = $routeParams.feature_type;
-            console.log("featureType-->",self.featureType);
 
             self.showElements = function() {
 
@@ -10966,6 +10963,19 @@ angular.module('FieldDoc')
                 }, 250);
 
             };
+
+            self.parseRouteParams = function(){
+                 self.featureId = $routeParams.id;
+
+                if($routeParams.feature_type){
+                    if($routeParams.feature_type == 'projects'){
+                        self.featureType = 'projects;
+                    }
+                }
+
+                 console.log("featureId-->",self.featureId);
+                console.log("featureType-->",self.featureType);
+            }
 
       /*START Pagniation vars*/
             self.limit = 12;

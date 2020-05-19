@@ -23,16 +23,13 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.parseRouteParams();
+
             function closeAlerts() {
 
                 self.alerts = [];
 
             }
-
-            self.featureId = $routeParams.id;
-            console.log("featureId-->",self.featureId);
-            self.featureType = $routeParams.feature_type;
-            console.log("featureType-->",self.featureType);
 
             self.showElements = function() {
 
@@ -45,6 +42,19 @@ angular.module('FieldDoc')
                 }, 250);
 
             };
+
+            self.parseRouteParams = function(){
+                 self.featureId = $routeParams.id;
+
+                if($routeParams.feature_type){
+                    if($routeParams.feature_type == 'projects'){
+                        self.featureType = 'projects;
+                    }
+                }
+
+                 console.log("featureId-->",self.featureId);
+                console.log("featureType-->",self.featureType);
+            }
 
       /*START Pagniation vars*/
             self.limit = 12;
