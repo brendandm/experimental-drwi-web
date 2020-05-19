@@ -14,7 +14,7 @@ angular.module('FieldDoc')
             var self = this;
 
             $rootScope.viewState = {
-                'project': true
+                'changeLog': true
             };
 
             $rootScope.toolbarState = {
