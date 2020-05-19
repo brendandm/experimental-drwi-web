@@ -109,23 +109,27 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    combine: 'true',
                     feature_id: self.featureId,
                     feature_type: self.featureType,
                     limit:  self.limit,
                     page:   self.page
                 };
 
-                $location.search(data);
+              //  $location.search(data);
 
                 return data;
             }
 
             self.loadHistory = function() {
 
-                var params = self.buildFilter();
+           //     var params = self.buildFilter();
 
-                ChangeLog(params).$promise.then(function(successResponse) {
+                ChangeLog.history({
+                    feature_id: self.featureId,
+                    feature_type: self.featureType,
+                    limit:  self.limit,
+                    page:   self.page
+                }).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 

@@ -16,10 +16,10 @@
                 'query': {
                     'isArray': false
                 },
-                collection: {
+                history: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/tasks')
+                    url: environment.apiUrl.concat('/v1/:type/:id/history')
                 }
             });
         });

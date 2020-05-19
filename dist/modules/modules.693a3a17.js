@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589903979056})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589904360052})
 
 ;
 /**
@@ -11030,23 +11030,27 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    combine: 'true',
                     feature_id: self.featureId,
                     feature_type: self.featureType,
                     limit:  self.limit,
                     page:   self.page
                 };
 
-                $location.search(data);
+              //  $location.search(data);
 
                 return data;
             }
 
             self.loadHistory = function() {
 
-                var params = self.buildFilter();
+           //     var params = self.buildFilter();
 
-                ChangeLog(params).$promise.then(function(successResponse) {
+                ChangeLog.history({
+                    feature_id: self.featureId,
+                    feature_type: self.featureType,
+                    limit:  self.limit,
+                    page:   self.page
+                }).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
@@ -39421,10 +39425,10 @@ angular.module('FieldDoc')
                 'query': {
                     'isArray': false
                 },
-                collection: {
+                history: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/tasks')
+                    url: environment.apiUrl.concat('/v1/:type/:id/history')
                 }
             });
         });
