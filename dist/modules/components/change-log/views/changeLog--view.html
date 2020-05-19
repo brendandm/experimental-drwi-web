@@ -135,6 +135,17 @@
                                         </label> -->
 
                                         <div class="body">
+                                            <div style="position:relative;
+                                                        float:left;
+                                                        text-align:center;
+                                                        width:100%"
+                                            >Changes</div>
+                                             <div style="position:relative;
+                                                        float:left;
+                                                        text-align:center;
+                                                        width:100%"
+                                            >Previous</div>
+
                                             <div data-ng-repeat="(key, item) in changeLogItem.diff">
                                                 <div style="width:48%;
                                                                 position:relative;
@@ -143,11 +154,10 @@
                                                                 margin-right:20px;
                                                                 background-color:#72d28d;
                                                                 ">
-                                                    <div style="width:100%;">
+
                                                     {{key}} :
-                                                        <span style="text-align:center;width:100%">Changes</span>
                                                         <p style="padding-left:20px;">{{item.new_value}}</p>
-                                                    </div>
+
                                                 </div>
                                                 <div style="width:48%;
                                                                 position:relative;
@@ -156,11 +166,11 @@
                                                                 margin-right:20px;
                                                                 background-color:#da7784;
                                                                 ">
-                                                    <div style="width:100%;">
-                                                        <span style="text-align:center;width:100%">Previous</span>
+
+
                                                         {{key}} :
                                                         <p style="padding-left:20px;">{{item.previous_value}}</p>
-                                                    </div>
+
                                                 </div>
 
                                             </div>
