@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589915930014})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589916580728})
 
 ;
 /**
@@ -11094,10 +11094,13 @@ angular.module('FieldDoc')
 
                     self.user = Account.userObject = userResponse;
 
+                    console.log("$rootScope.user-->",$rootScope.user);
+
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                       // can_edit:
                     };
                     //
                      self.loadHistory();
