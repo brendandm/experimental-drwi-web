@@ -23,8 +23,6 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
-            self.parseRouteParams();
-
             function closeAlerts() {
 
                 self.alerts = [];
@@ -161,6 +159,9 @@ angular.module('FieldDoc')
 
             // Verify Account information for proper UI element display
             //
+
+            self.parseRouteParams();
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
@@ -195,6 +196,8 @@ angular.module('FieldDoc')
                 $location.path('/logout');
 
             }
+
+
 
           //  var params = $location.search();
          //   self.inspectSearchParams(params);
