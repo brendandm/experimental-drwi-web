@@ -48,7 +48,7 @@ angular.module('FieldDoc')
 
                 if($routeParams.feature_type){
                     if($routeParams.feature_type == 'projects'){
-                        self.featureType = 'projects;
+                        self.featureType = 'project';
                     }
                 }
 
