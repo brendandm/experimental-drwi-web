@@ -137,24 +137,30 @@
                                         <div class="body">
                                             <div data-ng-repeat="(key, item) in changeLogItem.diff">
                                                 <div style="width:48%;
-                                                            position:relative;
-                                                            float:left;
-                                                            border: 0px solid red;
-                                                            margin-right:20px;
-                                                            "
-                                                >
-                                                new {{key}} :
-                                                    <p style="padding-left:20px;">{{item.new_value}}</p>
+                                                                position:relative;
+                                                                float:left;
+                                                                border: 0px solid red;
+                                                                margin-right:20px;
+                                                                background-color:#72d28d;
+                                                                ">
+                                                    <div>
+                                                    {{key}} :
+                                                        <span style="text-align:center;width:100%">Changes</span>
+                                                        <p style="padding-left:20px;">{{item.new_value}}</p>
+                                                    </div>
                                                 </div>
-
                                                 <div style="width:48%;
-                                                            position:relative;
-                                                            float:left;
-                                                            border: 0px solid green;
-                                                            "
-                                                >
-                                                    old {{key}} :
-                                                    <p style="padding-left:20px;">{{item.previous_value}}</p>
+                                                                position:relative;
+                                                                float:left;
+                                                                border: 0px solid red;
+                                                                margin-right:20px;
+                                                                background-color:#da7784;
+                                                                ">
+                                                    <div>
+                                                        <span style="text-align:center;width:100%">Previous</span>
+                                                        {{key}} :
+                                                        <p style="padding-left:20px;">{{item.previous_value}}</p>
+                                                    </div>
                                                 </div>
 
                                             </div>
