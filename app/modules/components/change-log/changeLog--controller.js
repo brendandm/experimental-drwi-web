@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
                 var params = self.buildFilter();
 
-                ChangLog(params).$promise.then(function(successResponse) {
+                ChangeLog(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
