@@ -81,9 +81,10 @@
                                                 {{ changeLogItem.action }}
                                             </label>
                                             <span style="font-size: 0.7em; font-weight: normal; color: #757575;">
-                                                {{ changeLogItem.timestamp }}
+                                                {{ changeLogItem.timestamp | date:'medium' }}
+
                                             </span>
-                                              <span style="font-size: 0.7em; font-weight: normal; color: #757575;">
+                                              <span style="float:right; font-weight: normal; color: #757575;">
                                                   <a href="/profile/{{changeLogItem.creator.id}}">
                                                       {{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}
                                                   </a>
@@ -97,7 +98,12 @@
                                         </label> -->
 
                                         <div class="body">
-                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
+                                            <span data-ng-repeat="diffItem in diff = changeLogItem.diff">
+                                                
+                                                {{diffItem.newData}}
+
+                                            </span>
+
                                         </div>
 
                                     </div>
