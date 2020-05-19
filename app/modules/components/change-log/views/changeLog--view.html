@@ -98,12 +98,16 @@
                                         </label> -->
 
                                         <div class="body">
-                                            <span data-ng-repeat="diffItem in changeLogItem.diff">
-
-                                                {{diffItem.new_value}}
-                                                 {{diffItem.old_value}}
-
-                                            </span>
+                                            <div data-ng-repeat="(key, item) in changeLogItem.diff">
+                                                <div style="width:48%;position:relative;float:left; border: 1px solid red;">
+                                                new {{key}} :<br>
+                                                {{item.new_value}}
+                                                </div>
+                                                  <div style="width:48%;position:relative;float:left; border: 1px solid green;">
+                                                old {{key}} :<br>
+                                                {{item.old_value}}
+                                                </div>
+                                            </div>
 
                                         </div>
 
