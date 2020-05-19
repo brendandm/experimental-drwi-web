@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589894422775})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589894654323})
 
 ;
 /**
@@ -10906,30 +10906,16 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/projects/:feature_id/changeLog/', {
+            .when('/projects/:feature_id/changelog', {
                 templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
                 controller: 'ChangeLogController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                /*    projects: function($location, Project, $rootScope) {
-
-                        return Project.collection({});
-
-                    },
-                    */
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
+                        user: function(Account) {
                             return Account.getUser();
                         }
-
-                        return Account.userObject;
-
                     }
-                }
             });
 
     });
