@@ -83,7 +83,7 @@
                                      <!--   <div class="name" style="flex-flow: column; align-items: flex-start;">-->
 
                                             <div style="position:relative;
-                                                        width:66%;
+                                                        width:25%;
                                                         float:left;
                                                         font-weight: normal;
                                                         color: #757575;
@@ -93,7 +93,16 @@
                                                 <span for="changeLogItem-{{ changeLogItem.id }}">
                                                     {{ changeLogItem.action }}
                                                 </span>
+                                            </div>
 
+                                           <div style="position:relative;
+                                                        width:45%;
+                                                        float:left;
+                                                        font-weight: normal;
+                                                        color: #757575;
+                                                        border:1px solid blue;
+                                                        "
+                                            >
                                                 <span style="font-size: 0.7em; font-weight: normal; color: #757575;">
                                                     {{ changeLogItem.timestamp | date:'medium' }}
 
