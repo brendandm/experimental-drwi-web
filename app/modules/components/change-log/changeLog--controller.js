@@ -109,8 +109,8 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    feature_id: self.featureId,
-                    feature_type: self.featureType,
+                    id: self.featureId,
+                    type: self.featureType,
                     limit:  self.limit,
                     page:   self.page
                 };
