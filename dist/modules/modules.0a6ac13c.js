@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589920519356})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589921330048})
 
 ;
 /**
@@ -10968,8 +10968,17 @@ angular.module('FieldDoc')
                     if($routeParams.feature_type){
                             if($routeParams.feature_type == 'projects'){
                                 self.featureType = 'project';
+                            }else if($routeParams.feature_type == 'sites'){
+                                self.featureType = 'site';
+                            }else if($routeParams.feature_type == 'practices'){
+                                self.featureType = 'practice';
+                            }else if($routeParams.feature_type == 'programs'){
+                                self.featureType = 'program';
+                            }else if($routeParams.feature_type == 'organization'){
+                                self.featureType = 'organization';
                             }
                         }
+
 
                          console.log("featureId-->",self.featureId);
                         console.log("featureType-->",self.featureType);
