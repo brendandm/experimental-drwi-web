@@ -389,7 +389,8 @@ angular.module('FieldDoc')
                     //
                     // Assign project to a scoped variable
                     //
-                    project.$promise.then(function(successResponse) {
+                     console.log("USER LOAD");
+              /*      project.$promise.then(function(successResponse) {
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -416,11 +417,11 @@ angular.module('FieldDoc')
                         self.showElements();
 
                     });
-
+                */
                 });
 
             } else {
-
+                 console.log("NO USER");
                 $location.path('/logout');
 
             }

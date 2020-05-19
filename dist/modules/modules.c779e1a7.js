@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589894969014})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589895669771})
 
 ;
 /**
@@ -11310,7 +11310,8 @@ angular.module('FieldDoc')
                     //
                     // Assign project to a scoped variable
                     //
-                    project.$promise.then(function(successResponse) {
+                     console.log("USER LOAD");
+              /*      project.$promise.then(function(successResponse) {
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -11337,11 +11338,11 @@ angular.module('FieldDoc')
                         self.showElements();
 
                     });
-
+                */
                 });
 
             } else {
-
+                 console.log("NO USER");
                 $location.path('/logout');
 
             }
