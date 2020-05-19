@@ -30,7 +30,7 @@ angular.module('FieldDoc')
             }
 
             var featureId = $routeParams.id;
-
+            var featureType = $routeParams.feature_type;
             //
             // Assign project to a scoped variable
             //
