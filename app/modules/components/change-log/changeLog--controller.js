@@ -29,10 +29,10 @@ angular.module('FieldDoc')
 
             }
 
-            var featureId = $routeParams.id;
-            console.log("featureId-->",featureId);
-            var featureType = $routeParams.feature_type;
-            console.log("featureType-->",featureType);
+            self.featureId = $routeParams.id;
+            console.log("featureId-->",self.featureId);
+            self.featureType = $routeParams.feature_type;
+            console.log("featureType-->",self.featureType);
 
             self.showElements = function() {
 
