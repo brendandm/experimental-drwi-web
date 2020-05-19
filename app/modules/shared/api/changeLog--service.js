@@ -12,6 +12,15 @@
             return $resource(environment.apiUrl.concat('/v1/:type/:id/history'), {
                 'id': '@id',
                 'type':'@type'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/tasks')
+                }
             });
         });
 
