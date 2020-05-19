@@ -41,16 +41,19 @@
                 </div>
         </div>
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Edit project</h1>
+            <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">
+                {{self.FeatureType}} history
+            </h1>
         </div>
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
                 <div class="group reveal fade-in t2">
 
-                        <section class="pad shadow">
-                            <a name="practiceTypes">
-                            <h2>Practices Types</h2>
+                        <section class="shadow">
+                         <!--   <a name="practiceTypes">
+                            <h2>{{self.FeatureType}} History</h2>
                             </a>
+                            -->
                             <p>
                                 Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
                             </p>
