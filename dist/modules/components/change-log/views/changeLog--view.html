@@ -169,24 +169,24 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
+        <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
-            <li>
-                <a href="/projects/{{ page.project.id }}" data-ng-class="{active: $root.toolbarState.dashboard}" title="Summary">
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/projects/{{ page.project.id }}" title="Summary">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}" title="Edit">
-                <a href="/projects/{{ page.project.id }}/edit">
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}" title="Program">
-                <a href="/projects/{{ page.project.id }}/grant">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
+                <a href="/projects/{{ page.project.id }}/grant" title="Program">
                     <i class="material-icons">
                         account_balance
                     </i>
@@ -206,7 +206,7 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
+            <!-- <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
@@ -228,18 +228,25 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
+                <a href="#" data-ng-click="page.print()" title="Print">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
                     <p>Do you want to delete this project?</p>
                     <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')" >
                             Yes
                         </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()" >
                             Cancel
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project)" title="Delete">
+                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589915240782})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589915501216})
 
 ;
 /**
@@ -11090,23 +11090,18 @@ angular.module('FieldDoc')
 
                 user.$promise.then(function(userResponse) {
 
-                    $rootScope.user = Account.userObject = self.user = userResponse;
-                    console.log('userResponse',userResponse);
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = Account.userObject = userResponse;
+
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
                     };
-                    console.log(" self.permissions", self.permissions);
-                    //
-                    // Setup page meta data
-                    //
-                    $rootScope.page = {
-                        'title': 'History'
-                    };
-
-                    //
-                    // Load history data
                     //
                      self.loadHistory();
 
