@@ -77,6 +77,18 @@
                                     <div class="card--content" >
 
                                         <div class="name" style="flex-flow: column; align-items: flex-start;">
+                                             <div style="position:relative;
+                                                          float:right;
+                                                            width:30%;
+                                                          font-weight: normal;
+                                                          color: #757575;
+                                                            border:1px solid orange;
+                                                            "
+                                              >
+                                                  <a href="/profile/{{changeLogItem.creator.id}}">
+                                                      {{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}
+                                                  </a>
+                                              </div>
                                             <div style="position:relative;
                                                         width:30%;
                                                         float:left;
@@ -93,18 +105,7 @@
 
                                                 </span>
                                             </div>
-                                              <div style="position:relative;
-                                                          float:right;
-                                                            width:30%;
-                                                          font-weight: normal;
-                                                          color: #757575;
-                                                            border:1px solid orange;
-                                                            "
-                                              >
-                                                  <a href="/profile/{{changeLogItem.creator.id}}">
-                                                      {{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}
-                                                  </a>
-                                              </div>
+
 
                                         </div>
 
