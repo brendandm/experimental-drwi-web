@@ -74,7 +74,7 @@
                                     data-ng-repeat="changeLogItem in changeLog = (page.changeLog | orderBy:'timeStamp' | filter: page.queryToken)"
                                    >
 
-                                    <div class="card--content" style="margin-bottom:2px;">
+                                    <div class="card--content" style="margin-bottom:5px;">
 
                                         <div class="name" style="border:0px solid pink;
                                                                 width:100%;
@@ -135,7 +135,7 @@
                                         </label> -->
 
                                         <div class="body" style="padding: 0px 0px 0px 0px">
-                                            <div style="width:100%; height: 35px;" data-ng-if="changeLogItem.diff != null">
+                                            <div style="width:100%; height: 35px; " data-ng-if="changeLogItem.diff != null">
                                                 <div style="position:relative;
                                                             float:left;
                                                             height: 35px;
@@ -143,6 +143,7 @@
                                                             width:50%;
                                                             border:0px solid blue;
                                                             background-color:#f2fff3
+                                                             color: #757575;
                                                             "
 
                                                 ><b>CHANGE</b></div>
@@ -153,6 +154,7 @@
                                                             height: 35px;
                                                             border:0px solid black;
                                                             background-color:#fff2f2;
+                                                            color: #757575;
                                                             "
                                                  ><b>PREVIOUS</b></div>
                                             </div>
@@ -165,6 +167,7 @@
                                                                 background-color:#f2fff3;
                                                                 padding-left:20px;
                                                                 padding-right:20px;
+                                                                color: #757575;
                                                                 ">
 
                                                     {{key}} :
@@ -177,7 +180,7 @@
                                                                 border: 0px solid red;
                                                                 padding-left:20px;
                                                                 padding-right:20px;
-
+                                                                 color: #757575;
                                                                 ">
 
 
