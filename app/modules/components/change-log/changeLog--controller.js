@@ -125,8 +125,8 @@ angular.module('FieldDoc')
            //     var params = self.buildFilter();
 
                 ChangeLog.history({
-                    feature_id: self.featureId,
-                    feature_type: self.featureType,
+                    id: self.featureId,
+                    type: self.featureType,
                     limit:  self.limit,
                     page:   self.page
                 }).$promise.then(function(successResponse) {
