@@ -139,7 +139,8 @@
                                                         float:left;
                                                         text-align:center;
                                                         width:48%
-                                                        display:inline-block;"
+                                                        display:inline-block;
+                                                        border:1px solid blue;"
 
                                             >Changes</div>
                                              <div style="position:relative;
@@ -147,10 +148,12 @@
                                                         text-align:center;
                                                         width:48%
                                                         display:inline-block;
+                                                        border:1px solid black;"
                                                         "
                                             >Previous</div>
 
-                                            <div data-ng-repeat="(key, item) in changeLogItem.diff">
+                                            <div data-ng-repeat="(key, item) in changeLogItem.diff"
+                                                style="background-color:#da7784;">
                                                 <div style="width:48%;
                                                                 position:relative;
                                                                 float:left;
@@ -167,7 +170,7 @@
                                                                 float:left;
                                                                 border: 0px solid red;
 
-                                                                background-color:#da7784;
+
                                                                 ">
 
 
