@@ -74,7 +74,7 @@
                                     data-ng-repeat="changeLogItem in changeLog = (page.changeLog | orderBy:'timeStamp' | filter: page.queryToken)"
                                    >
 
-                                    <div class="card--content" >
+                                    <div class="card--content" style="margin-bottom:2px;">
 
                                         <div class="name" style="border:0px solid pink;
                                                                 width:100%;
@@ -135,9 +135,10 @@
                                         </label> -->
 
                                         <div class="body" style="padding: 0px 0px 0px 0px">
-                                            <div style="width:100%; height: 35px;" data-ng-if="changeLogItem.diff == null">
+                                            <div style="width:100%; height: 35px;" data-ng-if="changeLogItem.diff != null">
                                                 <div style="position:relative;
                                                             float:left;
+                                                            height: 35px;
                                                             text-align:center;
                                                             width:50%;
                                                             border:0px solid blue;
@@ -149,6 +150,7 @@
                                                             float:left;
                                                             text-align:center;
                                                             width:50%;
+                                                            height: 35px;
                                                             border:0px solid black;
                                                             background-color:#fff2f2;
                                                             "
