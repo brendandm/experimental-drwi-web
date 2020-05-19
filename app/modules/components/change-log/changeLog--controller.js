@@ -23,8 +23,16 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
-            self.parseRouteParams();
+                    self.featureId = $routeParams.id;
 
+                if($routeParams.feature_type){
+                    if($routeParams.feature_type == 'projects'){
+                        self.featureType = 'project';
+                    }
+                }
+
+                 console.log("featureId-->",self.featureId);
+                console.log("featureType-->",self.featureType);
             function closeAlerts() {
 
                 self.alerts = [];
@@ -44,16 +52,7 @@ angular.module('FieldDoc')
             };
 
             self.parseRouteParams = function(){
-                 self.featureId = $routeParams.id;
 
-                if($routeParams.feature_type){
-                    if($routeParams.feature_type == 'projects'){
-                        self.featureType = 'project';
-                    }
-                }
-
-                 console.log("featureId-->",self.featureId);
-                console.log("featureType-->",self.featureType);
             }
 
       /*START Pagniation vars*/
