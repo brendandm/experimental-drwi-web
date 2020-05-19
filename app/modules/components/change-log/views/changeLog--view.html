@@ -78,9 +78,13 @@
 
                                         <div class="name" style="flex-flow: column; align-items: flex-start;">
                                             <label for="changeLogItem-{{ changeLogItem.id }}">
-                                                {{ changeLogItem.name }}
+                                                {{ changeLogItem.action }}
                                             </label>
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="changeLogItem.group">{{ changeLogItem.group }}</span>
+                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575;"
+                                            >{{ changeLogItem.timestamp }}</span>
+                                              <span style="font-size: 0.7em; font-weight: normal; color: #757575;"
+                                            >{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</span>
+
                                         </div>
 
                                         <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
