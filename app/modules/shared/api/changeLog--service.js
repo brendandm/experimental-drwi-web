@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('ChangeLog', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/:type/:id/history'), {
+            return $resource(environment.apiUrl.concat('/v1/:id/history'), {
                 'id': '@id',
                 'type':'@type'
             }, {
