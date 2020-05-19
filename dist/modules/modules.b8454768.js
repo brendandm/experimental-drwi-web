@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589895898605})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589896142600})
 
 ;
 /**
@@ -10906,7 +10906,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/projects/:id/changelog', {
+            .when('/project/:id/changelog', {
                 templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
                 controller: 'ChangeLogController',
                 controllerAs: 'page',
@@ -10928,9 +10928,8 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('ChangeLogController',
-        function(Account, $location, $log, Project, project,
-            $rootScope, $route, user, SearchService, $timeout,
-            Utility, $interval) {
+        function(Project, Account, $location, $log, Notifications, $rootScope,
+            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
 
             var self = this;
 
@@ -10938,46 +10937,246 @@ angular.module('FieldDoc')
                 'changeLog': true
             };
 
-            $rootScope.toolbarState = {
-                'edit': true
-            };
-
-            $rootScope.page = {};
-
             self.status = {
                 loading: true,
-                processing: true
-            };
-
-            self.showElements = function() {
-
-                $timeout(function() {
-
-                    self.status.loading = false;
-
-                    self.status.processing = false;
-
-                }, 1000);
-
+                processing: false
             };
 
             self.alerts = [];
 
-            self.closeAlerts = function() {
+            function closeAlerts() {
 
                 self.alerts = [];
 
+            }
+
+            var featureId = $routeParams.id;
+
+            //
+            // Assign project to a scoped variable
+            //
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+                    console.log('userResponse',userResponse);
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+                    console.log(" self.permissions", self.permissions);
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Organization Profile'
+                    };
+
+                    //
+                    // Load organization data
+                    //
+                    if(featureId && featureId != self.user.properties.organization) {
+                         console.log(0);
+
+                         self.loadOrganization(featureId);
+
+                         self.loadOrganizationProjects(featureId);
+
+                         self.loadOrganizationMembers(featureId);
+                    }
+
+                    else if (self.user.properties.organization) {
+                         console.log(1);
+
+                        self.loadOrganization(self.user.properties.organization_id);
+
+                        self.loadOrganizationProjects(self.user.properties.organization_id);
+
+                        self.loadOrganizationMembers(self.user.properties.organization_id);
+
+                    } else {
+                         console.log(2);
+
+                        self.status.loading = false;
+
+                    }
+
+
+
+                });
+
+
+            } else {
+
+                $location.path('/logout');
+
+            }
+
+            self.parseFeature = function(data) {
+
+                self.organizationProfile = data;
+                console.log(self.organizationProfile.description)
+                console.log('self.organizationProfile', self.organizationProfile);
+
+                     console.log("page.organizationProfile.id", self.organizationProfile.id);
+                    console.log("page.user.properties.organization",self.user.properties.organization.id);
+
             };
 
-            self.closeRoute = function() {
+           self.loadOrganization = function(organizationId, postAssigment) {
 
-                $location.path('/projects');
+                Organization.profile({
+                    id: organizationId
+                }).$promise.then(function(successResponse) {
 
-            };
+                    console.log('self.organization', successResponse);
 
-            self.confirmDelete = function(obj) {
+                    self.parseFeature(successResponse);
 
-                self.deletionTarget = self.deletionTarget ? null : obj;
+                    if (postAssigment) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }
+
+                    self.status.loading = false;
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load organization.');
+
+                    self.status.loading = false;
+
+                });
+
+           };
+
+            self.loadOrganizationProjects = function(organizationId, postAssigment) {
+
+                Organization.projects({
+                    id: organizationId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.loadOrganizationProjects - >', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.extent) {
+
+                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
+
+                        }
+
+                    });
+
+                    self.organizationProjects = successResponse.features;
+
+                    console.log('self.organizationProjects - >', self.organizationProjects);
+
+                    self.projects = successResponse.features;
+
+                    console.log('self.projects', self.projects);
+
+                    self.projectCount = successResponse.count;
+
+                    if (postAssigment) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }
+
+                    self.status.loading = false;
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load organization.');
+
+                    self.status.loading = false;
+
+                });
+
+           };
+
+
+            self.parseMembers = function(members){
+                     console.log('members', members);
+                     var i = 0;
+                     for (var m in members) {
+                        if(  self.organizationMembers[i].picture != null){
+                            var picture =   self.members[i].picture;
+                            console.log(self.members[i].picture);
+                            self.members[i].picture = picture.replace("original", "square");
+                            console.log(self.members[i].picture);
+
+                         }
+                        i++;
+                      }
+            }
+
+            self.loadOrganizationMembers = function(organizationId, postAssigment) {
+
+                Organization.members({
+                    id: organizationId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.organizationMembers', successResponse);
+
+                     self.organizationMembers = successResponse.features;
+
+                     self.members = successResponse.features;
+
+                     self.parseMembers(self.members);
+
+                     self.memberCount = successResponse.count;
+
+                    if (postAssigment) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }
+
+                    self.status.loading = false;
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load organization.');
+
+                    self.status.loading = false;
+
+                });
+
+           };
+
+
+           self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
 
             };
 
@@ -10987,269 +11186,24 @@ angular.module('FieldDoc')
 
             };
 
-            self.searchPrograms = function(value) {
-
-                return SearchService.program({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.program response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
-            self.searchOrganizations = function(value) {
-
-                return SearchService.organization({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.organization response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
-            self.addRelation = function(item, model, label, collection, queryAttr) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                collection.push(_datum);
-
-                queryAttr = null;
-
-                console.log('Updated ' + collection + ' (addition)', collection);
-
-            };
-
-            self.removeRelation = function(id, collection) {
-
-                var _index;
-
-                collection.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove item at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    collection.splice(_index, 1);
-
-                }
-
-                console.log('Updated ' + collection + ' (removal)', collection);
-
-            };
-
-            self.processRelations = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.processFeature = function(data) {
-
-                self.project = data;
-
-                if (self.project.program) {
-
-                    self.program = self.project.program;
-
-                }
-
-                self.tempPartners = self.project.partners;
-
-                self.status.processing = false;
-
-            };
-
-            self.setProgram = function(item, model, label) {
-
-                self.project.program_id = item.id;
-
-            };
-
-            self.unsetProgram = function() {
-
-                self.project.program_id = null;
-
-                self.program = null;
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [
-                    'creator',
-                    'extent',
-                    'geometry',
-                    'last_modified_by',
-                    'organization',
-                    'program',
-                    'tags',
-                    'tasks'
-                ];
-
-                var reservedProperties = [
-                    'links',
-                    'permissions',
-                    '$promise',
-                    '$resolved'
-                ];
-
-                excludedKeys.forEach(function(key) {
-
-                    if (feature.properties) {
-
-                        delete feature.properties[key];
-
-                    } else {
-
-                        delete feature[key];
-
-                    }
-
-                });
-
-                reservedProperties.forEach(function(key) {
-
-                    delete feature[key];
-
-                });
-
-            };
-
-            self.saveProject = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.project);
-
-                self.project.partners = self.processRelations(self.tempPartners);
-
-                self.project.workflow_state = "Draft";
-
-                var exclude = [
-                    'centroid',
-                    'creator',
-                    'dashboards',
-                    'extent',
-                    'geometry',
-                    'members',
-                    'metric_types',
-                    // 'partners',
-                    'practices',
-                    'practice_types',
-                    'properties',
-                    'tags',
-                    'targets',
-                    'tasks',
-                    'type',
-                    'sites'
-                ].join(',');
-
-                Project.update({
-                    id: $route.current.params.projectId,
-                    exclude: exclude
-                }, self.project).then(function(successResponse) {
-
-                    self.processFeature(successResponse);
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Project changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                }).catch(function(error) {
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong and the changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.project) {
-
-                    targetId = self.project.id;
-
-                } else {
-
-                    targetId = self.project.id;
-
-                }
+            self.deleteFeature = function(obj, index) {
 
                 Project.delete({
-                    id: +targetId
+                    id: obj.id
                 }).$promise.then(function(data) {
 
-                    self.alerts.push({
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
                         'msg': 'Successfully deleted this project.',
                         'prompt': 'OK'
-                    });
+                    }];
 
-                    $timeout(self.closeRoute, 2000);
+                    self.projects.splice(index, 1);
+
+                    $timeout(closeAlerts, 2000);
 
                 }).catch(function(errorResponse) {
 
@@ -11260,7 +11214,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this project.',
                             'prompt': 'OK'
                         }];
 
@@ -11284,68 +11238,11 @@ angular.module('FieldDoc')
 
                     }
 
-                    $timeout(self.closeAlerts, 2000);
+                    $timeout(closeAlerts, 2000);
 
                 });
 
             };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
-
-                    //
-                    // Assign project to a scoped variable
-                    //
-                     console.log("USER LOAD");
-              /*      project.$promise.then(function(successResponse) {
-
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
-
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load request project');
-
-                        self.showElements();
-
-                    });
-                */
-                });
-
-            } else {
-                 console.log("NO USER");
-                $location.path('/logout');
-
-            }
 
         });
 (function() {

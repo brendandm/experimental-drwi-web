@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/projects/:id/changelog', {
+            .when('/project/:id/changelog', {
                 templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
                 controller: 'ChangeLogController',
                 controllerAs: 'page',
