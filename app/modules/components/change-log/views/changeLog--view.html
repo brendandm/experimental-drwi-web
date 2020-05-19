@@ -84,8 +84,8 @@
 
                                             <div style="position:relative;
                                                         width:25%;
-                                                        max-width:150px;
-                                                        min-width:150px;
+                                                        max-width:200px;
+                                                        min-width:200px;
                                                         float:left;
                                                         font-weight: normal;
                                                         color: #757575;
@@ -98,7 +98,7 @@
                                             </div>
 
                                            <div style="position:relative;
-                                                        width:45%;
+                                                        width:60%;
                                                         float:left;
                                                         font-weight: normal;
                                                         color: #757575;
@@ -135,12 +135,19 @@
                                         <div class="body">
                                             <div data-ng-repeat="(key, item) in changeLogItem.diff">
                                                 <div style="width:48%;position:relative;float:left; border: 1px solid red;">
-                                                new {{key}} :<br>
+                                                new {{key}} :
+                                                </div>
+                                                 <div style="width:48%;position:relative;float:left; border: 1px solid red;">
                                                 {{item.new_value}}
+
                                                 </div>
                                                   <div style="width:48%;position:relative;float:left; border: 1px solid green;">
-                                                old {{key}} :<br>
+                                                old {{key}} :
+                                                  </div>
+                                                 <div style="width:48%;position:relative;float:left; border: 1px solid green;">
+
                                                 {{item.previous_value}}
+                                                </div>
                                                 </div>
                                             </div>
 
