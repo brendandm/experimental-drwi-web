@@ -228,9 +228,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                if (successResponse.category) {
+                if (successResponse.practice_type) {
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                 }
 
@@ -257,7 +257,7 @@ angular.module('FieldDoc')
 
                     successResponse.features.forEach(function(item) {
 
-                        item.category = item.group;
+                        item.practice_type = item.group;
 
                     });
 
@@ -494,7 +494,7 @@ angular.module('FieldDoc')
 
             self.practiceType = $item;
 
-            self.practice.category_id = $item.id;
+            self.practice.practice_type_id = $item.id;
 
         };
 

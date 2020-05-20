@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590005444148})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590005843467})
 
 ;
 /**
@@ -17739,9 +17739,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                if (successResponse.category) {
+                if (successResponse.practice_type) {
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                 }
 
@@ -17768,7 +17768,7 @@ angular.module('FieldDoc')
 
                     successResponse.features.forEach(function(item) {
 
-                        item.category = item.group;
+                        item.practice_type = item.group;
 
                     });
 
@@ -18005,7 +18005,7 @@ angular.module('FieldDoc')
 
             self.practiceType = $item;
 
-            self.practice.category_id = $item.id;
+            self.practice.practice_type_id = $item.id;
 
         };
 
@@ -18950,7 +18950,7 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.practiceType = successResponse.properties.category  || successResponse.category;
+                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -19195,7 +19195,7 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                     self.showElements();
 

@@ -143,7 +143,7 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.practiceType = successResponse.properties.category  || successResponse.category;
+                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -388,7 +388,7 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                     self.showElements();
 
