@@ -179,19 +179,25 @@ angular.module('FieldDoc')
 
                               if(change.diff != null){
                                  if(change.diff.hasOwnProperty('geometry')){
-                                    self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value,self.featureType);;
+                                    if(change.diff.geometry.new_value != null){
+                                         self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value,self.featureType);;
+                                    }
                                     if(change.diff.geometry.previous_value != null){
                                         self.changeLog[i].changes[c].diff.geometry.previous_staticURL =Utility.buildStaticMapURL(change.diff.geometry.previous_value,self.featureType);;
                                     }
                                  }
                                  if(change.diff.hasOwnProperty('practice_type')){
-                                    self.changeLog[i].changes[c].diff.practice_type.new_display = self.changeLog[i].changes[c].diff.practice_type.new_value.name;
+                                    if(change.diff.practice_type.new_value != null){
+                                        self.changeLog[i].changes[c].diff.practice_type.new_display = self.changeLog[i].changes[c].diff.practice_type.new_value.name;
+                                    }
                                     if(change.diff.practice_type.previous_value != null){
                                         self.changeLog[i].changes[c].diff.practice_type.previous_display = self.changeLog[i].changes[c].diff.practice_type.previous_value.name;
                                     }
                                  }
                                  if(change.diff.hasOwnProperty('site')){
-                                    self.changeLog[i].changes[c].diff.site.new_display = self.changeLog[i].changes[c].diff.site.new_value.name;
+                                     if(change.diff.site.new_value != null){
+                                        self.changeLog[i].changes[c].diff.site.new_display = self.changeLog[i].changes[c].diff.site.new_value.name;
+                                     }
                                      if(change.diff.site.previous_value != null){
                                         self.changeLog[i].changes[c].diff.site.previous_display = self.changeLog[i].changes[c].diff.site.previous_value.name;
                                      }
