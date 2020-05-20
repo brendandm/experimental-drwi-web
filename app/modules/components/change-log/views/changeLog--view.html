@@ -74,11 +74,22 @@
                             <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
 
-                                <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                <li class="card reveal fade-in"
+                                    style=" width: 100%;
+                                            borderanimation-delay: {{ $index * 100 }}ms;
+                                            min-height: 0;
+                                            border: 1px solid pink;
+                                            "
                                     data-ng-repeat="group in changeLog = (page.changeLog)"
                                    >
 
-                                    <div class="card reveal fade-in" style="border:1px solid red; float:left; clear:left; animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                    <div class="card reveal fade-in"
+                                         style="border:1px solid red;
+                                                float:left;
+                                                clear:both;
+                                                animation-delay: {{ $index * 100 }}ms;
+                                                min-height: 0;
+                                                "
                                         data-ng-repeat="changeLogItem in group.changes = (group | orderBy:'timeStamp' | filter: page.queryToken)"
                                        >
 
