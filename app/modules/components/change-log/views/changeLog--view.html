@@ -73,132 +73,139 @@
 
                             <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
+
                                 <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                    data-ng-repeat="changeLogItem in changeLog = (page.changeLog | orderBy:'timeStamp' | filter: page.queryToken)"
+                                    data-ng-repeat="group in changeLog"
                                    >
 
-                                    <div class="card--content" style="margin-bottom:16px;">
+                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                        data-ng-repeat="changeLogItem in group = (group | orderBy:'timeStamp' | filter: page.queryToken)"
+                                       >
 
-                                        <div class="name" style="border:0px solid pink;
-                                                                width:100%;
-                                                                height:45px;
-                                        ">
-                                     <!--   <div class="name" style="flex-flow: column; align-items: flex-start;">-->
+                                        <div class="card--content" style="margin-bottom:16px;">
 
-                                            <div style="position:relative;
-                                                        width:25%;
-                                                        max-width:200px;
-                                                        min-width:200px;
-                                                        float:left;
-                                                        font-weight: normal;
-                                                        color: #757575;
-                                                        border:0px solid blue;
-                                                        "
-                                            >
-                                                 <a href="/profile/{{changeLogItem.creator.id}}">
-                                                     <b>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</b>
-                                                  </a>
+                                            <div class="name" style="border:0px solid pink;
+                                                                    width:100%;
+                                                                    height:45px;
+                                            ">
+                                         <!--   <div class="name" style="flex-flow: column; align-items: flex-start;">-->
 
-                                            </div>
-
-                                           <div style="position:relative;
-                                                        width:60%;
-                                                        float:left;
-                                                        font-weight: normal;
-                                                        color: #757575;
-                                                        border:0px solid blue;
-                                                        "
-                                            >
-                                                <span style="font-size: 1.0em; font-weight: normal; color: #757575;">
-                                                    {{ changeLogItem.timestamp | date:'medium' }}
-
-                                                </span>
-
-
-                                           </div>
-                                                                               <div style="position:relative;
-                                                          float:left;
-                                                            width:30%;
-                                                          font-weight: normal;
-                                                          color: #757575;
-                                                            border:0px solid orange;
-                                                            text-align:right;
-                                                            "
-                                              >
-
-                                                  <span for="changeLogItem-{{ changeLogItem.id }}">
-                                                    {{ changeLogItem.action_label }}
-                                                </span>
-                                              </div>
-
-
-                                        </div>
-
-                                        <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
-                                            {{ practice.name }}
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                        </label> -->
-
-                                        <div class="body" style="padding: 0px 0px 0px 0px">
-                                            <div style="width:100%; height: 35px; " data-ng-if="changeLogItem.diff != null">
                                                 <div style="position:relative;
+                                                            width:25%;
+                                                            max-width:200px;
+                                                            min-width:200px;
                                                             float:left;
-                                                            height: 35px;
-                                                            text-align:center;
-                                                            width:50%;
-                                                            border:0px solid blue;
-                                                            background-color:#f2fff3;
-                                                             color: #757575;
-                                                             font-size:1.0em;
-                                                            "
-
-                                                ><b>CHANGE</b></div>
-                                                 <div style="position:relative;
-                                                            float:left;
-                                                            text-align:center;
-                                                            width:50%;
-                                                            height: 35px;
-                                                            border:0px solid black;
-                                                            background-color:#fff2f2;
+                                                            font-weight: normal;
                                                             color: #757575;
-                                                             font-size:1.0em;
+                                                            border:0px solid blue;
                                                             "
-                                                 ><b>PREVIOUS</b></div>
+                                                >
+                                                     <a href="/profile/{{changeLogItem.creator.id}}">
+                                                         <b>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</b>
+                                                      </a>
+
+                                                </div>
+
+                                               <div style="position:relative;
+                                                            width:60%;
+                                                            float:left;
+                                                            font-weight: normal;
+                                                            color: #757575;
+                                                            border:0px solid blue;
+                                                            "
+                                                >
+                                                    <span style="font-size: 1.0em; font-weight: normal; color: #757575;">
+                                                        {{ changeLogItem.timestamp | date:'medium' }}
+
+                                                    </span>
+
+
+                                               </div>
+                                                                                   <div style="position:relative;
+                                                              float:left;
+                                                                width:30%;
+                                                              font-weight: normal;
+                                                              color: #757575;
+                                                                border:0px solid orange;
+                                                                text-align:right;
+                                                                "
+                                                  >
+
+                                                      <span for="changeLogItem-{{ changeLogItem.id }}">
+                                                        {{ changeLogItem.action_label }}
+                                                    </span>
+                                                  </div>
+
+
                                             </div>
-                                            <div data-ng-repeat="(key, item) in changeLogItem.diff"
-                                                style="background-color:#fff2f2;">
-                                                <div style="width:50%;
-                                                                position:relative;
+
+                                            <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
+                                                {{ practice.name }}
+                                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                            </label> -->
+
+                                            <div class="body" style="padding: 0px 0px 0px 0px">
+                                                <div style="width:100%; height: 35px; " data-ng-if="changeLogItem.diff != null">
+                                                    <div style="position:relative;
                                                                 float:left;
-                                                                border: 0px solid red;
+                                                                height: 35px;
+                                                                text-align:center;
+                                                                width:50%;
+                                                                border:0px solid blue;
                                                                 background-color:#f2fff3;
-                                                                padding-left:20px;
-                                                                padding-right:20px;
+                                                                 color: #757575;
+                                                                 font-size:1.0em;
+                                                                "
+
+                                                    ><b>CHANGE</b></div>
+                                                     <div style="position:relative;
+                                                                float:left;
+                                                                text-align:center;
+                                                                width:50%;
+                                                                height: 35px;
+                                                                border:0px solid black;
+                                                                background-color:#fff2f2;
                                                                 color: #757575;
                                                                  font-size:1.0em;
-                                                                ">
-
-                                                    {{key}} :
-                                                        <p style="padding-left:20px; ">{{item.new_value}}</p>
-                                                        <img  data-ng-if="key == 'geometry'"
-                                                                src="{{item.new_value.staticURL}}"
-                                                        />
-                                                    {{item.new_value.staticURL}}
-
+                                                                "
+                                                     ><b>PREVIOUS</b></div>
                                                 </div>
-                                                <div style="width:50%;
-                                                                position:relative;
-                                                                float:left;
-                                                                border: 0px solid red;
-                                                                padding-left:20px;
-                                                                padding-right:20px;
-                                                                 color: #757575;
-                                                                  font-size:1.0em;
-                                                                ">
-
+                                                <div data-ng-repeat="(key, item) in changeLogItem.diff"
+                                                    style="background-color:#fff2f2;">
+                                                    <div style="width:50%;
+                                                                    position:relative;
+                                                                    float:left;
+                                                                    border: 0px solid red;
+                                                                    background-color:#f2fff3;
+                                                                    padding-left:20px;
+                                                                    padding-right:20px;
+                                                                    color: #757575;
+                                                                     font-size:1.0em;
+                                                                    ">
 
                                                         {{key}} :
-                                                        <p style="padding-left:20px;">{{item.previous_value}}</p>
+                                                            <p style="padding-left:20px; ">{{item.new_value}}</p>
+                                                            <img  data-ng-if="key == 'geometry'"
+                                                                    src="{{item.new_value.staticURL}}"
+                                                            />
+                                                        {{item.new_value.staticURL}}
+
+                                                    </div>
+                                                    <div style="width:50%;
+                                                                    position:relative;
+                                                                    float:left;
+                                                                    border: 0px solid red;
+                                                                    padding-left:20px;
+                                                                    padding-right:20px;
+                                                                     color: #757575;
+                                                                      font-size:1.0em;
+                                                                    ">
+
+
+                                                            {{key}} :
+                                                            <p style="padding-left:20px;">{{item.previous_value}}</p>
+
+                                                    </div>
 
                                                 </div>
 
@@ -206,7 +213,7 @@
 
                                         </div>
 
-                                    </div>
+                                    </li>
 
                                 </li>
 

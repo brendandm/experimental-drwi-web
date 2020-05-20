@@ -173,6 +173,8 @@ angular.module('FieldDoc')
                   var i =0;
                     console.log("self.changeLog-->",self.changeLog);
                     self.changeLog.forEach(function(log){
+
+
                         if(log.diff != null){
                            // log.diff.forEach(function(diff){
                                 if(log.diff.hasOwnProperty('geometry')){
