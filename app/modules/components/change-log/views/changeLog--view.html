@@ -198,11 +198,15 @@
                                                                     ">
 
                                                         {{key}} :
-                                                            <p style="padding-left:20px; ">{{item.new_value}}</p>
+                                                            <p style="padding-left:20px;"
+                                                                data-ng-if="key != 'geometry'"
+                                                            >   {{item.new_value}}
+                                                            </p>
+
                                                             <img  data-ng-if="key == 'geometry'"
                                                                     src="{{item.new_staticURL}}"
                                                             />
-                                                        {{item.new_value.staticURL}}
+
 
                                                     </div>
                                                     <div style="width:50%;
@@ -217,7 +221,14 @@
 
 
                                                             {{key}} :
-                                                            <p style="padding-left:20px;">{{item.previous_value}}</p>
+                                                            <p style="padding-left:20px;"
+                                                                data-ng-if="key != 'geometry'"
+                                                            >   {{item.previous_value}}
+                                                            </p>
+
+                                                            <img  data-ng-if="key == 'geometry'"
+                                                                    src="{{item.old_staticURL}}"
+                                                            />
 
                                                     </div>
 

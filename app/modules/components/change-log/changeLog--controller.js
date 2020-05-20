@@ -180,6 +180,9 @@ angular.module('FieldDoc')
                               if(change.diff != null){
                                  if(change.diff.hasOwnProperty('geometry')){
                                     self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value,self.featureType);;
+                                    if(change.diff.geometry.previous_value != null){
+                                        self.changeLog[i].changes[c].diff.geometry.previous_staticURL =Utility.buildStaticMapURL(change.diff.geometry.previous_value,self.featureType);;
+                                    }
 
                                  }
                              }
