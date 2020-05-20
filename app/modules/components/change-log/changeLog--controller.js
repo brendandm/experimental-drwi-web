@@ -179,7 +179,7 @@ angular.module('FieldDoc')
                              if(change.diff.hasOwnProperty('geometry')){
                                 self.changeLog[i].changes[c].diff.geometry.staticURL =Utility.buildStaticMapURL(log.diff.geometry.new_value.coordinates,self.feature_type);;
 
-                             }
+                             });
                              c = c+1;
                           }
                         i = i+1;
