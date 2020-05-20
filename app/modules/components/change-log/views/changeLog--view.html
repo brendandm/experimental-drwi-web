@@ -198,14 +198,12 @@
                                                                     ">
 
                                                         {{key}} :
-                                                            <p style="padding-left:20px;"
-                                                                data-ng-if="key != 'geometry'"
-                                                            >   {{item.new_value}}
-                                                            </p>
-
-                                                            <img  data-ng-if="key == 'geometry'"
-                                                                    src="{{item.new_staticURL}}"
-                                                            />
+                                                              <p style="padding-left:20px;" data-ng-if="key != ('geometry' || 'practice_type' || 'site')">
+                                                                {{item.new_value}} </p>
+                                                            <p data-ng-if="key == ('practice_type' || 'site')">
+                                                                {{item.new_value.name}}</p>
+                                                            <p data-ng-if="key == 'geometry'">
+                                                                <img src="{{item.new_staticURL}}"/>
 
 
                                                     </div>
