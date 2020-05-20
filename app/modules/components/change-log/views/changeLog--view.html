@@ -80,7 +80,7 @@
                                             min-height: 0;
                                             border: 1px solid blue;
                                             "
-                                    data-ng-repeat="group in changeLog = (page.changeLog)"
+                                    data-ng-repeat="group in changeLog"
                                    >
 
                                  <!--   <div class=""
@@ -95,7 +95,7 @@
                                         data-ng-repeat="changes in group.changes = (group)"
                                        >
                                        -->
-                                            <div data-ng-repeat="changeLogItem in group.changes = (changes | orderBy:'timeStamp' | filter: page.queryToken)">
+                                            <div data-ng-repeat="changeLogItem in group.changes = (orderBy:'timeStamp' | filter: page.queryToken)">
                                                 <div class="card--content" style="margin-bottom:16px;">
 
                                             <div class="name" style="border:0px solid pink;
