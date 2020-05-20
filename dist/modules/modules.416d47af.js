@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589924157864})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589937591995})
 
 ;
 /**
@@ -11075,7 +11075,7 @@ angular.module('FieldDoc')
 
                   //  });
 
-                    self.pageFeature = successResponse.project;
+                    self.subjectFeature = successResponse.project;
                     self.changeLog = successResponse.features;
 
                     self.showElements();
@@ -11089,6 +11089,94 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            self.parseResponse = function(){
+                    var changeLogTemp = changeLog;
+                    self.changLog.forEach(function(log){
+                        log.diff.forEach(function(diff)){
+                            if(diff.hasOwnProperty('geometry'){
+                                staticURL = Utility.buildStaticMapURL(diff.geometry.new_value.coordinates,feature_type);
+                                log.diff.geometry.new_value.staticURL =staticURL;
+
+                            }else{
+
+                            }
+                        }
+                    });
+            }
+
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+            */
+            self.createStaticMapURLs = function(arr, feature_type){
+                console.log("createStaticMapURLS -> arr", arr)
+
+                arr.forEach(function(feature, index) {
+
+                            if(feature.geometry != null){
+
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
+
+                                if(feature.staticURL.length >= 4096){
+
+                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                        ].join('');
+                                }
+
+                                console.log('feature.staticURL',feature.staticURL);
+
+                                if(feature_type == "site"){
+
+                                     self.sites[index].staticURL = feature.staticURL;
+
+                                     console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                                }
+                                if(feature_type == "practice"){
+                                     self.practices[index].staticURL = feature.staticURL;
+
+                                     console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
+
+                                }
+
+
+
+                            }else{
+
+                                 if(feature_type == "site"){
+                                    self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
+
+
+                                 }
+                                 if(feature_type == "practice"){
+                                     self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
+
+                                 }
+
+                            }
+
+                    //    }else{
+                     //      console.log("A 7");
+                     //   }
+
+                });
+
+            }
+
 
             // Verify Account information for proper UI element display
             //
