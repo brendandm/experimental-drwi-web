@@ -172,7 +172,7 @@ angular.module('FieldDoc')
                   //  var changeLogTemp = changeLog;
                   var i =0;
                     console.log("self.changeLog-->",self.changeLog);
-                    self.changLog.forEach(function(log){
+                    self.changeLog.forEach(function(log){
                         log.diff.forEach(function(diff){
                             if(diff.hasOwnProperty('geometry')){
                                 staticURL = Utility.buildStaticMapURL(diff.geometry.new_value.coordinates,feature_type);
