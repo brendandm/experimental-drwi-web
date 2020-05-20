@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589988224914})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589994871033})
 
 ;
 /**
@@ -11062,7 +11062,7 @@ angular.module('FieldDoc')
 
            //     var params = self.buildFilter();
 
-                ChangeLog.history({
+                ChangeLog.query({
                     id: self.featureId,
                     type: self.featureType,
                     limit:  self.limit,
@@ -11071,7 +11071,7 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    self.subjectFeature = successResponse.project;
+                    self.subjectFeature = successResponse.feature;
 
                     self.changeLog = successResponse.history;
 

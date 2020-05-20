@@ -141,7 +141,7 @@ angular.module('FieldDoc')
 
            //     var params = self.buildFilter();
 
-                ChangeLog.history({
+                ChangeLog.query({
                     id: self.featureId,
                     type: self.featureType,
                     limit:  self.limit,
@@ -150,7 +150,7 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    self.subjectFeature = successResponse.project;
+                    self.subjectFeature = successResponse.feature;
 
                     self.changeLog = successResponse.history;
 
