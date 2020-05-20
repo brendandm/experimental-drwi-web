@@ -180,7 +180,7 @@ angular.module('FieldDoc')
                             }else{
 
                             }
-                        }):
+                        });
                     });
             }
 
