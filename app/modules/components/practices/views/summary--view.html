@@ -71,12 +71,12 @@
                         </p>
 
                         <p>
-                            <strong>Practice Type:</strong> {{ page.practice.category.name }}
+                            <strong>Practice Type:</strong> {{ page.practice.practice_type.name }}
                         </p>
 
-                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.category.unit.dimension != 'count'))" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong>
-                                {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.category.unit.unit.plural}}
+                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.practice_type.unit.dimension != 'count'))" style="text-transform:capitalize;">
+                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong>
+                                {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
                                <!-- {{ calculated_extent.practice.calculated_extent }} -->
                             </p>
 
@@ -84,7 +84,7 @@
 
                                      <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                            && (page.practice.  category.unit.dimension == 'count')
+                                                            && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'LineString')
                                                     )
 
@@ -95,7 +95,7 @@
 
                                      <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                            && (page.practice.category.unit.dimension == 'count')
+                                                            && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'Polygon')
                                                     )
 
@@ -108,7 +108,7 @@
                               <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
 
                              <p data-ng-if="page.practice.custom_extent" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.category.unit.unit.plural}}
+                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
                             </p>
 
 
@@ -120,7 +120,7 @@
                     -->
                         <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
 
-                        <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
+                        <p data-ng-if="!page.practice.description">{{ page.practice.practice_type.description }}</p>
 
                         <div data-ng-if="page.tags && page.tags.length">
 
@@ -514,7 +514,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.practice_type" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
