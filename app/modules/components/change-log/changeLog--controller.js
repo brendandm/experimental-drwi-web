@@ -171,6 +171,7 @@ angular.module('FieldDoc')
             self.parseResponse = function(){
                   //  var changeLogTemp = changeLog;
                   var i =0;
+                    console.log("self.changeLog-->",self.changeLog);
                     self.changLog.forEach(function(log){
                         log.diff.forEach(function(diff){
                             if(diff.hasOwnProperty('geometry')){
