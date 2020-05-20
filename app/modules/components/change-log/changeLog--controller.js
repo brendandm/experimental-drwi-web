@@ -176,7 +176,8 @@ angular.module('FieldDoc')
 
                           var c = 0;
                           group.changes.forEach(function(change){
-                              if(group.change.diff != null){
+                              
+                              if(change.diff != null){
                                  if(change.diff.hasOwnProperty('geometry')){
                                     self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value.coordinates,self.feature_type);;
 
