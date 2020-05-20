@@ -186,7 +186,7 @@ angular.module('FieldDoc')
                         }
                         var i = i+1;
                     });
-                    console.Log("parsedResponce",self.changLog);
+                    console.log("parsedResponce",self.changLog);
             }
 
             /*
