@@ -176,12 +176,12 @@ angular.module('FieldDoc')
 
                           var c = 0;
                           group.changes.forEach(function(change){
-                             if(change.diff.hasOwnProperty('geometry'){
+                             if(change.diff.hasOwnProperty('geometry')){
                                 self.changeLog[i].changes[c].diff.geometry.staticURL =Utility.buildStaticMapURL(log.diff.geometry.new_value.coordinates,self.feature_type);;
 
-                             });
+                             }
                              c = c+1;
-                          }
+                          });
                         i = i+1;
                     });
                     console.log("parsedResponce",self.changeLog);
