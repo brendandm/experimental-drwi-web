@@ -74,7 +74,7 @@
                             <div class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
 
-                                <div class="card reveal fade-in"
+                                <section class="pad shadow reveal fade-in"
                                     style=" width: 100%;
                                             borderanimation-delay: {{ $index * 100 }}ms;
                                             min-height: 0;
@@ -95,8 +95,8 @@
                                         data-ng-repeat="changes in group.changes = (group)"
                                        >
                                        -->
-                                            <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
-                                                <div class="card--content" style="margin-bottom:16px;">
+                                    <div class="reveal fade-in" data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
+                                        <div class="card--content" style="margin-bottom:16px;">
 
                                             <div class="name" style="border:0px solid pink;
                                                                     width:100%;
@@ -135,7 +135,7 @@
 
 
                                                </div>
-                                                                                   <div style="position:relative;
+                                                 <div style="position:relative;
                                                               float:left;
                                                                 width:30%;
                                                               font-weight: normal;
@@ -237,7 +237,7 @@
                                  <!--   </div>
                                  -->
 
-                                </div>
+                                </section>
 
 
                             </div>
