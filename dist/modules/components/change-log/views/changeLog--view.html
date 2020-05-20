@@ -92,10 +92,10 @@
                                                 animation-delay: {{ $index * 100 }}ms;
                                                 min-height: 0;
                                                 "
-                                        data-ng-repeat="changeLogItem in group.changes = (group | orderBy:'timeStamp' | filter: page.queryToken)"
+                                        data-ng-repeat="changes in group.changes = (group)"
                                        >
-
-                                        <div class="card--content" style="margin-bottom:16px;">
+                                            <div data-ng-repeat="changeLogItem in changes.changes = (changes | orderBy:'timeStamp' | filter: page.queryToken)">
+                                                <div class="card--content" style="margin-bottom:16px;">
 
                                             <div class="name" style="border:0px solid pink;
                                                                     width:100%;
@@ -225,7 +225,7 @@
                                             </div>
 
                                         </div>
-
+                                            </div>
                                     </div>
 
                                 </div>
