@@ -173,15 +173,17 @@ angular.module('FieldDoc')
                   var i =0;
                     console.log("self.changeLog-->",self.changeLog);
                     self.changeLog.forEach(function(log){
-                        log.diff.forEach(function(diff){
-                            if(diff.hasOwnProperty('geometry')){
-                                staticURL = Utility.buildStaticMapURL(diff.geometry.new_value.coordinates,feature_type);
-                            //    log.diff.geometry.new_value.staticURL =staticURL;
-                                self.changLog[i].diff.geometry.new_value.staticURL =staticURL;
-                            }else{
+                        if(log.diff != null){
+                            log.diff.forEach(function(diff){
+                                if(diff.hasOwnProperty('geometry')){
+                                    staticURL = Utility.buildStaticMapURL(diff.geometry.new_value.coordinates,feature_type);
+                                //    log.diff.geometry.new_value.staticURL =staticURL;
+                                    self.changLog[i].diff.geometry.new_value.staticURL =staticURL;
+                                }else{
 
-                            }
-                        });
+                                }
+                            });
+                        }
                         var i = i+1;
                     });
                     consoleLog("parsedResponce",self.changLog);
