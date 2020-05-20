@@ -95,8 +95,8 @@
                                         data-ng-repeat="changes in group.changes = (group)"
                                        >
                                        -->
-                                    <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
-                                                <div class="card--content" style="margin-bottom:16px;">
+                                    <div class="card--content" style="margin-bottom:16px;" data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
+
 
                                             <div class="name" style="border:0px solid pink;
                                                                     width:100%;
@@ -233,7 +233,7 @@
                                             </div>
 
                                         </div>
-                                            </div>
+                                   
                                  <!--   </div>
                                  -->
 
