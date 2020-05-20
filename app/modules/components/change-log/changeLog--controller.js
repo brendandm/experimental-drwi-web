@@ -150,12 +150,11 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                  //  successResponse.features.forEach(function(feature) {
-
-                  //  });
-
                     self.subjectFeature = successResponse.project;
+
                     self.changeLog = successResponse.features;
+
+                    self.parseResponse();
 
                     self.showElements();
 
