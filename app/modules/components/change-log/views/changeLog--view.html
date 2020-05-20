@@ -74,7 +74,7 @@
                             <div class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
 
-                                <section class="pad shadow reveal fade-in"
+                                <section class="pad shadow"
                                     style=" width: 100%;
                                             borderanimation-delay: {{ $index * 100 }}ms;
                                             min-height: 0;
@@ -95,8 +95,8 @@
                                         data-ng-repeat="changes in group.changes = (group)"
                                        >
                                        -->
-                                    <div class="reveal fade-in" data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
-                                        <div class="card--content" style="margin-bottom:16px;">
+                                    <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
+                                                <div class="card--content" style="margin-bottom:16px;">
 
                                             <div class="name" style="border:0px solid pink;
                                                                     width:100%;
