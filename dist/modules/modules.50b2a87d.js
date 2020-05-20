@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589939790003})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1589940130589})
 
 ;
 /**
@@ -11097,6 +11097,8 @@ angular.module('FieldDoc')
                         if(log.diff != null){
                            // log.diff.forEach(function(diff){
                                 if(log.diff.hasOwnProperty('geometry')){
+                                console.log("log",log);
+                                console.log("self.changeLog[i]",self.changeLog[i]);
                                     staticURL = Utility.buildStaticMapURL(log.diff.geometry.new_value.coordinates,self.feature_type);
                                 //    log.diff.geometry.new_value.staticURL =staticURL;
                                     self.changeLog[i].diff.geometry.new_value.staticURL =staticURL;
