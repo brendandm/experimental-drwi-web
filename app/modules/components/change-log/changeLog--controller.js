@@ -178,8 +178,7 @@ angular.module('FieldDoc')
                           group.changes.forEach(function(change){
 
                               if(change.diff != null){
-                                self.changeLog[i].changes[c].diff.practice_type.new_display = self.changeLog[i].changes[c].diff.practice_type.new_value;
-                                self.changeLog[i].changes[c].diff.practice_type.previous_display  = self.changeLog[i].changes[c].diff.practice_type.previous_value;
+
                                  if(change.diff.hasOwnProperty('geometry')){
                                     if(change.diff.geometry.new_value != null){
                                          self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value,self.featureType);;

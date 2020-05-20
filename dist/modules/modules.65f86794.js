@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590003442433})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590003726941})
 
 ;
 /**
@@ -11099,8 +11099,7 @@ angular.module('FieldDoc')
                           group.changes.forEach(function(change){
 
                               if(change.diff != null){
-                                self.changeLog[i].changes[c].diff.practice_type.new_display = self.changeLog[i].changes[c].diff.practice_type.new_value;
-                                self.changeLog[i].changes[c].diff.practice_type.previous_display  = self.changeLog[i].changes[c].diff.practice_type.previous_value;
+
                                  if(change.diff.hasOwnProperty('geometry')){
                                     if(change.diff.geometry.new_value != null){
                                          self.changeLog[i].changes[c].diff.geometry.new_staticURL =Utility.buildStaticMapURL(change.diff.geometry.new_value,self.featureType);;
