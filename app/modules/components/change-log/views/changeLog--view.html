@@ -78,7 +78,7 @@
                                     data-ng-repeat="group in changeLog = (page.changeLog)"
                                    >
 
-                                    <div class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                    <div class="card reveal fade-in" style="border:1px solid red; animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                         data-ng-repeat="changeLogItem in group.changes = (group | orderBy:'timeStamp' | filter: page.queryToken)"
                                        >
 
