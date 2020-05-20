@@ -152,7 +152,7 @@ angular.module('FieldDoc')
 
                     self.subjectFeature = successResponse.project;
 
-                    self.changeLog = successResponse.features;
+                    self.changeLog = successResponse.history;
 
                     self.parseResponse();
 
