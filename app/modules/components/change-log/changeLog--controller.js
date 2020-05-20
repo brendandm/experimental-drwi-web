@@ -221,15 +221,15 @@ angular.module('FieldDoc')
 
                                 if(feature_type == "site"){
 
-                                     self.sites[index].staticURL = feature.staticURL;
+                                    self.changeLog[index].staticURL = feature.staticURL;
 
-                                     console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                     console.log("self.sites"+index+".staticURL",self.changeLog[index].staticURL);
 
                                 }
                                 if(feature_type == "practice"){
-                                     self.practices[index].staticURL = feature.staticURL;
+                                     self.changeLog[index].staticURL = feature.staticURL;
 
-                                     console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
+                                     console.log("self.practices"+index+".staticURL",self.changeLog[index].staticURL);
 
                                 }
 
