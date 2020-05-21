@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590080570145})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590081032259})
 
 ;
 /**
@@ -11100,11 +11100,10 @@ angular.module('FieldDoc')
                              console.log("change",change);
 
                             var d = 0;
-                            change.forEach(function(item){
-                            //for (var item in change) {
-                                 console.log("Item", item );
-                                if(item.diff == null){
-                                      console.log("diff is")
+                            for (var item in change) {
+                                 console.log("Item", item+", "+change[item] );
+                                if(change. == null){
+
                                 }else{
 
 
