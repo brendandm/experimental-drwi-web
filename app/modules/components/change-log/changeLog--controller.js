@@ -184,6 +184,7 @@ angular.module('FieldDoc')
                                  var d = 0;
 
                                  Object.keys(change.diff).forEach(function (item) {
+                                    console.log("--item-->",item);
                                      //   console.log(item); // key
                                      //   console.log(lunch[item]); // value
                                 //    });
