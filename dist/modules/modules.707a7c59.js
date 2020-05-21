@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590083552440})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590083962674})
 
 ;
 /**
@@ -11104,8 +11104,8 @@ angular.module('FieldDoc')
                             if(change.diff != null){
                                  var d = 0;
 
-                                 Object.keys(change.diff).forEach(function (item) {
-                                    console.log("--item-->",item);
+                         //        Object.keys(change.diff).forEach(function (item) {
+                         //           console.log("--item-->",item);
                                      //   console.log(item); // key
                                      //   console.log(lunch[item]); // value
                                 //    });
@@ -11114,34 +11114,34 @@ angular.module('FieldDoc')
                           //  for (var item in change) {
                           //       console.log("Item", item+", "+change[item] );
                           //      if(change.)
-                                    if(item.diff.type == "object"){
-                                        self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
+                                    if(change.diff.type == "object"){
+                                        self.changeLog[i].changes[c].diff.new_display = change.diff.new_value;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
-                                        self.changeLog[i].changes[c].diff[d].previous_display = item.diff.previous_value;
+                                        self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
-                                    }else if(item.diff.type == "number"){
-                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                    }else if(change.diff.type == "number"){
+                                        self.changeLog[i].changes[c].diff.new_display = change.diff.new_value;
                                      //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
-                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                        self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                    }else if(item.diff.type == "text"){
-                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                    }else if(change.diff.type == "text"){
+                                        self.changeLog[i].changes[c].diff.new_display = change.diff.new_value;
                                     //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
-                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                        self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
                                      //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
                                     }else if (item.diff.type == "geometry"){
                                         if(change.item.new_value != null){
-                                             self.changeLog[i].changes[c].diff[d].new_staticURL =Utility.buildStaticMapURL(item.new_value,self.featureType);;
+                                             self.changeLog[i].changes[c].diff.new_staticURL =Utility.buildStaticMapURL(change.diff.new_value,self.featureType);;
                                         }
                                         if(change.diff.previous_value != null){
-                                            self.changeLog[i].changes[c].diff[d].previous_staticURL =Utility.buildStaticMapURL(item.previous_value,self.featureType);;
+                                            self.changeLog[i].changes[c].diff.previous_staticURL =Utility.buildStaticMapURL(change.diff.previous_value,self.featureType);;
                                         }
                                     }else{
 
                                     }
 
                                        d = d+1;
-                                 });
+                              //   });
                             }
                       /*    change.diff.forEach(function(item){
                                 if(item.type == "object"){
