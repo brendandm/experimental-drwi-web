@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590075189465})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590075330202})
 
 ;
 /**
@@ -11104,30 +11104,32 @@ angular.module('FieldDoc')
                                 if (change.hasOwnProperty(item)) {
                                      console.log(item + " -> " + change[item]);
                                 }
-                                if(item.diff.type == "object"){
-                                    self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
-                                  //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
-                                    self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
-                                //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
-                                }else if(item.diff.type == "number"){
-                                    self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
-                                 //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
-                                    self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
-                                //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                }else if(item.diff.type == "text"){
-                                    self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
-                                //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
-                                    self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
-                                 //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                }else if (item.diff.type == "geometry"){
-                                    if(change.item.new_value != null){
-                                         self.changeLog[i].changes[c].diff[d].new_staticURL =Utility.buildStaticMapURL(item.new_value,self.featureType);;
-                                    }
-                                    if(change.diff.previous_value != null){
-                                        self.changeLog[i].changes[c].diff[d].previous_staticURL =Utility.buildStaticMapURL(item.previous_value,self.featureType);;
-                                    }
-                                }else{
+                                if(item.diff != null){
+                                    if(item.diff.type == "object"){
+                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                      //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
+                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                    //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
+                                    }else if(item.diff.type == "number"){
+                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                     //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
+                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                    //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
+                                    }else if(item.diff.type == "text"){
+                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                    //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
+                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                     //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
+                                    }else if (item.diff.type == "geometry"){
+                                        if(change.item.new_value != null){
+                                             self.changeLog[i].changes[c].diff[d].new_staticURL =Utility.buildStaticMapURL(item.new_value,self.featureType);;
+                                        }
+                                        if(change.diff.previous_value != null){
+                                            self.changeLog[i].changes[c].diff[d].previous_staticURL =Utility.buildStaticMapURL(item.previous_value,self.featureType);;
+                                        }
+                                    }else{
 
+                                    }
                                 }
                                 d = d+1;
 
