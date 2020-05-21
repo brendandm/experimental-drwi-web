@@ -173,9 +173,10 @@ angular.module('FieldDoc')
                     var i =0;
                     console.log("self.changeLog-->",self.changeLog);
                     self.changeLog.forEach(function(group){
-                          console.log("change",change);
+
                           var c = 0;
                           group.changes.forEach(function(change){
+                             console.log("change",change);
                         /*
                             var d = 0;
                           change.forEach(function(item){
