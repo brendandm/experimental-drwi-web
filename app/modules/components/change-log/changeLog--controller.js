@@ -180,10 +180,10 @@ angular.module('FieldDoc')
 
                             var d = 0;
                             for (var item in change) {
-                                if (change.hasOwnProperty(item)) {
-                                     console.log("-- "+item + " -> " + change[item]);
-                                }
-                                if(item.diff != null){
+
+                                if(item.diff == null){
+
+                                }else{
                                      console.log("DIFF");
 
                                     if(item.diff.type == "object"){
@@ -211,8 +211,6 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-                                }else{
-                                    console.log("THERE IS NO DIFF");
                                 }
                                 d = d+1;
 

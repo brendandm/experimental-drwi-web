@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590075688907})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590079567735})
 
 ;
 /**
@@ -11101,10 +11101,10 @@ angular.module('FieldDoc')
 
                             var d = 0;
                             for (var item in change) {
-                                if (change.hasOwnProperty(item)) {
-                                     console.log("-- "+item + " -> " + change[item]);
-                                }
-                                if(item.diff != null){
+
+                                if(item.diff == null){
+
+                                }else{
                                      console.log("DIFF");
 
                                     if(item.diff.type == "object"){
@@ -11132,8 +11132,6 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-                                }else{
-                                    console.log("THERE IS NO DIFF");
                                 }
                                 d = d+1;
 
