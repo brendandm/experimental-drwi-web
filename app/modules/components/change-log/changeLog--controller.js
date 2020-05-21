@@ -194,9 +194,9 @@ angular.module('FieldDoc')
                           //       console.log("Item", item+", "+change[item] );
                           //      if(change.)
                                     if(change.diff.type == "object"){
-                                        self.changeLog[i].changes[c].diff.new_display = change.diff.new_value;
+                                        self.changeLog[i].changes[c].diff.new_display = change.diff.new_value.name;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
-                                        self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
+                                        self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value.name;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
                                     }else if(change.diff.type == "number"){
                                         self.changeLog[i].changes[c].diff.new_display = change.diff.new_value;
@@ -209,7 +209,7 @@ angular.module('FieldDoc')
                                         self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
                                      //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
                                     }else if (change.diff.type == "geometry"){
-                                        if(change.item.new_value != null){
+                                        if(change.diff.new_value != null){
                                              self.changeLog[i].changes[c].diff.new_staticURL =Utility.buildStaticMapURL(change.diff.new_value,self.featureType);;
                                         }
                                         if(change.diff.previous_value != null){
