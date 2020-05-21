@@ -183,22 +183,22 @@ angular.module('FieldDoc')
                                 if (change.hasOwnProperty(item)) {
                                      console.log(item + " -> " + change[item]);
                                 }
-                                if(item.type == "object"){
+                                if(item.diff.type == "object"){
                                     self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
                                   //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
                                     self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
                                 //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
-                                }else if(item.type == "number"){
+                                }else if(item.diff.type == "number"){
                                     self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
                                  //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                     self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
                                 //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                }else if(item.type == "text"){
+                                }else if(item.diff.type == "text"){
                                     self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
                                 //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                     self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
                                  //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                }else if (item.type == "geometry"){
+                                }else if (item.diff.type == "geometry"){
                                     if(change.item.new_value != null){
                                          self.changeLog[i].changes[c].diff[d].new_staticURL =Utility.buildStaticMapURL(item.new_value,self.featureType);;
                                     }
