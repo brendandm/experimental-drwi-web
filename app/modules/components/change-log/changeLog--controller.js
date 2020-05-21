@@ -193,13 +193,13 @@ angular.module('FieldDoc')
                           //  for (var item in change) {
                           //       console.log("Item", item+", "+change[item] );
                           //      if(change.)
-                                     console.log("A");
-                                     
+                                     console.log("A", change.diff.type);
+
                                      if (change.diff.type == "geometry"){
                                         console.log("E");
                                         if(change.diff.new_value != null){
                                              console.log("F");
-                                             self.changeLog[i].changes[c].diff.new_staticURL =Utility.buildStaticMapURL(change.diff.new_value,self.featureType);;
+                                             self.changeLog[i].changes[c].diff.new_staticURL =Utility.buildStaticMapURL(change.diff.new_value.name,self.featureType);;
                                         }
                                         if(change.diff.previous_value != null){
                                              console.log("G");
