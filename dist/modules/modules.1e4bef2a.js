@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590083962674})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590084102036})
 
 ;
 /**
@@ -11129,7 +11129,7 @@ angular.module('FieldDoc')
                                     //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                         self.changeLog[i].changes[c].diff.previous_display = change.diff.previous_value;
                                      //   self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                    }else if (item.diff.type == "geometry"){
+                                    }else if (change.diff.type == "geometry"){
                                         if(change.item.new_value != null){
                                              self.changeLog[i].changes[c].diff.new_staticURL =Utility.buildStaticMapURL(change.diff.new_value,self.featureType);;
                                         }
