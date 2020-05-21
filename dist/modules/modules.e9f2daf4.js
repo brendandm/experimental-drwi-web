@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590081032259})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590082950745})
 
 ;
 /**
@@ -11100,13 +11100,14 @@ angular.module('FieldDoc')
                              console.log("change",change);
 
                             var d = 0;
-                            for (var item in change) {
-                                 console.log("Item", item+", "+change[item] );
-                                if(change. == null){
 
-                                }else{
+                            if(change.diff != null){
 
 
+
+                          //  for (var item in change) {
+                          //       console.log("Item", item+", "+change[item] );
+                          //      if(change.)
                                     if(item.diff.type == "object"){
                                         self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
@@ -11132,8 +11133,8 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-                                }
-                                d = d+1;
+
+                             //   d = d+1;
 
                             }
                       /*    change.diff.forEach(function(item){

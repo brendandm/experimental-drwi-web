@@ -179,13 +179,14 @@ angular.module('FieldDoc')
                              console.log("change",change);
 
                             var d = 0;
-                            for (var item in change) {
-                                 console.log("Item", item+", "+change[item] );
-                                if(change. == null){
 
-                                }else{
+                            if(change.diff != null){
 
 
+
+                          //  for (var item in change) {
+                          //       console.log("Item", item+", "+change[item] );
+                          //      if(change.)
                                     if(item.diff.type == "object"){
                                         self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
@@ -211,8 +212,8 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-                                }
-                                d = d+1;
+
+                             //   d = d+1;
 
                             }
                       /*    change.diff.forEach(function(item){
