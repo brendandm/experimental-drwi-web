@@ -182,7 +182,13 @@ angular.module('FieldDoc')
 
                             if(change.diff != null){
                                  var d = 0;
-                                change.diff.forEach(function(item){
+
+                                 Object.keys(change.diff).forEach(function (item) {
+                                     //   console.log(item); // key
+                                     //   console.log(lunch[item]); // value
+                                //    });
+
+                               // change.diff.forEach(function(item){
                           //  for (var item in change) {
                           //       console.log("Item", item+", "+change[item] );
                           //      if(change.)
@@ -211,7 +217,7 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-                                    
+
                                        d = d+1;
                                  });
                             }
