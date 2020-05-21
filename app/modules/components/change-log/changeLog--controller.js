@@ -184,12 +184,12 @@ angular.module('FieldDoc')
                                 if(item.diff == null){
 
                                 }else{
-                                     console.log("DIFF");
+                                     console.log("Item", item );
 
                                     if(item.diff.type == "object"){
-                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                        self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
-                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                        self.changeLog[i].changes[c].diff[d].previous_display = item.diff.previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
                                     }else if(item.diff.type == "number"){
                                         self.changeLog[i].changes[c].diff[d].new_display = item.new_value;

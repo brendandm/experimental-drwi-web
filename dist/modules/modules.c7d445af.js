@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590079567735})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590080224531})
 
 ;
 /**
@@ -11105,12 +11105,12 @@ angular.module('FieldDoc')
                                 if(item.diff == null){
 
                                 }else{
-                                     console.log("DIFF");
+                                     console.log("Item", item );
 
                                     if(item.diff.type == "object"){
-                                        self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
+                                        self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
-                                        self.changeLog[i].changes[c].diff[d].previous_display = item.previous_value;
+                                        self.changeLog[i].changes[c].diff[d].previous_display = item.diff.previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
                                     }else if(item.diff.type == "number"){
                                         self.changeLog[i].changes[c].diff[d].new_display = item.new_value;
