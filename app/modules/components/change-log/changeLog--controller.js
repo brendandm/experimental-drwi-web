@@ -180,11 +180,11 @@ angular.module('FieldDoc')
 
                             var d = 0;
                             for (var item in change) {
-
+                                 console.log("Item", item );
                                 if(item.diff == null){
 
                                 }else{
-                                     console.log("Item", item );
+
 
                                     if(item.diff.type == "object"){
                                         self.changeLog[i].changes[c].diff[d].new_display = item.diff.new_value;
