@@ -200,6 +200,8 @@
                                                         {{key}} :
                                                               <p style="padding-left:20px;" data-ng-if="key != 'geometry'">
                                                                   {{item.new_display || item.new_value}} </p>
+                                                           <!--       {{item.new_display}} </p>
+                                                           -->
 
                                                             <p  style="padding-left:20px;" data-ng-if="key == 'geometry'">
                                                                 <img src="{{item.new_staticURL}}"/>
@@ -219,8 +221,9 @@
 
                                                          {{key}} :
                                                              <p style="padding-left:20px;" data-ng-if="key != 'geometry'" >
-                                                                {{item.previous_display || item.previous_value}} </p>
-
+                                                                {{item.previous_display}} </p>
+                                                              <!--  {{item.previous_display || item.previous_value}} </p>
+                                                                -->
                                                             <p  style="padding-left:20px;" data-ng-if="key == 'geometry'">
                                                                 <img src="{{item.previous_staticURL}}"/>
                                                             </p>
