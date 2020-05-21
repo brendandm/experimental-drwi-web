@@ -188,7 +188,7 @@ angular.module('FieldDoc')
                                 }else if(item.type == "text"){
                                     self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                     self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                }else if (item.type == {"geometry"}){
+                                }else if (item.type == "geometry"){
                                     if(change.item.new_value != null){
                                          self.changeLog[i].changes[c].diff[d].new_staticURL =Utility.buildStaticMapURL(change.item.new_value,self.featureType);;
                                     }
