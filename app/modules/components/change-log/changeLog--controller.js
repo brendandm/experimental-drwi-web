@@ -178,12 +178,11 @@ angular.module('FieldDoc')
                           group.changes.forEach(function(change){
                              console.log("change",change);
 
-                            var d = 0;
+
 
                             if(change.diff != null){
-
-
-
+                                 var d = 0;
+                                change.diff.forEach(function(item){
                           //  for (var item in change) {
                           //       console.log("Item", item+", "+change[item] );
                           //      if(change.)
@@ -212,9 +211,9 @@ angular.module('FieldDoc')
                                     }else{
 
                                     }
-
-                             //   d = d+1;
-
+                                    
+                                       d = d+1;
+                                 });
                             }
                       /*    change.diff.forEach(function(item){
                                 if(item.type == "object"){
