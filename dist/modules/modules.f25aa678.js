@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590072940142})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590073122991})
 
 ;
 /**
@@ -11094,12 +11094,12 @@ angular.module('FieldDoc')
                     var i =0;
                     console.log("self.changeLog-->",self.changeLog);
                     self.changeLog.forEach(function(group){
-
+                          console.log("change",change);
                           var c = 0;
                           group.changes.forEach(function(change){
-                            console.log("change",change);
+                        /*
                             var d = 0;
-                         /*   change.forEach(function(item){
+                          change.forEach(function(item){
                                 if(item.type == "object"){
                                     self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
                                     self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
@@ -11119,9 +11119,10 @@ angular.module('FieldDoc')
                                 }else{
 
                                 }
-                                */
+
                                 d = d+1;
                             });
+                            */
                             c = c+1;
                           });
                         i = i+1;
