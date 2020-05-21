@@ -179,10 +179,11 @@ angular.module('FieldDoc')
                              console.log("change",change);
 
                             var d = 0;
-                            for (var item in change) {
+                            change.forEach(function(item){
+                            //for (var item in change) {
                                  console.log("Item", item );
                                 if(item.diff == null){
-
+                                      console.log("diff is")
                                 }else{
 
 
