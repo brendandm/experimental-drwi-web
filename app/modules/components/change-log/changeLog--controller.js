@@ -189,13 +189,21 @@ angular.module('FieldDoc')
                                         console.log("change.diff[item].type",change.diff[item].type);
                                      if (change.diff[item].type == "geometry"){
                                         console.log("E");
-                                        if(change.diff[item].new_value != null){
-                                             console.log("F");
-                                             self.changeLog[i].changes[c].diff[item].new_staticURL =Utility.buildStaticMapURL(change.diff[item].new_value,self.featureType);;
-                                        }
-                                        if(change.diff[item].previous_value != null){
-                                             console.log("G");
-                                            self.changeLog[i].changes[c].diff[item].previous_staticURL =Utility.buildStaticMapURL(change.diff[item].previous_value,self.featureType);;
+                                        if(item === 'centroid'){
+                                        
+                                        }else if(item === 'extent'){
+
+                                        }else if(item === 'geometry'){
+
+                                            if(change.diff[item].new_value != null){
+                                                 console.log("F");
+                                                 self.changeLog[i].changes[c].diff[item].new_staticURL =Utility.buildStaticMapURL(change.diff[item].new_value,self.featureType);;
+                                            }
+                                            if(change.diff[item].previous_value != null){
+                                                 console.log("G");
+                                                 self.changeLog[i].changes[c].diff[item].previous_staticURL =Utility.buildStaticMapURL(change.diff[item].previous_value,self.featureType);;
+                                            }
+
                                         }
                                     }else if(change.diff[item].type == "object"){
                                          console.log("B");
