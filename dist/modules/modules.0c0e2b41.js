@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590115993882})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590116422733})
 
 ;
 /**
@@ -11121,6 +11121,9 @@ angular.module('FieldDoc')
                                     }else if(change.diff[item].type == "object"){
                                          console.log("B");
                                           if(change.diff[item].new_value != null){
+                                            console.log("X",self.changeLog[i].changes[c].diff[item]);
+                                            console.log("Y",self.changeLog[i].changes[c].diff);
+                                            console.log("Z",item);
                                             self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
                                             }
                                          if(change.diff[item].previous_value != null){

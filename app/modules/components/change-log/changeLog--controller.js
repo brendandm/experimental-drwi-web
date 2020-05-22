@@ -200,6 +200,9 @@ angular.module('FieldDoc')
                                     }else if(change.diff[item].type == "object"){
                                          console.log("B");
                                           if(change.diff[item].new_value != null){
+                                            console.log("X",self.changeLog[i].changes[c].diff[item]);
+                                            console.log("Y",self.changeLog[i].changes[c].diff);
+                                            console.log("Z",item);
                                             self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
                                             }
                                          if(change.diff[item].previous_value != null){
