@@ -54,9 +54,10 @@
                             <h2>{{self.FeatureType}} History</h2>
                             </a>
                             -->
-                            <p>
+                          <!--  <p>
                                 Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
                             </p>
+                            -->
 
                                <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
                                                                             justify-content:left;
@@ -74,9 +75,9 @@
                             <div class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
 
-                                <div class="card reveal fade-in pad shadow"
+                                <div class="selectable-group-items card reveal fade-in pad shadow"
                                     style=" width: 100%;
-                                            borderanimation-delay: {{ $index * 100 }}ms;
+                                            animation-delay: {{ $index * 100 }}ms;
                                             min-height: 0;
                                             border: 0px solid blue;
                                             background-color: #f5f5f5;
