@@ -199,22 +199,28 @@ angular.module('FieldDoc')
                                         }
                                     }else if(change.diff[item].type == "object"){
                                          console.log("B");
-                                        self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
-
-                                        self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value.name;
-
+                                          if(change.diff[item].new_value != null){
+                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
+                                            }
+                                         if(change.diff[item].previous_value != null){
+                                            self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value.name;
+                                        }
                                     }else if(change.diff[item].type == "number"){
                                          console.log("C");
-                                        self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
-
-                                        self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
-
+                                          if(change.diff[item].new_value != null){
+                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
+                                          }
+                                           if(change.diff[item].previous_value != null){
+                                            self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
+                                           }
                                     }else if(change.diff[item].type == "text"){
                                          console.log("D");
-                                        self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
-
-                                        self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
-
+                                         if(change.diff[item].new_value != null){
+                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
+                                           }
+                                            if(change.diff[item].previous_value != null){
+                                                self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
+                                            }
                                     }else{
                                          console.log("H");
                                     }
