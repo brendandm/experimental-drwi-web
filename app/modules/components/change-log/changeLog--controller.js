@@ -234,11 +234,34 @@ angular.module('FieldDoc')
                             c = c+1;
                             }else{
 
+                                  self.changeLog[i].changes[c].diff = {new_value:{}};
+                                   for (var item in change.data) {
+                                       //  self.changeLog[i].changes[c].diff[item].new_value = change.data[item];
+                                         self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
+                                   }
 
 
-                                  self.changeLog[i].changes[c].diff = {};
-                                  self.changeLog[i].changes[c].diff[0] = {new_display: {}};
-                                  self.changeLog[i].changes[c].diff[0].new_display = change.data.name;
+
+
+
+
+                                /*
+
+                                  if( change.data.name != null){
+                                        self.changeLog[i].changes[c].diff['name'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['name'].new_display = change.data.name;
+                                  }
+                                   if( change.data.practice_type != null){
+                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
+                                   }
+                                    if( change.data.site != null){
+                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
+                                   }
+                                   */
+
+
                             }
                         });
                         i = i+1;
