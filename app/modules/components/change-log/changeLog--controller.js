@@ -186,8 +186,8 @@ angular.module('FieldDoc')
                                 for (var item in change.diff) {
 
                                      console.log("A", item);
-
-                                     if (item == "geometry"){
+                                        console.log("change.diff[item].type",change.diff[item].type);
+                                     if (change.diff[item].type == "geometry"){
                                         console.log("E");
                                         if(change.diff[item].new_value != null){
                                              console.log("F");
@@ -197,19 +197,19 @@ angular.module('FieldDoc')
                                              console.log("G");
                                             self.changeLog[i].changes[c].diff[item].previous_staticURL =Utility.buildStaticMapURL(change.diff[item].previous_value,self.featureType);;
                                         }
-                                    }else if(item == "object"){
+                                    }else if(change.diff[item].type == "object"){
                                          console.log("B");
                                         self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
 
                                         self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value.name;
 
-                                    }else if(item == "number"){
+                                    }else if(change.diff[item].type == "number"){
                                          console.log("C");
                                         self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
 
                                         self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
 
-                                    }else if(item == "text"){
+                                    }else if(change.diff[item].type == "text"){
                                          console.log("D");
                                         self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
 
