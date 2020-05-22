@@ -230,7 +230,7 @@ angular.module('FieldDoc')
                                 }
                             c = c+1;
                             }else{
-                                  self.changeLog[i].changes[c].diff[0] = {};
+                                  self.changeLog[i].changes[c].diff = {};
                                   self.changeLog[i].changes[c].diff[0].new_display = change.data;
                             }
                         });
