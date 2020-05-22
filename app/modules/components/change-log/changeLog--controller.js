@@ -234,7 +234,7 @@ angular.module('FieldDoc')
                             c = c+1;
                             }else{
 
-
+                                    self.changeLog[i].changes[c].diff = {};
                                    for (var item in change.data) {
                                        self.changeLog[i].changes[c].diff[item] = {new_display:{}};
                                        //  self.changeLog[i].changes[c].diff[item].new_value = change.data[item];
