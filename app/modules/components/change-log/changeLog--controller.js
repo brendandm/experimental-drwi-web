@@ -185,7 +185,7 @@ angular.module('FieldDoc')
 
                                 for (var item in change.diff) {
 
-                                     console.log("A", change.diff[d].type);
+                                     console.log("A", item.type);
 
                                      if (item.type == "geometry"){
                                         console.log("E");
