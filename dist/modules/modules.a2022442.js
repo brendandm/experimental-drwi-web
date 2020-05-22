@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590108367565})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590108900440})
 
 ;
 /**
@@ -11108,7 +11108,7 @@ angular.module('FieldDoc')
 
                                      console.log("A", change.diff[d].type);
 
-                                     if (change.diff[d].type == "geometry"){
+                                     if (item.type == "geometry"){
                                         console.log("E");
                                         if(change.diff.new_value != null){
                                              console.log("F");
@@ -11118,19 +11118,19 @@ angular.module('FieldDoc')
                                              console.log("G");
                                             self.changeLog[i].changes[c].diff[d].previous_staticURL =Utility.buildStaticMapURL(change.diff[d].previous_value,self.featureType);;
                                         }
-                                    }else if(change.diff[d].type == "object"){
+                                    }else if(item.type == "object"){
                                          console.log("B");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value.name;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
                                         self.changeLog[i].changes[c].diff[d].previous_display = change.diff[d].previous_value.name;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
-                                    }else if(change.diff[d].type == "number"){
+                                    }else if(item.type == "number"){
                                          console.log("C");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value;
                                      //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                         self.changeLog[i].changes[c].diff[d].previous_display = change.diff[d].previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                    }else if(change.diff[d].type == "text"){
+                                    }else if(item.type == "text"){
                                          console.log("D");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value;
                                     //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
