@@ -212,7 +212,7 @@ angular.module('FieldDoc')
                                     }else if(item == "text"){
                                          console.log("D");
                                         self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
-\
+
                                         self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
 
                                     }else{
