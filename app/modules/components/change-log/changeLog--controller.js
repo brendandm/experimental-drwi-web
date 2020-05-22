@@ -187,7 +187,7 @@ angular.module('FieldDoc')
 
                                      console.log("A", item);
 
-                                     if (item.type == "geometry"){
+                                     if (item == "geometry"){
                                         console.log("E");
                                         if(change.diff.new_value != null){
                                              console.log("F");
@@ -197,19 +197,19 @@ angular.module('FieldDoc')
                                              console.log("G");
                                             self.changeLog[i].changes[c].diff[d].previous_staticURL =Utility.buildStaticMapURL(change.diff[d].previous_value,self.featureType);;
                                         }
-                                    }else if(item.type == "object"){
+                                    }else if(item == "object"){
                                          console.log("B");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value.name;
                                       //  self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value.name;
                                         self.changeLog[i].changes[c].diff[d].previous_display = change.diff[d].previous_value.name;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value.name;
-                                    }else if(item.type == "number"){
+                                    }else if(item == "number"){
                                          console.log("C");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value;
                                      //   self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
                                         self.changeLog[i].changes[c].diff[d].previous_display = change.diff[d].previous_value;
                                     //    self.changeLog[i].changes[c].diff[d].previous_display = self.changeLog[i].changes[c].diff[d].previous_value;
-                                    }else if(item.type == "text"){
+                                    }else if(item == "text"){
                                          console.log("D");
                                         self.changeLog[i].changes[c].diff[d].new_display = change.diff[d].new_value;
                                     //    self.changeLog[i].changes[c].diff[d].new_display = self.changeLog[i].changes[c].diff[d].new_value;
