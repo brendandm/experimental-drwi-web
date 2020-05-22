@@ -223,15 +223,15 @@ angular.module('FieldDoc')
                                             }
                                     }else{
                                          console.log("H");
-                                          self.changeLog[i].changes[c].diff[0] = {};
-                                         self.changeLog[i].changes[c].diff[0].new_display = change.data;
+
                                     }
 
                                      d = d+1;
                                 }
                             c = c+1;
                             }else{
-
+                                  self.changeLog[i].changes[c].diff[0] = {};
+                                  self.changeLog[i].changes[c].diff[0].new_display = change.data;
                             }
                         });
                         i = i+1;
