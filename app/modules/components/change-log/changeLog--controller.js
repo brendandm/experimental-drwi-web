@@ -191,7 +191,7 @@ angular.module('FieldDoc')
                                         console.log("E");
                                         if(change.diff[item].new_value != null){
                                              console.log("F");
-                                             self.changeLog[i].changes[c].diff[item].new_staticURL =Utility.buildStaticMapURL(change.diff[item].new_value.name,self.featureType);;
+                                             self.changeLog[i].changes[c].diff[item].new_staticURL =Utility.buildStaticMapURL(change.diff[item].new_value,self.featureType);;
                                         }
                                         if(change.diff[item].previous_value != null){
                                              console.log("G");
