@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590175546149})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590248474257})
 
 ;
 /**
@@ -11071,7 +11071,7 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    self.subjectFeature = successResponse.feature;
+                    self.feature = successResponse.feature;
 
                     self.changeLog = successResponse.history;
 
@@ -11111,7 +11111,7 @@ angular.module('FieldDoc')
                                      if (change.diff[item].type == "geometry"){
                                         console.log("E");
                                         if(item === 'centroid'){
-                                        
+
                                         }else if(item === 'extent'){
 
                                         }else if(item === 'geometry'){

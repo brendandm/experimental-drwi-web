@@ -28,8 +28,12 @@
            <div class="group">
                     <article class="breadcrumb" >
                        <p>
-                        <nobr>
-                            Project: <a href="/projects/{{page.changeLog.project.id}}">{{page.changeLog.project.name}}</a>
+                        <nobr data-ng-if="!page.feature.project">
+                            Project: <a href="/projects/{{page.feature.id}}">{{page.feature.name}}</a>
+                            /
+                        </nobr>
+                           <nobr data-ng-if="page.feature.project">
+                            Project: <a href="/projects/{{page.feature.project_id}}">{{page.feature.project_name}}</a>
                             /
                         </nobr>
                         <nobr>

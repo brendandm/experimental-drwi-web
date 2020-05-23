@@ -150,7 +150,7 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    self.subjectFeature = successResponse.feature;
+                    self.feature = successResponse.feature;
 
                     self.changeLog = successResponse.history;
 
@@ -190,7 +190,7 @@ angular.module('FieldDoc')
                                      if (change.diff[item].type == "geometry"){
                                         console.log("E");
                                         if(item === 'centroid'){
-                                        
+
                                         }else if(item === 'extent'){
 
                                         }else if(item === 'geometry'){
