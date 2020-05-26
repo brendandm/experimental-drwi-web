@@ -62,8 +62,8 @@
                                     <i class="material-icons">
                                         person
                                     </i>
-                                    <span data-ng-if="!owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.first_name }} {{ owner.last_name }}</span>
-                                    <span data-ng-if="owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.name }}</span>
+                                    <span data-ng-if="!owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.user.first_name }} {{ owner.user.last_name }}</span>
+                                    <span data-ng-if="owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.user.name }}</span>
                                     <div class="button--container">
                                         <button data-ng-if="owner.id !== page.profile.id" type="button" class="remove-item" data-ng-click="page.removeOwner(owner.id)">
                                             <i class="material-icons">
