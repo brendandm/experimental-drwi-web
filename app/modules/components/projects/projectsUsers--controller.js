@@ -216,7 +216,7 @@
                         'sites'
                     ].join(',');
 
-                    Project.update({
+                    Project.post_members({
                         id: $route.current.params.projectId,
                         exclude: exclude
                     }, self.project).then(function(successResponse) {
