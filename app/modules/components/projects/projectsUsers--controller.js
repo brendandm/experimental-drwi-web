@@ -359,7 +359,7 @@
                        Project.members({
                         id: $route.current.params.projectId
                        // exclude: exclude
-                        }).then(function(successResponse) {
+                        }).$promise.then(function(successResponse) {
 
                             console.log('self.project', successResponse);
 
