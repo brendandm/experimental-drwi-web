@@ -154,6 +154,24 @@ angular.module('FieldDoc')
 
                     self.changeLog = successResponse.history;
 
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        self.showElements(false);
+
+                    } else {
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = 'History';
+
+
+                    }
+
+
                     self.parseResponse();
 
                     self.showElements();
