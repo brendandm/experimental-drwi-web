@@ -111,9 +111,9 @@
 
                 };
 
-                self.removeOwner = function(id) {
-
-                    var _index;
+                self.removeOwner = function(index) {
+                    self.tempOwners.splice(index, 1);
+                /*    var _index;
 
                     self.tempOwners.forEach(function(item, idx) {
 
@@ -132,7 +132,7 @@
                         self.tempOwners.splice(_index, 1);
 
                     }
-
+*/
                     console.log('Updated owners (removal)', self.tempOwners);
 
                 };
