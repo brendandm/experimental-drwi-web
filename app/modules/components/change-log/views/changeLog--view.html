@@ -25,231 +25,154 @@
         </section>
 
         <div class="main--ui breadcrumb-ui">
+
            <div class="group">
-                    <article class="breadcrumb" >
-                       <p>
-                        <nobr data-ng-if="!page.feature.project">
-                            Project: <a href="/projects/{{page.feature.id}}">{{page.feature.name}}</a>
-                            /
-                        </nobr>
-                        <nobr data-ng-if="page.feature.project">
-                            Project: <a href="/projects/{{page.feature.project.id}}">{{page.feature.project.name}}</a>
-                            /
-                        </nobr>
 
-                           <nobr data-ng-if="page.feature.project && (page.feature.site != undefined)">
-                            Site A: <a href="/sites/{{page.feature.site.id}}">{{page.feature.site.name}}</a>
-                            /
-                        </nobr>
-                        <nobr data-ng-if="page.feature.project && (page.feature.site === undefined)">
-                            Site B: <a href="/sites/{{page.feature.id}}">{{page.feature.name}}</a>
-                            /
-                        </nobr>
+                <article class="breadcrumb">
 
+                    <div style="display: inline-flex;" data-ng-repeat="crumb in page.feature.breadcrumb">
+                        <span>{{ crumb.type_label }}:&nbsp;</span>
+                        <a href="{{ crumb.type }}s/{{ crumb.id }}">{{ crumb.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div style="display: inline-flex;" data-ng-repeat="crumb in page.feature.breadcrumb">
+                        History
+                    </div>
 
+                </article>
 
-                        <nobr>
-                            History
+            </div>
 
-                        </nobr>
-                       </p>
-                    </article>
-                </div>
         </div>
+
         <div class="breadcrumb-header-wrapper">
             <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">
-                {{page.featureType}} history
+                {{ page.feature.breadcrumb[0].type_label }} history
             </h1>
         </div>
+
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
                 <div class="group reveal fade-in t2">
 
-                        <section class="shadow">
-                         <!--   <a name="practiceTypes">
-                            <h2>{{self.FeatureType}} History</h2>
-                            </a>
-                            -->
-                          <!--  <p>
-                                Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
-                            </p>
-                            -->
+                    <section class="shadow">
 
-                               <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
-                                                                            justify-content:left;
-                                                                            align-items:left;
-                                                                            overflow: auto;
-                                                                            flex-wrap: wrap;
-                                                                             "
-                                 >
+                        <div class="collection-search reveal fade-in t0" style="justify-content: left; align-items: left; overflow: auto; flex-wrap: wrap;">
+                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search history">
 
-                                     <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search history">
+                        </div>
 
+                            <div class="history-group list-unstyled" style="margin-top: 2em;">
 
-                                </div>
+                                <div class="card reveal fade-in pad shadow"
+                                    style="width: 100%; animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="group in page.changeLog">
 
-                            <div class="selectable-group-items list-unstyled" style="margin-top: 2em;">
-
-
-                                <div class="selectable-group-items card reveal fade-in pad shadow"
-                                    style=" width: 100%;
-                                            animation-delay: {{ $index * 100 }}ms;
-                                            min-height: 0;
-                                            border: 0px solid blue;
-                                            background-color: #f5f5f5;
-                                            margin-bottom: 16px;
-                                            "
-                                    data-ng-repeat="group in page.changeLog"
-                                   >
                                     <h2>
-                                         {{group.weekday}} {{group.date}}
+                                         {{ group.weekday }} &middot; {{ group.date | date:'longDate' }}
                                     </h2>
 
-                                 <!--   <div class=""
-                                         style="border:1px solid red;
-                                                float:left;
-                                                width:100%;
-                                                display:block;
-                                                clear:both;
-                                                animation-delay: {{ $index * 100 }}ms;
-                                                min-height: 0;
-                                                "
-                                        data-ng-repeat="changes in group.changes = (group)"
-                                       >
-                                       -->
                                     <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
-                                        <div class="card--content" style="margin-bottom:2px;">
 
-                                            <div class="name" style="border:0px solid pink;
-                                                                    width:100%;
-                                                                    height:45px;
-                                            ">
-                                         <!--   <div class="name" style="flex-flow: column; align-items: flex-start;">-->
+                                        <div class="card--content">
 
-                                                <div style="position:relative;
-                                                            width:25%;
-                                                            max-width:200px;
-                                                            min-width:200px;
-                                                            float:left;
-                                                            font-weight: normal;
-                                                            color: #757575;
-                                                            border:0px solid blue;
-                                                            "
-                                                >
-                                                     <a href="/profile/{{changeLogItem.creator.id}}">
-                                                         <b>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</b>
-                                                      </a>
+                                            <div class="change-metadata">
 
-                                                </div>
-
-                                               <div style="position:relative;
-                                                            width:60%;
-                                                            float:left;
-                                                            font-weight: normal;
-                                                            color: #757575;
-                                                            border:0px solid blue;
-                                                            "
-                                                >
-                                                    <span style="font-size: 1.0em; font-weight: normal; color: #757575;">
-                                                        {{ changeLogItem.timestamp.local | date:'medium' }}
-
-                                                    </span>
-
-
-                                               </div>
-                                                 <div style="position:relative;
-                                                              float:left;
-                                                                width:30%;
-                                                              font-weight: normal;
-                                                              color: #757575;
-                                                                border:0px solid orange;
-                                                                text-align:right;
-                                                                "
-                                                  >
-
-                                                      <span for="changeLogItem-{{ changeLogItem.id }}">
+                                                <div class="change-action">
+                                                    <i class="material-icons">
+                                                        {{ changeLogItem.op }}
+                                                    </i>
+                                                    <span title="{{ changeLogItem.timestamp.utc }} UTC">
                                                         {{ changeLogItem.action_label }}
                                                     </span>
-                                                  </div>
+                                                    <span>&nbsp;by&nbsp;</span>
+                                                    <a href="/profile/{{changeLogItem.creator.id}}">
+                                                        <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                                    </a>
+                                                </div>
 
+                                                <span>&nbsp;&middot;&nbsp;</span>
+
+                                                <div class="timestamp">
+                                                    <span>
+                                                        {{ changeLogItem.timestamp.local | date:'longDate' }}
+                                                    </span>
+                                                    <span>&nbsp;at&nbsp;</span>
+                                                    <span>
+                                                        {{ changeLogItem.timestamp.local | date:'shortTime' }}
+                                                    </span>
+                                                </div>
 
                                             </div>
 
-                                            <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
-                                                {{ practice.name }}
-                                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                            </label> -->
+                                            <div class="body">
 
-                                            <div class="body" style="padding: 0px 0px 0px 0px">
-                                                <div style="width:100%; height: 35px; " data-ng-if="changeLogItem.diff != null">
-                                                    <div style="position:relative;
-                                                                float:left;
-                                                                height: 35px;
-                                                                text-align:center;
-                                                                width:50%;
-                                                                border:0px solid blue;
-                                                                background-color:#f2fff3;
-                                                                 color: #757575;
-                                                                 font-size:1.0em;
-                                                                "
+                                                <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
 
-                                                    ><b>CHANGE</b></div>
-                                                     <div style="position:relative;
-                                                                float:left;
-                                                                text-align:center;
-                                                                width:50%;
-                                                                height: 35px;
-                                                                border:0px solid black;
-                                                                background-color:#fff2f2;
-                                                                color: #757575;
-                                                                 font-size:1.0em;
-                                                                "
-                                                     ><b>PREVIOUS</b></div>
+                                                    <a href="{{ changeLogItem.link }}">{{ changeLogItem.linkTxt }}</a>
+
                                                 </div>
-                                                <div data-ng-repeat="(key, item) in changeLogItem.diff"
-                                                    style="background-color:#fff2f2;">
-                                                    <div style="width:50%;
-                                                                    position:relative;
-                                                                    float:left;
-                                                                    border: 0px solid red;
-                                                                    background-color:#f2fff3;
-                                                                    padding-left:20px;
-                                                                    padding-right:20px;
-                                                                    color: #757575;
-                                                                     font-size:1.0em;
-                                                                    ">
 
-                                                        {{key}} :
-                                                              <p style="padding-left:20px;" data-ng-if="key != 'geometry'">
-                                                                  {{item.new_display || item.new_value}} &nbsp;</p>
-                                                           <!--       {{item.new_display}} </p>
-                                                           -->
+                                                <div data-ng-if="changeLogItem.deletedName">
 
-                                                            <p  style="padding-left:20px;" data-ng-if="key == 'geometry'">
-                                                                <img src="{{item.new_staticURL}}"/>
-                                                            </p>
+                                                    <span>{{ changeLogItem.deletedName }}</span>
 
+                                                </div>
+
+                                                <div data-ng-if="changeLogItem.diff">
+
+                                                    <div style="position: relative; float: left; height: 35px; text-align: center; width: 50%; border: 0px solid blue; background-color: #f2fff3; font-size: 1.0em;">
+                                                        <strong>Change</strong>
+                                                    </div>
+
+                                                    <div style="position: relative; float: left; text-align: center; width: 50%; height: 35px; border: 0px solid black; background-color: #fff2f2; font-size: 1.0em;">
+                                                        <strong>Previous</strong>
+                                                    </div>
+
+                                                </div>
+
+                                                <div data-ng-repeat="(key, item) in changeLogItem.diff" style="background-color:#fff2f2;">
+
+                                                    <div style="width: 50%; position: relative; float:left; border: 0px solid red; background-color:#f2fff3; padding-left:20px; padding-right:20px; font-size:1.0em;">
+
+                                                        {{ key }}:
+
+                                                        <p data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                            {{ item.new_value }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'object'">
+                                                            {{ item.new_value.name }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'number'">
+                                                            {{ item.new_value | number:2 }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'geometry'">
+                                                            <img src="{{ item.new_staticURL }}"/>
+                                                        </p>
 
                                                     </div>
-                                                    <div style="width:50%;
-                                                                    position:relative;
-                                                                    float:left;
-                                                                    border: 0px solid red;
-                                                                    padding-left:20px;
-                                                                    padding-right:20px;
-                                                                     color: #757575;
-                                                                      font-size:1.0em;
-                                                                    ">
 
-                                                         {{key}} :
-                                                             <p style="padding-left:20px;" data-ng-if="key != 'geometry'" >
-                                                                {{item.previous_display || item.previous_value}} &nbsp; </p>
-                                                              <!--  {{item.previous_display || item.previous_value}} </p>
-                                                                -->
-                                                            <p  style="padding-left:20px;" data-ng-if="key == 'geometry'">
-                                                                <img src="{{item.previous_staticURL}}"/>
-                                                            </p>
+                                                    <div style="width: 50%; position: relative; float: left; border: 0px solid red; padding-left: 20px; padding-right: 20px; font-size: 1.0em;">
 
+                                                        {{ key }}:
+
+                                                        <p data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                            {{ item.previous_value }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'object'">
+                                                            {{ item.previous_value.name }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'number'">
+                                                            {{ item.previous_value | number:2 }} &nbsp;
+                                                        </p>
+
+                                                        <p data-ng-if="item.type === 'geometry'">
+                                                            <img src="{{ item.previous_staticURL }}"/>
+                                                        </p>
 
                                                     </div>
 
@@ -258,12 +181,10 @@
                                             </div>
 
                                         </div>
-                                            </div>
-                                 <!--   </div>
-                                 -->
+
+                                    </div>
 
                                 </div>
-
 
                             </div>
 
@@ -271,10 +192,10 @@
 
                     </div>
 
-
                 </div>
 
             </div>
+
         </div>
 
     </div>

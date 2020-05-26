@@ -8,39 +8,38 @@
 //
 
 .breadcrumb {
-     height      : auto;
-     width:     100%;
-     min-height      : 0px !important ;
-
-     margin-right    : 0px;
-     margin-bottom   : 0px !important ;
-     padding         : 5px 32px 5px 0px;
-     color           : #333333;
-     background-color: transparent;
-     display: flex;
-     flex-direction: column;
-     float           : left;
-     clear           :both;
-     overflow: hidden;
-
+    height: auto;
+    width: 100%;
+    min-height: 0px !important;
+    margin-right: 0px;
+    margin-bottom: 0px !important;
+    padding: 5px 32px 5px 0px;
+    color: #333333;
+    background-color: transparent;
+    display: flex;
+    flex-flow: row wrap;
+    float: none;
+    clear: both;
+    overflow: hidden;
 }
+
 .breadcrumb icon    {
     color:#666666;
     font-size:20px;
-
 }
 
 .breadcrumb-ui {
     padding-bottom: 0px;
-    margin-bottom   : -20px !important;
-
+    margin-bottom: -20px !important;
     float: left;
     display: inline-block;
 }
+
 .breadcrumb-header-wrapper{
     width: 100%;
 }
+
 .breadcrumb-header {
-    display:block;
-    padding-top:0px !important;
+    display: block;
+    padding-top: 0px !important;
 }

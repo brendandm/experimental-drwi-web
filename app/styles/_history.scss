@@ -1,0 +1,192 @@
+//
+// _breadcrumb.scss
+//
+// This stylesheet is written in SASS(1) and compiles all of the styles
+// we use throughout the site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+.history-group {
+  display: flex;
+  flex-flow: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  .card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .image-card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .card,
+  .image-card {
+    min-height: 0;
+    flex-grow: 1;
+    box-sizing: border-box;
+
+    .card--content {
+      display: flex;
+      flex-flow: column;
+      width: 100%;
+      margin-bottom: 2em;
+      border-radius: 4px;
+      box-shadow: none;
+      border: 1px solid #e0e0e0;
+      //box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
+      overflow: hidden;
+      transition: all 250ms ease 0s;
+
+      &:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08), 0 6px 6px rgba(0,0,0,0.12);
+      }
+
+      img {
+        width: 100%;
+      }
+
+      input[type="radio"] {
+        margin: 0;
+        margin-bottom: 0;
+        margin-left: 1em;
+        width: auto;
+      }
+
+      .change-metadata {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        width: 100%;
+        padding: 1em;
+        //background: #f5f5f5;
+        //font-weight: bold;
+        border-bottom: 1px solid #e0e0e0;
+
+        .creator,
+        .change-action,
+        .timestamp {
+            display: flex;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .change-action {
+            align-items: center;
+
+            span {
+                display: inline-flex;
+
+                &:first-of-type {
+                    margin-left: 0.5em;
+                }
+
+            }
+
+        }
+
+        span {
+          display: flex;
+          //width: 100%;
+          //font-weight: bold;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          //margin-right: 1em;
+        }
+
+      }
+
+      .body {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        padding: 1em;
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+        box-sizing: border-box;
+        background: #fff;
+
+        .visible {
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
+        .confirm--delete {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          background: #fff;
+          z-index: 999;
+          transition: all 250ms ease 0s;
+
+          .actions {
+            flex: 0;
+            align-items: center;
+
+            a:first-of-type {
+              background: red;
+              padding: 0.5em 1em;
+              border-radius: 3px;
+              color: #fff;
+            }
+
+          }
+
+        }
+
+        time {
+          font-size: 0.9em;
+          letter-spacing: 0;
+          color: #888;
+        }
+
+        .actions {
+          flex: 1;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: flex-end;
+          justify-content: flex-end;
+          text-align: right;
+          margin-top: 1em;
+
+          a,
+          a:link,
+          a:visited {
+            display: inline-block;
+            margin-right: 1em;
+            color: #333;
+            opacity: 0.7;
+            transition: all 250ms ease 0s;
+          }
+
+          a:hover,
+          a:focus {
+            opacity: 1;
+          }
+
+          a:last-of-type {
+            margin-right: 0;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

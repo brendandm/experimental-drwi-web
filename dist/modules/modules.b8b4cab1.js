@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590517251482})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590534885200})
 
 ;
 /**
@@ -10977,84 +10977,86 @@ angular.module('FieldDoc')
 
             };
 
-            self.parseRouteParams = function(){
-                  self.featureId = $routeParams.id;
+            self.parseRouteParams = function() {
 
-                    if($routeParams.feature_type){
-                            if($routeParams.feature_type == 'projects'){
-                                self.featureType = 'project';
-                            }else if($routeParams.feature_type == 'sites'){
-                                self.featureType = 'site';
-                            }else if($routeParams.feature_type == 'practices'){
-                                self.featureType = 'practice';
-                            }else if($routeParams.feature_type == 'programs'){
-                                self.featureType = 'program';
-                            }else if($routeParams.feature_type == 'organization'){
-                                self.featureType = 'organization';
-                            }
-                        }
+                self.featureId = $routeParams.id;
 
+                if ($routeParams.feature_type) {
+                    if ($routeParams.feature_type == 'projects') {
+                        self.featureType = 'project';
+                    } else if ($routeParams.feature_type == 'sites') {
+                        self.featureType = 'site';
+                    } else if ($routeParams.feature_type == 'practices') {
+                        self.featureType = 'practice';
+                    } else if ($routeParams.feature_type == 'programs') {
+                        self.featureType = 'program';
+                    } else if ($routeParams.feature_type == 'organization') {
+                        self.featureType = 'organization';
+                    }
+                }
 
-                         console.log("featureId-->",self.featureId);
-                        console.log("featureType-->",self.featureType);
-            }
+                console.log('featureId-->', self.featureId);
+                console.log('featureType-->', self.featureType);
 
-      /*START Pagniation vars*/
+            };
+
+            /*START Pagniation vars*/
             self.limit = 12;
             self.page = 1;
 
             self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
+            self.viewCountHigh = self.limit;
 
-            self.calculateViewCount = function(){
-               if(self.page > 1){
+            self.calculateViewCount = function() {
 
-                    if(self.page == 1){
+                if (self.page > 1) {
+
+                    if (self.page == 1) {
                         self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
-                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        self.viewCountLow = ((self.page - 1) * self.limit);
+                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
+                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
 
-                    }else{
+                    } else {
                         self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
                     }
-               }else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
-                    }else{
+                } else {
+                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.limit;
+                    } else {
                         self.viewCountLow = 1;
                         self.viewCountHigh = self.summary.feature_count;
 
                     }
 
-               }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
-                self.page = 1;
-                self.loadProjects();
-            }
-
-             self.getPage = function(page){
-                console.log("PAGE",page);
-
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-
-                     self.loadHistory();
                 }
 
             };
-    /*START Pagniation vars*/
+
+            self.changeLimit = function(limit) {
+                self.limit = limit;
+                self.page = 1;
+                self.loadProjects();
+            };
+
+            self.getPage = function(page) {
+                console.log('PAGE', page);
+
+                if (page < 1) {
+                    self.page = 1;
+                } else if (page > self.summary.page_count) {
+                    self.page = self.summary.page_count;
+                } else {
+                    self.page = page;
+
+                    self.loadHistory();
+                }
+
+            };
+            /*START Pagniation vars*/
 
             self.buildFilter = function() {
 
@@ -11064,24 +11066,23 @@ angular.module('FieldDoc')
                 var data = {
                     id: self.featureId,
                     type: self.featureType,
-                    limit:  self.limit,
-                    page:   self.page
+                    limit: self.limit,
+                    page: self.page
                 };
 
-              //  $location.search(data);
+                //  $location.search(data);
 
                 return data;
-            }
+            };
 
             self.loadHistory = function() {
-
-           //     var params = self.buildFilter();
 
                 ChangeLog.query({
                     id: self.featureId,
                     type: self.featureType,
-                    limit:  self.limit,
-                    page:   self.page
+                    limit: self.limit,
+                    page: self.page,
+                    tz_offset: self.tzOffset
                 }).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
@@ -11102,11 +11103,7 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = self.feature.permissions.write;
                         self.permissions.can_delete = self.feature.permissions.write;
 
-                     //   $rootScope.page.title = 'History';
-
-
                     }
-
 
                     self.parseResponse();
 
@@ -11122,123 +11119,195 @@ angular.module('FieldDoc')
 
             };
 
-            self.parseResponse = function(){
-                  //  var changeLogTemp = changeLog;
-                    var i =0;
-                    console.log("self.changeLog-->",self.changeLog);
-                    self.changeLog.forEach(function(group){
+            self.parseResponse = function() {
 
-                          var c = 0;
-                          group.changes.forEach(function(change){
-                             console.log("change",change);
+                console.log('self.changeLog-->', self.changeLog);
 
+                self.changeLog.forEach(function(group) {
 
+                    group.changes.forEach(function(change) {
 
-                            if(change.diff != null){
-                                 var d = 0;
+                        var separatorIdx = change.action.indexOf('_');
 
-                                for (var item in change.diff) {
+                        var op = change.action.substring(0, separatorIdx);
 
-                                     console.log("A", item);
-                                        console.log("change.diff[item].type",change.diff[item].type);
-                                     if (change.diff[item].type == "geometry"){
-                                        console.log("E");
-                                        if(item === 'centroid'){
+                        var featureType = change.action.substring(separatorIdx + 1);
 
-                                        }else if(item === 'extent'){
+                        console.log(
+                            'self.parseResponse.op:',
+                            op
+                        );
 
-                                        }else if(item === 'geometry'){
+                        console.log(
+                            'self.parseResponse.featureType:',
+                            featureType
+                        );
 
-                                            if(change.diff[item].new_value != null){
-                                                 console.log("F");
-                                                 self.changeLog[i].changes[c].diff[item].new_staticURL =Utility.buildStaticMapURL(change.diff[item].new_value,self.featureType);;
-                                            }
-                                            if(change.diff[item].previous_value != null){
-                                                 console.log("G");
-                                                 self.changeLog[i].changes[c].diff[item].previous_staticURL =Utility.buildStaticMapURL(change.diff[item].previous_value,self.featureType);;
-                                            }
+                        if (change.diff &&
+                            typeof change.diff !== 'undefined') {
 
-                                        }
-                                    }else if(change.diff[item].type == "object"){
-                                         console.log("B");
-                                          if(change.diff[item].new_value != null){
-                                            console.log("X",self.changeLog[i].changes[c].diff[item]);
-                                            console.log("Y",self.changeLog[i].changes[c].diff);
-                                            console.log("Z",item);
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value.name;
-                                            }
-                                         if(change.diff[item].previous_value != null){
-                                            self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value.name;
-                                        }
-                                    }else if(change.diff[item].type == "number"){
-                                         console.log("C");
-                                          if(change.diff[item].new_value != null){
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
-                                          }
-                                           if(change.diff[item].previous_value != null){
-                                            self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
-                                           }
-                                    }else if(change.diff[item].type == "text"){
-                                         console.log("D");
-                                         if(change.diff[item].new_value != null){
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.diff[item].new_value;
-                                           }
-                                            if(change.diff[item].previous_value != null){
-                                                self.changeLog[i].changes[c].diff[item].previous_display = change.diff[item].previous_value;
-                                            }
-                                    }else{
-                                         console.log("H");
+                            for (var item in change.diff) {
+
+                                console.log('A', item);
+
+                                console.log('change.diff[item].type', change.diff[item].type);
+
+                                if (change.diff[item].type === 'geometry') {
+
+                                    console.log('E');
+
+                                    if (change.diff[item].new_value != null) {
+
+                                        console.log('F');
+
+                                        change.diff[item].new_staticURL = Utility.buildStaticMapURL(
+                                            change.diff[item].new_value, self.featureType);
 
                                     }
 
-                                     d = d+1;
+                                    if (change.diff[item].previous_value != null) {
+
+                                        console.log('G');
+
+                                        change.diff[item].previous_staticURL = Utility.buildStaticMapURL(
+                                            change.diff[item].previous_value, self.featureType);
+
+                                    }
+
                                 }
-                            c = c+1;
-                            }else{
-
-                                    self.changeLog[i].changes[c].diff = {};
-                                   for (var item in change.data) {
-                                        if(change.action.includes("create")){
-                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
-                                        }else if(change.action.includes("delete")){
-                                             self.changeLog[i].changes[c].diff[item] = {previous_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].previous_display = change.data[item];
-                                        }else{
-                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
-                                        }
-
-                                   }
-
-
-
-
-
-
-                                /*
-
-                                  if( change.data.name != null){
-                                        self.changeLog[i].changes[c].diff['name'] = {new_display: {}};
-                                        self.changeLog[i].changes[c].diff['name'].new_display = change.data.name;
-                                  }
-                                   if( change.data.practice_type != null){
-                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
-                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
-                                   }
-                                    if( change.data.site != null){
-                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
-                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
-                                   }
-                                   */
-
 
                             }
-                        });
-                        i = i+1;
+
+                        } else {
+
+                            if (op.indexOf('create') >= 0) {
+
+                                var link;
+
+                                var linkTxt;
+
+                                switch(featureType) {
+
+                                    case 'organization':
+
+                                        link = 'organizations/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'practice':
+
+                                        link = 'practices/' + change.data.id;
+
+                                        if (typeof change.data.name == 'string') {
+
+                                            linkTxt = change.data.name;
+
+                                        } else {
+
+                                            linkTxt = 'Un-named practice (' + change.data.id + ')';
+
+                                        }
+
+                                        break;
+
+                                    case 'program':
+
+                                        link = 'programs/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'project':
+
+                                        link = 'projects/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'project_member':
+
+                                        link = 'profile/' + change.data.user.id;
+
+                                        linkTxt = change.data.user.first_name + ' ' + change.data.user.last_name;
+
+                                        break;
+
+                                    case 'report':
+
+                                        link = 'reports/' + change.data.id;
+
+                                        linkTxt = change.data.report_date;
+
+                                        break;
+
+                                    case 'site':
+
+                                        link = 'sites/' + change.data.id;
+
+                                        if (typeof change.data.name == 'string') {
+
+                                            linkTxt = change.data.name;
+
+                                        } else {
+
+                                            linkTxt = 'Un-named site (' + change.data.id + ')';
+
+                                        }
+
+                                        break;
+
+                                    case 'tag':
+
+                                        link = 'tags/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                }
+
+                                change.link = link;
+
+                                change.linkTxt = linkTxt;
+
+                            } else {
+
+                                if (featureType === 'project_member') {
+
+                                    change.deletedName = change.data.user.first_name + ' ' + change.data.user.last_name;
+
+                                } else if (featureType.indexOf('target') >= 0) {
+
+                                    change.deletedName = change.data.metric.name;
+                                    
+                                } else {
+
+                                    change.deletedName = change.data.name;
+
+                                }
+
+                            }
+
+                        }
+
+                        change.op = op;
+
+                        console.log(
+                            'self.parseResponse.change:',
+                            change
+                        );
+
                     });
-                    console.log("parsedResponce",self.changeLog);
-            }
+
+                });
+
+                console.log('parsedResponse', self.changeLog);
+
+            };
 
             /*
             createStaticMapUrls:
@@ -11249,70 +11318,65 @@ angular.module('FieldDoc')
                 adds return to site[] as staticURL property
                 if no site geometry, adds default URL to site[].staticURL
             */
-            self.createStaticMapURLs = function(arr, feature_type){
-                console.log("createStaticMapURLS -> arr", arr)
+            self.createStaticMapURLs = function(arr, feature_type) {
+
+                console.log('createStaticMapURLS -> arr', arr);
 
                 arr.forEach(function(feature, index) {
 
-                            if(feature.geometry != null){
+                    if (feature.geometry != null) {
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
+                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type);
 
-                                if(feature.staticURL.length >= 4096){
+                        if (feature.staticURL.length >= 4096) {
 
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
-                                }
+                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
 
-                                console.log('feature.staticURL',feature.staticURL);
+                        console.log('feature.staticURL', feature.staticURL);
 
-                                if(feature_type == "site"){
+                        if (feature_type == 'site') {
 
-                                    self.changeLog[index].staticURL = feature.staticURL;
+                            self.changeLog[index].staticURL = feature.staticURL;
 
-                                     console.log("self.sites"+index+".staticURL",self.changeLog[index].staticURL);
+                            console.log('self.sites' + index + '.staticURL', self.changeLog[index].staticURL);
 
-                                }
-                                if(feature_type == "practice"){
-                                     self.changeLog[index].staticURL = feature.staticURL;
+                        }
+                        if (feature_type == 'practice') {
+                            self.changeLog[index].staticURL = feature.staticURL;
 
-                                     console.log("self.practices"+index+".staticURL",self.changeLog[index].staticURL);
+                            console.log('self.practices' + index + '.staticURL', self.changeLog[index].staticURL);
 
-                                }
+                        }
 
+                    } else {
 
-
-                            }else{
-
-                                 if(feature_type == "site"){
-                                    self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                            ].join('');
+                        if (feature_type == 'site') {
+                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
 
 
-                                 }
-                                 if(feature_type == "practice"){
-                                     self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                            ].join('');
+                        }
+                        if (feature_type == 'practice') {
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
 
-                                 }
+                        }
 
-                            }
-
-                    //    }else{
-                     //      console.log("A 7");
-                     //   }
+                    }
 
                 });
 
-            }
+            };
 
-
+            // 
             // Verify Account information for proper UI element display
             //
 
@@ -11322,7 +11386,7 @@ angular.module('FieldDoc')
 
                 user.$promise.then(function(userResponse) {
 
-                     $rootScope.user = Account.userObject = userResponse;
+                    $rootScope.user = Account.userObject = userResponse;
 
                     self.user = Account.userObject = userResponse;
 
@@ -11335,10 +11399,13 @@ angular.module('FieldDoc')
                         is_admin: false
                     };
 
-                    //
-                     self.loadHistory();
+                    // 
+                    // Retrieve the system's time zone offset.
+                    // 
 
+                    self.tzOffset = new Date().getTimezoneOffset();
 
+                    self.loadHistory();
 
                 });
 
@@ -11348,13 +11415,6 @@ angular.module('FieldDoc')
                 $location.path('/logout');
 
             }
-
-
-
-          //  var params = $location.search();
-         //   self.inspectSearchParams(params);
-
-
 
         });
 (function() {
