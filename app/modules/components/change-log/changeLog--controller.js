@@ -243,7 +243,7 @@ angular.module('FieldDoc')
                             }else{
 
                                     self.changeLog[i].changes[c].diff = {};
-                                   for (var item in change.data) {
+                                  /* for (var item in change.data) {
                                         console.log("change.action",change.action);
                                         if(change.action.includes("create")){
 
@@ -256,11 +256,11 @@ angular.module('FieldDoc')
                                             self.changeLog[i].changes[c].diff[item].previous_display = change.data[item];
 
                                         }else{
-
+                                    */
                                             self.changeLog[i].changes[c].diff[item] = {new_display:{}};
                                             self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
 
-                                        }
+                                    //    }
                                    }
 
                             }
