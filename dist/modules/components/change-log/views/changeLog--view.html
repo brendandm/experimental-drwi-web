@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading history data&hellip;</p>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                 </i>
             </p>
 
-            <p>This project is private.</p>
+            <p>You do not have permission to view this page.</p>
 
         </section>
 
@@ -41,10 +41,12 @@
                             Site A: <a href="/sites/{{page.feature.site.id}}">{{page.feature.site.name}}</a>
                             /
                         </nobr>
-                        <nobr data-ng-if="page.feature.project && (page.feature.site == undefined)">
+                        <nobr data-ng-if="page.feature.project && (page.feature.site === undefined)">
                             Site B: <a href="/sites/{{page.feature.id}}">{{page.feature.name}}</a>
                             /
                         </nobr>
+
+
 
                         <nobr>
                             History
