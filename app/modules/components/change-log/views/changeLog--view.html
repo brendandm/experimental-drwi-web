@@ -32,12 +32,22 @@
                             Project: <a href="/projects/{{page.feature.id}}">{{page.feature.name}}</a>
                             /
                         </nobr>
-                           <nobr data-ng-if="page.feature.project">
+                        <nobr data-ng-if="page.feature.project">
                             Project: <a href="/projects/{{page.feature.project.id}}">{{page.feature.project.name}}</a>
                             /
                         </nobr>
+
+                           <nobr data-ng-if="!page.feature.project && page.feature.site">
+                            Site: <a href="/sites/{{page.feature.id}}">{{page.feature.site.name}}</a>
+                            /
+                        </nobr>
+                        <nobr data-ng-if="page.feature.project && !page.feature.site">
+                            Site: <a href="/sites/{{page.feature.project.id}}">{{page.feature.name}}</a>
+                            /
+                        </nobr>
+
                         <nobr>
-                            Edit project
+                            History
 
                         </nobr>
                        </p>
