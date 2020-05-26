@@ -94,11 +94,16 @@
                 self.addOwner = function(item, model, label) {
 
                     console.log("member item",item);
+                    var member = {
+                        'user': item,
+                        'user_id': item.id
+                        }
+
                  //   var member = item;
                 //    member.user = item;
                 //    member.user_id = item.id;
 
-                    self.tempOwners.push(item);
+                    self.tempOwners.push(member);
 
                     self.ownerQuery = null;
 

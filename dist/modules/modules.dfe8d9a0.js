@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590509625528})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590510011236})
 
 ;
 /**
@@ -7936,11 +7936,16 @@ angular.module('FieldDoc')
                 self.addOwner = function(item, model, label) {
 
                     console.log("member item",item);
+                    var member = {
+                        'user': item,
+                        'user_id': item.id
+                        }
+
                  //   var member = item;
                 //    member.user = item;
                 //    member.user_id = item.id;
 
-                    self.tempOwners.push(item);
+                    self.tempOwners.push(member);
 
                     self.ownerQuery = null;
 
