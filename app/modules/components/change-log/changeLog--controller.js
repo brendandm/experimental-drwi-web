@@ -244,24 +244,33 @@ angular.module('FieldDoc')
 
                                     self.changeLog[i].changes[c].diff = {};
                                    for (var item in change.data) {
-                                    /*    console.log("change.action",change.action);
-                                        if(change.action.includes("create")){
 
-                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
-
-                                        }else if (change.action.includes("delete")){
-
-                                            self.changeLog[i].changes[c].diff[item] = {previous_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].previous_display = change.data[item];
-
-                                        }else{
-                                    */
-                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
-                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
-
-                                    //    }
+                                        self.changeLog[i].changes[c].diff[item] = {new_display:{}};
+                                       //  self.changeLog[i].changes[c].diff[item].new_value = change.data[item];
+                                         self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
                                    }
+
+
+
+
+
+
+                                /*
+
+                                  if( change.data.name != null){
+                                        self.changeLog[i].changes[c].diff['name'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['name'].new_display = change.data.name;
+                                  }
+                                   if( change.data.practice_type != null){
+                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
+                                   }
+                                    if( change.data.site != null){
+                                        self.changeLog[i].changes[c].diff['practice_type'] = {new_display: {}};
+                                        self.changeLog[i].changes[c].diff['practice_type'].new_display = change.data.practice_type;
+                                   }
+                                   */
+
 
                             }
                         });
