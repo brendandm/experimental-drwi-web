@@ -217,8 +217,8 @@
                     ].join(',');
 
                     Project.post_members({
-                        id: $route.current.params.projectId,
-                        exclude: exclude
+                        id: $route.current.params.projectId
+                       // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;

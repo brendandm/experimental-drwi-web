@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590507068089})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590507579429})
 
 ;
 /**
@@ -8059,8 +8059,8 @@ angular.module('FieldDoc')
                     ].join(',');
 
                     Project.post_members({
-                        id: $route.current.params.projectId,
-                        exclude: exclude
+                        id: $route.current.params.projectId
+                       // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;
