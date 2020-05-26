@@ -244,6 +244,7 @@ angular.module('FieldDoc')
 
                                     self.changeLog[i].changes[c].diff = {};
                                    for (var item in change.data) {
+                                        console.log("change.action",change.action);
                                         if(change.action.includes("create")){
 
                                             self.changeLog[i].changes[c].diff[item] = {new_display:{}};
