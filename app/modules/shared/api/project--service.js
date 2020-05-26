@@ -53,6 +53,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
                 },
+                post_members: {
+                     method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
+                },
                 partnerships: {
                     method: 'GET',
                     isArray: false,

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590504861318})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590506518567})
 
 ;
 /**
@@ -11289,18 +11289,19 @@ angular.module('FieldDoc')
 
                 user.$promise.then(function(userResponse) {
 
-                    $rootScope.user = Account.userObject = userResponse;
+                     $rootScope.user = Account.userObject = userResponse;
 
                     self.user = Account.userObject = userResponse;
-
-                    console.log("$rootScope.user-->",$rootScope.user);
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                       // can_edit:
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
                     };
+
                     //
                      self.loadHistory();
 
@@ -38530,6 +38531,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
+                },
+                post_members: {
+                     method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
                 },
                 partnerships: {
                     method: 'GET',
