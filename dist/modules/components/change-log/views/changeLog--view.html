@@ -37,11 +37,11 @@
                             /
                         </nobr>
 
-                           <nobr data-ng-if="!page.feature.project && page.feature.site">
-                            Site A: <a href="/sites/{{page.feature.id}}">{{page.feature.site.name}}</a>
+                           <nobr data-ng-if="page.feature.project && (page.feature.site != undefined)">
+                            Site A: <a href="/sites/{{page.feature.site.id}}">{{page.feature.site.name}}</a>
                             /
                         </nobr>
-                        <nobr data-ng-if="page.feature.project && (page.feature.site != null)">
+                        <nobr data-ng-if="page.feature.project && page.feature.site == undefined)">
                             Site B: <a href="/sites/{{page.feature.id}}">{{page.feature.name}}</a>
                             /
                         </nobr>
