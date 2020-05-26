@@ -204,7 +204,7 @@
 
                     self.scrubFeature(self.project);
 
-                    self.project.members = self.processOwners(self.tempOwners);
+                 //   self.project.members = self.processOwners(self.tempOwners);
 
                     var exclude = [
                         'centroid',
