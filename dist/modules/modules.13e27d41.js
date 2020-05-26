@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590517066976})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590517154832})
 
 ;
 /**
@@ -11099,8 +11099,8 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
+                        self.permissions.can_edit = self.feature.permissions.write;
+                        self.permissions.can_delete = self.feature.permissions.write;
 
                         $rootScope.page.title = 'History';
 
