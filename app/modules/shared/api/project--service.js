@@ -51,7 +51,7 @@
                 members: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/project/:id/members')
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
                 },
                 post_members: {
                      method: 'POST',

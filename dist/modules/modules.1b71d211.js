@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590511024114})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590511199062})
 
 ;
 /**
@@ -8198,7 +8198,10 @@ angular.module('FieldDoc')
                         //
                         // Assign project to a scoped variable
                         //
-                        project.$promise.then(function(successResponse) {
+                       Project.members({
+                        id: $route.current.params.projectId
+                       // exclude: exclude
+                        }).then(function(successResponse) {
 
                             console.log('self.project', successResponse);
 
@@ -38542,7 +38545,7 @@ angular
                 members: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/project/:id/members')
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
                 },
                 post_members: {
                      method: 'POST',
