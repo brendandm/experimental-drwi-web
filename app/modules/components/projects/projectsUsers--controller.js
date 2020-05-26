@@ -96,7 +96,7 @@
                     console.log("member item",item);
                     var member = item;
                     member.user = item;
-                 //   {'user': item}
+
                     self.tempOwners.push(member);
 
                     self.ownerQuery = null;
@@ -228,6 +228,8 @@
                         self.project = successResponse;
 
                         $rootScope.page.title = self.project.name;
+
+                        console.log(" self.project.members", self.project.members);
 
                         self.tempOwners = self.project.members;
 

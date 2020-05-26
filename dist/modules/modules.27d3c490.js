@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590508525353})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590508975406})
 
 ;
 /**
@@ -7938,7 +7938,7 @@ angular.module('FieldDoc')
                     console.log("member item",item);
                     var member = item;
                     member.user = item;
-                 //   {'user': item}
+
                     self.tempOwners.push(member);
 
                     self.ownerQuery = null;
@@ -8070,6 +8070,8 @@ angular.module('FieldDoc')
                         self.project = successResponse;
 
                         $rootScope.page.title = self.project.name;
+
+                        console.log(" self.project.members", self.project.members);
 
                         self.tempOwners = self.project.members;
 
