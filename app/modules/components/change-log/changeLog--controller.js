@@ -244,10 +244,17 @@ angular.module('FieldDoc')
 
                                     self.changeLog[i].changes[c].diff = {};
                                    for (var item in change.data) {
+                                        if(change.action.includes("create")){
+                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
+                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
+                                        }else if(change.action.includes("delete")){
+                                             self.changeLog[i].changes[c].diff[item] = {previous_display:{}};
+                                            self.changeLog[i].changes[c].diff[item].previous_display = change.data[item];
+                                        }else{
+                                            self.changeLog[i].changes[c].diff[item] = {new_display:{}};
+                                            self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
+                                        }
 
-                                        self.changeLog[i].changes[c].diff[item] = {new_display:{}};
-                                       //  self.changeLog[i].changes[c].diff[item].new_value = change.data[item];
-                                         self.changeLog[i].changes[c].diff[item].new_display = change.data[item];
                                    }
 
 
