@@ -166,7 +166,7 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = self.feature.permissions.write;
                         self.permissions.can_delete = self.feature.permissions.write;
 
-                        $rootScope.page.title = 'History';
+                     //   $rootScope.page.title = 'History';
 
 
                     }
