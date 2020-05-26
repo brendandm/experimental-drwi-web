@@ -154,8 +154,8 @@ angular.module('FieldDoc')
 
                     self.changeLog = successResponse.history;
 
-                    if (!successResponse.permissions.read &&
-                        !successResponse.permissions.write) {
+                    if (!self.feature.permissions.read &&
+                        !self.feature.permissions.write) {
 
                         self.makePrivate = true;
 
