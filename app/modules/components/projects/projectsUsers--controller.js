@@ -96,7 +96,7 @@
                     console.log("member item",item);
                     var member = {
                             "user": item,
-                            "user_id" : item.id
+                            "user_id" : item.id,
                         }
 
                  //   var member = item;
