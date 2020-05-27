@@ -155,6 +155,8 @@ angular.module('FieldDoc')
 
                     self.changeLog = successResponse.history;
 
+                    self.summary = successResponse.summary;
+
                     if (!self.feature.permissions.read &&
                         !self.feature.permissions.write) {
 
