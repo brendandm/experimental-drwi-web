@@ -231,6 +231,8 @@
 
                                 </div>
 
+                                <div data-ng-include="'/templates/pagination-view.html'"></div>
+
                             </div>
 
                         </section>
@@ -244,8 +246,8 @@
         </div>
 
     </div>
-
-        <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
+        <div data-ng-include="'/templates/toolbars/project.html'"></div>
+     <!--   <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/projects/{{ page.project.id }}" title="Summary">
@@ -282,6 +284,7 @@
                     </i>
                 </a>
             </li>
+            -->
             <!-- <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
@@ -289,6 +292,7 @@
                     </i>
                 </a>
             </li> -->
+    <!--
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
                     <i class="material-icons">
@@ -330,6 +334,7 @@
             </li>
         </ul>
     </nav>
+    -->
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
