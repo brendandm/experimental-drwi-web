@@ -112,6 +112,70 @@
 
       }
 
+      .diff {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        align-items: center;
+        //border-bottom: 1px solid #fff;
+
+        > div {
+          display: flex;
+          flex-flow: column;
+          flex-basis: 50%;
+          flex-grow: 0;
+          flex-shrink: 0;
+          //text-align: center;
+          padding: 1em;
+        }
+
+      }
+
+      .diff-header {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100%;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+
+        > div {
+          flex-basis: 50%;
+          flex-grow: 0;
+          flex-shrink: 0;
+          text-align: center;
+          padding: 1em;
+        }
+
+      }
+
+      .diff-table {
+        width: 100%;
+
+        th {
+          padding: 1em 1em 1em 0;
+          vertical-align: top;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        th:first-of-type {
+          padding-left: 1em;
+        }
+
+        td {
+          padding: 1em;
+          vertical-align: top;
+        }
+
+      }
+
+      .prev-val {
+        background-color: #ffeef0;
+      }
+
+      .new-val {
+        background-color: #e6ffed;
+      }
+
       .body {
         position: relative;
         display: flex;
