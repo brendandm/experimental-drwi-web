@@ -11,7 +11,7 @@
         .config(function($routeProvider, environment) {
 
             $routeProvider
-                .when('/organizationEdit', {
+                .when('/organization/:id/edit', {
                     templateUrl: '/modules/components/organization/views/organizationEdit--view.html?t=' + environment.version,
                     controller: 'OrganizationEditViewController',
                     controllerAs: 'page',

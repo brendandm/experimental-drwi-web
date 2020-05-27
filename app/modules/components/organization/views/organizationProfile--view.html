@@ -12,7 +12,7 @@
 
                 <div class="add--new--wrapper"  data-ng-if="$root.user.properties.is_admin">
                     <span>Edit organization</span>
-                    <a class="add--new--btn" href="/organization" data-ng-class="{viewing: $root.viewState.organizationProfile}">
+                    <a class="add--new--btn" href="/organization/{{page.organizationProfile.id}}/edit" data-ng-class="{viewing: $root.viewState.organizationProfile}">
                         <i class="material-icons">
                         edit
                         </i>
