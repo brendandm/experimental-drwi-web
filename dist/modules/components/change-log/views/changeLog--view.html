@@ -105,7 +105,81 @@
 
                                             </div>
 
-                                            <div class="body">
+                                            <div data-ng-if="changeLogItem.diff">
+
+                                                <table class="diff-table">
+
+                                                    <thead>
+
+                                                        <tr>
+
+                                                            <th><strong>Property name</strong></th>
+
+                                                            <th><strong>New value</strong></th>
+
+                                                            <th><strong>Old value</strong></th>
+
+                                                        </tr>
+
+                                                    </thead>
+
+                                                    <tbody>
+
+                                                        <tr data-ng-repeat="(key, item) in changeLogItem.diff">
+
+                                                            <td style="width: 20%;">
+                                                                <strong>{{ key }}</strong>
+                                                            </td>
+
+                                                            <td class="new-val" style="width: 30%;">
+
+                                                                <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                                    {{ item.new_value }} &nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'object'">
+                                                                    {{ item.new_value.name }} &nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'number'">
+                                                                    {{ item.new_value | number:2 }} &nbsp;
+                                                                </span>
+
+                                                                <div data-ng-if="item.type === 'geometry'">
+                                                                    <img src="{{ item.new_staticURL }}"/>
+                                                                </div>
+
+                                                            </td>
+
+                                                            <td class="prev-val" style="width: 30%;">
+
+                                                                <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                                    {{ item.previous_value }} &nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'object'">
+                                                                    {{ item.previous_value.name }} &nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'number'">
+                                                                    {{ item.previous_value | number:2 }} &nbsp;
+                                                                </span>
+
+                                                                <div data-ng-if="item.type === 'geometry'">
+                                                                    <img src="{{ item.previous_staticURL }}"/>
+                                                                </div>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+
+                                            <div class="body" data-ng-if="!changeLogItem.diff">
 
                                                 <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
 
@@ -116,66 +190,6 @@
                                                 <div data-ng-if="changeLogItem.deletedName">
 
                                                     <span>{{ changeLogItem.deletedName }}</span>
-
-                                                </div>
-
-                                                <div data-ng-if="changeLogItem.diff">
-
-                                                    <div style="position: relative; float: left; height: 35px; text-align: center; width: 50%; border: 0px solid blue; background-color: #f2fff3; font-size: 1.0em;">
-                                                        <strong>Change</strong>
-                                                    </div>
-
-                                                    <div style="position: relative; float: left; text-align: center; width: 50%; height: 35px; border: 0px solid black; background-color: #fff2f2; font-size: 1.0em;">
-                                                        <strong>Previous</strong>
-                                                    </div>
-
-                                                </div>
-
-                                                <div data-ng-repeat="(key, item) in changeLogItem.diff" style="background-color:#fff2f2;">
-
-                                                    <div style="width: 50%; position: relative; float:left; border: 0px solid red; background-color:#f2fff3; padding-left:20px; padding-right:20px; font-size:1.0em;">
-
-                                                        {{ key }}:
-
-                                                        <p data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                            {{ item.new_value }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'object'">
-                                                            {{ item.new_value.name }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'number'">
-                                                            {{ item.new_value | number:2 }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'geometry'">
-                                                            <img src="{{ item.new_staticURL }}"/>
-                                                        </p>
-
-                                                    </div>
-
-                                                    <div style="width: 50%; position: relative; float: left; border: 0px solid red; padding-left: 20px; padding-right: 20px; font-size: 1.0em;">
-
-                                                        {{ key }}:
-
-                                                        <p data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                            {{ item.previous_value }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'object'">
-                                                            {{ item.previous_value.name }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'number'">
-                                                            {{ item.previous_value | number:2 }} &nbsp;
-                                                        </p>
-
-                                                        <p data-ng-if="item.type === 'geometry'">
-                                                            <img src="{{ item.previous_staticURL }}"/>
-                                                        </p>
-
-                                                    </div>
 
                                                 </div>
 
