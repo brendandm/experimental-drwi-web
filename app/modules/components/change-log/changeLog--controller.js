@@ -184,6 +184,8 @@ angular.module('FieldDoc')
 
                     self.showElements();
 
+                    console.log("self.feature.feature_type",self.feature.feature_type );
+
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
