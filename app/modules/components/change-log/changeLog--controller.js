@@ -21,6 +21,8 @@ angular.module('FieldDoc')
                 processing: false
             };
 
+
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -67,6 +69,11 @@ angular.module('FieldDoc')
             /*START Pagniation vars*/
             self.limit = 12;
             self.page = 1;
+
+            self.defaultPaginationLimits = true;
+            self.limitLow = 25;
+            self.limitMedium = 50;
+            self.limitHigh = 100;
 
             self.viewCountLow = self.page;
             self.viewCountHigh = self.limit;

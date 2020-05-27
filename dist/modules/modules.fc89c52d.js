@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590603553258})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590605656468})
 
 ;
 /**
@@ -10957,6 +10957,8 @@ angular.module('FieldDoc')
                 processing: false
             };
 
+
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -11003,6 +11005,11 @@ angular.module('FieldDoc')
             /*START Pagniation vars*/
             self.limit = 12;
             self.page = 1;
+
+            self.defaultPaginationLimits = true;
+            self.limitLow = 25;
+            self.limitMedium = 50;
+            self.limitHigh = 100;
 
             self.viewCountLow = self.page;
             self.viewCountHigh = self.limit;
