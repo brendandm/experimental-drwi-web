@@ -103,7 +103,7 @@ angular.module('FieldDoc')
             self.changeLimit = function(limit) {
                 self.limit = limit;
                 self.page = 1;
-                self.loadProjects();
+                self.loadHistory();
             };
 
             self.getPage = function(page) {
