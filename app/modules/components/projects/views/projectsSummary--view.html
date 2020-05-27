@@ -50,7 +50,14 @@
                         <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
                             Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
-
+                        <p>
+                        <a href="/projects/{{ page.feature.id }}/history">
+                             <i class="material-icons">
+                             history
+                        </i>
+                            View change log
+                         </a>
+                        </p>
                         <p data-ng-if="page.project.program && page.project.program.id" class="label">
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
