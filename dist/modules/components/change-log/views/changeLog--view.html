@@ -133,17 +133,27 @@
 
                                                             <td class="new-val" style="width: 30%;">
 
+                                                                <!-- Change value -->
+
                                                                 <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                                    {{ item.new_value }} &nbsp;
+                                                                    {{ item.new_value }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'object'">
-                                                                    {{ item.new_value.name }} &nbsp;
+                                                                    {{ item.new_value.name }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'number'">
-                                                                    {{ item.new_value | number:2 }} &nbsp;
+                                                                    {{ item.new_value | number:2 }}&nbsp;
                                                                 </span>
+
+                                                                <!-- Change label -->
+
+                                                                <span data-ng-if="item.new_value !== null && item.label && item.label.length">
+                                                                    {{ item.label }}
+                                                                </span>
+
+                                                                <!-- Change geometry map (static) -->
 
                                                                 <div data-ng-if="item.type === 'geometry'">
                                                                     <img src="{{ item.new_staticURL }}"/>
@@ -153,17 +163,27 @@
 
                                                             <td class="prev-val" style="width: 30%;">
 
+                                                                <!-- Change value -->
+
                                                                 <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                                    {{ item.previous_value }} &nbsp;
+                                                                    {{ item.previous_value }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'object'">
-                                                                    {{ item.previous_value.name }} &nbsp;
+                                                                    {{ item.previous_value.name }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'number'">
-                                                                    {{ item.previous_value | number:2 }} &nbsp;
+                                                                    {{ item.previous_value | number:2 }}&nbsp;
                                                                 </span>
+
+                                                                <!-- Change label -->
+
+                                                                <span data-ng-if="item.previous_value !== null && item.label && item.label.length">
+                                                                    {{ item.label }}
+                                                                </span>
+
+                                                                <!-- Change geometry map (static) -->
 
                                                                 <div data-ng-if="item.type === 'geometry'">
                                                                     <img src="{{ item.previous_staticURL }}"/>
@@ -180,6 +200,14 @@
                                             </div>
 
                                             <div class="body" data-ng-if="!changeLogItem.diff">
+
+                                                <div data-ng-if="changeLogItem.data && changeLogItem.data.metric">
+
+                                                    <span><strong>{{ changeLogItem.data.metric.name }}:&nbsp;</strong></span>
+
+                                                    <span>{{ changeLogItem.data.value | number:2 }}</span>
+
+                                                </div>
 
                                                 <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
 
