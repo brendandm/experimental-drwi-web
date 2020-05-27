@@ -67,7 +67,7 @@ angular.module('FieldDoc')
             };
 
             /*START Pagniation vars*/
-            self.limit = 12;
+            self.limit = 25;
             self.page = 1;
 
             self.defaultPaginationLimits = true;
