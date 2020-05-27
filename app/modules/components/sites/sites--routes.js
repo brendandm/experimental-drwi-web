@@ -31,11 +31,6 @@ angular.module('FieldDoc')
                             return Account.userObject;
 
                         },
-                        nodes: function(Site, $route) {
-                            return Site.nodes({
-                                id: $route.current.params.siteId
-                            });
-                        },
                         practices: function(Site, $route) {
                             return Site.practices({
                                 id: $route.current.params.siteId

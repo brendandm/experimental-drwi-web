@@ -10,7 +10,7 @@
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
+                $route, user, Utility, site, mapbox, Site, Project, practices,
                 $interval, LayerService, MapManager,
                 Shapefile, Task) {
 
