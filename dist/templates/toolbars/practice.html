@@ -29,10 +29,18 @@
             </a>
         </li>
         -->
+
         <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
             <a href="/practices/{{ page.feature.id }}/tags">
                 <i class="material-icons">
                     local_offer
+                </i>
+            </a>
+        </li>
+         <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
+            <a href="/practices/{{ page.feature.id }}/history">
+                <i class="material-icons">
+                    history
                 </i>
             </a>
         </li>
