@@ -21,6 +21,13 @@
     float: none;
     clear: both;
     overflow: hidden;
+
+    a:hover,
+    a:active,
+    a:focus {
+        text-decoration: underline !important;
+    }
+            
 }
 
 .breadcrumb icon    {

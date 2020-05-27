@@ -4,123 +4,116 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
+    <div class="content--container" data-ng-if="!page.status.loading && !page.member.id">
 
-      <div class="content--container"  data-ng-if="!page.status.loading && !page.member.id">
-            <section class="privacy-message reveal fade-in t0">
-                <div class="main--ui eveal fade-in">
-                   <p>
+        <section class="privacy-message reveal fade-in t0">
+        
+            <div class="main--ui eveal fade-in">
+        
+                <p>
                     <i class="material-icons">
                         lock
                     </i>
                 </p>
 
                 <p>You do not have permission to view this profile.</p>
+        
             </div>
-          </section>
-      </div>
-      <div class="content--container" ng-if="page.member.id">
-        <h1 class="inset"  data-ng-if="page.member.id == page.user.properties.id" ng-cloak>My Profile</h1>
-          <h1 class="inset"  data-ng-if="page.member.id != page.user.properties.id" ng-cloak>Profile</h1>
-
-        <div class="main--ui eveal fade-in">
-
-          <div class="add--new--wrapper reveal fade-in"  data-ng-if="page.member.id == page.user.properties.id">
-                    <span>Edit profile</span>
-                    <a class="add--new--btn" href="/account/" data-ng-class="{viewing: $root.viewState.accountEdit}">
-                        <i class="material-icons">
-                        edit
-                        </i>
-                    </a>
-                </div>
-
-
-             <div class="flow2--profile-container reveal fade-in" style="">
-                  <div class="flow2--left-field-profile" style="">
-
-                       <div class="user-avatar-wrapper" style=""  ng-if="page.member.picture">
-                             <img class='user--avatar' style="" src="{{page.member.picture}}">
-
-                        </div>
-                      <div class="user-avatar-wrapper" style=""  ng-if="!page.member.picture">
-                                 <img class='user--avatar' style="" src="/images/avatar-Default-1024x.png">
-                          <!-- <i class="material-icons">
-                                person
-                            </i> -->
-
-                        </div>
-
-
-                    </div>
-
-                    <div class="flow2--right-field-profile" style="">
-                        <div class='flow2-text-container' style="" >
-
-                           <h2 class="flow2-profile" style="">
-                                       {{page.member.first_name}}  {{page.member.last_name}}
-                            </h2>
-                        </div>
-                        <div class='flow2-text-container' style="margin-right:3em;" ng-if="page.member.title || page.member.organization">
-
-                                <p class="flow2-b">
-                                    <span ng-if="page.member.title">
-                                        <b>{{page.member.title}}</b>
-                                    </span>
-                                    <br>
-                                     <span ng-if="page.member.organization.properties.name" style="clear:left;">
-                                         {{page.member.organization.properties.name}}
-                                     </span>
-                                </p>
-                          <!--   <p class="flow2-b" >
-                                 <span>{{page.member.organization.properties.name}}</span>
-                            </p>
-                            -->
-
-                        </div>
-                  <!--     <div class='flow2-text-container' ng-if="page.member.organization">
-
-                            <p class="flow2-b">
-                                {{page.member.organization.name}}
-                            </p>
-                        </div>
-                   -->
-                        <div class='flow2-text-container' ng-if="page.member.email">
-
-                            <p class="flow2-b">
-                                <a href="mailto:{page.member.email">{{page.member.email}}</a>
-                            </p>
-                        </div>
-                        <div class='flow2-text-container' ng-if="page.member.bio">
-
-                            <p class="flow2-b" style="text-align: left;  text-align-last: left; ">
-                                {{page.user.properties.bio}}
-                            </p>
-                        </div>
-
-                     </div>
-
-                </div>
-
-
-        </div>
-
+        
+        </section>
 
     </div>
 
+    <div class="content--container" data-ng-if="page.member.id">
 
+        <h1 class="inset" data-ng-if="page.member.id == page.user.properties.id">My Profile</h1>
 
+        <h1 class="inset" data-ng-if="page.member.id != page.user.properties.id">Profile</h1>
 
+        <div class="main--ui eveal fade-in">
 
+            <div class="add--new--wrapper reveal fade-in"  data-ng-if="page.member.id == page.user.properties.id">
 
+                <span>Edit profile</span>
+            
+                <a class="add--new--btn" href="/account/" data-ng-class="{viewing: $root.viewState.accountEdit}">
+            
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            
+            </div>
 
+            <div class="flow2--profile-container reveal fade-in">
 
+                <div class="flow2--left-field-profile">
 
+                    <div class="user-avatar-wrapper" data-ng-if="page.member.picture">
 
+                        <div class="user-avatar user-avatar-lg" style="background-image: url({{ page.member.picture }});"></div>
 
+                    </div>
+            
+                    <div class="user-avatar-wrapper" data-ng-if="!page.member.picture">
 
+                        <div class="user-avatar user-avatar-lg" style="background-image: url(/images/avatar-Default-1024x.png);"></div>
+                
+                    </div>
 
+                </div>
 
+                <div class="flow2--right-field-profile">
+            
+                    <div class="flow2-text-container">
 
+                        <h2 class="flow2-profile">
+                            {{ page.member.first_name }}  {{ page.member.last_name }}
+                        </h2>
 
+                    </div>
+            
+                    <div class="flow2-text-container" style="margin-right:3em;" data-ng-if="page.member.title || page.member.organization">
+
+                        <p class="flow2-b">
+                        
+                            <span data-ng-if="page.member.title">
+                                <strong>{{page.member.title}}</strong>
+                            </span>
+            
+                            <br>
+            
+                            <span data-ng-if="page.member.organization.properties.name">
+                                {{ page.member.organization.properties.name }}
+                            </span>
+            
+                        </p>
+
+                    </div>
+
+                    <div class="flow2-text-container" data-ng-if="page.member.email">
+
+                        <p class="flow2-b">
+                            <a href="mailto:{page.member.email">{{ page.member.email }}</a>
+                        </p>
+                    
+                    </div>
+            
+                    <div class="flow2-text-container" data-ng-if="page.member.bio">
+
+                        <p class="flow2-b">
+                            {{ page.user.properties.bio }}
+                        </p>
+            
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">

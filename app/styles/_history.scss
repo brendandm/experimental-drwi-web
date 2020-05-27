@@ -78,6 +78,17 @@
         .change-action {
             align-items: center;
 
+            a:hover,
+            a:active,
+            a:focus {
+                text-decoration: underline !important;
+            }
+
+            i {
+                cursor: default;
+                user-select: none;
+            }
+
             span {
                 display: inline-flex;
 
