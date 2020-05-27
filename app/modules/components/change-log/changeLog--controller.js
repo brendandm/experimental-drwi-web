@@ -160,6 +160,8 @@ angular.module('FieldDoc')
 
                     self.feature = successResponse.feature;
 
+                    self.feature_type = successResponse.feature_type;
+
                     self.changeLog = successResponse.history;
 
                     self.summary = successResponse.summary;
