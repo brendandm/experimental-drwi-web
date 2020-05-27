@@ -11,7 +11,7 @@
         .config(function($routeProvider, environment) {
 
             $routeProvider
-                .when('/organization', {
+                .when('/organizationEdit', {
                     templateUrl: '/modules/components/organization/views/organizationEdit--view.html?t=' + environment.version,
                     controller: 'OrganizationEditViewController',
                     controllerAs: 'page',
@@ -22,7 +22,7 @@
                     }
                 }),
             $routeProvider
-                .when('/organizationProfile', {
+                .when('/organization', {
                     templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
                     controller: 'OrganizationProfileViewController',
                     controllerAs: 'page',
@@ -33,7 +33,7 @@
                     }
                 }),
              $routeProvider
-                .when('/organizationProfile/:id', {
+                .when('/organization/:id', {
                     templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
                     controller: 'OrganizationProfileViewController',
                     controllerAs: 'page',

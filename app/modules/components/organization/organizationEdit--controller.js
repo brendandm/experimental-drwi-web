@@ -36,7 +36,7 @@ angular.module('FieldDoc')
 
             function closeAlertRedirection() {
                 self.alerts = [];
-                $location.path('/organizationProfile' );
+                $location.path('/organization' );
             }
             //
             // Assign project to a scoped variable
