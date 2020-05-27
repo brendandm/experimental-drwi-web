@@ -157,7 +157,7 @@ angular.module('FieldDoc')
 
                     self.summary = successResponse.summary;
 
-                     self.practicesCalculateViewCount();
+                     self.calculateViewCount();
 
                     if (!self.feature.permissions.read &&
                         !self.feature.permissions.write) {
