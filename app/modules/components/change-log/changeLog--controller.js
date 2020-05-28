@@ -206,7 +206,21 @@ angular.module('FieldDoc')
 
                         var separatorIdx = change.action.indexOf('_');
 
+                        // 
+                        // Extract operation name from `change.action`.
+                        // 
+                        // e.g. `create_practice` --> `create`
+                        // 
+
                         var op = change.action.substring(0, separatorIdx);
+
+                        change.op = op;
+
+                        // 
+                        // Extract feature type from `change.action`.
+                        // 
+                        // e.g. `create_practice` --> `practice`
+                        // 
 
                         var featureType = change.action.substring(separatorIdx + 1);
 
@@ -220,12 +234,35 @@ angular.module('FieldDoc')
                             featureType
                         );
 
+                        // 
+                        // If applicable, add `deletion` flag to log
+                        // and a generic string describing the action.
+                        // 
+
+                        if (op.indexOf('delete') === 0) {
+
+                            change.deletion = true;
+
+                            change.detail = ' removed from ' + self.featureType + '.';
+
+                        }
+
+                        // 
+                        // Hide creation log body when view context
+                        // and log feature type match.
+                        // 
+
                         if (op.indexOf('create') >= 0 &&
                             (featureType.replace(/_/g, '-') === self.featureType)) {
 
                             change.hideBody = true;
 
                         }
+
+                        // 
+                        // Iterate `change.diff` object and generate
+                        // static Mapbox URLs for `geometry` types.
+                        // 
 
                         if (change.diff &&
                             typeof change.diff !== 'undefined') {
@@ -263,6 +300,12 @@ angular.module('FieldDoc')
                             }
 
                         } else {
+
+                            // 
+                            // Generate relative link paths and text content
+                            // so that users can access new features from
+                            // creation logs.
+                            // 
 
                             if (op.indexOf('create') >= 0) {
 
@@ -318,6 +361,8 @@ angular.module('FieldDoc')
 
                                         linkTxt = change.data.user.first_name + ' ' + change.data.user.last_name;
 
+                                        change.detail = ' added to project.';
+
                                         break;
 
                                     case 'report':
@@ -360,25 +405,28 @@ angular.module('FieldDoc')
 
                             } else {
 
-                                if (featureType === 'project_member') {
+                                // 
+                                // Extract feature name for display
+                                // in deletion log bodies.
+                                // 
 
-                                    change.deletedName = change.data.user.first_name + ' ' + change.data.user.last_name;
+                                if (featureType.indexOf('target') < 0) {
 
-                                } else if (featureType.indexOf('target') >= 0) {
+                                    if (featureType === 'project_member') {
 
-                                    change.deletedName = change.data.metric.name;
-                                    
-                                } else {
+                                        change.deletedName = change.data.user.first_name + ' ' + change.data.user.last_name;
 
-                                    change.deletedName = change.data.name;
+                                    } else {
+
+                                        change.deletedName = change.data.name;
+
+                                    }
 
                                 }
 
                             }
 
                         }
-
-                        change.op = op;
 
                         console.log(
                             'self.parseResponse.change:',

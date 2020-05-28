@@ -85,7 +85,7 @@
                                             <div class="change-metadata">
 
                                                 <div class="change-action">
-                                                    <i class="material-icons" title="{{ changeLogItem.action_label }}">
+                                                    <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
                                                         {{ changeLogItem.op }}
                                                     </i>
                                                     <span title="{{ changeLogItem.timestamp.utc }} UTC">
@@ -112,7 +112,7 @@
                                                     </span>
                                                 </div>
 
-                                                <div class="version">
+                                                <div class="version" title="{{ changeLogItem.timestamp.utc }} UTC">
                                                     {{ changeLogItem.version }}
                                                 </div>
 
@@ -222,23 +222,45 @@
 
                                             <div class="body" data-ng-if="!changeLogItem.diff && !changeLogItem.hideBody">
 
+                                                <!-- Metric target display -->
+
                                                 <div data-ng-if="changeLogItem.data && changeLogItem.data.metric">
 
-                                                    <span><strong>{{ changeLogItem.data.metric.name }}:&nbsp;</strong></span>
+                                                    <div class="deletion-highlight" data-ng-if="changeLogItem.deletion">
 
-                                                    <span>{{ changeLogItem.data.value | number:2 }}</span>
+                                                        <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
+
+                                                        <span style="text-decoration: line-through;">{{ changeLogItem.data.value | number:2 }}</span>
+
+                                                    </div>
+
+                                                    <div data-ng-if="!changeLogItem.deletion">
+
+                                                        <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
+
+                                                        <span>{{ changeLogItem.data.value | number:2 }}</span>
+
+                                                    </div>
 
                                                 </div>
+
+                                                <!-- Non-target creation log display -->
 
                                                 <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
 
                                                     <a href="{{ changeLogItem.link }}">{{ changeLogItem.linkTxt }}</a>
 
+                                                    <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
+
                                                 </div>
 
-                                                <div data-ng-if="changeLogItem.deletedName">
+                                                <!-- Non-target deletion log display -->
 
-                                                    <span>{{ changeLogItem.deletedName }}</span>
+                                                <div data-ng-if="(changeLogItem.data && !changeLogItem.data.metric) && changeLogItem.deletedName">
+
+                                                    <span class="deletion-highlight">{{ changeLogItem.deletedName }}</span>
+
+                                                    <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
 
                                                 </div>
 
