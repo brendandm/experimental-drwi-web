@@ -167,10 +167,9 @@ angular.module('FieldDoc')
 
                     self.summary = successResponse.summary;
 
-                     self.calculateViewCount();
+                    self.calculateViewCount();
 
-                    if (!self.feature.permissions.read &&
-                        !self.feature.permissions.write) {
+                    if (!self.feature.permissions.write) {
 
                         self.makePrivate = true;
 
