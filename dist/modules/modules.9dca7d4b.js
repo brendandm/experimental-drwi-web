@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590673485746})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590673784286})
 
 ;
 /**
@@ -11099,12 +11099,6 @@ angular.module('FieldDoc')
 
                     self.feature_type = successResponse.feature_type;
 
-                    self.changeLog = successResponse.history;
-
-                    self.summary = successResponse.summary;
-
-                    self.calculateViewCount();
-
                     if (!self.feature.permissions.write) {
 
                         self.makePrivate = true;
@@ -11116,15 +11110,17 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = self.feature.permissions.write;
                         self.permissions.can_delete = self.feature.permissions.write;
 
+                        self.changeLog = successResponse.history;
+
+                        self.summary = successResponse.summary;
+
+                        self.calculateViewCount();
+
+                        self.parseResponse();
+
+                        self.showElements();
+
                     }
-
-                    self.parseResponse();
-
-                    self.showElements();
-
-                    console.log(
-                        "self.feature_type",
-                        self.feature_type );
 
                 }, function(errorResponse) {
 
