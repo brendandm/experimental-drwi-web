@@ -52,7 +52,7 @@
                                 {{page.organizationProfile.email}}
                             </p>
                         </div>
-
+                        <br>
                         <div class="flow2--profileItem" data-ng-if="page.organizationProfile.created_on">
                             <p class="flow2-h">
                                 <i>Created on:</i>
@@ -71,6 +71,11 @@
                                 {{ page.organizationProfile.modified_on | date : 'longDate' }}
 
                             </p>
+                               <p>
+                                <a href="/organization/{{ page.organizationProfile.id }}/history">
+                                <sub><i class="material-icons">history</i></sub> View change log
+                             </a>
+                        </p>
                         </div>
 
                         <div class="flow2--profileItem"
