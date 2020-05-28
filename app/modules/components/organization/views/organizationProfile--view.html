@@ -12,7 +12,7 @@
 
                 <div class="add--new--wrapper"  data-ng-if="$root.user.properties.is_admin">
                     <span>Edit organization</span>
-                    <a class="add--new--btn" href="/organization/{{page.organizationProfile.id}}/edit" data-ng-class="{viewing: $root.viewState.organizationProfile}">
+                    <a class="add--new--btn" href="/organizations/{{page.organizationProfile.id}}/edit" data-ng-class="{viewing: $root.viewState.organizationProfile}">
                         <i class="material-icons">
                         edit
                         </i>
@@ -72,7 +72,7 @@
 
                             </p>
                                <p>
-                                <a href="/organization/{{ page.organizationProfile.id }}/history">
+                                <a href="/organizations/{{ page.organizationProfile.id }}/history">
                                 <sub><i class="material-icons">history</i></sub> View change log
                              </a>
                         </p>
