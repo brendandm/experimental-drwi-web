@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590668455982})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590669634826})
 
 ;
 /**
@@ -10957,8 +10957,6 @@ angular.module('FieldDoc')
                 processing: false
             };
 
-
-
             self.alerts = [];
 
             function closeAlerts() {
@@ -10983,21 +10981,24 @@ angular.module('FieldDoc')
 
                 self.featureId = $routeParams.id;
 
-                if ($routeParams.feature_type) {
-                    if ($routeParams.feature_type == 'projects') {
-                        self.featureType = 'project';
-                    } else if ($routeParams.feature_type == 'sites') {
-                        self.featureType = 'site';
-                    } else if ($routeParams.feature_type == 'practices') {
-                        self.featureType = 'practice';
-                    } else if ($routeParams.feature_type == 'programs') {
-                        self.featureType = 'program';
-                    } else if ($routeParams.feature_type == 'organization') {
-                        self.featureType = 'organization';
-                    }
+                var featureType = $routeParams.feature_type;
+
+                var lastChar = featureType.slice(-1);
+
+                if (lastChar === 's') {
+
+                    featureType = featureType.slice(0, -1);
+
                 }
 
+                self.featureType = featureType;
+
+                $rootScope.viewState = {
+                    featureType: true
+                };
+
                 console.log('featureId-->', self.featureId);
+
                 console.log('featureType-->', self.featureType);
 
             };
@@ -11122,7 +11123,9 @@ angular.module('FieldDoc')
 
                     self.showElements();
 
-                    console.log("self.feature.feature_type",self.feature.feature_type );
+                    console.log(
+                        "self.feature_type",
+                        self.feature_type );
 
                 }, function(errorResponse) {
 
@@ -32972,9 +32975,32 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            // .when('/tags/:tagId', {
+            //     templateUrl: '/modules/components/tags/views/tagSummary--view.html?t=' + environment.version,
+            //     controller: 'TagSummaryController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         tag: function(Tag, $route) {
+            //             return Tag.get({
+            //                 id: $route.current.params.tagId
+            //             });
+            //         }
+            //     }
+            // })
             .when('/tags/:tagId', {
-                templateUrl: '/modules/components/tags/views/tagSummary--view.html?t=' + environment.version,
-                controller: 'TagSummaryController',
+                templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,
+                controller: 'TagEditController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -33130,8 +33156,6 @@ angular.module('FieldDoc')
                 self.permissions.can_delete = successResponse.permissions.write;
 
                 $rootScope.page.title = self.tag.name ? self.tag.name : 'Un-named Tag';
-
-                self.scrubFeature(self.tag);
 
                 self.showElements();
 

@@ -28,7 +28,6 @@
 
             <div class="module--grid" data-ng-if="!page.status.loading">
 
-               <!--     <div class="breadcrumb_container"> -->
                 <div class="group">
                     <article class="breadcrumb" >
                         <p>
@@ -37,14 +36,11 @@
                                     /
                             </nobr>
                             <nobr>
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
                                 Site: <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-
                             </nobr>
                         </p>
                     </article>
                 </div>
-            <!--    </div> -->
 
                 <div class="group">
 
@@ -52,14 +48,22 @@
 
                         <h1>{{ page.site.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
-                         <p>
-                        <a href="/sites/{{ page.site.id }}/history">
-                            <sub><i class="material-icons">history</i></sub> View change log
-                         </a>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/sites/{{ page.site.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
 
                         <p data-ng-if="page.project.id && page.project.program">
                             <strong>Program:</strong> {{ page.project.program.name }}

@@ -28,7 +28,6 @@
 
             <div class="module--grid">
 
-            <!--     <div class="breadcrumb_container">  display:inline-block; -->
                <div class="group" style="border:0px solid green;">
 
                     <article class="breadcrumb" style="border:0px solid red;" >
@@ -37,7 +36,6 @@
                                 /
                                </nobr>
                             <nobr data-ng-if="page.practice.site != null">
-                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
                             Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
                                 /
                             </nobr>
@@ -48,8 +46,6 @@
                     </article>
                </div>
 
-            <!--    </div> -->
-
                 <div class="group">
 
                     <!-- Descriptors -->
@@ -58,14 +54,23 @@
 
                         <h1>{{ page.practice.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
-                         <p>
-                            <a href="/practices/{{ page.practice.id }}/history">
-                                <sub><i class="material-icons">history</i></sub> View change log
-                             </a>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/practices/{{ page.practice.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
+
                         <p>
                             <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name || 'Un-named' }}</a>
                         </p>

@@ -10,7 +10,6 @@
 
             <div class="module--grid">
 
-                   <!--     <div class="breadcrumb_container"> -->
                 <div class="group">
                     <article class="breadcrumb" >
                        <p>
@@ -20,7 +19,6 @@
                        </p>
                     </article>
                 </div>
-            <!--    </div> -->
 
                 <div class="group">
 
@@ -29,11 +27,24 @@
                     <article class="pad space-right shadow">
 
                         <h1>{{ page.program.name || 'Un-named' }}</h1>
-                         <p>
-                            <a href="/programs/{{ page.program.id }}/history">
-                                <sub><i class="material-icons">history</i></sub> View change log
-                             </a>
-                        </p>
+
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.program.id && page.program.last_modified_by.first_name && page.program.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.program.last_modified_by.first_name }} {{ page.program.last_modified_by.last_name }} on {{ page.program.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/programs/{{ page.program.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
+
                         <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
 
                         <p data-ng-if="page.program.website" style="display: flex; flex-flow: row nowrap; align-items: center;">

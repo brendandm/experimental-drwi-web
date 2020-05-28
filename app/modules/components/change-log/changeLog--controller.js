@@ -21,8 +21,6 @@ angular.module('FieldDoc')
                 processing: false
             };
 
-
-
             self.alerts = [];
 
             function closeAlerts() {
@@ -47,21 +45,24 @@ angular.module('FieldDoc')
 
                 self.featureId = $routeParams.id;
 
-                if ($routeParams.feature_type) {
-                    if ($routeParams.feature_type == 'projects') {
-                        self.featureType = 'project';
-                    } else if ($routeParams.feature_type == 'sites') {
-                        self.featureType = 'site';
-                    } else if ($routeParams.feature_type == 'practices') {
-                        self.featureType = 'practice';
-                    } else if ($routeParams.feature_type == 'programs') {
-                        self.featureType = 'program';
-                    } else if ($routeParams.feature_type == 'organization') {
-                        self.featureType = 'organization';
-                    }
+                var featureType = $routeParams.feature_type;
+
+                var lastChar = featureType.slice(-1);
+
+                if (lastChar === 's') {
+
+                    featureType = featureType.slice(0, -1);
+
                 }
 
+                self.featureType = featureType;
+
+                $rootScope.viewState = {
+                    featureType: true
+                };
+
                 console.log('featureId-->', self.featureId);
+
                 console.log('featureType-->', self.featureType);
 
             };
@@ -186,7 +187,9 @@ angular.module('FieldDoc')
 
                     self.showElements();
 
-                    console.log("self.feature.feature_type",self.feature.feature_type );
+                    console.log(
+                        "self.feature_type",
+                        self.feature_type );
 
                 }, function(errorResponse) {
 

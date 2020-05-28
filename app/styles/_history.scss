@@ -7,6 +7,30 @@
 // @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 //
 
+.last-modified-summary {
+  
+  .modtime {
+    font-size: 0.9em;
+    font-weight: normal;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-link-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding-bottom: 1em;
+    color: $color-blue-base;
+
+    span {
+      display: inline-flex;
+      margin-right: 0.25em;
+    }
+
+  }
+
+}
+
 .history-group {
   display: flex;
   flex-flow: column;
@@ -59,7 +83,7 @@
 
       .change-metadata {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: row wrap;
         align-items: center;
         width: 100%;
         padding: 1em;
@@ -98,6 +122,17 @@
 
             }
 
+        }
+
+        .version {
+          display: flex;
+          flex-grow: 1;
+          flex-shrink: 0;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: flex-end;
+          color: #9E9E9E;
+          font-size: 0.9rem;
         }
 
         span {

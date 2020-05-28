@@ -63,7 +63,11 @@
 
                         </div>
 
+                            <!-- Pagination controls -->
+
                             <div data-ng-include="'/templates/pagination-view.html'"></div>
+
+                            <!-- History -->
 
                             <div class="history-group list-unstyled" style="margin-top: 2em;">
 
@@ -88,9 +92,12 @@
                                                         {{ changeLogItem.action_label }}
                                                     </span>
                                                     <span>&nbsp;by&nbsp;</span>
-                                                    <a href="/profile/{{changeLogItem.creator.id}}">
+                                                    <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
                                                         <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
                                                     </a>
+                                                    <span data-ng-if="!changeLogItem.link_creator_profile">
+                                                        <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                                    </span>
                                                 </div>
 
                                                 <span>&nbsp;&middot;&nbsp;</span>
@@ -103,6 +110,10 @@
                                                     <span>
                                                         {{ changeLogItem.timestamp.local | date:'shortTime' }}
                                                     </span>
+                                                </div>
+
+                                                <div class="version">
+                                                    {{ changeLogItem.version }}
                                                 </div>
 
                                             </div>
@@ -231,6 +242,8 @@
 
                                 </div>
 
+                                <!-- Pagination controls -->
+
                                 <div data-ng-include="'/templates/pagination-view.html'"></div>
 
                             </div>
@@ -246,100 +259,12 @@
         </div>
 
     </div>
-        <div data-ng-if="page.feature_type == 'project'" data-ng-include="'/templates/toolbars/project.html'"></div>
-        <div data-ng-if="page.feature_type == 'practice'" data-ng-include="'/templates/toolbars/practice.html'"></div>
-        <div data-ng-if="page.feature_type == 'site'" data-ng-include="'/templates/toolbars/site.html'"></div>
-        <div data-ng-if="page.feature_type == 'program'" data-ng-include="'/templates/toolbars/program.html'"></div>
-        <div data-ng-if="page.feature_type == 'organization'" data-ng-include="'/templates/toolbars/organization.html'"></div>
 
-    <!--   <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/projects/{{ page.project.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
-                <a href="/projects/{{ page.project.id }}/grant" title="Program">
-                    <i class="material-icons">
-                        account_balance
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/users" title="Collaborators">
-                    <i class="material-icons">
-                        group
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/projects/{{ page.project.id }}/partnerships" title="Partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-            -->
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li> -->
-    <!--
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/projects/{{ page.project.id }}/tags" title="Tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.print()" title="Print">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
-                    <p>Do you want to delete this project?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')" >
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()" >
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')" title="Delete">
-                    <i class="material-icons">
-                        delete
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    -->
+    <div data-ng-if="page.feature_type == 'project'" data-ng-include="'/templates/toolbars/project.html'"></div>
+    <div data-ng-if="page.feature_type == 'practice'" data-ng-include="'/templates/toolbars/practice.html'"></div>
+    <div data-ng-if="page.feature_type == 'site'" data-ng-include="'/templates/toolbars/site.html'"></div>
+    <div data-ng-if="page.feature_type == 'program'" data-ng-include="'/templates/toolbars/program.html'"></div>
+    <div data-ng-if="page.feature_type == 'organization'" data-ng-include="'/templates/toolbars/organization.html'"></div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">

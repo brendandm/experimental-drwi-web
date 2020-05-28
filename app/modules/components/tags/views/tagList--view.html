@@ -54,8 +54,9 @@
 
                             <div class="card--content">
 
-                                <div class="name" style="background-color:{{ tag.color }}">
-                                    <span style="color:#ffffff">{{ tag.name }}</span>
+                                <div class="name" style="background-color: {{ tag.color }};">
+                                    <span style="color: #ffffff;" data-ng-if="tag.color">{{ tag.name }}</span>
+                                    <span data-ng-if="!tag.color">{{ tag.name }}</span>
                                 </div>
 
                                 <div class="body">

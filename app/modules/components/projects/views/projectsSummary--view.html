@@ -28,7 +28,6 @@
 
             <div class="module--grid">
 
-                 <!--     <div class="breadcrumb_container"> -->
                 <div class="group">
                     <article class="breadcrumb" >
                         <p>
@@ -38,8 +37,6 @@
                         </p>
                     </article>
                 </div>
-            <!--    </div> -->
-
 
                 <div class="group">
 
@@ -47,22 +44,27 @@
 
                         <h1>{{ page.project.name }}</h1>
 
-                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
-                        <p>
-                        <a href="/projects/{{ page.project.id }}/history">
-                            <sub><i class="material-icons">history</i></sub> View change log
-                         </a>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/projects/{{ page.project.id }}/history">
+                                    View change log
+                                 </a>
+                            </div>
+
+                        </div>
+
                         <p data-ng-if="page.project.program && page.project.program.id" class="label">
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
 
-                     <!--   <p data-ng-if="page.area && page.area.value" class="label">
-                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
-                        </p>
-                    -->
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">
