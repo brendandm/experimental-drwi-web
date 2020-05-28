@@ -35,6 +35,9 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/reports/:reportId', {
+                redirectTo: '/reports/:reportId/edit'
+            })
             .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
                 controller: 'ReportEditController',

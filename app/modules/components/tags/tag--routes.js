@@ -61,27 +61,7 @@ angular.module('FieldDoc')
             //     }
             // })
             .when('/tags/:tagId', {
-                templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,
-                controller: 'TagEditController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    tag: function(Tag, $route) {
-                        return Tag.get({
-                            id: $route.current.params.tagId
-                        });
-                    }
-                }
+                redirectTo: '/tags/:tagId/edit'
             })
             .when('/tags/:tagId/edit', {
                 templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,

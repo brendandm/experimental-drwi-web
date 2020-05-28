@@ -148,8 +148,12 @@
 
                                                                 <!-- Change value -->
 
-                                                                <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                                <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
                                                                     {{ item.new_value }}&nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'date'">
+                                                                    {{ item.new_value | date:'longDate' }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'object'">
@@ -178,8 +182,12 @@
 
                                                                 <!-- Change value -->
 
-                                                                <span data-ng-if="item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                                <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
                                                                     {{ item.previous_value }}&nbsp;
+                                                                </span>
+
+                                                                <span data-ng-if="item.type === 'date'">
+                                                                    {{ item.previous_value | date:'longDate' }}&nbsp;
                                                                 </span>
 
                                                                 <span data-ng-if="item.type === 'object'">

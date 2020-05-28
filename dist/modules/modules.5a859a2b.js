@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590675881171})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590677603014})
 
 ;
 /**
@@ -17392,6 +17392,9 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/reports/:reportId', {
+                redirectTo: '/reports/:reportId/edit'
+            })
             .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
                 controller: 'ReportEditController',
@@ -23818,12 +23821,6 @@ angular.module('FieldDoc')
 
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-
-                            if (!self.report.practice_extent) {
-
-                                self.report.practice_extent = convertPracticeArea(self.practice);
-
-                            }
 
                         }
 
@@ -32994,27 +32991,7 @@ angular.module('FieldDoc')
             //     }
             // })
             .when('/tags/:tagId', {
-                templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,
-                controller: 'TagEditController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    tag: function(Tag, $route) {
-                        return Tag.get({
-                            id: $route.current.params.tagId
-                        });
-                    }
-                }
+                redirectTo: '/tags/:tagId/edit'
             })
             .when('/tags/:tagId/edit', {
                 templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,

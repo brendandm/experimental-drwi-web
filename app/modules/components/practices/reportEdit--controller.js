@@ -281,12 +281,6 @@
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            if (!self.report.practice_extent) {
-
-                                self.report.practice_extent = convertPracticeArea(self.practice);
-
-                            }
-
                         }
 
                         self.loadMatrix();
