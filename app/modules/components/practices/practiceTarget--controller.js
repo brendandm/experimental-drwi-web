@@ -540,6 +540,10 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                if(self.practice.custom_extent == null){
+                    self.practice.custom_extent = self.practice.calculated_extent;
+                }
+
                 self.calculating ==  self.practice.calculating;
 
                 self.geometryMismatch = false;
