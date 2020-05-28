@@ -226,21 +226,11 @@
 
                                                 <div data-ng-if="changeLogItem.data && changeLogItem.data.metric">
 
-                                                    <div class="deletion-highlight" data-ng-if="changeLogItem.deletion">
+                                                    <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
 
-                                                        <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
+                                                    <span class="deletion-highlight" style="text-decoration: line-through;" data-ng-if="changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
 
-                                                        <span style="text-decoration: line-through;">{{ changeLogItem.data.value | number:2 }}</span>
-
-                                                    </div>
-
-                                                    <div data-ng-if="!changeLogItem.deletion">
-
-                                                        <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
-
-                                                        <span>{{ changeLogItem.data.value | number:2 }}</span>
-
-                                                    </div>
+                                                    <span data-ng-if="!changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
 
                                                 </div>
 
