@@ -52,209 +52,221 @@
 
         </section>
 
+        <!-- Start history content -->
+
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
-                <div class="group reveal fade-in t2">
+            <div class="group reveal fade-in t2">
 
-                    <section class="shadow">
+                <section style="padding: 0 0 2em;">
 
-                        <div class="collection-search reveal fade-in t0" style="justify-content: left; align-items: left; overflow: auto; flex-wrap: wrap;">
-                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search history">
+                    <!-- Search element -->
 
+                    <div class="collection-search reveal fade-in t0" style="justify-content: left; align-items: left; overflow: auto; flex-wrap: wrap;">
+                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search history">
+                    </div>
+
+                    <!-- User filter control -->
+
+                    <div id="history-scope" class="scope--control" style="margin: 1rem 0;">
+                        <div style="display: inline-block; margin-right: 1rem;">
+                            <strong>Show only your changes</strong>
                         </div>
+                        <label class="switch">
+                            <input class="inputdemo" type="checkbox" data-ng-model="page.userOnly" data-ng-checked="page.userOnly" data-ng-change="page.changeLimit(page.limitLow)">
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
 
-                            <!-- Pagination controls -->
+                    <!-- Pagination controls -->
 
-                            <div data-ng-include="'/templates/pagination-view.html'"></div>
+                    <div data-ng-include="'/templates/pagination-view.html'"></div>
 
-                            <!-- History -->
+                    <!-- Start history -->
 
-                            <div class="history-group list-unstyled" style="margin-top: 2em;">
+                    <div class="history-group list-unstyled" style="margin-top: 2em;">
 
-                                <div class="card reveal fade-in pad shadow"
-                                    style="width: 100%; animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="group in page.changeLog">
+                        <div class="card reveal fade-in pad shadow" style="width: 100%; animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="group in page.changeLog">
 
-                                    <h2>
-                                         {{ group.weekday }} &middot; {{ group.date | date:'longDate' }}
-                                    </h2>
+                            <h2>
+                                 {{ group.weekday }} &middot; {{ group.date | date:'longDate' }}
+                            </h2>
 
-                                    <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
+                            <div data-ng-repeat="changeLogItem in group.changes | filter: page.queryToken">
 
-                                        <div class="card--content">
+                                <div class="card--content">
 
-                                            <div class="change-metadata">
+                                    <div class="change-metadata">
 
-                                                <div class="change-action">
-                                                    <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
-                                                        {{ changeLogItem.op }}
-                                                    </i>
-                                                    <span title="{{ changeLogItem.timestamp.utc }} UTC">
-                                                        {{ changeLogItem.action_label }}
-                                                    </span>
-                                                    <span>&nbsp;by&nbsp;</span>
-                                                    <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
-                                                        <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
-                                                    </a>
-                                                    <span data-ng-if="!changeLogItem.link_creator_profile">
-                                                        <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
-                                                    </span>
-                                                </div>
-
-                                                <span>&nbsp;&middot;&nbsp;</span>
-
-                                                <div class="timestamp">
-                                                    <span>
-                                                        {{ changeLogItem.timestamp.local | date:'longDate' }}
-                                                    </span>
-                                                    <span>&nbsp;at&nbsp;</span>
-                                                    <span>
-                                                        {{ changeLogItem.timestamp.local | date:'shortTime' }}
-                                                    </span>
-                                                </div>
-
-                                                <div class="version" title="{{ changeLogItem.timestamp.utc }} UTC">
-                                                    {{ changeLogItem.version }}
-                                                </div>
-
+                                        <div class="change-action">
+                                            <div class="icon">
+                                                <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
+                                                    {{ changeLogItem.op }}
+                                                </i>
                                             </div>
+                                            <span title="{{ changeLogItem.timestamp.utc }} UTC">
+                                                {{ changeLogItem.action_label }}
+                                            </span>
+                                            <span>&nbsp;by&nbsp;</span>
+                                            <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
+                                                <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                            </a>
+                                            <span data-ng-if="!changeLogItem.link_creator_profile">
+                                                <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                            </span>
+                                        </div>
 
-                                            <div data-ng-if="changeLogItem.diff">
+                                        <span>&nbsp;&middot;&nbsp;</span>
 
-                                                <table class="diff-table">
+                                        <div class="timestamp" title="{{ changeLogItem.timestamp.local | date:'longDate' }}, {{ changeLogItem.timestamp.local | date:'shortTime' }}">
+                                            <span>
+                                                {{ changeLogItem.timestamp.local | date:'longDate' }}
+                                            </span>
+                                            <span>&nbsp;at&nbsp;</span>
+                                            <span>
+                                                {{ changeLogItem.timestamp.local | date:'shortTime' }}
+                                            </span>
+                                        </div>
 
-                                                    <thead>
+                                        <div class="version" title="{{ changeLogItem.timestamp.utc }} UTC">
+                                            {{ changeLogItem.version }}
+                                        </div>
 
-                                                        <tr>
+                                    </div>
 
-                                                            <th><strong>Property name</strong></th>
+                                    <div data-ng-if="changeLogItem.diff">
 
-                                                            <th><strong>New value</strong></th>
+                                        <table class="diff-table">
 
-                                                            <th><strong>Old value</strong></th>
+                                            <thead>
 
-                                                        </tr>
+                                                <tr>
 
-                                                    </thead>
+                                                    <th><strong>Property name</strong></th>
 
-                                                    <tbody>
+                                                    <th><strong>New value</strong></th>
 
-                                                        <tr data-ng-repeat="(key, item) in changeLogItem.diff">
+                                                    <th><strong>Old value</strong></th>
 
-                                                            <td style="width: 20%;">
-                                                                <strong>{{ key }}</strong>
-                                                            </td>
+                                                </tr>
 
-                                                            <td class="new-val" style="width: 30%;">
+                                            </thead>
 
-                                                                <!-- Change value -->
+                                            <tbody>
 
-                                                                <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                                    {{ item.new_value }}&nbsp;
-                                                                </span>
+                                                <tr data-ng-repeat="(key, item) in changeLogItem.diff">
 
-                                                                <span data-ng-if="item.type === 'date'">
-                                                                    {{ item.new_value | date:'longDate' }}&nbsp;
-                                                                </span>
+                                                    <td style="width: 20%;">
+                                                        <strong>{{ key }}</strong>
+                                                    </td>
 
-                                                                <span data-ng-if="item.type === 'object'">
-                                                                    {{ item.new_value.name }}&nbsp;
-                                                                </span>
+                                                    <td class="new-val" style="width: 30%;">
 
-                                                                <span data-ng-if="item.type === 'number'">
-                                                                    {{ item.new_value | number:2 }}&nbsp;
-                                                                </span>
+                                                        <!-- Change value -->
 
-                                                                <!-- Change label -->
+                                                        <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                            {{ item.new_value }}&nbsp;
+                                                        </span>
 
-                                                                <span data-ng-if="item.new_value !== null && item.label && item.label.length">
-                                                                    {{ item.label }}
-                                                                </span>
+                                                        <span data-ng-if="item.type === 'date'">
+                                                            {{ item.new_value | date:'longDate' }}&nbsp;
+                                                        </span>
 
-                                                                <!-- Change geometry map (static) -->
+                                                        <span data-ng-if="item.type === 'object'">
+                                                            {{ item.new_value.name }}&nbsp;
+                                                        </span>
 
-                                                                <div data-ng-if="item.type === 'geometry'">
-                                                                    <img src="{{ item.new_staticURL }}"/>
-                                                                </div>
+                                                        <span data-ng-if="item.type === 'number'">
+                                                            {{ item.new_value | number:2 }}&nbsp;
+                                                        </span>
 
-                                                            </td>
+                                                        <!-- Change label -->
 
-                                                            <td class="prev-val" style="width: 30%;">
+                                                        <span data-ng-if="item.new_value !== null && item.label && item.label.length">
+                                                            {{ item.label }}
+                                                        </span>
 
-                                                                <!-- Change value -->
+                                                        <!-- Change geometry map (static) -->
 
-                                                                <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                                    {{ item.previous_value }}&nbsp;
-                                                                </span>
+                                                        <div data-ng-if="item.type === 'geometry'">
+                                                            <img src="{{ item.new_staticURL }}"/>
+                                                        </div>
 
-                                                                <span data-ng-if="item.type === 'date'">
-                                                                    {{ item.previous_value | date:'longDate' }}&nbsp;
-                                                                </span>
+                                                    </td>
 
-                                                                <span data-ng-if="item.type === 'object'">
-                                                                    {{ item.previous_value.name }}&nbsp;
-                                                                </span>
+                                                    <td class="prev-val" style="width: 30%;">
 
-                                                                <span data-ng-if="item.type === 'number'">
-                                                                    {{ item.previous_value | number:2 }}&nbsp;
-                                                                </span>
+                                                        <!-- Change value -->
 
-                                                                <!-- Change label -->
+                                                        <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
+                                                            {{ item.previous_value }}&nbsp;
+                                                        </span>
 
-                                                                <span data-ng-if="item.previous_value !== null && item.label && item.label.length">
-                                                                    {{ item.label }}
-                                                                </span>
+                                                        <span data-ng-if="item.type === 'date'">
+                                                            {{ item.previous_value | date:'longDate' }}&nbsp;
+                                                        </span>
 
-                                                                <!-- Change geometry map (static) -->
+                                                        <span data-ng-if="item.type === 'object'">
+                                                            {{ item.previous_value.name }}&nbsp;
+                                                        </span>
 
-                                                                <div data-ng-if="item.type === 'geometry'">
-                                                                    <img src="{{ item.previous_staticURL }}"/>
-                                                                </div>
+                                                        <span data-ng-if="item.type === 'number'">
+                                                            {{ item.previous_value | number:2 }}&nbsp;
+                                                        </span>
 
-                                                            </td>
+                                                        <!-- Change label -->
 
-                                                        </tr>
+                                                        <span data-ng-if="item.previous_value !== null && item.label && item.label.length">
+                                                            {{ item.label }}
+                                                        </span>
 
-                                                    </tbody>
+                                                        <!-- Change geometry map (static) -->
 
-                                                </table>
+                                                        <div data-ng-if="item.type === 'geometry'">
+                                                            <img src="{{ item.previous_staticURL }}"/>
+                                                        </div>
 
-                                            </div>
+                                                    </td>
 
-                                            <div class="body" data-ng-if="!changeLogItem.diff && !changeLogItem.hideBody">
+                                                </tr>
 
-                                                <!-- Metric target display -->
+                                            </tbody>
 
-                                                <div data-ng-if="changeLogItem.data && changeLogItem.data.metric">
+                                        </table>
 
-                                                    <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
+                                    </div>
 
-                                                    <span class="deletion-highlight" style="text-decoration: line-through;" data-ng-if="changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
+                                    <div class="body" data-ng-if="!changeLogItem.diff && !changeLogItem.hideBody">
 
-                                                    <span data-ng-if="!changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
+                                        <!-- Metric target display -->
 
-                                                </div>
+                                        <div data-ng-if="changeLogItem.data && changeLogItem.data.metric">
 
-                                                <!-- Non-target creation log display -->
+                                            <span>{{ changeLogItem.data.metric.name }}:&nbsp;</span>
 
-                                                <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
+                                            <span class="deletion-highlight" style="text-decoration: line-through;" data-ng-if="changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
 
-                                                    <a href="{{ changeLogItem.link }}">{{ changeLogItem.linkTxt }}</a>
+                                            <span data-ng-if="!changeLogItem.deletion">{{ changeLogItem.data.value | number:2 }}</span>
 
-                                                    <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
+                                        </div>
 
-                                                </div>
+                                        <!-- Non-target creation log display -->
 
-                                                <!-- Non-target deletion log display -->
+                                        <div data-ng-if="changeLogItem.link && changeLogItem.linkTxt">
 
-                                                <div data-ng-if="(changeLogItem.data && !changeLogItem.data.metric) && changeLogItem.deletedName">
+                                            <a href="{{ changeLogItem.link }}">{{ changeLogItem.linkTxt }}</a>
 
-                                                    <span class="deletion-highlight">{{ changeLogItem.deletedName }}</span>
+                                            <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
 
-                                                    <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
+                                        </div>
 
-                                                </div>
+                                        <!-- Non-target deletion log display -->
 
-                                            </div>
+                                        <div data-ng-if="(changeLogItem.data && !changeLogItem.data.metric) && changeLogItem.deletedName">
+
+                                            <span class="deletion-highlight">{{ changeLogItem.deletedName }}</span>
+
+                                            <span data-ng-if="changeLogItem.detail">{{ changeLogItem.detail }}</span>
 
                                         </div>
 
@@ -262,21 +274,25 @@
 
                                 </div>
 
-                                <!-- Pagination controls -->
-
-                                <div data-ng-include="'/templates/pagination-view.html'"></div>
-
                             </div>
 
-                        </section>
+                        </div>
 
                     </div>
 
-                </div>
+                    <!-- End history -->
+
+                    <!-- Pagination controls -->
+
+                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+
+                </section>
 
             </div>
 
         </div>
+
+        <!-- End history content -->
 
     </div>
 
