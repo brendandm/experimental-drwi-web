@@ -176,7 +176,7 @@
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">Installed / Planned</th>
                                     <th class="table-metrics-header">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -191,7 +191,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            of {{ metric.self_target | number:2 }}</span>
+                                            / {{ metric.self_target | number:2 }}</span>
                                     </td>
                                     <td data-ng-if="metric.self_target > 0">
                                         <strong class="metrics--metric--percentage">
