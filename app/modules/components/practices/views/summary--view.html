@@ -61,7 +61,11 @@
                         <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
                             Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
-
+                         <p>
+                            <a href="/practices/{{ page.practice.id }}/history">
+                                <sub><i class="material-icons">history</i></sub> View change log
+                             </a>
+                        </p>
                         <p>
                             <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name || 'Un-named' }}</a>
                         </p>
