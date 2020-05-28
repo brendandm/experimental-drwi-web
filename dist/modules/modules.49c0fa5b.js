@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590677603014})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590678678976})
 
 ;
 /**
@@ -11155,6 +11155,13 @@ angular.module('FieldDoc')
                             'self.parseResponse.featureType:',
                             featureType
                         );
+
+                        if (op.indexOf('create') >= 0 &&
+                            (featureType.replace(/_/g, '-') === self.featureType)) {
+
+                            change.hideBody = true;
+
+                        }
 
                         if (change.diff &&
                             typeof change.diff !== 'undefined') {

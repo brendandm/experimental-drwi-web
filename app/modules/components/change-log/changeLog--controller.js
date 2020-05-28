@@ -220,6 +220,13 @@ angular.module('FieldDoc')
                             featureType
                         );
 
+                        if (op.indexOf('create') >= 0 &&
+                            (featureType.replace(/_/g, '-') === self.featureType)) {
+
+                            change.hideBody = true;
+
+                        }
+
                         if (change.diff &&
                             typeof change.diff !== 'undefined') {
 
