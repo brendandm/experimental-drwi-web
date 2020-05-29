@@ -26,26 +26,24 @@
 
         </section>
        <div class="breadcrumb-ui main--ui" >
-           <!-- style="padding-bottom: 0px;border:1px solid purple; float:left; display:inline-block;" -->
            <div class="group" style="border:0px solid red;">
-                    <article class="breadcrumb" style="border:0px solid green;" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr data-ng-if="page.practice.site.id">
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                                    / Edit practice
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
+                <article class="breadcrumb" style="border:0px solid green;" >
+                    <p>
+                        <nobr>
+                            Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                /
+                        </nobr>
+                        <nobr data-ng-if="page.practice.site.id">
+                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                /
+                        </nobr>
+                        <nobr>
+                            Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
+                                / Edit practice
+                        </nobr>
+                    </p>
+                </article>
+            </div>
       </div>
         <div class="breadcrumb-header-wrapper">
             <h1 class="inset breadcrumb-header reveal fade-in t0"
@@ -53,8 +51,6 @@
                >Edit practice</h1>
         </div>
         <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
-
-
 
             <article class="feature-detail">
 

@@ -154,7 +154,8 @@ angular.module('FieldDoc')
                     type: self.featureType,
                     limit: self.limit,
                     page: self.page,
-                    tz_offset: self.tzOffset
+                    tz_offset: self.tzOffset,
+                    user_only: self.userOnly ? self.userOnly : false
                 }).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
