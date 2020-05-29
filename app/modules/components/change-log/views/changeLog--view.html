@@ -165,29 +165,33 @@
                                                         <strong>{{ key }}</strong>
                                                     </td>
 
-                                                    <td class="new-val" style="width: 30%;">
+                                                    <td class="empty-val" style="width: 30%;" data-ng-if="item.new_value === null">
+                                                        <div class="spacer"></div>
+                                                    </td>
+
+                                                    <td class="new-val" style="width: 30%;" data-ng-if="item.new_value !== null">
 
                                                         <!-- Change value -->
 
                                                         <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                            {{ item.new_value }}&nbsp;
+                                                            {{ item.new_value }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'date'">
-                                                            {{ item.new_value | date:'longDate' }}&nbsp;
+                                                            {{ item.new_value | date:'longDate' }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'object'">
-                                                            {{ item.new_value.name }}&nbsp;
+                                                            {{ item.new_value.name }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'number'">
-                                                            {{ item.new_value | number:2 }}&nbsp;
+                                                            {{ item.new_value | number:2 }}
                                                         </span>
 
                                                         <!-- Change label -->
 
-                                                        <span data-ng-if="item.new_value !== null && item.label && item.label.length">
+                                                        <span class="value-label" data-ng-if="item.new_value !== null && item.label && item.label.length">
                                                             {{ item.label }}
                                                         </span>
 
@@ -197,31 +201,35 @@
                                                             <img src="{{ item.new_staticURL }}"/>
                                                         </div>
 
+                                                        <div class="spacer"></div>
+
                                                     </td>
 
-                                                    <td class="prev-val" style="width: 30%;">
+                                                    <td class="empty-val" style="width: 30%;" data-ng-if="item.previous_value === null"></td>
+
+                                                    <td class="prev-val" style="width: 30%;" data-ng-if="item.previous_value !== null">
 
                                                         <!-- Change value -->
 
                                                         <span data-ng-if="item.type !== 'date' && item.type !== 'number' && item.type !== 'geometry' && item.type !== 'object'">
-                                                            {{ item.previous_value }}&nbsp;
+                                                            {{ item.previous_value }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'date'">
-                                                            {{ item.previous_value | date:'longDate' }}&nbsp;
+                                                            {{ item.previous_value | date:'longDate' }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'object'">
-                                                            {{ item.previous_value.name }}&nbsp;
+                                                            {{ item.previous_value.name }}
                                                         </span>
 
                                                         <span data-ng-if="item.type === 'number'">
-                                                            {{ item.previous_value | number:2 }}&nbsp;
+                                                            {{ item.previous_value | number:2 }}
                                                         </span>
 
                                                         <!-- Change label -->
 
-                                                        <span data-ng-if="item.previous_value !== null && item.label && item.label.length">
+                                                        <span class="value-label" data-ng-if="item.previous_value !== null && item.label && item.label.length">
                                                             {{ item.label }}
                                                         </span>
 
