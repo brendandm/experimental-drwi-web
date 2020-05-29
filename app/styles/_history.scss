@@ -33,8 +33,50 @@
 
 #history-scope {
 
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e0e0e0;
+        -webkit-transition: all 20ms ease;
+        transition: all 20ms ease;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 5px;
+        bottom: 5px;
+        background-color: white;
+        -webkit-transition: all 200ms ease;
+        transition: all 200ms ease;
+    }
+
     input:checked + .slider {
         background-color: #03d673;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #03d673;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(20px);
+        -ms-transform: translateX(20px);
+        transform: translateX(20px);
+    }
+
+    .slider.round {
+        border-radius: 24px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
     }
 
 }
