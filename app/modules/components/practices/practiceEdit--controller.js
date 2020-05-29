@@ -258,6 +258,8 @@ angular.module('FieldDoc')
 
                     successResponse.features.forEach(function(item) {
 
+                        item.category = item.group;
+
                         item.practice_type = item.group;
 
                     });
