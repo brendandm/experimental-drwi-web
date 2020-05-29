@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590755774531})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1590763886744})
 
 ;
 /**
@@ -11047,7 +11047,7 @@ angular.module('FieldDoc')
             self.changeLimit = function(limit) {
                 self.limit = limit;
                 self.page = 1;
-                self.loadHistory();
+                self.loadHistory(false);
             };
 
             self.getPage = function(page) {
@@ -11083,7 +11083,7 @@ angular.module('FieldDoc')
                 return data;
             };
 
-            self.loadHistory = function() {
+            self.loadHistory = function(firstLoad) {
 
                 ChangeLog.query({
                     id: self.featureId,
@@ -11104,8 +11104,6 @@ angular.module('FieldDoc')
 
                         self.makePrivate = true;
 
-                        self.showElements(false);
-
                     } else {
 
                         self.permissions.can_edit = self.feature.permissions.write;
@@ -11119,9 +11117,9 @@ angular.module('FieldDoc')
 
                         self.parseResponse();
 
-                        self.showElements();
-
                     }
+
+                    if (firstLoad) self.showElements();
 
                 }, function(errorResponse) {
 
@@ -11474,7 +11472,7 @@ angular.module('FieldDoc')
 
                     self.tzOffset = new Date().getTimezoneOffset();
 
-                    self.loadHistory();
+                    self.loadHistory(true);
 
                 });
 
