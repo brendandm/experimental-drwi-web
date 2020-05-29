@@ -12,30 +12,22 @@
             </div>
         </div>
 
-        <div class="main--ui breadcrumb-ui">
+        <div class="breadcrumb pad-crumb">
 
-           <div class="group">
+            <div style="display: inline-flex;" data-ng-repeat="crumb in page.feature.breadcrumb">
+                <span>{{ crumb.type_label }}:&nbsp;</span>
+                <a href="{{ crumb.type }}s/{{ crumb.id }}">{{ crumb.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
 
-                <article class="breadcrumb">
-
-                    <div style="display: inline-flex;" data-ng-repeat="crumb in page.feature.breadcrumb">
-                        <span>{{ crumb.type_label }}:&nbsp;</span>
-                        <a href="{{ crumb.type }}s/{{ crumb.id }}">{{ crumb.name }}</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-
-                    <div style="display: inline-flex;">
-                        History
-                    </div>
-
-                </article>
-
+            <div style="display: inline-flex;">
+                History
             </div>
 
         </div>
 
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header">
+            <h1 class="inset">
                 {{ page.feature.breadcrumb[page.feature.breadcrumb.length - 1].type_label }} history
             </h1>
         </div>

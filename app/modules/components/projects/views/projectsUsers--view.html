@@ -24,25 +24,23 @@
 
         </section>
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Collaborators
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Collaborators
+            </div>
+        </div>
 
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
-        </div>
         <div class="breadcrumb-header-wrapper">
-             <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Collaborators</h1>
+            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
+                Collaborators
+            </h1>
         </div>
+        
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail" style="width: 100%; max-width: 48rem; margin: 1em auto;">

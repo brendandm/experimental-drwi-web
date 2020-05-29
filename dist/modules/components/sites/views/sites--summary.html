@@ -28,18 +28,20 @@
 
             <div class="module--grid" data-ng-if="!page.status.loading">
 
-                <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Site: <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-                            </nobr>
-                        </p>
-                    </article>
+                <div class="breadcrumb">
+                    <div>
+                        <span>Project:&nbsp;</span>
+                        <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        <span>Site:&nbsp;</span>
+                        <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
                 </div>
 
                 <div class="group">
@@ -429,7 +431,7 @@
                          data-ng-if="page.permissions.can_edit"
                     >
                         <a class="snapshot--title" title="Batch Delete"
-                           href="/sites/{{ page.site.id }}/batchDelete"
+                           href="/sites/{{ page.site.id }}/batch-delete"
                            >
                                 <i class="material-icons" style="color:#666666;">
                                       delete_sweep
@@ -718,21 +720,6 @@
                     </i>
                 </a>
             </li>
-        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships" title="Partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-         -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/sites/{{ page.site.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">

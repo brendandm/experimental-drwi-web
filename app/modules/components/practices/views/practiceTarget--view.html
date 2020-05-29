@@ -8,29 +8,31 @@
             class="content--container"
          style="border-right: 1px solid #e0e0e0;">
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                    /
-                                </nobr>
-                            <nobr data-ng-if="page.practice.site != null">
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                    /
-                            </nobr><nobr>
-                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                                    / Targets
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.practice.project.id }}">{{ page.practice.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.site !== null">
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Practice:&nbsp;</span>
+                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Targets
+            </div>
         </div>
+
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
+            <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
         </div>
+
         <div class="main--ui target-ui reveal fade-in t0">
 
             <p>The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>

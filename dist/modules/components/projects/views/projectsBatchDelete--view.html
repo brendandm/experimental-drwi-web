@@ -24,21 +24,20 @@
 
         </section>
 
-          <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <nobr>
-                            Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                /
-                            Delete Sites
-
-                        </nobr>
-                    </article>
-                </div>
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Delete sites
+            </div>
         </div>
 
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
-            Delete Sites</h1>
+            Delete sites
+        </h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate" style="overflow:hidden;">
 

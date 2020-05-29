@@ -28,23 +28,26 @@
 
             <div class="module--grid">
 
-               <div class="group" style="border:0px solid green;">
-
-                    <article class="breadcrumb" style="border:0px solid red;" >
-                        <p>
-                           <nobr> Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                /
-                               </nobr>
-                            <nobr data-ng-if="page.practice.site != null">
-                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                /
-                            </nobr>
-                            <nobr>
-                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                            </nobr>
-                        </p>
-                    </article>
-               </div>
+                <div class="breadcrumb">
+                    <div>
+                        <span>Project:&nbsp;</span>
+                        <a href="/projects/{{ page.practice.project.id }}">{{ page.practice.project.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div data-ng-if="page.practice.site !== null">
+                        <span>Site:&nbsp;</span>
+                        <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        <span>Practice:&nbsp;</span>
+                        <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
+                </div>
 
                 <div class="group">
 
@@ -530,22 +533,6 @@
                     </i>
                 </a>
             </li>
-
-          <!--  <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
-                    <i class="material-icons">
-                        insert_photo
-                    </i>
-                </a>
-            </li>
-            -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/practices/{{ page.practice.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">
