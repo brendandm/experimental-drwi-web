@@ -98,38 +98,43 @@
 
                                     <div class="change-metadata">
 
-                                        <div class="change-action">
-                                            <div class="icon">
-                                                <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
-                                                    {{ changeLogItem.op }}
-                                                </i>
+                                        <div class="icon">
+                                            <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
+                                                {{ changeLogItem.op }}
+                                            </i>
+                                        </div>
+
+                                        <div class="meta-group">
+
+                                            <div class="change-action">
+                                                <span title="{{ changeLogItem.timestamp.utc }} UTC">
+                                                    {{ changeLogItem.action_label }}
+                                                </span>
+                                                <span>&nbsp;by&nbsp;</span>
+                                                <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
+                                                    <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                                </a>
+                                                <span data-ng-if="!changeLogItem.link_creator_profile">
+                                                    <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
+                                                </span>
                                             </div>
-                                            <span title="{{ changeLogItem.timestamp.utc }} UTC">
-                                                {{ changeLogItem.action_label }}
-                                            </span>
-                                            <span>&nbsp;by&nbsp;</span>
-                                            <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
-                                                <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
-                                            </a>
-                                            <span data-ng-if="!changeLogItem.link_creator_profile">
-                                                <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
-                                            </span>
-                                        </div>
 
-                                        <span>&nbsp;&middot;&nbsp;</span>
+                                            <span>&nbsp;&middot;&nbsp;</span>
 
-                                        <div class="timestamp" title="{{ changeLogItem.timestamp.local | date:'longDate' }}, {{ changeLogItem.timestamp.local | date:'shortTime' }}">
-                                            <span>
-                                                {{ changeLogItem.timestamp.local | date:'longDate' }}
-                                            </span>
-                                            <span>&nbsp;at&nbsp;</span>
-                                            <span>
-                                                {{ changeLogItem.timestamp.local | date:'shortTime' }}
-                                            </span>
-                                        </div>
+                                            <div class="timestamp" title="{{ changeLogItem.timestamp.local | date:'longDate' }}, {{ changeLogItem.timestamp.local | date:'shortTime' }}">
+                                                <span>
+                                                    {{ changeLogItem.timestamp.local | date:'longDate' }}
+                                                </span>
+                                                <span>&nbsp;at&nbsp;</span>
+                                                <span>
+                                                    {{ changeLogItem.timestamp.local | date:'shortTime' }}
+                                                </span>
+                                            </div>
 
-                                        <div class="version" title="{{ changeLogItem.timestamp.utc }} UTC">
-                                            {{ changeLogItem.version }}
+                                            <div class="version" title="{{ changeLogItem.timestamp.utc }} UTC">
+                                                {{ changeLogItem.version }}
+                                            </div>
+
                                         </div>
 
                                     </div>
