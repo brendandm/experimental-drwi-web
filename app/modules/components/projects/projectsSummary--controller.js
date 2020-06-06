@@ -886,6 +886,8 @@ angular.module('FieldDoc')
 
                             if(feature.geometry != null){
 
+                                console.log("THUMB", feature);
+
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
 
                                 if(feature.staticURL.length >= 4096){
