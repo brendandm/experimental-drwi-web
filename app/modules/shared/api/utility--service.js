@@ -92,6 +92,8 @@ angular.module('FieldDoc')
                  //    console.log('COLOR 3');
                 }
 
+                console.log("STATIC GEOMETRY",geometry);
+
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": geometry,
