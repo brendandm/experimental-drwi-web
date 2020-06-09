@@ -93,7 +93,7 @@ angular.module('FieldDoc')
                 }
 
                 var styledFeature = {
-                    "type": "Line",
+                    "type": "Feature",
                     "geometry": geometry,
                     "properties": {
                         "marker-size": "small",
