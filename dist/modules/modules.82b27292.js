@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591482816921})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591665239876})
 
 ;
 /**
@@ -38414,19 +38414,19 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+                   // console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                         console.log('COLOR 1');
+                     //    console.log('COLOR 1');
                     }else{
-                         console.log('COLOR 2');
+                   //      console.log('COLOR 2');
                     }
                 }else{
-                     console.log('COLOR 3');
+                 //    console.log('COLOR 3');
                 }
 
                 var styledFeature = {
-                    "type": geometry.type,
+                    "type": "Line",
                     "geometry": geometry,
                     "properties": {
                         "marker-size": "small",
