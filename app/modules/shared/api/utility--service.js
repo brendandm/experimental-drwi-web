@@ -94,6 +94,12 @@ angular.module('FieldDoc')
 
                 console.log("STATIC GEOMETRY",geometry);
 
+                if(geometry.type == "LineString"){
+
+                    geometry.type = "Line";
+                    console.log("CONVERTING STATIC GEOMETRY",geometry);
+                }
+
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": geometry,
