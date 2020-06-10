@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591751781128})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591794812919})
 
 ;
 /**
@@ -38427,14 +38427,17 @@ angular.module('FieldDoc')
 
                 console.log("STATIC GEOMETRY",geometry);
 
-                var geometry_type
+             //   var geometry_type
+
+                var fillOpacity = 0.5;
+
                 if(geometry.type === "LineString"){
+                    fillOpacity = 0.0;
+             //       geometry_type = "Line";
 
-                    geometry_type = "Line";
+             //       console.log("CONVERTING STATIC GEOMETRY",geometry);
 
-                    console.log("CONVERTING STATIC GEOMETRY",geometry);
-
-                    geometry.type = geometry_type;
+             //       geometry.type = geometry_type;
 
                 }else{
 
@@ -38451,7 +38454,7 @@ angular.module('FieldDoc')
                         "stroke-opacity": 1.0,
                         "stroke-width": 2,
                         "fill": color,
-                        "fill-opacity": 0.5
+                        "fill-opacity": fillOpacity
                     }
                 };
                 // Build static map URL for Mapbox API
