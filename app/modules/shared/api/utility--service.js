@@ -100,11 +100,11 @@ angular.module('FieldDoc')
 
                 if(geometry.type === "LineString"){
                     fillOpacity = 0.0;
-             //       geometry_type = "Line";
+                    geometry_type = "LineString";
 
-             //       console.log("CONVERTING STATIC GEOMETRY",geometry);
+                    console.log("CONVERTING STATIC GEOMETRY",geometry);
 
-             //       geometry.type = geometry_type;
+                    geometry.type = geometry_type;
 
                 }else{
 
