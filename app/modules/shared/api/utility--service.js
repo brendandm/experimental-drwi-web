@@ -116,7 +116,7 @@ angular.module('FieldDoc')
                                 "stroke": color,
                                 "stroke-opacity": 1.0,
                                 "stroke-width": 2,
-                               
+
                             }
                         };
 
@@ -134,7 +134,6 @@ angular.module('FieldDoc')
                                 "fill-opacity": fillOpacity
                             }
                         };
-                 //   geometry_type = geometry.type;
                 }
 
 
