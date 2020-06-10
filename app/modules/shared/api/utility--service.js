@@ -105,6 +105,7 @@ angular.module('FieldDoc')
                         "fill-opacity": 0.5
                     }
                 };
+                
                 // Build static map URL for Mapbox API
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
