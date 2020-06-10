@@ -103,28 +103,41 @@ angular.module('FieldDoc')
                     geometry_type = "LineString";
 
                     console.log("CONVERTING STATIC GEOMETRY",geometry);
-                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates);
+                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates );
 
                     geometry.type = geometry_type;
 
-                }else{
+                      var styledFeature = {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": color,
+                                "stroke": color,
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                               
+                            }
+                        };
 
+                }else{
+                      var styledFeature = {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": color,
+                                "stroke": color,
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                                "fill": color,
+                                "fill-opacity": fillOpacity
+                            }
+                        };
                  //   geometry_type = geometry.type;
                 }
 
-                var styledFeature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "marker-size": "small",
-                        "marker-color": color,
-                        "stroke": color,
-                        "stroke-opacity": 1.0,
-                        "stroke-width": 2,
-                        "fill": color,
-                        "fill-opacity": fillOpacity
-                    }
-                };
+
                 // Build static map URL for Mapbox API
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [

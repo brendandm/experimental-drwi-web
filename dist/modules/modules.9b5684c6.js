@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591796414971})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591800356500})
 
 ;
 /**
@@ -38436,28 +38436,41 @@ angular.module('FieldDoc')
                     geometry_type = "LineString";
 
                     console.log("CONVERTING STATIC GEOMETRY",geometry);
-                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates);
+                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates );
 
                     geometry.type = geometry_type;
 
-                }else{
+                      var styledFeature = {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": color,
+                                "stroke": color,
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                               
+                            }
+                        };
 
+                }else{
+                      var styledFeature = {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": color,
+                                "stroke": color,
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                                "fill": color,
+                                "fill-opacity": fillOpacity
+                            }
+                        };
                  //   geometry_type = geometry.type;
                 }
 
-                var styledFeature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "marker-size": "small",
-                        "marker-color": color,
-                        "stroke": color,
-                        "stroke-opacity": 1.0,
-                        "stroke-width": 2,
-                        "fill": color,
-                        "fill-opacity": fillOpacity
-                    }
-                };
+
                 // Build static map URL for Mapbox API
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
