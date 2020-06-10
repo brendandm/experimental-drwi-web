@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591751253085})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591751533285})
 
 ;
 /**
@@ -38427,10 +38427,18 @@ angular.module('FieldDoc')
 
                 console.log("STATIC GEOMETRY",geometry);
 
-                if(geometry.type == "LineString"){
+                var geometry_type
+                if(geometry.type === "LineString"){
 
-                    geometry.type = "Line";
+                    geometry_type = "Line";
+
                     console.log("CONVERTING STATIC GEOMETRY",geometry);
+
+                    geometry.type = geometry_type;
+
+                }else{
+
+                 //   geometry_type = geometry.type;
                 }
 
                 var styledFeature = {
