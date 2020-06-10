@@ -103,6 +103,7 @@ angular.module('FieldDoc')
                     geometry_type = "LineString";
 
                     console.log("CONVERTING STATIC GEOMETRY",geometry);
+                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates);
 
                     geometry.type = geometry_type;
 
