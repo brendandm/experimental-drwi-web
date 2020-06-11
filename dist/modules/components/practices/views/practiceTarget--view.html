@@ -53,7 +53,7 @@
 
 
  <!-- Extent-->
-
+        <div style="border:1px solid red;">
                 <h2>Practice Extent</h2>
         <!--    <div style="text-align: left;margin-bottom:20px;">
                          {{page.practice_category.unit.instructions}}
@@ -228,10 +228,12 @@
 
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;"></li>
             </ul>
+        </div>
 
 
             <!-- END extent-->
                 <!-- Modeled Inputs-->
+        <div style="border:1px solid red;"></div>
             <div data-ng-if="page.models.length">
                 <h2>Modeled Inputs</h2>
 
@@ -246,6 +248,7 @@
                 </div>
 
             </div>
+        </div>
             <!-- END Modeled inputs -->
 
             <!-- Assign Targets -->
@@ -362,9 +365,9 @@
         <!-- END Assign Metrics-->
 
   <!-- Add Metrics-->
-    <div style="border:1px solid red;">
-        <h2>Add Metric </h2>
-         <div class="form-element">
+        <div style="border:1px solid red;">
+            <h2>Add Metric </h2>
+             <div class="form-element">
                             <span class="meta-label"><b>Add Metric</b></span>
 
                             <input id="practice_type_id"
@@ -384,14 +387,14 @@
                             <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
                                 This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
                             </p>
-         </div>
+                </div>
 
-    </div>
+            </div>
 
      <!-- END Add Metrics-->
 
         </div>
-        </div>
+    </div>
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
