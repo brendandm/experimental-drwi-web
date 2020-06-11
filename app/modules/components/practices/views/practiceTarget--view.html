@@ -49,51 +49,12 @@
                 </p>
             </div>
 
-            <div data-ng-if="page.models.length">
-
-                <h2>Modeled metrics</h2>
-
-                <div data-ng-repeat="model in page.models" style="min-height:25px; display:block; clear:both;">
-
-                    <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
-
-                     <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
 
-               <!--     <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
 
-                    <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
-                -->
-           <!--         <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+ <!-- Extent-->
 
-                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in model.metrics | orderBy:'name'">
-
-                            <div class="card--content">
-
-                                <div class="name" style="border-bottom: none;">
-                                    <span>{{ metric.name || 'Un-named' }}</span>
-                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
-                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
-                                </div>
-
-                                <div class="body" data-ng-if="metric.description">
-
-                                    <p>{{ metric.description | truncate:80 }}</p>
-
-                                </div>
-
-                            </div>
-
-                        </li>
-
-                    </ul>
-                 -->
-
-                </div>
-
-            </div>
-
-            <h2>Practice Extent</h2>
+                <h2>Practice Extent</h2>
         <!--    <div style="text-align: left;margin-bottom:20px;">
                          {{page.practice_category.unit.instructions}}
             </div>
@@ -269,6 +230,27 @@
             </ul>
 
 
+            <!-- END extent-->
+                <!-- Modeled Inputs-->
+            <div data-ng-if="page.models.length">
+                <h2>Modeled Inputs</h2>
+
+                <div data-ng-repeat="model in page.models" style="min-height:25px; display:block; clear:both;">
+
+                    <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
+
+
+                    <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
+
+
+                </div>
+
+            </div>
+            <!-- END Modeled inputs -->
+
+            <!-- Assign Targets -->
+
+
             <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
 
             <ul class="target-lst" data-ng-if="page.calculating == true">
@@ -377,6 +359,34 @@
             </div>
           </section>
     </div>
+        <!-- END Assign Metrics-->
+
+  <!-- Add Metrics-->
+ <div class="form-element">
+     <h2>Add Metric </h2>
+                            <span class="meta-label"><b>Add Metric</b></span>
+
+                            <input id="practice_type_id"
+                                   name="practice_type_id"
+                                   type="text"
+                                   placeholder="Search categories"
+                                   data-ng-model="page.practiceType"
+                                   uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.setPracticeType($item,$model,$label)"
+                                   typeahead-min-length="0"
+                                   typeahead-template-url="templates/search--tpl.html" />
+
+                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                {{ page.practice.category.description || page.practiceType.description }}
+                            </p>
+
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
+                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
+                            </p>
+
+                        </div>
+     <!-- END Add Metrics-->
+
 
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
