@@ -237,7 +237,12 @@
             <div data-ng-if="page.models.length">
                 <h2>Modeled Inputs</h2>
 
-                <div data-ng-repeat="model in page.models" style="min-height:25px; display:block; clear:both;">
+                <div data-ng-repeat="model in page.models"
+                     style="min-height:25px;
+                            display:block;
+                            clear:both;
+                            background-color: #cccccc;
+                ">
 
                    <!-- <p data-ng-if="page.practice.category.require_inputs">
                         This conservation practice is
@@ -253,8 +258,17 @@
 
                     <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
-                    <a data-ng-repeat="model in page.models" href="/practices/{{ page.practice.id }}/model-data">Modify Inputs</a>
-                    <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">>Model Summary</a>
+                    <a data-ng-repeat="model in page.models" href="/practices/{{ page.practice.id }}/model-data">
+                         <i class="material-icons">
+                            multiline_chart
+                        </i>
+                        Modify Inputs
+                    </a>
+                    <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">
+                        <i class="material-icons">
+                            dashboard
+                        </i>Model Summary
+                    </a>
 
 
                 </div>
