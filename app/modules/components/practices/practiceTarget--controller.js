@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval, program) {
+            MetricType, Model, $filter, $interval, Program) {
 
 
             var self = this;

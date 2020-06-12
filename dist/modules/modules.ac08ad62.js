@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591933374789})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591933460160})
 
 ;
 /**
@@ -21163,7 +21163,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval, program) {
+            MetricType, Model, $filter, $interval, Program) {
 
 
             var self = this;
