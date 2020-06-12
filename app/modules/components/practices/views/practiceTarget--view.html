@@ -238,16 +238,18 @@
                 <h2>Modeled Inputs</h2>
 
                   <ul class="snapshot--cards list-unstyled">
-                     <li class="card" data-ng-repeat="model in page.models">
-
-                        <div data-ng-repeat="model in page.models"
-                             style="min-height:25px;
+                     <li class="card" data-ng-repeat="model in page.models"
+                         style="min-height:25px;
                                     max-height:75px;
-                                    min-width: 300px;
+                                    min-width: 400px;
                                     display:block;
                                     clear:both;
-                                    background-color: #f5f5f5;
-                        ">
+                                    background-color: #f5f5f5;"
+                     >
+
+                      <!--  <div data-ng-repeat="model in page.models"
+
+                        ">-->
                             <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
                             <a href="/practices/{{ page.practice.id }}/model-data">
@@ -262,7 +264,8 @@
                                 </i>Model Summary
                             </a>
 
-                        </div>
+                       <!-- </div>-->
+                         
                      </li>
                   </ul>
 
