@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591910866175})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591933255888})
 
 ;
 /**
@@ -21163,7 +21163,8 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval) {
+            MetricType, Model, $filter, $interval, program) {
+
 
             var self = this;
 
@@ -21507,6 +21508,8 @@ angular.module('FieldDoc')
                         self.calculating = true;
 
                         self.bgLoadMatrix();
+
+                        self.loadProgramMetrics();
                 //    }
 
 
@@ -22006,49 +22009,27 @@ angular.module('FieldDoc')
 
             }
 
-/*
-            self.backgroundLoadMatrix = function(){
-                console.log("YESSSS", self.practice.calculating);
+            self.loadProgramMetrics = function (){
 
-//                var matrixLoadInterval;
-//                var matrixLoadIntervalRunning;
-                    self.matrixLoadInterval = false;
+                Program.metrics({
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
+                        id  : self.practice.project.program_id;
 
-                    console.log("Checking Practice");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
+                    }).$promise.then(function(successResponse) {
 
-                     self.matrixLoadIntervalRunning = true;
+                    console.log("Program Metrics -->", successResponse);
 
-                     self.matrixLoadInterval = $interval(function() {
-                         self.loadPractice();
-                    }, 2000);
-                }else{
-                    console.log("Reloading Matrix");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
-                //    if(self.matrixLoadIntervalRunning == true){
+                    }, function(errorResponse) {
 
-                        console.log("Terminating Matrix Load Interval");
-
-                        self.matrixLoadIntervalRunning = false;
-
-                      //  setTimeout(function(){
-                            $interval.cancel(self.matrixLoadInterval);
+                        console.log("Program Metrics --> ERROR",errorResponse );
 
 
-                            self.matrixLoadInterval = false;
-                     //   }, 2000);
+                     });
 
-
-              //      }
-
-                    self.loadMatrix();
-                }
 
 
             };
-*/
+
             /*
             END Custom Extent Logic
             */
