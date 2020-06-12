@@ -859,7 +859,7 @@ angular.module('FieldDoc')
 
                 Program.metrics({
 
-                        id  : self.practice.project.program_id;
+                        id  : self.practice.project.program_id
 
                     }).$promise.then(function(successResponse) {
 
