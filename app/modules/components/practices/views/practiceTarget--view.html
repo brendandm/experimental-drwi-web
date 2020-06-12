@@ -253,19 +253,25 @@
                             <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
                             <a href="/practices/{{ page.practice.id }}/model-data">
-                                 <i class="material-icons">
+                               <sub>
+                                   <i class="material-icons">
                                     multiline_chart
-                                </i>
+                                    </i>
+                               </sub>
                                 Modify Inputs
                             </a>
                             <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">
-                                <i class="material-icons">
-                                    dashboard
-                                </i>Model Summary
+                                <sub>
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
+                                </sub>
+                                 Model Summary
+
                             </a>
 
                        <!-- </div>-->
-                         
+
                      </li>
                   </ul>
 
