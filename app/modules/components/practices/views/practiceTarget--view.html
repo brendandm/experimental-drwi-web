@@ -250,9 +250,12 @@
                       <!--  <div data-ng-repeat="model in page.models"
 
                         ">-->
-                            <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
+                         <div class="card-content">
+                            <p style="display:block; clear:both;"></p>
 
-                            <a href="/practices/{{ page.practice.id }}/model-data">
+                            <a href="/practices/{{ page.practice.id }}/model-data"
+                               title="{{ model.model.name }}"
+                               style="margin-left:30px;">
                                <sub>
                                    <i class="material-icons">
                                     multiline_chart
@@ -269,6 +272,7 @@
                                  Model Summary
 
                             </a>
+                         </div>
 
                        <!-- </div>-->
 
