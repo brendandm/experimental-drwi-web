@@ -250,9 +250,13 @@
                                            <b>2</b>
                     </div>
 
-                <div style="display:block; float: left;">Modeled Inputs</div>
+                <div style="display:block;
+                            float: left;
+                            font-size: 1.5em;
+                ">
+                        Modeled Inputs</div>
 
-                <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
+                    <p style="clear:both;" data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
                   <ul class="snapshot--cards list-unstyled">
                      <li class="card" data-ng-repeat="model in page.models"
