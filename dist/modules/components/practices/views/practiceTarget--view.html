@@ -243,12 +243,12 @@
                        font-size:15px;
                        text-align: center;
                        color:#ffffff;
-                       padding: 0px 0px 3px 3px;
+                       padding: 0px 0px 3px 0px;
                        ">
                                            <b>2</b>
                     </div>
 
-                <h2>Modeled Inputs</h2>
+                <h2 style="display:inline">Modeled Inputs</h2>
 
                 <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
