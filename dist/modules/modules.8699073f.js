@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1591996195562})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592236121297})
 
 ;
 /**
@@ -21414,44 +21414,7 @@ angular.module('FieldDoc')
 
             };
 
-            // self.runModel = function() {
 
-            //     var data = {
-            //         practice_code: self.practice.category.model_key,
-            //         geometry: self.practice.geometry,
-            //         units: $filter('convertArea')(self.practice.area, 'acre')
-            //     };
-
-            //     Model.cast({}, data).$promise.then(function(successResponse) {
-
-            //         console.log('Run model successResponse', successResponse);
-
-            //         self.modelTargets.forEach(function(metric) {
-
-            //             if (successResponse.hasOwnProperty(metric.model_key)) {
-
-            //                 metric.value = successResponse[metric.model_key];
-
-            //                 self.targets.active.push({
-            //                     name: metric.name,
-            //                     value: metric.value,
-            //                     metric_id: metric.id,
-            //                     metric: metric
-            //                 });
-
-            //             }
-
-            //         });
-
-            //         self.modelTargets = [];
-
-            //     }, function(errorResponse) {
-
-            //         console.log('Run model errorResponse', errorResponse);
-
-            //     });
-
-            // };
 
             self.loadPractice = function() {
 
@@ -21720,7 +21683,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-                console.log("process practice->>",self.practice)
+                console.log("process practice->>",self.practice);
 
             };
 
