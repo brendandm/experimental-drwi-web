@@ -838,6 +838,8 @@ angular.module('FieldDoc')
                 });
             };
 
+
+
             self.loadProgramMetrics = function (){
 
                 Program.metrics({
