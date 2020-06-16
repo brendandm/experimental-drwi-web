@@ -184,7 +184,7 @@ angular.module('FieldDoc')
 
             };
 /*END COPY LOGIC*/
-
+/*
             self.loadMatrix = function() {
                console.log("self.practice.project.program_id",self.practice.project.program_id);
                 //
@@ -221,7 +221,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.loadModels = function(activeDomain) {
 
                 console.log('self.loadModels.activeDomain', activeDomain);
@@ -479,7 +479,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadFeatures = function(programId) {
+         /*   self.loadFeatures = function(programId) {
 
                 var params = {
                     program: programId
@@ -504,7 +504,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+        */
             self.processPractice = function(data) {
 
                 console.log('process-data -->', data);
@@ -833,6 +833,9 @@ angular.module('FieldDoc')
 
                 }).$promise.then(function(successResponse){
                     console.log("loadMetrics",successResponse);
+
+                    self.object =
+
                 },function(errorResponse){
                      console.log("loadMetrics error",errorResponse);
                 });
