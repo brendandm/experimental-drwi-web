@@ -826,9 +826,10 @@ angular.module('FieldDoc')
 
 
             self.loadMetrics = function(){
+                console.log("LoadMetrics A");
                 Practice.metrics({
 
-                id: self.practice.id
+                    id: self.practice.id
 
                 }).$promise.then(function(successResponse){
                     console.log("loadMetrics",successResponse);
