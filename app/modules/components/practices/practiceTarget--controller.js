@@ -834,7 +834,8 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse){
                     console.log("loadMetrics",successResponse);
 
-                    self.object =
+                    self.info = successResponse;
+                    console.log("self.info",self.info);
 
                 },function(errorResponse){
                      console.log("loadMetrics error",errorResponse);
