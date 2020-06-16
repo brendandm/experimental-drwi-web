@@ -318,6 +318,8 @@ angular.module('FieldDoc')
 
                         self.bgLoadMatrix();
 
+
+                        self.loadMetrics();
                         self.loadProgramMetrics();
                 //    }
 
@@ -335,7 +337,8 @@ angular.module('FieldDoc')
 
             };
 
-            self.search = function(value) {
+
+/*            self.search = function(value) {
 
                 if (self.searchScope.target === 'metric') {
 
@@ -376,7 +379,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.directQuery = function(item, model, label) {
 
                 if (self.searchScope.target === 'program') {
@@ -390,7 +394,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.removeAll = function() {
 
                 self.targets.active.forEach(function (item) {
@@ -402,7 +407,8 @@ angular.module('FieldDoc')
                 self.targets.active = [];
 
             };
-
+*/
+/*
             self.addTarget = function(item, idx) {
 
                 if (!item.value ||
@@ -452,7 +458,7 @@ angular.module('FieldDoc')
                 console.log('Updated targets (removal)');
 
             };
-
+*/
             self.processTargets = function(list) {
 
                 var _list = [];
@@ -818,6 +824,19 @@ angular.module('FieldDoc')
 
             }
 
+
+            self.loadMetrics = function(){
+                Practice.metrics({
+
+                id: self.practice.id
+
+                }).$promise.then(function(successResponse){
+                    console.log("loadMetrics",successResponse);
+                },function(errorResponse){
+                     console.log("loadMetrics error",errorResponse);
+                });
+            };
+
             self.loadProgramMetrics = function (){
 
                 Program.metrics({
@@ -838,6 +857,8 @@ angular.module('FieldDoc')
 
 
             };
+
+
 
             /*
             END Custom Extent Logic

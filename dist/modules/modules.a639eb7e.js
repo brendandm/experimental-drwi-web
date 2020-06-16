@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592317274201})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592322933380})
 
 ;
 /**
@@ -21472,6 +21472,8 @@ angular.module('FieldDoc')
 
                         self.bgLoadMatrix();
 
+
+                        self.loadMetrics();
                         self.loadProgramMetrics();
                 //    }
 
@@ -21489,7 +21491,8 @@ angular.module('FieldDoc')
 
             };
 
-            self.search = function(value) {
+
+/*            self.search = function(value) {
 
                 if (self.searchScope.target === 'metric') {
 
@@ -21530,7 +21533,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.directQuery = function(item, model, label) {
 
                 if (self.searchScope.target === 'program') {
@@ -21544,7 +21548,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.removeAll = function() {
 
                 self.targets.active.forEach(function (item) {
@@ -21556,7 +21561,8 @@ angular.module('FieldDoc')
                 self.targets.active = [];
 
             };
-
+*/
+/*
             self.addTarget = function(item, idx) {
 
                 if (!item.value ||
@@ -21606,7 +21612,7 @@ angular.module('FieldDoc')
                 console.log('Updated targets (removal)');
 
             };
-
+*/
             self.processTargets = function(list) {
 
                 var _list = [];
@@ -21972,6 +21978,19 @@ angular.module('FieldDoc')
 
             }
 
+
+            self.loadMetrics = function(){
+                Practice.metrics({
+
+                id: self.practice.id
+
+                }).$promise.then(function(successResponse){
+                    console.log("loadMetrics",successResponse);
+                },function(errorResponse){
+                     console.log("loadMetrics error",errorResponse);
+                });
+            };
+
             self.loadProgramMetrics = function (){
 
                 Program.metrics({
@@ -21992,6 +22011,8 @@ angular.module('FieldDoc')
 
 
             };
+
+
 
             /*
             END Custom Extent Logic
@@ -36687,7 +36708,8 @@ angular
     angular.module('FieldDoc')
         .service('Practice', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
-                'id': '@id'
+                'id': '@id',
+                'target_id': '@target_id'
             }, {
                 'query': {
                     'isArray': false
@@ -36789,6 +36811,22 @@ angular
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/clone')
+                },
+                metrics: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/metrics/')
+                },
+                target: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+                },
+                targetUpdate: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
                 }
 
             });
