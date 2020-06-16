@@ -320,7 +320,7 @@ angular.module('FieldDoc')
 
 
                         self.loadMetrics();
-                        self.loadProgramMetrics();
+                //        self.loadProgramMetrics();
                 //    }
 
 
