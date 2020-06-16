@@ -316,7 +316,7 @@ angular.module('FieldDoc')
 
                         self.calculating = true;
 
-                        self.bgLoadMatrix();
+                  //      self.bgLoadMatrix();
 
 
                         self.loadMetrics();
