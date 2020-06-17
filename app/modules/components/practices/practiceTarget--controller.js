@@ -836,6 +836,7 @@ angular.module('FieldDoc')
                     console.log("loadMetrics",successResponse);
 
                     self.info = successResponse;
+                    self.programMetrics = self.info.metrics.secondary;
                     console.log("self.info",self.info);
 
                 },function(errorResponse){

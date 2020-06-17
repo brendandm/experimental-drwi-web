@@ -457,12 +457,12 @@
              <div class="form-element">
                             <span class="meta-label"><b>Add Metric</b></span>
 
-                            <input id="practice_type_id"
-                                   name="practice_type_id"
+                            <input id="programMetric_type_id"
+                                   name="programMetric_type_id"
                                    type="text"
-                                   placeholder="Search categories"
-                                   data-ng-model="page.practiceType"
-                                   uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"
+                                   placeholder="Search metrics"
+                                   data-ng-model="page.programMetrics"
+                                   uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.setPracticeType($item,$model,$label)"
                                    typeahead-min-length="0"
                                    typeahead-template-url="templates/search--tpl.html" />
