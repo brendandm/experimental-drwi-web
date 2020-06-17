@@ -443,7 +443,7 @@
                         {{secondary.name}}
                     </div>
                         -->
-                     <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
+                     <ul class="target-lst target-lst-inactive">
                         <li data-ng-repeat="secondary in page.metricMatrix">
                              <div>{{ secondary.name }}</div>
                             <input type="number" class="form-control" data-ng-model="target.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
