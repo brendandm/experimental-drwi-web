@@ -857,8 +857,10 @@ angular.module('FieldDoc')
 
                 console.log("self.metricMatrix",self.metricMatrix)
 
+                console.log("self.programMetrics1",self.programMetrics);
+
                 var i = 0;
-                
+
                 self.programMetrics.forEach(function(newItem){
 
                      if(newItem.id == self.programMetrics[i].id){
@@ -869,6 +871,8 @@ angular.module('FieldDoc')
 
                      i = i+1;
                 });
+
+                console.log("self.programMetrics2",self.programMetrics);
 
     //            self.practiceType = $item;
 
