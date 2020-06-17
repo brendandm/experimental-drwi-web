@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592398547369})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592398709617})
 
 ;
 /**
@@ -21208,6 +21208,8 @@ angular.module('FieldDoc')
 
             };
 
+            self.metricMatrix = [];
+
             function closeRoute() {
 
                     if(self.practice.site != null){
@@ -22018,7 +22020,7 @@ angular.module('FieldDoc')
 
                 console.log('self.addMetric', $item);
 
-                self.metricMatrix = [];
+
                 self.metricMatrix.push($item);
 
                 console.log("self.metricMatrix",self.metricMatrix)

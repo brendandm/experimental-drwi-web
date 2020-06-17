@@ -40,6 +40,8 @@ angular.module('FieldDoc')
 
             };
 
+            self.metricMatrix = [];
+
             function closeRoute() {
 
                     if(self.practice.site != null){
@@ -850,7 +852,7 @@ angular.module('FieldDoc')
 
                 console.log('self.addMetric', $item);
 
-                self.metricMatrix = [];
+
                 self.metricMatrix.push($item);
 
                 console.log("self.metricMatrix",self.metricMatrix)
