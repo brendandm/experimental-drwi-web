@@ -461,7 +461,7 @@
                                    name="programMetric_type_id"
                                    type="text"
                                    placeholder="Search metrics"
-                                   data-ng-model="page.programMetrics"
+                                   data-ng-model="page.programMetric"
                                    uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.setPracticeType($item,$model,$label)"
                                    typeahead-min-length="0"
