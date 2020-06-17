@@ -867,6 +867,7 @@ angular.module('FieldDoc')
                      if($item.id == newItem.id){
                             console.log("Y New Item", newItem.id);
                         console.log("Y $item.id", $item.id);
+                        console.log("self.programMetrics[i]",self.programMetrics[i]);
                         delete self.programMetrics[i];
                         i = i-1;
                     //    self.programMetrics.splice(i,0);
