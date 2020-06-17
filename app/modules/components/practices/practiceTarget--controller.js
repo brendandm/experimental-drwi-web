@@ -868,6 +868,7 @@ angular.module('FieldDoc')
                             console.log("Y New Item", newItem.id);
                         console.log("Y $item.id", $item.id);
                         delete self.programMetrics[i];
+                        i = i-1;
                     //    self.programMetrics.splice(i,0);
 
                      }
