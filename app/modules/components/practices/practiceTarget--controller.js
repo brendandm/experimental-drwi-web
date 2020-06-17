@@ -857,6 +857,19 @@ angular.module('FieldDoc')
 
                 console.log("self.metricMatrix",self.metricMatrix)
 
+                var i = 0;
+                
+                self.programMetrics.forEach(function(newItem){
+
+                     if(newItem.id == self.programMetrics[i].id){
+
+                        self.programMetrics.splice(i,0);
+
+                     }
+
+                     i = i+1;
+                });
+
     //            self.practiceType = $item;
 
       //          self.practice.practice_type_id = $item.id;
