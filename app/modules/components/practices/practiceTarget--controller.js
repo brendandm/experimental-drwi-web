@@ -864,7 +864,7 @@ angular.module('FieldDoc')
 
 
                 self.programMetrics.forEach(function(newItem){
-
+                     console.log("New Item", newItem);
                      if($item.id == newItem.id){
 
                         self.programMetrics.splice(i,0);
