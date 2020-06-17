@@ -846,6 +846,21 @@ angular.module('FieldDoc')
             };
 
 
+            self.addMetric = function($item, $model, $label) {
+
+                console.log('self.addMetric', $item);
+
+                self.metricMatrix = [];
+                self.metricMatrix.push($item);
+
+                console.log("self.metricMatrix",self.metricMatrix)
+
+    //            self.practiceType = $item;
+
+      //          self.practice.practice_type_id = $item.id;
+
+            };
+
         /*
             self.loadProgramMetrics = function (){
 
