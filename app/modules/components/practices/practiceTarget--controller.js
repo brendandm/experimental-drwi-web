@@ -861,21 +861,23 @@ angular.module('FieldDoc')
 
                 var i = 0;
 
-                self.programMetrics.forEach(function(newItem){
-                     console.log("New Item", newItem.id);
-                     console.log("$item.id", $item.id);
-                     if($item.id == newItem.id){
-                            console.log("Y New Item", newItem.id);
-                        console.log("Y $item.id", $item.id);
-                        console.log("self.programMetrics[i]",self.programMetrics[i]);
-                        delete self.programMetrics[i];
-                        i = i-1;
-                    //    self.programMetrics.splice(i,0);
+                var tempProgramMetrics = [];
 
+                self.programMetrics.forEach(function(newItem){
+
+                     if($item.id == newItem.id){
+
+                      //  delete self.programMetrics[i];
+
+                     }else{
+                         tempProgramMetrics.push(elf.programMetrics[i]);
                      }
 
                      i = i+1;
                 });
+
+                self.programMetrics = tempProgramMetrics;
+
 
                 console.log("self.programMetrics2",self.programMetrics);
 
