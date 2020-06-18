@@ -890,6 +890,8 @@ angular.module('FieldDoc')
 
             self.addMetric = function($item, $model, $label) {
 
+                delete $item.id;
+
                 self.metricMatrix.push($item);
 
                 var i = 0;
