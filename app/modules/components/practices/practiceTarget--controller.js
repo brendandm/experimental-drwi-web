@@ -841,8 +841,9 @@ angular.module('FieldDoc')
 
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
-                    console.log("self.info",self.info);
-                     console.log("self.programMetrics",self.programMetrics);
+                    self.assignedMetrics = self.info.metrics.primary;
+                //    console.log("self.info",self.info);
+                //     console.log("self.programMetrics",self.programMetrics);
 
                 },function(errorResponse){
                      console.log("loadMetrics error",errorResponse);
@@ -878,12 +879,17 @@ angular.module('FieldDoc')
                 self.programMetrics = tempProgramMetrics;
 
                 var searchinputHTML = document.getElementById("programMetric_type_id");
+
                 console.log("searchinputHTML",searchinputHTML);
 
                 self.loadModels(self.activeDomain);
 
 
             };
+
+            self.saveMetric =  function($item,$index){
+
+            }
 
             self.removeMetric = function($item,$index){
 

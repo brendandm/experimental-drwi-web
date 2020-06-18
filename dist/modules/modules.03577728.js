@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592488353160})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592491342775})
 
 ;
 /**
@@ -22009,8 +22009,9 @@ angular.module('FieldDoc')
 
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
-                    console.log("self.info",self.info);
-                     console.log("self.programMetrics",self.programMetrics);
+                    self.assignedMetrics = self.info.metrics.primary;
+                //    console.log("self.info",self.info);
+                //     console.log("self.programMetrics",self.programMetrics);
 
                 },function(errorResponse){
                      console.log("loadMetrics error",errorResponse);
@@ -22046,12 +22047,17 @@ angular.module('FieldDoc')
                 self.programMetrics = tempProgramMetrics;
 
                 var searchinputHTML = document.getElementById("programMetric_type_id");
+
                 console.log("searchinputHTML",searchinputHTML);
 
                 self.loadModels(self.activeDomain);
 
 
             };
+
+            self.saveMetric =  function($item,$index){
+
+            }
 
             self.removeMetric = function($item,$index){
 
