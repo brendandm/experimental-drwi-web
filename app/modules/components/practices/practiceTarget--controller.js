@@ -324,7 +324,8 @@ angular.module('FieldDoc')
 
 
                         self.loadMetrics();
-                        self.loadMatrix();
+                   //     self.loadMatrix();
+                   self.bgLoadMatrix();
                 //        self.loadProgramMetrics();
                 //    }
 
@@ -788,7 +789,7 @@ angular.module('FieldDoc')
 
             };
 
-        /*    self.bgLoadMatrix = function(){
+            self.bgLoadMatrix = function(){
                 console.log("BG LOAD MATRIX", self.calculating);
 
                 //self.practice.calculating
@@ -804,8 +805,8 @@ angular.module('FieldDoc')
                 }
 
             };
-        */
-        /*
+
+
             self.checkStatus = function(){
                 console.log("Checking Calc Status");
 
@@ -829,7 +830,7 @@ angular.module('FieldDoc')
 
 
             }
-            */
+
 
             self.loadMetrics = function(){
                 console.log("LoadMetrics A");
