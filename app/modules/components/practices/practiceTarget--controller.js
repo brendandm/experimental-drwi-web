@@ -189,7 +189,7 @@ angular.module('FieldDoc')
             };
 /*END COPY LOGIC*/
 
-            self.loadMatrix = function() {
+     /*       self.loadMatrix = function() {
                console.log("self.practice.project.program_id",self.practice.project.program_id);
                 //
                 // Assign practice to a scoped variable
@@ -225,7 +225,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.loadModels = function(activeDomain) {
 
                 console.log('self.loadModels.activeDomain', activeDomain);
@@ -658,7 +658,7 @@ angular.module('FieldDoc')
 
             };
 */
-            self.savePractice = function() {
+       /*     self.savePractice = function() {
 
                 self.status.processing = true;
 
@@ -708,7 +708,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.deleteFeature = function() {
 
                 var targetId;
