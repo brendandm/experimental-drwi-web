@@ -881,7 +881,7 @@ angular.module('FieldDoc')
 
                 console.log($item+" "+$index);
 
-                self.metricMatrix.splice($index,0);
+                self.metricMatrix.splice($index,1);
 
             }
 
