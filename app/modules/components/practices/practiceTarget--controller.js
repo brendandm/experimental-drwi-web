@@ -870,7 +870,7 @@ angular.module('FieldDoc')
                       //  delete self.programMetrics[i];
 
                      }else{
-                         tempProgramMetrics.push(elf.programMetrics[i]);
+                         tempProgramMetrics.push(self.programMetrics[i]);
                      }
 
                      i = i+1;
