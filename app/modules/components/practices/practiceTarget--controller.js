@@ -842,6 +842,19 @@ angular.module('FieldDoc')
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
                     self.assignedMetrics = self.info.metrics.primary;
+
+                    var i = 0;
+
+                    self.assignedMetrics.forEach(function(newItem){
+
+                        self.activeDomain.push(newItem.id);
+
+                        i = i+1;
+
+                    });
+
+                     self.loadModels(self.activeDomain);
+
                 //    console.log("self.info",self.info);
                 //     console.log("self.programMetrics",self.programMetrics);
 
@@ -849,6 +862,8 @@ angular.module('FieldDoc')
                      console.log("loadMetrics error",errorResponse);
                 });
             };
+
+
 
 
             self.addMetric = function($item, $model, $label) {

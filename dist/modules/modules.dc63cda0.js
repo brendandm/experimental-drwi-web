@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592497931725})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592499431143})
 
 ;
 /**
@@ -22010,6 +22010,19 @@ angular.module('FieldDoc')
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
                     self.assignedMetrics = self.info.metrics.primary;
+
+                    var i = 0;
+
+                    self.assignedMetrics.forEach(function(newItem){
+
+                        self.activeDomain.push(newItem.id);
+
+                        i = i+1;
+
+                    });
+
+                     self.loadModels(self.activeDomain);
+
                 //    console.log("self.info",self.info);
                 //     console.log("self.programMetrics",self.programMetrics);
 
@@ -22017,6 +22030,8 @@ angular.module('FieldDoc')
                      console.log("loadMetrics error",errorResponse);
                 });
             };
+
+
 
 
             self.addMetric = function($item, $model, $label) {
