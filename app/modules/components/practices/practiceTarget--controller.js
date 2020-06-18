@@ -325,7 +325,7 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
                    //     self.loadMatrix();
-                   self.bgLoadMatrix();
+              //     self.bgLoadMatrix();
                 //        self.loadProgramMetrics();
                 //    }
 
