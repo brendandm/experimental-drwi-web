@@ -946,7 +946,7 @@ angular.module('FieldDoc')
 
                     console.log();
 
-                    self.loadMetrics();
+            //        self.loadMetrics();
 
                     self.loadPractice();
 
