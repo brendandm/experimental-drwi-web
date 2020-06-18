@@ -591,7 +591,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveTargets = function() {
+   /*         self.saveTargets = function() {
 
                 self.status.processing = true;
 
@@ -657,7 +657,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.savePractice = function() {
 
                 self.status.processing = true;
@@ -924,8 +924,24 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveMetric =  function($item,$index){
+            self.saveTarget =  function($item,$index){
+                console.log("save $item", $item);
+                self.status.processing = true;
 
+                 Practice.targetUpdate({
+
+                    id: self.practice.id,
+                    target_id: $item.id
+
+                }).$promise.then(function(successResponse){
+
+                    console.log("save target",successResponse);
+
+                },function(errorResponse){
+
+                     console.log("loadMetrics error",errorResponse);
+
+                });
             }
 
             self.removeMetric = function($item,$index){
