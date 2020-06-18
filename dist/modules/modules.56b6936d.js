@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592484584460})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592485088970})
 
 ;
 /**
@@ -22039,7 +22039,9 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-                document.getElementById("programMetric_type_id").value = "";
+                var searchinputHTML = document.getElementById("programMetric_type_id");
+                console.log("searchinputHTML",searchinputHTML);
+
 
 
             };

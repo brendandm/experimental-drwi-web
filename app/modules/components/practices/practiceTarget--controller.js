@@ -871,7 +871,9 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-                document.getElementById("programMetric_type_id").value = "";
+                var searchinputHTML = document.getElementById("programMetric_type_id");
+                console.log("searchinputHTML",searchinputHTML);
+
 
 
             };
