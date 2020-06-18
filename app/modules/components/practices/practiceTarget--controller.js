@@ -818,8 +818,8 @@ angular.module('FieldDoc')
 
                      self.calculating = successResponse.calculating;
 
-                    self.bgLoadMatrix();
-
+                  //  self.bgLoadMatrix();
+                    self.bgLoadMetrics();
                     //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
@@ -865,6 +865,22 @@ angular.module('FieldDoc')
                 });
             };
 
+            self.bgLoadMetrics = function(){
+                console.log("BG LOAD MATRIX", self.calculating);
+
+                //self.practice.calculating
+                if(self.calculating == true){
+                     console.log("Checking Practice");
+                     var timer = setTimeout(function(){
+                          self.checkStatus();
+
+                    }, 2000);
+                }else{
+                    clearTimeout(timer);
+                    self.loadMetrics();
+                }
+
+            };
 
 
 

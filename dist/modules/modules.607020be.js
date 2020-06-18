@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592501532607})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592502796447})
 
 ;
 /**
@@ -21986,8 +21986,8 @@ angular.module('FieldDoc')
 
                      self.calculating = successResponse.calculating;
 
-                    self.bgLoadMatrix();
-
+                  //  self.bgLoadMatrix();
+                    self.bgLoadMetrics();
                     //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
@@ -22033,6 +22033,22 @@ angular.module('FieldDoc')
                 });
             };
 
+            self.bgLoadMetrics = function(){
+                console.log("BG LOAD MATRIX", self.calculating);
+
+                //self.practice.calculating
+                if(self.calculating == true){
+                     console.log("Checking Practice");
+                     var timer = setTimeout(function(){
+                          self.checkStatus();
+
+                    }, 2000);
+                }else{
+                    clearTimeout(timer);
+                    self.loadMetrics();
+                }
+
+            };
 
 
 
