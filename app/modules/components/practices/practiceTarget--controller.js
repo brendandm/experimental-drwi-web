@@ -926,22 +926,46 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveTarget =  function($item,$index){
+            self.saveTarget =  function($item,$index,$value){
                 console.log("save $item", $item);
-                self.status.processing = true;
 
-                 Practice.targetUpdate({
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
 
-                    id: self.practice.id,
-                    target_id: $item.id
+                Practice.updateMatrix({
+                    id: +self.practice.id,
+                }, data).$promise.then(function(successResponse) {
 
-                }).$promise.then(function(successResponse){
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
 
-                    console.log("save target",successResponse);
+                    $timeout(self.closeAlerts, 2000);
 
-                },function(errorResponse){
+                    self.status.processing = false;
 
-                     console.log("loadMetrics error",errorResponse);
+                    console.log("practice.updateMatrix", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('savePractice.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
 
                 });
             }
