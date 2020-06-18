@@ -42,6 +42,8 @@ angular.module('FieldDoc')
 
             self.metricMatrix = [];
 
+            self.activeDomain = [];
+
             function closeRoute() {
 
                     if(self.practice.site != null){
@@ -863,7 +865,11 @@ angular.module('FieldDoc')
                       //  delete self.programMetrics[i];
 
                      }else{
+
                          tempProgramMetrics.push(self.programMetrics[i]);
+
+                         self.activeDomain.push(newItem.id);
+
                      }
 
                      i = i+1;
@@ -874,6 +880,7 @@ angular.module('FieldDoc')
                 var searchinputHTML = document.getElementById("programMetric_type_id");
                 console.log("searchinputHTML",searchinputHTML);
 
+                self.loadModels(self.activeDomain);
 
 
             };
