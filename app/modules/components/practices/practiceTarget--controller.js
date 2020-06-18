@@ -883,6 +883,8 @@ angular.module('FieldDoc')
 
                 self.metricMatrix.splice($index,1);
 
+                self.programMetrics.push($item);
+
             }
 
         /*
