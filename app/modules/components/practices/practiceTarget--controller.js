@@ -871,9 +871,8 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-    //            self.practiceType = $item;
+                document.getElementById("programMetric_type_id").value = "";
 
-      //          self.practice.practice_type_id = $item.id;
 
             };
 
