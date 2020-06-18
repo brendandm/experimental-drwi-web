@@ -125,7 +125,7 @@
                     url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
                 },
                 targetUpdate: {
-                    method: 'GET',
+                    method: 'PATCH',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
 
