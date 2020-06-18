@@ -843,7 +843,7 @@ angular.module('FieldDoc')
 
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
-                    self.assignedMetrics = self.info.metrics.primary;
+                    self.assignedMetrics = self.info.metrics.targets;
 
                     var i = 0;
 
