@@ -877,7 +877,9 @@ angular.module('FieldDoc')
 
             };
 
-            self.removeMetric = function(){
+            self.removeMetric = function($item,$index){
+
+                self.metricMatrix.splice($index,0);
 
             }
 
