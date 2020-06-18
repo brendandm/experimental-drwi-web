@@ -850,14 +850,7 @@ angular.module('FieldDoc')
 
             self.addMetric = function($item, $model, $label) {
 
-                console.log('self.addMetric', $item);
-
-
                 self.metricMatrix.push($item);
-
-                console.log("self.metricMatrix",self.metricMatrix)
-
-                console.log("self.programMetrics1",self.programMetrics);
 
                 var i = 0;
 
@@ -878,14 +871,15 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-
-                console.log("self.programMetrics2",self.programMetrics);
-
     //            self.practiceType = $item;
 
       //          self.practice.practice_type_id = $item.id;
 
             };
+
+            self.removeMetric = function(){
+
+            }
 
         /*
             self.loadProgramMetrics = function (){
