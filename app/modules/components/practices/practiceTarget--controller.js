@@ -944,6 +944,10 @@ angular.module('FieldDoc')
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
+                    console.log();
+
+                    self.loadMetrics();
+
                     self.loadPractice();
 
 //                    self.loadMatrix();
