@@ -524,7 +524,7 @@ angular.module('FieldDoc')
 
                 self.geometryMismatch = false;
 
-                if(self.practice_category.unit != undefined){
+          /*      if(self.practice_category.unit != undefined){
                     if(self.practice.geometry != undefined){
                         if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
                             self.geometryMismatch = true;
@@ -534,7 +534,7 @@ angular.module('FieldDoc')
                         }
                      }
                 }
-
+*/
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;

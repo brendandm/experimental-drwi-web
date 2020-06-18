@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592496099350})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592497448512})
 
 ;
 /**
@@ -21692,7 +21692,7 @@ angular.module('FieldDoc')
 
                 self.geometryMismatch = false;
 
-                if(self.practice_category.unit != undefined){
+          /*      if(self.practice_category.unit != undefined){
                     if(self.practice.geometry != undefined){
                         if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
                             self.geometryMismatch = true;
@@ -21702,7 +21702,7 @@ angular.module('FieldDoc')
                         }
                      }
                 }
-
+*/
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
@@ -22111,6 +22111,8 @@ angular.module('FieldDoc')
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
+
+                    console.log();
 
                     self.loadMetrics();
 
