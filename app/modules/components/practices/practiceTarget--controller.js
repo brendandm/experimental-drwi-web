@@ -847,6 +847,8 @@ angular.module('FieldDoc')
 
                     self.assignedMetrics = self.info.targets;
 
+
+
                     var i = 0;
 
                     self.assignedMetrics.forEach(function(newItem){
