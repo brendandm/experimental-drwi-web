@@ -1010,7 +1010,7 @@ angular.module('FieldDoc')
                 Practice.targetDelete({
                     id: +self.practice.id,
                     target_id : $item.id
-                },data).$promise.then(function(successResponse) {
+                }).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
