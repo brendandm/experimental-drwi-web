@@ -129,6 +129,12 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
 
+                },
+                targetDelete: {
+                    method: 'DELETE',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
                 }
 
             });

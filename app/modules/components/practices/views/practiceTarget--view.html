@@ -444,7 +444,7 @@
                             <li data-ng-repeat="assigned in page.assignedMetrics"
                                 data-ng-if="assigned.metric.automated"
                                 style="height:63px; background-color:#f5f5f5;">
-                                   <div>{{assigned.metric.name}}</div> <div style="margin-right:70px">{{assigned.value}}</div>
+                                   <div>{{assigned.metric.name}}</div> <div style="">{{assigned.value}}</div>
                             </li>
                             <li data-ng-repeat="assigned in page.assignedMetrics"
                                 data-ng-if="!assigned.metric.automated"
@@ -457,7 +457,7 @@
                                                 done
                                             </i>
                                         </button>
-                                         <button type="button" class="add-item" data-ng-click="page.removeMetric(assigned, $index)" data-ng-disabled="page.status.processing">
+                                         <button type="button" class="add-item" data-ng-click="page.deleteTarget(assigned, $index)" data-ng-disabled="page.status.processing">
                                              <i class="material-icons">
                                                 remove_circle
                                             </i>

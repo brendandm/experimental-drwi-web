@@ -996,6 +996,11 @@ angular.module('FieldDoc')
 
             }
 
+            self.deleteTarget = function($item,$index){
+
+
+            }
+
         /*
             self.loadProgramMetrics = function (){
 
