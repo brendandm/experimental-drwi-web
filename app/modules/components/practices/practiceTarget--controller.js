@@ -932,7 +932,7 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-               document.getElementById("assignTargetsBlock").focus();
+               document.getElementById("assignTargetsBlock").blur();
 
              //   console.log("searchinputHTML",searchinputHTML);
 
