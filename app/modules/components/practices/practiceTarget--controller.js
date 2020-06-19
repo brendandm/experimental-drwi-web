@@ -998,6 +998,43 @@ angular.module('FieldDoc')
 
             self.deleteTarget = function($item,$index){
 
+                Practice.targetDelete({
+                    id: +self.practice.id,
+                    target_id : $item.id
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target deleted.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.delete", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('practiceDelete.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
 
             }
 
