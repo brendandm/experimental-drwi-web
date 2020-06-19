@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592567609692})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592567917231})
 
 ;
 /**
@@ -18914,9 +18914,9 @@ angular.module('FieldDoc')
                     self.drawControls = new MapboxDraw({
                         displayControlsDefault: false,
                         controls: {
-                            line_string: true,
-                            point: true,
-                            polygon: true,
+                            line_string: map_ctrl_linestring,
+                            point: map_ctrl_point,
+                            polygon: map_ctrl_polygon,
                             trash: true
                         },
                         userProperties: true,

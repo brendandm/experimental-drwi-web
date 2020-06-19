@@ -832,9 +832,9 @@ angular.module('FieldDoc')
                     self.drawControls = new MapboxDraw({
                         displayControlsDefault: false,
                         controls: {
-                            line_string: true,
-                            point: true,
-                            polygon: true,
+                            line_string: map_ctrl_linestring,
+                            point: map_ctrl_point,
+                            polygon: map_ctrl_polygon,
                             trash: true
                         },
                         userProperties: true,
