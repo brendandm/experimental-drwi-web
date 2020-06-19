@@ -1025,8 +1025,10 @@ angular.module('FieldDoc')
 
                     var i = 0;
                     self.assignedMetrics.forEach(function(am){
+                        console.log((am.id+" "+$item.id);
                         if(am.id == $item.id){
-                            self.assignedMetrics.splice(i,0);
+  
+                            self.assignedMetrics.splice(i,1);
                         }
                         i = i+1;
                     });
