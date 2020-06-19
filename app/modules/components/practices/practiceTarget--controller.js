@@ -692,7 +692,7 @@ angular.module('FieldDoc')
                     self.calculating = true;
                  //   setTimeout(function(){
                  //     console.log("Timeout complete");
-                      self.bgLoadMatrix();
+                      self.bgLoadMetrics();
                  //    }, 2000);
 
 
