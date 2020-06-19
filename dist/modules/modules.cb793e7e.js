@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592595749095})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592595821310})
 
 ;
 /**
@@ -22194,12 +22194,12 @@ angular.module('FieldDoc')
                     console.log("assignedMetrics",self.assignedMetrics);
 
                     var i = 0;
-                    self.assignedMetric.forEach(function(am)){
+                    self.assignedMetric.forEach(function(am){
                         if(am.id == $item.id){
                             self.assignedMetric.splice(i,0);
                         }
                         i = i+1;
-                    }
+                    });
 
                     $timeout(self.closeAlerts, 2000);
 
