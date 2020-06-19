@@ -870,7 +870,7 @@ angular.module('FieldDoc')
 
                         self.programMetrics.forEach(function(pm){
 
-                            if(am.metrics.id == pm.id){
+                            if(am.metric.id == pm.id){
 
                                 self.programMetrics.splice(i,1);
                             }
