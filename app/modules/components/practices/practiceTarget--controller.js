@@ -1021,6 +1021,16 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
+                    console.log("assignedMetrics",self.assignedMetrics);
+
+                    var i = 0;
+                    self.assignedMetric.forEach(function(am)){
+                        if(am.id == $item.id){
+                            self.assignedMetric.splice(i,0);
+                        }
+                        i = i+1;
+                    }
+
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
