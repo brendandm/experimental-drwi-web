@@ -420,12 +420,58 @@
 
         <!-- END Assign Metrics-->
 
+
+        <!-- Add Metrics-->
+        <div class="target-block-wrapper" style="margin-bottom:200px;">
+              <div class="target-block-header">
+
+                    <div class="target-block-number-circle">
+                                           <b>3</b>
+                    </div>
+
+                    <div class="target-block-title">
+                        <b> Add Metric </b>
+                    </div>
+               </div>
+
+            <p style="clear:both;" >
+                Automated and Reportable Metrics can be added to this Practice using the search form below.
+            </p>
+
+             <div class="form-element">
+                            <span class="meta-label"><b>Add Metric</b></span>
+
+                            <input id="programMetric_type_id"
+                                   name="programMetric_type_id"
+                                   type="text"
+                                   placeholder="Search metrics"
+                                   data-ng-model="page.programMetric"
+                                   uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.addMetric($item,$model,$label)"
+                                   typeahead-min-length="0"
+                                   typeahead-template-url="templates/search--tpl.html" />
+
+                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                {{ page.practice.category.description || page.practiceType.description }}
+                            </p>
+
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
+                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
+                            </p>
+             </div>
+
+            </div>
+
+     <!-- END Add Metrics-->
+
+       <!-- assign Metrics -->
+
        <div class="target-block-wrapper">
 
                <div class="target-block-header">
 
                     <div class="target-block-number-circle">
-                                           <b>3</b>
+                                           <b>4</b>
                     </div>
 
                     <div class="target-block-title">
@@ -495,49 +541,8 @@
 
        </div>
 
+        <!-- end assign metrics -->
 
-  <!-- Add Metrics-->
-        <div class="target-block-wrapper" style="margin-bottom:200px;">
-              <div class="target-block-header">
-
-                    <div class="target-block-number-circle">
-                                           <b>4</b>
-                    </div>
-
-                    <div class="target-block-title">
-                        <b> Add Metric </b>
-                    </div>
-               </div>
-
-            <p style="clear:both;" >
-                Automated and Reportable Metrics can be added to this Practice using the search form below.
-            </p>
-
-             <div class="form-element">
-                            <span class="meta-label"><b>Add Metric</b></span>
-
-                            <input id="programMetric_type_id"
-                                   name="programMetric_type_id"
-                                   type="text"
-                                   placeholder="Search metrics"
-                                   data-ng-model="page.programMetric"
-                                   uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
-                                   typeahead-on-select="page.addMetric($item,$model,$label)"
-                                   typeahead-min-length="0"
-                                   typeahead-template-url="templates/search--tpl.html" />
-
-                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                {{ page.practice.category.description || page.practiceType.description }}
-                            </p>
-
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
-                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
-                            </p>
-             </div>
-
-            </div>
-
-     <!-- END Add Metrics-->
 
         </div>
     </div>
