@@ -815,10 +815,12 @@ angular.module('FieldDoc')
                     var map_ctrl_point = true;
                     var map_ctrl_polygon = false;
 
-                    if(self.practiceType.unit.dimension = 'area'){
+                    console.log("self.practiceType.unit.dimension",self.practiceType.unit.dimension);
+
+                    if(self.practiceType.unit.dimension == 'area'){
                         map_ctrl_polygon = true;
                     }
-                    else if(self.practiceType.unit.dimension = 'length'){
+                    else if(self.practiceType.unit.dimension == 'length'){
                         map_ctrl_linestring = true;
                     }else{
                         map_ctrl_polygon = true;
