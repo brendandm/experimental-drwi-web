@@ -998,10 +998,19 @@ angular.module('FieldDoc')
 
             self.deleteTarget = function($item,$index){
 
+                console.log("$delete $item,",$item)
+
+                var target_arr = [];
+                target_arr.push($item);
+
+                var data = {
+                    targets: target_arr
+                };
+
                 Practice.targetDelete({
                     id: +self.practice.id,
                     target_id : $item.id
-                }).$promise.then(function(successResponse) {
+                },data).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
