@@ -968,7 +968,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(error) {
 
-                    console.log('savePractice.error', error);
+                    console.log('updateMatrix.error', error);
 
                     // Do something with the error
 
