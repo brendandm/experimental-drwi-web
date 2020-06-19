@@ -444,7 +444,7 @@
                             <li data-ng-repeat="assigned in page.assignedMetrics"
                                 data-ng-if="assigned.metric.automated"
                                 style="height:63px; background-color:#f5f5f5;">
-                                   <div>{{assigned.metric.name}}</div> <div>{{assigned.value}}</div>
+                                   <div>{{assigned.metric.name}}</div> <div style="margin-right:70px">{{assigned.value}}</div>
                             </li>
                             <li data-ng-repeat="assigned in page.assignedMetrics"
                                 data-ng-if="!assigned.metric.automated"
