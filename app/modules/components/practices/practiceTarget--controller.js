@@ -850,15 +850,32 @@ angular.module('FieldDoc')
 
                     self.assignedMetrics = self.info.targets;
 
+              /*      self.programMetrics.forEach(function(pm){
+                       self.assignedMetrics.forEach(function(am){
 
+                       });
 
-                    var i = 0;
+                    });
+*/
+//                    var i = 0;
 
-                    self.assignedMetrics.forEach(function(newItem){
+                    self.assignedMetrics.forEach(function(am){
 
-                        self.activeDomain.push(newItem.id);
+                        self.activeDomain.push(am.id);
 
-                        i = i+1;
+                        var i = 0;
+
+                        self.programMetrics.forEach(function(pm){
+
+                            if(am.id == pm.id){
+
+                                self.programMetrics.splice(i,1);
+                            }
+
+                            i = i+1;
+                        });
+
+                    //
 
                     });
 
