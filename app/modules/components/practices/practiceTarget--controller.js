@@ -952,6 +952,8 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
+                 self.saveTarget($item, null, 0);
+
                document.getElementById("assignTargetsBlock").blur();
 
              //   console.log("searchinputHTML",searchinputHTML);
