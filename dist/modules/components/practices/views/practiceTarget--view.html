@@ -441,14 +441,16 @@
                 <div style="border:0px solid green;">
 
                         <ul class="target-lst target-lst-inactive">
-                            <li data-ng-repeat="assigned in page.assignedMetrics" style="height:63px; background-color:#f5f5f5;">
-                                <div data-ng-if="assigned.metric.automated" style="height:63px; border:1px solid red;">
-                                   <nobr> <div>{{assigned.metric.name}}</div> <div>{{assigned.value}}</div></nobr>
-                                </div>
+                            <li data-ng-repeat="assigned in page.assignedMetrics"
+                               style="height:63px; background-color:#f5f5f5;">
+
+                                 <!--data-ng-if="assigned.metric.automated" -->
+
+                                   <div>{{assigned.metric.name}}</div> <div>{{assigned.value}}</div>
 
 
-                                 <div data-ng-if="!assigned.metric.automated" style="height:63px; border:1px solid blue;">
-                                    <nobr>
+                             <!--    <div data-ng-if="!assigned.metric.automated" style="height:63px; border:1px solid blue;">
+
                                          <div>{{assigned.metric.name}}</div>
 
                                          <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
@@ -462,8 +464,8 @@
                                                 remove_circle
                                             </i>
                                         </button>
-                                    </nobr>
                                  </div>
+                                 -->
                             </li>
                         </ul>
 

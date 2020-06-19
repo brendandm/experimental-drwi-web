@@ -905,6 +905,8 @@ angular.module('FieldDoc')
 
                 self.metricMatrix.push($item);
 
+                self.assignedMetrics.push($item);
+
                 var i = 0;
 
                 var tempProgramMetrics = [];
