@@ -896,6 +896,7 @@ angular.module('FieldDoc')
             self.addMetric = function($item, $model, $label) {
 
                 self.programMetric = '';
+             //   document.getElementById("whatever").focus();
               //  delete $item.id;
 
                 var temp_id = $item.id;
@@ -931,9 +932,9 @@ angular.module('FieldDoc')
 
                 self.programMetrics = tempProgramMetrics;
 
-                var searchinputHTML = document.getElementById("programMetric_type_id");
+               document.getElementById("programMetric_type_id").focus();
 
-                console.log("searchinputHTML",searchinputHTML);
+             //   console.log("searchinputHTML",searchinputHTML);
 
                 self.loadModels(self.activeDomain);
 
