@@ -442,12 +442,12 @@
 
                         <ul class="target-lst target-lst-inactive">
                             <li data-ng-repeat="assigned in page.assignedMetrics" style="height:63px; background-color:#f5f5f5;">
-                                <div data-ng-if="assigned.metric.automated" style="border:1px solid red;">
+                                <div data-ng-if="assigned.metric.automated" style="height:63px; border:1px solid red;">
                                     <div>{{assigned.metric.name}}</div> <div>{{assigned.value}}</div>
                                 </div>
 
-                                
-                                 <div data-ng-if="!assigned.metric.automated" style="border:1px solid blue;">
+
+                                 <div data-ng-if="!assigned.metric.automated" style="height:63px; border:1px solid blue;">
                                     <div>{{assigned.metric.name}}</div>
 
                                      <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
