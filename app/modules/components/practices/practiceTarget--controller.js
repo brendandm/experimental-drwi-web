@@ -659,7 +659,7 @@ angular.module('FieldDoc')
 
             };
 */
-       /*     self.savePractice = function() {
+            self.savePractice = function() {
 
                 self.status.processing = true;
 
@@ -709,7 +709,7 @@ angular.module('FieldDoc')
                 });
 
             };
-*/
+
             self.deleteFeature = function() {
 
                 var targetId;

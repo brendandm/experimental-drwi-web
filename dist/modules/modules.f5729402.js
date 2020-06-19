@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592562447422})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592563205245})
 
 ;
 /**
@@ -21827,7 +21827,7 @@ angular.module('FieldDoc')
 
             };
 */
-       /*     self.savePractice = function() {
+            self.savePractice = function() {
 
                 self.status.processing = true;
 
@@ -21877,7 +21877,7 @@ angular.module('FieldDoc')
                 });
 
             };
-*/
+
             self.deleteFeature = function() {
 
                 var targetId;
