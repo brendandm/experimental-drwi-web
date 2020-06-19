@@ -859,6 +859,9 @@ angular.module('FieldDoc')
 */
 //                    var i = 0;
 
+
+                    console.log("self.assignedMetrics",self.assignedMetrics);
+                    console.log("self.programMetrics",self.programMetrics);
                     self.assignedMetrics.forEach(function(am){
 
                         self.activeDomain.push(am.id);

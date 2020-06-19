@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592598161756})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592598424231})
 
 ;
 /**
@@ -22029,6 +22029,9 @@ angular.module('FieldDoc')
 */
 //                    var i = 0;
 
+
+                    console.log("self.assignedMetrics",self.assignedMetrics);
+                    console.log("self.programMetrics",self.programMetrics);
                     self.assignedMetrics.forEach(function(am){
 
                         self.activeDomain.push(am.id);
