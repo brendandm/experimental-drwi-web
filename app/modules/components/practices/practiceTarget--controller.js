@@ -840,6 +840,8 @@ angular.module('FieldDoc')
                     id: self.practice.id
 
                 }).$promise.then(function(successResponse){
+
+
                     console.log("loadMetrics",successResponse);
 
                     self.info = successResponse;
@@ -861,6 +863,8 @@ angular.module('FieldDoc')
                     });
 
                      self.loadModels(self.activeDomain);
+
+                     self.calculating = false;
 
                 //    console.log("self.info",self.info);
                 //     console.log("self.programMetrics",self.programMetrics);

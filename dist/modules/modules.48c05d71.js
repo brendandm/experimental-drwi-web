@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592566666195})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592566909095})
 
 ;
 /**
@@ -22008,6 +22008,8 @@ angular.module('FieldDoc')
                     id: self.practice.id
 
                 }).$promise.then(function(successResponse){
+
+
                     console.log("loadMetrics",successResponse);
 
                     self.info = successResponse;
@@ -22029,6 +22031,8 @@ angular.module('FieldDoc')
                     });
 
                      self.loadModels(self.activeDomain);
+
+                     self.calculating = false;
 
                 //    console.log("self.info",self.info);
                 //     console.log("self.programMetrics",self.programMetrics);
