@@ -897,6 +897,12 @@ angular.module('FieldDoc')
 
               //  delete $item.id;
 
+                var temp_id = $item.id;
+
+                $item.metric_id = temp_id;
+
+                delete $item.id;
+
                 self.metricMatrix.push($item);
 
                 var i = 0;
