@@ -895,6 +895,7 @@ angular.module('FieldDoc')
 
             self.addMetric = function($item, $model, $label) {
 
+                self.programMetric = '';
               //  delete $item.id;
 
                 var temp_id = $item.id;
