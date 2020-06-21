@@ -8,7 +8,7 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('ProgramMetricController', [
+        .controller('ProgramMetricsController', [
             'Account',
             '$location',
             '$timeout',
