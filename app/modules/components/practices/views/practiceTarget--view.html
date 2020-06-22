@@ -4,7 +4,7 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div 
+    <div
             class="content--container"
          style="border-right: 1px solid #e0e0e0;">
 
@@ -35,17 +35,24 @@
 
         <div class="main--ui target-ui reveal fade-in t0">
 
-            <p>The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
+            <div data-ng-if="page.practice.category">
+                <p >The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
 
-            <h2>{{ page.practice_category.name }} &middot; Definition</h2>
+                <h2>{{ page.practice_category.name }} &middot; Definition</h2>
 
-            <div>
+                <div>
 
-                <p data-ng-if="page.practice_category.description" style="width:70%">
-                    {{ page.practice_category.description }}
-                </p>
-                <p data-ng-if="!page.practice_category.description" style="width:70%">
-                   This Practice Type's definition has not been defined.
+                    <p data-ng-if="page.practice_category.description" style="width:70%">
+                        {{ page.practice_category.description }}
+                    </p>
+                    <p data-ng-if="!page.practice_category.description" style="width:70%">
+                       This Practice Type's definition has not been defined.
+                    </p>
+                </div>
+            </div>
+            <div data-ng-if="!page.practice.category">
+                <p style="width:70%">
+                       This Practice does not have a specified Practice Type.
                 </p>
             </div>
 
