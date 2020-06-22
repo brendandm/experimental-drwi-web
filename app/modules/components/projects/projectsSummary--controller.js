@@ -376,7 +376,6 @@ angular.module('FieldDoc')
                     console.log("self.project.organization_id",self.project.organization_id);
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': null,
                         'project_id': self.project.id,
                         'organization_id': self.project.organization_id

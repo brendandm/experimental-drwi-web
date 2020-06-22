@@ -592,7 +592,6 @@
                 self.createPractice = function() {
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.project.id,
                         'organization_id': self.site.organization_id
