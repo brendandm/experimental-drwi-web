@@ -266,7 +266,7 @@
 
                         self.loadMetrics();
 
-                        loadProgramMetrics();
+                        self.loadProgramMetrics();
 
                         self.loadProjects();
 
