@@ -44,3 +44,38 @@
 .target-lst-inactive li > div:first-of-type {
     color: #616161;
 }
+
+/*practice targets view*/
+
+    .target-block-wrapper {
+    border-bottom:1px solid #cccccc;
+    padding-bottom:20px;
+    padding-top: 20px;
+}
+
+.target-block-header {
+    margin-bottom:10px;
+    height: 30px;
+}
+
+.target-block-number-circle {
+    width: 20px;
+    height: 20px;
+    background-color:#cccccc;
+    border-radius:50%;
+    font-size:15px;
+    text-align: center;
+    color:#ffffff;
+    font-style:bold;
+    padding: 0px 0px 3px 0px;
+    margin: 5px 10px 0px 0px;
+    display: block;
+    float: left;
+}
+.target-block-title{
+    display:block;
+    float: left;
+    font-size: 1.5em;
+
+
+}

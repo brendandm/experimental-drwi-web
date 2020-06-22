@@ -9,7 +9,8 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval) {
+            MetricType, Model, $filter, $interval, Program) {
+
 
             var self = this;
 
@@ -38,6 +39,10 @@ angular.module('FieldDoc')
                 self.alerts = [];
 
             };
+
+            self.metricMatrix = [];
+
+            self.activeDomain = [];
 
             function closeRoute() {
 
@@ -259,44 +264,7 @@ angular.module('FieldDoc')
 
             };
 
-            // self.runModel = function() {
 
-            //     var data = {
-            //         practice_code: self.practice.category.model_key,
-            //         geometry: self.practice.geometry,
-            //         units: $filter('convertArea')(self.practice.area, 'acre')
-            //     };
-
-            //     Model.cast({}, data).$promise.then(function(successResponse) {
-
-            //         console.log('Run model successResponse', successResponse);
-
-            //         self.modelTargets.forEach(function(metric) {
-
-            //             if (successResponse.hasOwnProperty(metric.model_key)) {
-
-            //                 metric.value = successResponse[metric.model_key];
-
-            //                 self.targets.active.push({
-            //                     name: metric.name,
-            //                     value: metric.value,
-            //                     metric_id: metric.id,
-            //                     metric: metric
-            //                 });
-
-            //             }
-
-            //         });
-
-            //         self.modelTargets = [];
-
-            //     }, function(errorResponse) {
-
-            //         console.log('Run model errorResponse', errorResponse);
-
-            //     });
-
-            // };
 
             self.loadPractice = function() {
 
@@ -352,7 +320,14 @@ angular.module('FieldDoc')
 
                         self.calculating = true;
 
-                        self.bgLoadMatrix();
+                  //      self.bgLoadMatrix();
+
+
+                        self.loadMetrics();
+                 //       self.loadMatrix();
+                   //     self.loadMatrix();
+              //     self.bgLoadMatrix();
+                //        self.loadProgramMetrics();
                 //    }
 
 
@@ -369,7 +344,8 @@ angular.module('FieldDoc')
 
             };
 
-            self.search = function(value) {
+
+/*            self.search = function(value) {
 
                 if (self.searchScope.target === 'metric') {
 
@@ -410,7 +386,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.directQuery = function(item, model, label) {
 
                 if (self.searchScope.target === 'program') {
@@ -424,7 +401,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.removeAll = function() {
 
                 self.targets.active.forEach(function (item) {
@@ -436,7 +414,8 @@ angular.module('FieldDoc')
                 self.targets.active = [];
 
             };
-
+*/
+/*
             self.addTarget = function(item, idx) {
 
                 if (!item.value ||
@@ -486,7 +465,7 @@ angular.module('FieldDoc')
                 console.log('Updated targets (removal)');
 
             };
-
+*/
             self.processTargets = function(list) {
 
                 var _list = [];
@@ -507,7 +486,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadFeatures = function(programId) {
+         /*   self.loadFeatures = function(programId) {
 
                 var params = {
                     program: programId
@@ -532,7 +511,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+        */
             self.processPractice = function(data) {
 
                 console.log('process-data -->', data);
@@ -540,11 +519,15 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                if(self.practice.custom_extent == null){
+                    self.practice.custom_extent = self.practice.calculated_extent.converted;
+                }
+
                 self.calculating ==  self.practice.calculating;
 
                 self.geometryMismatch = false;
 
-                if(self.practice_category.unit != undefined){
+          /*      if(self.practice_category.unit != undefined){
                     if(self.practice.geometry != undefined){
                         if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
                             self.geometryMismatch = true;
@@ -554,12 +537,12 @@ angular.module('FieldDoc')
                         }
                      }
                 }
-
+*/
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
 
-                console.log("process practice->>",self.practice)
+                console.log("process practice->>",self.practice);
 
             };
 
@@ -609,7 +592,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveTargets = function() {
+   /*         self.saveTargets = function() {
 
                 self.status.processing = true;
 
@@ -675,7 +658,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.savePractice = function() {
 
                 self.status.processing = true;
@@ -709,7 +692,7 @@ angular.module('FieldDoc')
                     self.calculating = true;
                  //   setTimeout(function(){
                  //     console.log("Timeout complete");
-                      self.bgLoadMatrix();
+                      self.bgLoadMetrics();
                  //    }, 2000);
 
 
@@ -824,6 +807,7 @@ angular.module('FieldDoc')
 
             };
 
+
             self.checkStatus = function(){
                 console.log("Checking Calc Status");
 
@@ -835,8 +819,8 @@ angular.module('FieldDoc')
 
                      self.calculating = successResponse.calculating;
 
-                    self.bgLoadMatrix();
-
+                  //  self.bgLoadMatrix();
+                    self.bgLoadMetrics();
                     //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
@@ -848,49 +832,283 @@ angular.module('FieldDoc')
 
             }
 
-/*
-            self.backgroundLoadMatrix = function(){
-                console.log("YESSSS", self.practice.calculating);
 
-//                var matrixLoadInterval;
-//                var matrixLoadIntervalRunning;
-                    self.matrixLoadInterval = false;
+            self.loadMetrics = function(){
+                console.log("LoadMetrics A");
+                Practice.metrics({
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
+                    id: self.practice.id
 
-                    console.log("Checking Practice");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
+                }).$promise.then(function(successResponse){
 
-                     self.matrixLoadIntervalRunning = true;
 
-                     self.matrixLoadInterval = $interval(function() {
-                         self.loadPractice();
+                    console.log("loadMetrics",successResponse);
+
+                    self.info = successResponse;
+                    self.programMetrics = self.info.metrics.secondary;
+                    //                    self.assignedMetrics = self.info.metrics.primary;
+
+                    self.assignedMetrics = self.info.targets;
+
+              /*      self.programMetrics.forEach(function(pm){
+                       self.assignedMetrics.forEach(function(am){
+
+                       });
+
+                    });
+*/
+//                    var i = 0;
+
+
+                    console.log("self.assignedMetrics",self.assignedMetrics);
+                    console.log("self.programMetrics",self.programMetrics);
+                    self.assignedMetrics.forEach(function(am){
+
+                        self.activeDomain.push(am.id);
+
+                        var i = 0;
+
+                        self.programMetrics.forEach(function(pm){
+
+                            if(am.metric.id == pm.id){
+
+                                self.programMetrics.splice(i,1);
+                            }
+
+                            i = i+1;
+                        });
+
+                    //
+
+                    });
+
+                     self.loadModels(self.activeDomain);
+
+                     self.calculating = false;
+
+                //    console.log("self.info",self.info);
+                //     console.log("self.programMetrics",self.programMetrics);
+
+                },function(errorResponse){
+                     console.log("loadMetrics error",errorResponse);
+                });
+            };
+
+            self.bgLoadMetrics = function(){
+                console.log("BG LOAD MATRIX", self.calculating);
+
+                //self.practice.calculating
+                if(self.calculating == true){
+                     console.log("Checking Practice");
+                     var timer = setTimeout(function(){
+                          self.checkStatus();
+
                     }, 2000);
                 }else{
-                    console.log("Reloading Matrix");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
-                //    if(self.matrixLoadIntervalRunning == true){
-
-                        console.log("Terminating Matrix Load Interval");
-
-                        self.matrixLoadIntervalRunning = false;
-
-                      //  setTimeout(function(){
-                            $interval.cancel(self.matrixLoadInterval);
-
-
-                            self.matrixLoadInterval = false;
-                     //   }, 2000);
-
-
-              //      }
-
-                    self.loadMatrix();
+                    clearTimeout(timer);
+                    self.loadMetrics();
                 }
+
+            };
+
+
+
+            self.addMetric = function($item, $model, $label) {
+
+                self.programMetric = '';
+             //   document.getElementById("whatever").focus();
+              //  delete $item.id;
+
+                var temp_id = $item.id;
+
+                $item.metric_id = temp_id;
+
+                delete $item.id;
+
+                self.metricMatrix.push($item);
+
+           //     self.assignedMetrics.push($item);
+
+                var i = 0;
+
+                var tempProgramMetrics = [];
+
+                self.programMetrics.forEach(function(newItem){
+
+                     if($item.id == newItem.id){
+
+                      //  delete self.programMetrics[i];
+
+                     }else{
+
+                         tempProgramMetrics.push(self.programMetrics[i]);
+
+                         self.activeDomain.push(newItem.id);
+
+                     }
+
+                     i = i+1;
+                });
+
+                self.programMetrics = tempProgramMetrics;
+
+                 self.saveTarget($item, null, 0);
+
+               document.getElementById("assignTargetsBlock").blur();
+
+             //   console.log("searchinputHTML",searchinputHTML);
+
+                self.loadModels(self.activeDomain);
 
 
             };
-*/
+
+            self.saveTarget =  function($item,$index,$value){
+                console.log("save $item", $item);
+
+                var target_arr = [];
+                target_arr.push($item);
+
+                var data = {
+                    targets: target_arr
+                };
+
+                Practice.updateMatrix({
+                    id: +self.practice.id,
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.updateMatrix", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('updateMatrix.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+            }
+
+            self.removeMetric = function($item,$index){
+
+                console.log($item+" "+$index);
+
+                self.metricMatrix.splice($index,1);
+
+                self.programMetrics.push($item);
+
+            }
+
+            self.deleteTarget = function($item,$index){
+
+                console.log("$delete $item,",$item)
+
+                var target_arr = [];
+                target_arr.push($item);
+
+                var data = {
+                    targets: target_arr
+                };
+
+                Practice.targetDelete({
+                    id: +self.practice.id,
+                    target_id : $item.id
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target deleted.',
+                        'prompt': 'OK'
+                    }];
+
+                    console.log("assignedMetrics",self.assignedMetrics);
+
+                    var i = 0;
+                    self.assignedMetrics.forEach(function(am){
+
+                        if(am.id == $item.id){
+
+                            self.assignedMetrics.splice(i,1);
+                        }
+                        i = i+1;
+                    });
+
+                    self.programMetrics.push($item.metric);
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.delete", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('practiceDelete.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+
+            }
+
+        /*
+            self.loadProgramMetrics = function (){
+
+                Program.metrics({
+
+                        id  : self.practice.project.program_id
+
+                    }).$promise.then(function(successResponse) {
+
+                    console.log("Program Metrics -->", successResponse);
+
+                    }, function(errorResponse) {
+
+                        console.log("Program Metrics --> ERROR",errorResponse );
+
+
+                     });
+
+
+
+            };
+
+
+
             /*
             END Custom Extent Logic
             */
@@ -909,6 +1127,10 @@ angular.module('FieldDoc')
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
+
+                    console.log();
+
+            //        self.loadMetrics();
 
                     self.loadPractice();
 

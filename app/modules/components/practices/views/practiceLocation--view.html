@@ -24,30 +24,33 @@
 
         </section>
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.practice.properties.project.properties.id}}">{{page.practice.properties.project.properties.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr data-ng-if="page.practice.properties.site.properties.id != null">
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.practice.properties.site.properties.id}}">{{page.practice.properties.site.properties.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Practice: <a href="/practices/{{page.practice.properties.id}}">{{ page.practice.properties.name }}</a>
-                                    / Edit location
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{page.practice.properties.project.properties.id }}">{{ page.practice.properties.project.properties.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.properties.site.properties.id !== null">
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{ page.practice.properties.site.properties.id }}">{{ page.practice.properties.site.properties.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Practice:&nbsp;</span>
+                <a href="/practices/{{ page.practice.properties.id }}">{{ page.practice.properties.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Edit location
+            </div>
         </div>
+
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
+            <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
+                Edit location
+            </h1>
         </div>
+        
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();" autocomplete="off">
@@ -58,7 +61,7 @@
                     <span class="meta-label"><b>Practice type</b></span>
                     <input id="practice_type_id" name="practice_type_id" type="text" data-ng-model="page.practiceType.name" disabled readonly />
                     <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                        {{ page.practice.properties.category.description }}
+                        {{ page.practice.properties.practice_type.description }}
                     </p>
                 </div>
 
@@ -170,21 +173,6 @@
                     </i>
                 </a>
             </li>
-        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos" title="Photod">
-                    <i class="material-icons">
-                        insert_photo
-                    </i>
-                </a>
-            </li>
-            -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/practices/{{ page.practice.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">

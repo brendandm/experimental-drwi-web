@@ -426,6 +426,7 @@
           align-items: center;
           padding: 1em;
           color: #333;
+          text-decoration: none;
           opacity: 0.7;
           transition: all 250ms ease 0s;
 
@@ -433,6 +434,7 @@
           &:focus,
           &.active {
             opacity: 1;
+            text-decoration: none;
           }
 
         }
@@ -441,6 +443,7 @@
 
       .active > a {
         opacity: 1;
+        text-decoration: none;
       }
 
     }
@@ -1523,13 +1526,13 @@
 
   a {
     //color:rgb(41, 132, 189);
-    text-decoration: none;
+    //text-decoration: none;
     outline: 0 none;
   }
 
   a:hover {
-    color: rgb(41, 132, 189);
-    text-decoration: none;
+    //color: rgb(41, 132, 189);
+    //text-decoration: none;
     outline: 0 none;
   }
 
@@ -2849,12 +2852,14 @@
         display: inline-block;
         margin-right: 1em;
         //color: #333;
+        text-decoration: none;
         opacity: 0.7;
         transition: all 250ms ease 0s;
       }
 
       a:hover,
       a:focus {
+        text-decoration: none;
         opacity: 1;
       }
 
@@ -4494,7 +4499,7 @@
       margin-bottom: 2em;
       border-radius: 4px;
       //box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-      box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+      box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
       overflow: hidden;
       transition: all 250ms ease 0s;
 

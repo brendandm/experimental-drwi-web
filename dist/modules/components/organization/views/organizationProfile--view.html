@@ -8,21 +8,22 @@
 
         <h1 class="inset">{{page.organizationProfile.name}}</h1>
 
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
-
-        <!--    <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
                 <div class="add--new--wrapper"  data-ng-if="$root.user.properties.is_admin">
                     <span>Edit organization</span>
-                    <a class="add--new--btn" href="/organization" data-ng-class="{viewing: $root.viewState.organizationProfile}">
+                    <a class="add--new--btn" href="/organizations/{{page.organizationProfile.id}}/edit" data-ng-class="{viewing: $root.viewState.organizationProfile}">
                         <i class="material-icons">
                         edit
                         </i>
                     </a>
                 </div>
-                <div class="flow2--field-container" style="border:0px solid purple">
-                    <div class="flow2--left-field" style="border: 0px solid red">
-                        <div class="flow2--profileItem" ng-if="page.organizationProfile.description">
+
+                <div class="flow2--field-container">
+
+                    <div class="flow2--left-field">
+
+                        <div class="flow2--profileItem" data-ng-if="page.organizationProfile.description">
                             <p class="flow2-h">
                                 <i>Description:</i>
                             </p>
@@ -30,7 +31,8 @@
                                 {{page.organizationProfile.description}}
                             </p>
                         </div>
-                        <div class="flow2--profileItem" style="margin-right:3em; clear:left;" ng-if="page.organizationProfile.website">
+
+                        <div class="flow2--profileItem" style="margin-right:3em; clear:left;" data-ng-if="page.organizationProfile.website">
 
                                 <p class="flow2-h">
                                     <i>Website:</i>
@@ -41,7 +43,8 @@
                                 </p>
 
                         </div>
-                        <div class="flow2--profileItem" ng-if="page.organizationProfile.email">
+
+                        <div class="flow2--profileItem" data-ng-if="page.organizationProfile.email">
                             <p class="flow2-h">
                                 <i>Email:</i>
                             </p>
@@ -49,115 +52,142 @@
                                 {{page.organizationProfile.email}}
                             </p>
                         </div>
-                        <div class="flow2--profileItem" style="clear:left;" ng-if="page.organizationProfile.created_on">
+                        <br>
+                        <div class="flow2--profileItem" data-ng-if="page.organizationProfile.created_on">
+                            <p class="flow2-h">
+                                <i>Created on:</i>
+                            </p>
+                            <p class="flow2-b">
+                                {{ page.organizationProfile.created_on | date : 'longDate' }}
+
+                            </p>
+                        </div>
+
+                        <div class="flow2--profileItem" data-ng-if="page.organizationProfile.modified_on">
                             <p class="flow2-h">
                                 <i>Last Modified:</i>
                             </p>
                             <p class="flow2-b">
-                                {{page.organizationProfile.created_on}}
+                                {{ page.organizationProfile.modified_on | date : 'longDate' }}
+
+                            </p>
+                               <p>
+                                <a href="/organizations/{{ page.organizationProfile.id }}/history">
+                                <sub><i class="material-icons">history</i></sub> View change log
+                             </a>
+                        </p>
+                        </div>
+
+                        <div class="flow2--profileItem"
+                             style="clear:left;  position: absolute; bottom: 0;"
+                             data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
+                            <p class="flow2-h">
+                              To request changes to your organization, please contact <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.
                             </p>
                         </div>
 
-                     </div>
+                    </div>
+
                     <div class="flow2--right-field" style="border: 0px solid green">
 
-                           <img class='flow2--organizationImage'  ng-if="page.organizationProfile.picture" src="{{page.organizationProfile.picture}}">
-                            <img class='flow2--organizationImage'  ng-if="!page.organizationProfile.picture" src="/images/partner-Default-1024x.png">
+                           <img class='flow2--organizationImage'  data-ng-if="page.organizationProfile.picture" src="{{page.organizationProfile.picture}}">
+                            <img class='flow2--organizationImage'  data-ng-if="!page.organizationProfile.picture" src="/images/partner-Default-1024x.png">
 
                     </div>
+
                 </div>
 
-
-    <!--        </section> -->
         </div>
 
-        <h2 class="flow2" ng-if="page.members.length">Members</h2>
+        <h2 class="flow2" data-ng-if="page.members.length">Members</h2>
+
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.members.length">
-            <div class="add--new--wrapper" style="position:relative">
-                <span></span>
 
-                </a>
-            </div>
-   <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
-
-                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.members.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
+                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <data-ng-pluralize count="page.members.length" when="{'one': 'member','other': 'members'}"></data-ng-pluralize>.</p>
 
                 <div class="features--container" data-ng-if="!page.status.loading" style="padding-bottom: 20px;">
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                        <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
+                        <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
 
-                                <div class="flow2-card--content" style="border: 0px solid red;" >
-
+                                <div class="flow2-card--content">
 
                                       <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id">
 
-                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        <div class="user-avatar-wrapper" data-ng-if="member.picture">
+
+                                            <div class="user-avatar user-avatar-sm" style="background-image: url({{ member.picture }});"></div>
+
                                         </div>
-                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+
+                                        <div class="user-avatar-wrapper" data-ng-if="!member.picture">
+
+                                            <div class="user-avatar user-avatar-sm" style="background-image: url(images/avatar-Default-1024x.png);"></div>
+
                                         </div>
 
                                       </a>
+
                                     <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id != page.user.properties.id">
 
-                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        <div class="user-avatar-wrapper" data-ng-if="member.picture">
+
+                                            <div class="user-avatar user-avatar-sm" style="background-image: url({{ member.picture }});"></div>
+
                                         </div>
-                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+
+                                        <div class="user-avatar-wrapper" data-ng-if="!member.picture">
+
+                                            <div class="user-avatar user-avatar-sm" style="background-image: url(images/avatar-Default-1024x.png);"></div>
+
                                         </div>
 
                                       </a>
 
-                                        <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
-                                            <span>  {{ member.first_name }} {{ member.last_name }}</span>
-
+                                        <div class="name" style="border-radius: 4px;">
+                                            <span>
+                                                {{ member.first_name }} {{ member.last_name }}
+                                            </span>
                                         </div>
 
-                                        <div class="body" style="display:block; border-bottom: 0px; float: left; clear:left; background: #fff;">
-                                             <span style=" font-weight: normal;"> {{ member.title }} </span>
-
-
-                                       </div>
+                                        <!-- <div class="body">
+                                             <span>{{ member.title }}</span>
+                                       </div> -->
 
                                 </div>
 
-
                         </li>
-
 
                     </ul>
 
                 </div>
 
-        <!--    </section> -->
-
         </div>
 
-        <h2 class="flow2" style="display:block" ng-if="page.projects.length">Projects</h2>
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.projects.length" style="border:0px solid red;">
+        <h2 class="flow2" style="display:block" data-ng-if="page.projects.length">Projects</h2>
+
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.projects.length">
+
             <div class="add--new--wrapper" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
+
                 <span>Create project</span>
-                    <a class="add--new--btn" href="projects/collection/new">
-                        <i class="material-icons">
-                        add
-                        </i>
-                    </a>
+
+                <a class="add--new--btn" href="projects/collection/new">
+                    <i class="material-icons">
+                    add
+                    </i>
+                </a>
+
             </div>
-           <!-- <section>
-            -->
 
                 <p data-ng-if="!page.status.loading && page.organizationProfile.id == page.user.properties.organization.id">{{page.organizationProfile.name}} has
-                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>
+                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <data-ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></data-ng-pluralize>.
                 </p>
 
-             <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && page.organizationProfile.id != page.user.properties.organization.id">There <ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></ng-pluralize>
-                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in programs that you manage.
+             <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && page.organizationProfile.id != page.user.properties.organization.id">There <data-ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></data-ng-pluralize>
+                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <data-ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></data-ng-pluralize> in programs that you manage.
                 </p>
-
 
                 <div class="features--container" data-ng-if="!page.status.loading" style="border:0px solid blue;">
 
@@ -215,10 +245,8 @@
                     </ul>
 
                 </div>
-       <!--     </section> -->
+
         </div>
-
-
 
     </div>
 

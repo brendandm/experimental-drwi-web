@@ -427,7 +427,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/batchDelete', {
+            .when('/projects/:projectId/batch-delete', {
                     templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
                     controller: 'ProjectsBatchDeleteController',
                     controllerAs: 'page',
@@ -452,7 +452,7 @@ angular.module('FieldDoc')
 
                     }
                 })
-                .when('/projects/:projectId/batchPracticeDelete', {
+                .when('/projects/:projectId/batch-practice-delete', {
                     templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
                     controller: 'ProjectsPracticesBatchDeleteController',
                     controllerAs: 'page',

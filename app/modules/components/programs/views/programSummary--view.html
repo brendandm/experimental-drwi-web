@@ -10,17 +10,16 @@
 
             <div class="module--grid">
 
-                   <!--     <div class="breadcrumb_container"> -->
-                <div class="group">
-                    <article class="breadcrumb" >
-                       <p>
-                            <nobr>
-                                Program: <a href="/programs/{{page.program.id}}">{{page.program.name}}</a>
-                            </nobr>
-                       </p>
-                    </article>
+                <div class="breadcrumb">
+                    <div>
+                        <span>Program:&nbsp;</span>
+                        <a href="/programs/{{ page.program.id }}">{{ page.program.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
                 </div>
-            <!--    </div> -->
 
                 <div class="group">
 
@@ -29,6 +28,23 @@
                     <article class="pad space-right shadow">
 
                         <h1>{{ page.program.name || 'Un-named' }}</h1>
+
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.program.id && page.program.last_modified_by.first_name && page.program.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.program.last_modified_by.first_name }} {{ page.program.last_modified_by.last_name }} on {{ page.program.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/programs/{{ page.program.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
 
                         <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
 
@@ -161,7 +177,7 @@
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">Installed / Planned</th>
                                     <th class="table-metrics-header">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -176,7 +192,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            of {{ metric.self_target | number:2 }}</span>
+                                            / {{ metric.self_target | number:2 }}</span>
                                     </td>
                                     <td data-ng-if="metric.self_target > 0">
                                         <strong class="metrics--metric--percentage">

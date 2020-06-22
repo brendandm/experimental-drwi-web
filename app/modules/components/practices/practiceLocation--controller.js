@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeLocationController',
         function(Account, Image, $location, $log, mapbox, Media,
             Site, Practice, practice, $q, $rootScope, $route,
-            $scope, $timeout, $interval, site, Site, user, Shapefile,
+            $scope, $timeout, $interval, site, user, Shapefile,
             Utility, Task, LayerService, MapManager) {
 
             var self = this;
@@ -143,7 +143,7 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.practiceType = successResponse.properties.category  || successResponse.category;
+                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -388,7 +388,7 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                     self.showElements();
 
@@ -811,14 +811,30 @@ angular.module('FieldDoc')
                     }
 
 
+                    var map_ctrl_linestring = false;
+                    var map_ctrl_point = true;
+                    var map_ctrl_polygon = false;
+
+                    console.log("self.practiceType.unit.dimension",self.practiceType.unit.dimension);
+
+                    if(self.practiceType.unit.dimension == 'area'){
+                        map_ctrl_polygon = true;
+                    }
+                    else if(self.practiceType.unit.dimension == 'length'){
+                        map_ctrl_linestring = true;
+                    }else{
+                        map_ctrl_polygon = true;
+                          map_ctrl_linestring = true;
+                    }
+
 
 
                     self.drawControls = new MapboxDraw({
                         displayControlsDefault: false,
                         controls: {
-                            line_string: true,
-                            point: true,
-                            polygon: true,
+                            line_string: map_ctrl_linestring,
+                            point: map_ctrl_point,
+                            polygon: map_ctrl_polygon,
                             trash: true
                         },
                         userProperties: true,

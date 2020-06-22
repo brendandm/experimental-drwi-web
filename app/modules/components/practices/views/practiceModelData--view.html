@@ -6,6 +6,27 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{page.practice.project.id }}">{{ page.practice.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.site !== null">
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Practice:&nbsp;</span>
+                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Edit model inputs
+            </div>
+        </div>
+
         <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Model inputs</h1>
 
         <div class="main--ui target-ui reveal fade-in t0">
@@ -41,20 +62,6 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
-                    <i class="material-icons">
-                        insert_photo
-                    </i>
-                </a>
-            </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/practices/{{ page.practice.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">

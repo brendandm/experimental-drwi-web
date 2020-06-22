@@ -18,6 +18,10 @@ angular.module('FieldDoc')
                 'profile': true
             };
 
+        //    self.member = {
+        //                    picture : null
+        //                   };
+
             self.status = {
                 loading: true,
                 processing: false,
@@ -65,8 +69,10 @@ angular.module('FieldDoc')
                                self.actions.getMember();
                         }else{
                             self.member = self.user.properties;
+                            console.log("self.member -->",self.member);
                             var picture = self.member.picture;
                             self.member.picture = picture.replace("original", "square");
+
                         }
 
 
@@ -102,7 +108,7 @@ angular.module('FieldDoc')
                                }
 
                                  self.status.loading = false;
-
+                                console.log("self.member", self.member);
                        }, function(errorResponse) {
 
                             self.status.processing = false;

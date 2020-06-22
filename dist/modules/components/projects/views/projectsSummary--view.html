@@ -28,18 +28,16 @@
 
             <div class="module--grid">
 
-                 <!--     <div class="breadcrumb_container"> -->
-                <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                            </nobr>
-                        </p>
-                    </article>
+                <div class="breadcrumb">
+                    <div>
+                        <span>Project:&nbsp;</span>
+                        <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
                 </div>
-            <!--    </div> -->
-
 
                 <div class="group">
 
@@ -47,18 +45,27 @@
 
                         <h1>{{ page.project.name }}</h1>
 
-                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/projects/{{ page.project.id }}/history">
+                                    View change log
+                                 </a>
+                            </div>
+
+                        </div>
 
                         <p data-ng-if="page.project.program && page.project.program.id" class="label">
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
 
-                     <!--   <p data-ng-if="page.area && page.area.value" class="label">
-                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
-                        </p>
-                    -->
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">
@@ -222,7 +229,7 @@
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">Installed / Planned</th>
                                     <th class="table-metrics-header">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -266,7 +273,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
-                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress"> / {{ metric.self_target | number:2 }} </span>
                                     </td>
                                     <td data-ng-if="metric.show_progress">
                                         <strong class="metrics--metric--percentage">
@@ -444,8 +451,8 @@
                                 "
                          data-ng-if="page.permissions.can_edit"
                     >
-                        <a class="snapshot--title" title="Batch Delete"
-                           href="/projects/{{ page.project.id }}/batchPracticeDelete"
+                        <a class="snapshot--title" title="Batch delete practices"
+                           href="/projects/{{ page.project.id }}/batch-practice-delete"
                            >
                                 <i class="material-icons" style="color:#666666;">
                                       delete_sweep
@@ -475,7 +482,7 @@
                             </div>
 
                             <div class="name" style="background: #fff;">
-                                <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
+                                <span>{{ practice.properties.name || practice.properties.practice_type || 'Un-named' }}</span>
                             </div>
 
                             <div class="body">
@@ -810,8 +817,8 @@
                                 "
                          data-ng-if="page.permissions.can_edit"
                     >
-                        <a class="snapshot--title" title="Batch Delete"
-                           href="/projects/{{ page.project.id }}/batchDelete"
+                        <a class="snapshot--title" title="Batch delete"
+                           href="/projects/{{ page.project.id }}/batch-delete"
                            >
                                 <i class="material-icons" style="color:#666666;">
                                       delete_sweep
@@ -1066,7 +1073,7 @@
 
                                     <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 0px solid red; " >
 
-                                        <a href="/organizationProfile/{{partner.organization.id}}" style="display: table-cell; vertical-align: middle;">
+                                        <a href="/organizations/{{partner.organization.id}}" style="display: table-cell; vertical-align: middle;">
                                               <div class="partner-logo-wrapper" style="border: 0px solid purple; "   ng-if="partner.organization.picture">
                                                      <img class='partner-logo' style="width: 100%; height: auto;" src="{{partner.organization.picture}}">
                                                 </div>
@@ -1146,13 +1153,14 @@
                     </i>
                 </a>
             </li> -->
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
+            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">

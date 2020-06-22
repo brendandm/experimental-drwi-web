@@ -46,6 +46,15 @@
 
     <base href="/" />
 
+      <!-- Google Tag Manager -->
+    <!--    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PG8N4PR');</script>
+      -->
+        <!-- End Google Tag Manager -->
+
   </head>
 
   <body class="{{ $root.page.class }}">
@@ -63,6 +72,12 @@
       ga('send', 'pageview');
 
     </script>
+
+    <!-- Google Tag Manager (noscript) -->
+  <!--      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PG8N4PR"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        -->
+    <!-- End Google Tag Manager (noscript) -->
 
     <!-- Sentry Bot Integration -->
         <!-- Note that we now also provide a es6 build only -->
@@ -169,6 +184,11 @@
             <script src="modules/components/projects/projectsBatchDelete--controller.js"></script>
             <script src="modules/components/projects/projectsPracticesBatchDelete--controller.js"></script>
 
+             <!-- ChangeLog Module -->
+            <script src="modules/components/change-log/changeLog--routes.js"></script>
+            <script src="modules/components/change-log/changeLog--controller.js"></script>
+
+
 
             <!-- Onboarding Module -->
             <script src="modules/components/onboarding/onboarding--routes.js"></script>
@@ -193,8 +213,6 @@
             <script src="modules/components/sites/sites--summary.js"></script>
             <script src="modules/components/sites/sites--edit.js"></script>
             <script src="modules/components/sites/siteLocation--controller.js"></script>
-            <script src="modules/components/sites/sitePartnership--controller.js"></script>
-            <script src="modules/components/sites/sitePhoto--controller.js"></script>
             <script src="modules/components/sites/siteGeography--controller.js"></script>
             <script src="modules/components/sites/siteTag--controller.js"></script>
             <script src="modules/components/sites/siteBatchDelete--controller.js"></script>
@@ -208,7 +226,6 @@
             <script src="modules/components/practices/practiceLocation--controller.js"></script>
             <script src="modules/components/practices/practiceLegacyData--controller.js"></script>
             <script src="modules/components/practices/practiceModelData--controller.js"></script>
-            <script src="modules/components/practices/practicePartnership--controller.js"></script>
             <script src="modules/components/practices/practicePhoto--controller.js"></script>
             <script src="modules/components/practices/practiceTag--controller.js"></script>
             <script src="modules/components/practices/practiceTarget--controller.js"></script>
@@ -354,7 +371,7 @@
             <script src="modules/shared/api/allocation--service.js"></script>
             <script src="modules/shared/api/model--service.js"></script>
             <script src="modules/shared/api/document--service.js"></script>
-
+            <script src="modules/shared/api/changeLog--service.js"></script>
             <script src="modules/shared/api/preprocessors--service.js"></script>
             <script src="modules/shared/api/user--service.js"></script>
             <script src="modules/shared/api/batch--service.js"></script>
@@ -387,6 +404,7 @@
             <script src="modules/shared/filters/pathSplit--filter.js"></script>
             <script src="modules/shared/filters/capitalAttribute--filter.js"></script>
             <script src="modules/shared/filters/localTime--filter.js"></script>
+            <script src="modules/shared/filters/elapsedTime--filter.js"></script>
             <!-- endbuild -->
 
   </body>

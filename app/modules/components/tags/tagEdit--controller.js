@@ -109,8 +109,6 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.tag.name ? self.tag.name : 'Un-named Tag';
 
-                self.scrubFeature(self.tag);
-
                 self.showElements();
 
             }, function(errorResponse) {

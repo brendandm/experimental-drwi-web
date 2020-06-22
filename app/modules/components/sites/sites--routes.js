@@ -31,11 +31,6 @@ angular.module('FieldDoc')
                             return Account.userObject;
 
                         },
-                        nodes: function(Site, $route) {
-                            return Site.nodes({
-                                id: $route.current.params.siteId
-                            });
-                        },
                         practices: function(Site, $route) {
                             return Site.practices({
                                 id: $route.current.params.siteId
@@ -123,80 +118,6 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                .when('/sites/:siteId/photos', {
-                    templateUrl: '/modules/components/sites/views/sitePhoto--view.html?t=' + environment.version,
-                    controller: 'SitePhotoController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
-
-                            $rootScope.targetPath = document.location.pathname;
-
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-
-                            return Account.userObject;
-
-                        },
-                        site: function(Site, $route) {
-                            return Site.get({
-                                id: $route.current.params.siteId
-                            });
-                        }
-                    }
-                })
-                .when('/sites/:siteId/partnerships', {
-                    templateUrl: '/modules/components/sites/views/sitePartnership--view.html?t=' + environment.version,
-                    controller: 'SitePartnershipController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
-
-                            $rootScope.targetPath = document.location.pathname;
-
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-
-                            return Account.userObject;
-
-                        },
-                        site: function(Site, $route) {
-
-                            var exclude = [
-                                'centroid',
-                                'creator',
-                                'dashboards',
-                                'extent',
-                                'geometry',
-                                'members',
-                                'metric_types',
-                                'practices',
-                                'practice_types',
-                                'properties',
-                                'tags',
-                                'targets',
-                                'tasks',
-                                'type',
-                                'sites'
-                            ].join(',');
-
-                            return Site.get({
-                                id: $route.current.params.siteId,
-                                exclude: exclude
-                            });
-
-                        },
-                        partnerships: function(Site, $route) {
-
-                            return Site.partnerships({
-                                id: $route.current.params.siteId
-                            });
-
-                        }
-                    }
-                })
                 .when('/sites/:siteId/tags', {
                     templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
                     controller: 'SiteTagController',
@@ -242,7 +163,7 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                 .when('/sites/:siteId/batchDelete', {
+                 .when('/sites/:siteId/batch-delete', {
                     templateUrl: '/modules/components/sites/views/siteBatchDelete--view.html?t=' + environment.version,
                     controller: 'SiteBatchDeleteController',
                     controllerAs: 'page',

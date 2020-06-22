@@ -8,29 +8,31 @@
             class="content--container"
          style="border-right: 1px solid #e0e0e0;">
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                    /
-                                </nobr>
-                            <nobr data-ng-if="page.practice.site != null">
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                    /
-                            </nobr><nobr>
-                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                                    / Targets
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.practice.project.id }}">{{ page.practice.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.site !== null">
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Practice:&nbsp;</span>
+                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Targets
+            </div>
         </div>
+
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
+            <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
         </div>
+
         <div class="main--ui target-ui reveal fade-in t0">
 
             <p>The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
@@ -47,51 +49,22 @@
                 </p>
             </div>
 
-            <div data-ng-if="page.models.length">
-
-                <h2>Modeled metrics</h2>
-
-                <div data-ng-repeat="model in page.models" style="min-height:25px; display:block; clear:both;">
-
-                    <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
-
-                     <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
 
-               <!--     <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
 
-                    <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
-                -->
-           <!--         <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+ <!-- Extent-->
+        <div class="target-block-wrapper">
+            <div class="target-block-header">
 
-                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in model.metrics | orderBy:'name'">
+                    <div class="target-block-number-circle">
+                                           <b>1</b>
+                    </div>
 
-                            <div class="card--content">
+                    <div class="target-block-title">
+                        <b> Practice Extent </b>
+                    </div>
+               </div>
 
-                                <div class="name" style="border-bottom: none;">
-                                    <span>{{ metric.name || 'Un-named' }}</span>
-                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
-                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
-                                </div>
-
-                                <div class="body" data-ng-if="metric.description">
-
-                                    <p>{{ metric.description | truncate:80 }}</p>
-
-                                </div>
-
-                            </div>
-
-                        </li>
-
-                    </ul>
-                 -->
-
-                </div>
-
-            </div>
-
-            <h2>Practice Extent</h2>
         <!--    <div style="text-align: left;margin-bottom:20px;">
                          {{page.practice_category.unit.instructions}}
             </div>
@@ -263,119 +236,211 @@
                     </button>
                 </li>
 
-                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;"></li>
+               <!-- <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;"></li>
+                -->
             </ul>
-
-
-            <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
-
-            <ul class="target-lst" data-ng-if="page.calculating == true">
-                <li>
-                    <div style="padding-right: 0; text-align:center;">Recalculating metrics...</div>
-                </li>
-                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
-                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            delete_sweep
-                        </i>
-                    </button>
-                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
-                </li>
-            </ul>
-
-            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length && page.calculating == false">
-                <li data-ng-repeat="target in page.targets.active">
-                    <div>
-                        <div> {{ target.metric.name || target.name }}</div>
-                        <div data-ng-if="target.metric.model" style="float:left; color:#666666; font-size:10px;">
-                           {{target.metric.model.name}}
-                        </div>
-                    </div>
-                    <input type="number" class="form-control" data-ng-model="target.value" id="name-active-{{ $index }}" name="name-active-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" data-ng-readonly="target.metric.locked" />
-
-                    <button type="button" class="add-item" data-ng-click="page.removeTarget(target, $index)" data-ng-disabled="page.status.processing || target.metric.locked">
-                        <i class="material-icons">
-                            remove_circle
-                        </i>
-                    </button>
-
-                </li>
-                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
-                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            delete_sweep
-                        </i>
-                    </button>
-                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
-                </li>
-            </ul>
-
-
-
-            <ul class="target-lst" data-ng-if="(!page.targets || !page.targets.active.length) && page.calculating == false">
-                <li>
-                    <div style="padding-right: 0; text-align:center;">This practice is not tracking any metrics yet.</div>
-                </li>
-                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
-                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            delete_sweep
-                        </i>
-                    </button>
-                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
-                </li>
-            </ul>
-
-            <h2 data-ng-if="page.targets && page.targets.inactive.length">Available metrics</h2>
-
-            <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
-                <li data-ng-repeat="target in page.targets.inactive" data-ng-if="!target.automated && !target.locked">
-                    <div>{{ target.name || target.metric.name }}</div>
-                    <input type="number" class="form-control" data-ng-model="target.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                    <button type="button" class="add-item" data-ng-click="page.addTarget(target, $index)" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            add_circle
-                        </i>
-                    </button>
-                </li>
-            </ul>
-
         </div>
 
-    </div>
 
-    <div data-ng-if="!page.practice.category"
-            class="content--container"
-         style="border-right: 1px solid #e0e0e0;">
-        <section class="privacy-message reveal fade-in t0">
-                <div class="main--ui eveal fade-in">
-                   <p>
-                    <i class="material-icons">
-                        error_outline
-                    </i>
-                </p>
+            <!-- END extent-->
+                <!-- Modeled Inputs-->
+           <div class="target-block-wrapper" data-ng-if="page.models.length">
+            <div data-ng-if="page.models.length">
+               <div class="target-block-header">
 
-                <p>
-                    A <a href="/practices/{{ page.practice.id }}/edit">Practice Type</a> must be specified before metric targets can be added.
-                    <br>
-                    Practice Types can be specified on the <a href="/practices/{{ page.practice.id }}/edit">Practice Edit Page</a>.
-                </p>
+                    <div class="target-block-number-circle">
+                                           <b>2</b>
+                    </div>
+
+                    <div class="target-block-title">
+                        <b> Modeled Inputs </b>
+                    </div>
+               </div>
+                    <p style="clear:both;" data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
+
+                  <ul class="snapshot--cards list-unstyled">
+                     <li class="card" data-ng-repeat="model in page.models"
+                         style="min-height:25px;
+                                    min-width: 400px;
+                                    display:block;
+                                    clear:both;
+                                    background-color: #f5f5f5;
+                                    margin-left: 40px;
+                                    padding: 20px 20px 30px 20px;
+                                "
+                     >
+
+                      <!--  <div data-ng-repeat="model in page.models"
+
+                        ">-->
+                         <div class="card-content">
+                            <p style="display:block; clear:both;">{{ model.model.name }}</p>
+
+                            <a href="/practices/{{ page.practice.id }}/model-data"
+                               title="{{ model.model.name }}"
+                               style="margin-right:30px;">
+                               <sub>
+                                   <i class="material-icons">
+                                    multiline_chart
+                                    </i>
+                               </sub>
+                                Modify Inputs
+                            </a>
+                            <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">
+                                <sub>
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
+                                </sub>
+                                 Model Summary
+
+                            </a>
+                         </div>
+
+                       <!-- </div>-->
+
+                     </li>
+                  </ul>
+
             </div>
-          </section>
-    </div>
+           </div>
+            <!-- END Modeled inputs -->
 
+
+
+
+        <!-- Add Metrics-->
+        <div class="target-block-wrapper" style="">
+              <div class="target-block-header">
+
+                    <div class="target-block-number-circle" >
+                                           <b data-ng-if="!page.models.length">2</b>
+                                           <b data-ng-if="page.models.length">3</b>
+
+                    </div>
+                    
+
+                    <div class="target-block-title">
+                        <b> Add Metric </b>
+                    </div>
+               </div>
+
+            <p style="clear:both;" >
+                Automated and Reportable Metrics can be added to this Practice using the search form below.
+            </p>
+
+             <div class="form-element">
+                            <span class="meta-label"><b>Add Metric</b></span>
+
+                            <input id="programMetric_type_id"
+                                   name="programMetric_type_id"
+                                   type="text"
+                                   placeholder="Search metrics"
+                                   data-ng-model="page.programMetric"
+                                   uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.addMetric($item,$model,$label)"
+                                   typeahead-min-length="0"
+                                   typeahead-template-url="templates/search--tpl.html" />
+
+                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                {{ page.practice.category.description || page.practiceType.description }}
+                            </p>
+
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
+                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
+                            </p>
+             </div>
+
+            </div>
+
+     <!-- END Add Metrics-->
+
+       <!-- assign Metrics -->
+
+       <div class="target-block-wrapper" id="assignTargetsBlock" data-ng-if="page.assignedMetrics && page.metricMatrix">
+
+               <div class="target-block-header">
+
+                    <div class="target-block-number-circle" >
+                                           <b data-ng-if="!page.models.length">3</b>
+                                           <b data-ng-if="page.models.length">4</b>
+
+                    </div>
+
+
+
+                    <div class="target-block-title">
+                        <b> Assign Targets </b>
+                    </div>
+               </div>
+
+                <p style="clear:both;" >
+                 Enter a target value for each metric added to this practice. Use the search form below to add metrics.
+                    Automated metric targets cannot be edited.
+                </p>
+
+                <div style="border:0px solid green;">
+
+                        <ul class="target-lst target-lst-inactive">
+                            <li data-ng-repeat="assigned in page.assignedMetrics"
+                                data-ng-if="assigned.metric.automated"
+                                style="height:63px; background-color:#f5f5f5;">
+                                   <div>{{assigned.metric.name}}</div> <div style="">{{assigned.value}}</div>
+                            </li>
+                            <li data-ng-repeat="assigned in page.assignedMetrics"
+                                data-ng-if="!assigned.metric.automated"
+                                style="height:63px; ">
+                                         <div>{{assigned.metric.name}}</div>
+
+                                         <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                                         <button type="button" class="add-item" data-ng-click="page.saveTarget(assigned, $index, assigned.value)" data-ng-disabled="page.status.processing">
+                                             <i class="material-icons">
+                                                done
+                                            </i>
+                                        </button>
+                                         <button type="button" class="add-item" data-ng-click="page.deleteTarget(assigned, $index)" data-ng-disabled="page.status.processing">
+                                             <i class="material-icons">
+                                                remove_circle
+                                            </i>
+                                        </button>
+                            </li>
+                        </ul>
+
+                </div>
+
+
+
+                <div style="border:0px solid green;">
+                  <!--  <div data-ng-repeat="secondary in page.metricMatrix">
+                        {{secondary.name}}
+                    </div>
+                        -->
+                     <ul class="target-lst target-lst-inactive">
+                        <li data-ng-repeat="metric in page.metricMatrix">
+                             <div>{{ metric.name }}</div>
+                            <input type="number" class="form-control" data-ng-model="metric.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                             <button type="button" class="add-item" data-ng-click="page.saveTarget(metric, $index, metric.value)" data-ng-disabled="page.status.processing">
+                                 <i class="material-icons">
+                                    done
+                                </i>
+                            </button>
+                             <button type="button" class="add-item" data-ng-click="page.removeMetric(metric, $index)" data-ng-disabled="page.status.processing">
+                                 <i class="material-icons">
+                                    remove_circle
+                                </i>
+                            </button>
+                        </li>
+                        </ul>
+
+                </div>
+
+       </div>
+
+        <!-- end assign metrics -->
+
+
+        </div>
+    </div>
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>

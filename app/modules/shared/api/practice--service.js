@@ -10,7 +10,8 @@
     angular.module('FieldDoc')
         .service('Practice', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
-                'id': '@id'
+                'id': '@id',
+                'target_id': '@target_id'
             }, {
                 'query': {
                     'isArray': false
@@ -112,6 +113,28 @@
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/clone')
+                },
+                metrics: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/metrics/')
+                },
+                target: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+                },
+                targetUpdate: {
+                    method: 'PATCH',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
+                },
+                targetDelete: {
+                    method: 'DELETE',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
                 }
 
             });

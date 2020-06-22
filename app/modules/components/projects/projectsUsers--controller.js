@@ -93,7 +93,17 @@
 
                 self.addOwner = function(item, model, label) {
 
-                    self.tempOwners.push(item);
+                    console.log("member item",item);
+                    var member = {
+                            "user": item,
+                            "user_id" : item.id,
+                        }
+
+                 //   var member = item;
+                //    member.user = item;
+                //    member.user_id = item.id;
+
+                    self.tempOwners.push(member);
 
                     self.ownerQuery = null;
 
@@ -101,9 +111,9 @@
 
                 };
 
-                self.removeOwner = function(id) {
-
-                    var _index;
+                self.removeOwner = function(index) {
+                    self.tempOwners.splice(index, 1);
+                /*    var _index;
 
                     self.tempOwners.forEach(function(item, idx) {
 
@@ -122,7 +132,7 @@
                         self.tempOwners.splice(_index, 1);
 
                     }
-
+*/
                     console.log('Updated owners (removal)', self.tempOwners);
 
                 };
@@ -195,7 +205,7 @@
 
                     self.scrubFeature(self.project);
 
-                    self.project.members = self.processOwners(self.tempOwners);
+                 //   self.project.members = self.processOwners(self.tempOwners);
 
                     var exclude = [
                         'centroid',
@@ -216,14 +226,16 @@
                         'sites'
                     ].join(',');
 
-                    Project.update({
-                        id: $route.current.params.projectId,
-                        exclude: exclude
+                    Project.post_members({
+                        id: $route.current.params.projectId
+                       // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;
 
                         $rootScope.page.title = self.project.name;
+
+                        console.log(" self.project.members", self.project.members);
 
                         self.tempOwners = self.project.members;
 
@@ -344,7 +356,10 @@
                         //
                         // Assign project to a scoped variable
                         //
-                        project.$promise.then(function(successResponse) {
+                       Project.members({
+                        id: $route.current.params.projectId
+                       // exclude: exclude
+                        }).$promise.then(function(successResponse) {
 
                             console.log('self.project', successResponse);
 

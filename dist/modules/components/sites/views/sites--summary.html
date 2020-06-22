@@ -28,23 +28,21 @@
 
             <div class="module--grid" data-ng-if="!page.status.loading">
 
-               <!--     <div class="breadcrumb_container"> -->
-                <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-
-                            </nobr>
-                        </p>
-                    </article>
+                <div class="breadcrumb">
+                    <div>
+                        <span>Project:&nbsp;</span>
+                        <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        <span>Site:&nbsp;</span>
+                        <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
                 </div>
-            <!--    </div> -->
 
                 <div class="group">
 
@@ -52,9 +50,22 @@
 
                         <h1>{{ page.site.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/sites/{{ page.site.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
 
                         <p data-ng-if="page.project.id && page.project.program">
                             <strong>Program:</strong> {{ page.project.program.name }}
@@ -237,7 +248,7 @@
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">Installed / Planned</th>
                                     <th class="table-metrics-header">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -252,7 +263,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            of {{ metric.self_target | number:2 }}</span>
+                                            / {{ metric.self_target | number:2 }}</span>
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--percentage">
@@ -420,7 +431,7 @@
                          data-ng-if="page.permissions.can_edit"
                     >
                         <a class="snapshot--title" title="Batch Delete"
-                           href="/sites/{{ page.site.id }}/batchDelete"
+                           href="/sites/{{ page.site.id }}/batch-delete"
                            >
                                 <i class="material-icons" style="color:#666666;">
                                       delete_sweep
@@ -709,21 +720,6 @@
                     </i>
                 </a>
             </li>
-        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships" title="Partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-         -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/sites/{{ page.site.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">

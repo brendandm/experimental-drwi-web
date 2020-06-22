@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope, $routeParams,
-            $route, user, User, Image, $timeout) {
+            $route, user, User, Image, SearchService, $timeout) {
 
             var self = this;
 
@@ -28,13 +28,18 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.createAlert = false;
+
             function closeAlerts() {
 
                 self.alerts = [];
 
+
             }
              var featureId = $routeParams.id;
-      
+
+
+
             //
             // Assign project to a scoped variable
             //
@@ -47,6 +52,20 @@ angular.module('FieldDoc')
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    //    self.organizationSelection = self.user.properties.organization;
+
+                        self.organizationSelection =
+                                                    {
+                                                        id: self.user.properties.organization.id,
+                                                        name: self.user.properties.organization.properties.name,
+                                                        category: self.user.properties.organization.properties.category_id
+
+                                                    }
+
+                        console.log("self.organizationSelection",self.organizationSelection);
+
+                        console.log("self.user", self.user);
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
@@ -79,32 +98,77 @@ angular.module('FieldDoc')
 
             }
 
+            self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+
             self.actions = {
 
                 save: function() {
                       self.status.processing = true;
 
-                      if (self.image) {
+                      if (typeof self.organizationSelection === 'string' || self.organizationSelection === null) {
+                            console.log("STRING");
+                            console.log(self.organizationSelection);
 
-                        var fileData = new FormData();
+                            self.createAlert = true;
 
-                        fileData.append('image', self.image);
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Select an organization to join.',
+                                'prompt': 'OK'
+                            }];
 
-                        Image.upload({
-
-                        }, fileData).$promise.then(function(successResponse) {
-                            console.log('YO YO ');
-                            console.log('successResponse', successResponse);
-
-                            self.user.properties.picture = successResponse.original;
-
-                            self.updateUser();
-
-                        });
+                            $timeout(closeAlerts, 2000);
+                            self.status.processing = false;
 
                       } else {
-                             self.updateUser();
+                            console.log("NOT STRING");
+                             if (self.image) {
+
+                                var fileData = new FormData();
+
+                                fileData.append('image', self.image);
+
+                                Image.upload({
+
+                                }, fileData).$promise.then(function(successResponse) {
+
+                                    console.log('successResponse', successResponse);
+
+                                    self.user.properties.picture = successResponse.original;
+
+                                    self.updateUser();
+
+                                });
+
+                              } else {
+                                     self.updateUser();
+                              }
                       }
+
+
+
 
 
                 },
@@ -124,7 +188,8 @@ angular.module('FieldDoc')
                         'last_name': self.user.properties.last_name,
                         'picture': self.user.properties.picture,
                         'bio': self.user.properties.bio,
-                        'title': self.user.properties.title
+                        'title': self.user.properties.title,
+                        'organization_id': self.organizationSelection.id
                     });
 
                     _user.$update(function(successResponse) {

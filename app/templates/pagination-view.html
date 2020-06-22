@@ -94,7 +94,44 @@
 
 
                     </div>
-                     <div style="border:0px solid red; margin-right: 30px;">
+
+                     <div data-ng-if="page.defaultPaginationLimits" style="border:0px solid red; margin-right: 30px;">
+                          <span >
+                             <a ng-if="page.limit != page.limitHigh" data-ng-click="page.changeLimit(page.limitHigh)" class="pagination_active pagination_showCount">
+                                {{page.limitHigh}}
+                            </a>
+                             <a ng-if="page.limit == page.limitHigh" class="pagination_inactive pagination_showCount">
+                                {{page.limitHigh}}
+                            </a>
+                         </span>
+                          <span>
+                             <a ng-if="page.limit != page.limitMedium" data-ng-click="page.changeLimit(page.limitMedium)" class="pagination_active pagination_showCount">
+                                {{page.limitMedium}}
+                            </a>
+                             <a ng-if="page.limit == page.limitMedium" class="pagination_inactive pagination_showCount">
+                                {{page.limitMedium}}
+                            </a>
+                        </span>
+                          <span>
+                             <a ng-if="page.limit != 12" data-ng-click="page.changeLimit(page.limitLow)" class="pagination_active pagination_showCount">
+                                 {{page.limitLow}}
+                            </a>
+                              <a ng-if="page.limit == 12" class="pagination_inactive pagination_showCount">
+                                 {{page.limitLow}}
+                            </a>
+                        </span>
+                         <span style="width: 30px;
+                                        border: 0px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #888888;
+                                        width: 60px;
+                                ">
+                             Show:</span>
+                    </div>
+
+                     <div data-ng-if="!page.defaultPaginationLimits" style="border:0px solid red; margin-right: 30px;">
                           <span >
                              <a ng-if="page.limit != 48" data-ng-click="page.changeLimit(48)" class="pagination_active pagination_showCount">
                                 48
@@ -128,11 +165,6 @@
                                         width: 60px;
                                 ">
                              Show:</span>
-
-
-
-
-
                     </div>
 
                 </div>

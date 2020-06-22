@@ -23,6 +23,8 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.createAlert = false;
+
             function closeAlerts() {
 
                 self.alerts = [];
@@ -77,37 +79,41 @@ angular.module('FieldDoc')
 
             self.assignOrganization = function() {
 
+                console.log("ASSIGN")
                 console.log('self.organizationSelection', self.organizationSelection);
 
-                self.status.processing = true;
+      //          self.status.processing = true;
 
                 if (typeof self.organizationSelection === 'string') {
+                    console.log("STRING");
+                    console.log(self.organizationSelection);
 
-                    var _organization = new Organization({
-                        'name': self.organizationSelection
-                    });
+                     self.createAlert = true;
+                  //  var _organization = new Organization({
+                 //       'name': self.organizationSelection
+                 //   });
 
-                    _organization.$save(function(successResponse) {
+           //         _organization.$save(function(successResponse) {
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                            'msg': 'Select an organization to join.',
                             'prompt': 'OK'
                         }];
 
                         $timeout(closeAlerts, 2000);
 
-                        self.updateRelation(successResponse.properties);
+                //        self.updateRelation(successResponse.properties);
 
-                    }, function(errorResponse) {
+            //        }, function(errorResponse) {
 
-                        self.status.processing = false;
+            //            self.status.processing = false;
 
-                    });
+             //       });
 
                 } else {
-
+                    console.log("NOT STRING");
                     self.updateRelation(self.organizationSelection);
 
                 }
@@ -115,6 +121,8 @@ angular.module('FieldDoc')
             };
 
             self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
 
                 return SearchService.organization({
                     q: value

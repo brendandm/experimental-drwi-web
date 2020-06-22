@@ -24,25 +24,23 @@
 
         </section>
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Collaborators
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Collaborators
+            </div>
+        </div>
 
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
-        </div>
         <div class="breadcrumb-header-wrapper">
-             <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Collaborators</h1>
+            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
+                Collaborators
+            </h1>
         </div>
+        
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail" style="width: 100%; max-width: 48rem; margin: 1em auto;">
@@ -58,14 +56,14 @@
 
                         <div class="classification--list" style="margin-top: 2em;">
                             <ul>
-                                <li data-ng-repeat="owner in page.tempOwners">
+                                <li data-ng-repeat="owner in page.tempOwners track by $index">
                                     <i class="material-icons">
                                         person
                                     </i>
-                                    <span data-ng-if="!owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.first_name }} {{ owner.last_name }}</span>
-                                    <span data-ng-if="owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.name }}</span>
+                                    <span data-ng-if="owner.user && !owner.user.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.user.first_name}} {{ owner.user.last_name }}</span>
+                                    <span data-ng-if="owner.user.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.user.name }}</span>
                                     <div class="button--container">
-                                        <button data-ng-if="owner.id !== page.profile.id" type="button" class="remove-item" data-ng-click="page.removeOwner(owner.id)">
+                                        <button data-ng-if="owner.user.id !== page.profile.id" type="button" class="remove-item" data-ng-click="page.removeOwner($index)">
                                             <i class="material-icons">
                                                 remove_circle
                                             </i>
@@ -140,13 +138,14 @@
                     </i>
                 </a>
             </li> -->
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
+            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">

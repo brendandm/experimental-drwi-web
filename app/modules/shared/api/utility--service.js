@@ -81,63 +81,33 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                   // console.log('COLOR 0');
+                    console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                     //    console.log('COLOR 1');
+                         console.log('COLOR 1');
                     }else{
-                   //      console.log('COLOR 2');
+                         console.log('COLOR 2');
                     }
                 }else{
-                 //    console.log('COLOR 3');
+                     console.log('COLOR 3');
                 }
 
-                console.log("STATIC GEOMETRY",geometry);
-
-             //   var geometry_type
-
-                var fillOpacity = 0.5;
-
-                if(geometry.type === "LineString"){
-                    fillOpacity = 0.0;
-                    geometry_type = "LineString";
-
-                    console.log("CONVERTING STATIC GEOMETRY",geometry);
-                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates );
-
-                    geometry.type = geometry_type;
-
-                      var styledFeature = {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": color,
-                                "stroke": color,
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-
-                            }
-                        };
-
-                }else{
-                      var styledFeature = {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": color,
-                                "stroke": color,
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-                                "fill": color,
-                                "fill-opacity": fillOpacity
-                            }
-                        };
-                }
-
-
+                var styledFeature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "marker-size": "small",
+                        "marker-color": color,
+                        "stroke": color,
+                        "stroke-opacity": 1.0,
+                        "stroke-width": 2,
+                        "fill": color,
+                        "fill-opacity": 0.5
+                    }
+                };
+                
                 // Build static map URL for Mapbox API
+                
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',

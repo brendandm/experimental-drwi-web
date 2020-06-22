@@ -24,29 +24,28 @@
 
         </section>
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Site: <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Edit location
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Edit location
+            </div>
+        </div>
 
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
-        </div>
         <div class="breadcrumb-header-wrapper">
-             <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
+            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
+                Edit location
+            </h1>
         </div>
+        
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()" autocomplete="off">
@@ -166,22 +165,6 @@
                     </i>
                 </a>
             </li>
-      <!--     <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships" title="Partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-            -->
-        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/sites/{{ page.site.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">

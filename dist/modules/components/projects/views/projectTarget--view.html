@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;" >
 
-          <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,25 +18,21 @@
 
         </section>
 
-         <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Targets
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Targets
+            </div>
+        </div>
 
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
-        </div>
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset breadcrumb-header">{{ page.project.name }} &middot; Targets</h1>
+            <h1 class="inset">{{ page.project.name }} &middot; Targets</h1>
         </div>
+
         <div class="main--ui target-ui reveal fade-in t0">
 
             <p>The metrics listed here include those that you created and any associated with the <strong>{{ page.project.program.name }}</strong> conservation program. Assign targets to this project by entering a numeric value for one or more metrics. From there, you’ll be able to track site- and practice-level implementation progress.</p>
@@ -149,13 +145,14 @@
                     </i>
                 </a>
             </li> -->
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+         <!--   <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
+            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">

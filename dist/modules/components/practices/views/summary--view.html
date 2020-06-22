@@ -28,27 +28,26 @@
 
             <div class="module--grid">
 
-            <!--     <div class="breadcrumb_container">  display:inline-block; -->
-               <div class="group" style="border:0px solid green;">
-
-                    <article class="breadcrumb" style="border:0px solid red;" >
-                        <p>
-                           <nobr> Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                /
-                               </nobr>
-                            <nobr data-ng-if="page.practice.site != null">
-                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                /
-                            </nobr>
-                            <nobr>
-                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                            </nobr>
-                        </p>
-                    </article>
-               </div>
-
-            <!--    </div> -->
+                <div class="breadcrumb">
+                    <div>
+                        <span>Project:&nbsp;</span>
+                        <a href="/projects/{{ page.practice.project.id }}">{{ page.practice.project.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div data-ng-if="page.practice.site !== null">
+                        <span>Site:&nbsp;</span>
+                        <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        <span>Practice:&nbsp;</span>
+                        <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
+                        Profile
+                    </div>
+                </div>
 
                 <div class="group">
 
@@ -58,9 +57,22 @@
 
                         <h1>{{ page.practice.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
+                        <div class="last-modified-summary">
+
+                            <div data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="modtime">
+                                Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                            </div>
+
+                            <div class="history-link-wrapper">
+                                <span class="material-icons">
+                                    history
+                                </span>
+                                <a href="/practices/{{ page.practice.id }}/history">
+                                    View change log
+                                </a>
+                            </div>
+
+                        </div>
 
                         <p>
                             <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name || 'Un-named' }}</a>
@@ -71,12 +83,12 @@
                         </p>
 
                         <p>
-                            <strong>Practice Type:</strong> {{ page.practice.category.name }}
+                            <strong>Practice Type:</strong> {{ page.practice.practice_type.name }}
                         </p>
 
-                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.category.unit.dimension != 'count'))" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong>
-                                {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.category.unit.unit.plural}}
+                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.practice_type.unit.dimension != 'count'))" style="text-transform:capitalize;">
+                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong>
+                                {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
                                <!-- {{ calculated_extent.practice.calculated_extent }} -->
                             </p>
 
@@ -84,7 +96,7 @@
 
                                      <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                            && (page.practice.  category.unit.dimension == 'count')
+                                                            && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'LineString')
                                                     )
 
@@ -95,7 +107,7 @@
 
                                      <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                            && (page.practice.category.unit.dimension == 'count')
+                                                            && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'Polygon')
                                                     )
 
@@ -108,7 +120,7 @@
                               <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
 
                              <p data-ng-if="page.practice.custom_extent" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.category.unit.unit.plural}}
+                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
                             </p>
 
 
@@ -120,7 +132,7 @@
                     -->
                         <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
 
-                        <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
+                        <p data-ng-if="!page.practice.description">{{ page.practice.practice_type.description }}</p>
 
                         <div data-ng-if="page.tags && page.tags.length">
 
@@ -295,7 +307,7 @@
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">Installed / Planned</th>
                                     <th class="table-metrics-header">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -310,7 +322,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            of {{ metric.self_target | number:2 }}</span>
+                                            / {{ metric.self_target | number:2 }}</span>
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--percentage">
@@ -514,29 +526,13 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.practice_type" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
-
-          <!--  <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
-                    <i class="material-icons">
-                        insert_photo
-                    </i>
-                </a>
-            </li>
-            -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/practices/{{ page.practice.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">

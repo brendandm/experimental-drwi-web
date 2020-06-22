@@ -10,7 +10,7 @@
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
+                $route, user, Utility, site, mapbox, Site, Project, practices,
                 $interval, LayerService, MapManager,
                 Shapefile, Task) {
 
@@ -592,7 +592,6 @@
                 self.createPractice = function() {
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.project.id,
                         'organization_id': self.site.organization_id

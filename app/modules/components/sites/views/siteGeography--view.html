@@ -24,27 +24,21 @@
 
         </section>
 
-        <div class="main--ui breadcrumb-ui">
-           <div class="group">
-                    <article class="breadcrumb" >
-                        <p>
-                            <nobr>
-                                Project: <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
-                                    /
-                            </nobr>
-                            <nobr>
-                                Site: <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-                                    /
-                            </nobr>
-                                <nobr>
-                                Geographies
-
-                            </nobr>
-                        </p>
-                    </article>
-                </div>
+        <div class="breadcrumb pad-crumb">
+            <div>
+                <span>Project:&nbsp;</span>
+                <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <span>Site:&nbsp;</span>
+                <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                Geographies
+            </div>
         </div>
-
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
@@ -207,21 +201,6 @@
                     </i>
                 </a>
             </li>
-        <!--    <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships" title="Partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-            -->
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/sites/{{ page.site.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">

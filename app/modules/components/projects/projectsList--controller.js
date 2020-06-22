@@ -485,6 +485,9 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
+                console.log("Account.userObject",Account.userObject);
+                console.log("user",user);
+
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
