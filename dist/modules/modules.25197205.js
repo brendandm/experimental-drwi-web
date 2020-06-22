@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1592838249019})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1592839142973})
 
 ;
 /**
@@ -3161,7 +3161,7 @@ angular.module('FieldDoc')
         .config(function($routeProvider, environment) {
 
             $routeProvider
-                .when('/organization', {
+                .when('/organizations/:id/edit', {
                     templateUrl: '/modules/components/organization/views/organizationEdit--view.html?t=' + environment.version,
                     controller: 'OrganizationEditViewController',
                     controllerAs: 'page',
@@ -3172,7 +3172,7 @@ angular.module('FieldDoc')
                     }
                 }),
             $routeProvider
-                .when('/organizationProfile', {
+                .when('/organizations', {
                     templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
                     controller: 'OrganizationProfileViewController',
                     controllerAs: 'page',
@@ -3183,7 +3183,7 @@ angular.module('FieldDoc')
                     }
                 }),
              $routeProvider
-                .when('/organizationProfile/:id', {
+                .when('/organizations/:id', {
                     templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
                     controller: 'OrganizationProfileViewController',
                     controllerAs: 'page',
@@ -3235,7 +3235,7 @@ angular.module('FieldDoc')
 
             function closeAlertRedirection() {
                 self.alerts = [];
-                $location.path('/organizationProfile' );
+                $location.path('/organizations' );
             }
             //
             // Assign project to a scoped variable
@@ -4312,7 +4312,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/batchDelete', {
+            .when('/projects/:projectId/batch-delete', {
                     templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
                     controller: 'ProjectsBatchDeleteController',
                     controllerAs: 'page',
@@ -4337,7 +4337,7 @@ angular.module('FieldDoc')
 
                     }
                 })
-                .when('/projects/:projectId/batchPracticeDelete', {
+                .when('/projects/:projectId/batch-practice-delete', {
                     templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
                     controller: 'ProjectsPracticesBatchDeleteController',
                     controllerAs: 'page',
@@ -4853,6 +4853,9 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
+                console.log("Account.userObject",Account.userObject);
+                console.log("user",user);
+
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
@@ -5271,7 +5274,6 @@ angular.module('FieldDoc')
                     console.log("self.project.organization_id",self.project.organization_id);
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': null,
                         'project_id': self.project.id,
                         'organization_id': self.project.organization_id
@@ -7934,7 +7936,17 @@ angular.module('FieldDoc')
 
                 self.addOwner = function(item, model, label) {
 
-                    self.tempOwners.push(item);
+                    console.log("member item",item);
+                    var member = {
+                            "user": item,
+                            "user_id" : item.id,
+                        }
+
+                 //   var member = item;
+                //    member.user = item;
+                //    member.user_id = item.id;
+
+                    self.tempOwners.push(member);
 
                     self.ownerQuery = null;
 
@@ -7942,9 +7954,9 @@ angular.module('FieldDoc')
 
                 };
 
-                self.removeOwner = function(id) {
-
-                    var _index;
+                self.removeOwner = function(index) {
+                    self.tempOwners.splice(index, 1);
+                /*    var _index;
 
                     self.tempOwners.forEach(function(item, idx) {
 
@@ -7963,7 +7975,7 @@ angular.module('FieldDoc')
                         self.tempOwners.splice(_index, 1);
 
                     }
-
+*/
                     console.log('Updated owners (removal)', self.tempOwners);
 
                 };
@@ -8036,7 +8048,7 @@ angular.module('FieldDoc')
 
                     self.scrubFeature(self.project);
 
-                    self.project.members = self.processOwners(self.tempOwners);
+                 //   self.project.members = self.processOwners(self.tempOwners);
 
                     var exclude = [
                         'centroid',
@@ -8057,14 +8069,16 @@ angular.module('FieldDoc')
                         'sites'
                     ].join(',');
 
-                    Project.update({
-                        id: $route.current.params.projectId,
-                        exclude: exclude
+                    Project.post_members({
+                        id: $route.current.params.projectId
+                       // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;
 
                         $rootScope.page.title = self.project.name;
+
+                        console.log(" self.project.members", self.project.members);
 
                         self.tempOwners = self.project.members;
 
@@ -8185,7 +8199,10 @@ angular.module('FieldDoc')
                         //
                         // Assign project to a scoped variable
                         //
-                        project.$promise.then(function(successResponse) {
+                       Project.members({
+                        id: $route.current.params.projectId
+                       // exclude: exclude
+                        }).$promise.then(function(successResponse) {
 
                             console.log('self.project', successResponse);
 
@@ -10891,6 +10908,583 @@ angular.module('FieldDoc')
        });
 
 }());
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
+            .when('/:feature_type/:id/history', {
+                templateUrl: '/modules/components/change-log/views/changeLog--view.html?t=' + environment.version,
+                controller: 'ChangeLogController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                        user: function(Account) {
+                            return Account.getUser();
+                        }
+                    }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ChangeLogController',
+        function(ChangeLog, Account, $location, $log, Notifications, $rootScope,
+            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'changeLog': true
+            };
+
+            self.status = {
+                loading: true,
+                processing: false
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 250);
+
+            };
+
+            self.parseRouteParams = function() {
+
+                self.featureId = $routeParams.id;
+
+                var featureType = $routeParams.feature_type;
+
+                var lastChar = featureType.slice(-1);
+
+                if (lastChar === 's') {
+
+                    featureType = featureType.slice(0, -1);
+
+                }
+
+                self.featureType = featureType;
+
+                $rootScope.viewState = {
+                    featureType: true
+                };
+
+                console.log('featureId-->', self.featureId);
+
+                console.log('featureType-->', self.featureType);
+
+            };
+
+            /*START Pagniation vars*/
+            self.limit = 25;
+            self.page = 1;
+
+            self.defaultPaginationLimits = true;
+            self.limitLow = 25;
+            self.limitMedium = 50;
+            self.limitHigh = 100;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh = self.limit;
+
+            self.calculateViewCount = function() {
+
+                if (self.page > 1) {
+
+                    if (self.page == 1) {
+                        self.viewCountHigh = self.limit;
+                        self.viewCountLow = ((self.page - 1) * self.limit);
+                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
+                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
+
+                    } else {
+                        self.viewCountHigh = self.summary.feature_count;
+                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
+                    }
+                } else {
+                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.limit;
+                    } else {
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+                }
+
+            };
+
+            self.changeLimit = function(limit) {
+                self.limit = limit;
+                self.page = 1;
+                self.loadHistory(false);
+            };
+
+            self.getPage = function(page) {
+                console.log('PAGE', page);
+
+                if (page < 1) {
+                    self.page = 1;
+                } else if (page > self.summary.page_count) {
+                    self.page = self.summary.page_count;
+                } else {
+                    self.page = page;
+
+                    self.loadHistory();
+                }
+
+            };
+            /*START Pagniation vars*/
+
+            self.buildFilter = function() {
+
+                console.log(
+                    'self.buildFilter --> Starting...');
+
+                var data = {
+                    id: self.featureId,
+                    type: self.featureType,
+                    limit: self.limit,
+                    page: self.page
+                };
+
+                //  $location.search(data);
+
+                return data;
+            };
+
+            self.loadHistory = function(firstLoad) {
+
+                ChangeLog.query({
+                    id: self.featureId,
+                    type: self.featureType,
+                    limit: self.limit,
+                    page: self.page,
+                    tz_offset: self.tzOffset,
+                    user_only: self.userOnly ? self.userOnly : false
+                }).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.feature = successResponse.feature;
+
+                    self.feature_type = successResponse.feature_type;
+
+                    if (!self.feature.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    } else {
+
+                        self.permissions.can_edit = self.feature.permissions.write;
+                        self.permissions.can_delete = self.feature.permissions.write;
+
+                        self.changeLog = successResponse.history;
+
+                        self.summary = successResponse.summary;
+
+                        self.calculateViewCount();
+
+                        self.parseResponse();
+
+                    }
+
+                    if (firstLoad) self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.parseResponse = function() {
+
+                console.log('self.changeLog-->', self.changeLog);
+
+                self.changeLog.forEach(function(group) {
+
+                    group.changes.forEach(function(change) {
+
+                        var separatorIdx = change.action.indexOf('_');
+
+                        // 
+                        // Extract operation name from `change.action`.
+                        // 
+                        // e.g. `create_practice` --> `create`
+                        // 
+
+                        var op = change.action.substring(0, separatorIdx);
+
+                        change.op = op;
+
+                        // 
+                        // Extract feature type from `change.action`.
+                        // 
+                        // e.g. `create_practice` --> `practice`
+                        // 
+
+                        var featureType = change.action.substring(separatorIdx + 1);
+
+                        console.log(
+                            'self.parseResponse.op:',
+                            op
+                        );
+
+                        console.log(
+                            'self.parseResponse.featureType:',
+                            featureType
+                        );
+
+                        // 
+                        // If applicable, add `deletion` flag to log
+                        // and a generic string describing the action.
+                        // 
+
+                        if (op.indexOf('delete') === 0) {
+
+                            change.deletion = true;
+
+                            change.detail = ' removed from ' + self.featureType + '.';
+
+                        }
+
+                        // 
+                        // Hide creation log body when view context
+                        // and log feature type match.
+                        // 
+
+                        if (op.indexOf('create') >= 0 &&
+                            (featureType.replace(/_/g, '-') === self.featureType)) {
+
+                            change.hideBody = true;
+
+                        }
+
+                        // 
+                        // Iterate `change.diff` object and generate
+                        // static Mapbox URLs for `geometry` types.
+                        // 
+
+                        if (change.diff &&
+                            typeof change.diff !== 'undefined') {
+
+                            for (var item in change.diff) {
+
+                                console.log('A', item);
+
+                                console.log('change.diff[item].type', change.diff[item].type);
+
+                                if (change.diff[item].type === 'geometry') {
+
+                                    console.log('E');
+
+                                    if (change.diff[item].new_value != null) {
+
+                                        console.log('F');
+
+                                        change.diff[item].new_staticURL = Utility.buildStaticMapURL(
+                                            change.diff[item].new_value, self.featureType);
+
+                                    }
+
+                                    if (change.diff[item].previous_value != null) {
+
+                                        console.log('G');
+
+                                        change.diff[item].previous_staticURL = Utility.buildStaticMapURL(
+                                            change.diff[item].previous_value, self.featureType);
+
+                                    }
+
+                                }
+
+                            }
+
+                        } else {
+
+                            // 
+                            // Generate relative link paths and text content
+                            // so that users can access new features from
+                            // creation logs.
+                            // 
+
+                            if (op.indexOf('create') >= 0) {
+
+                                var link;
+
+                                var linkTxt;
+
+                                switch(featureType) {
+
+                                    case 'organization':
+
+                                        link = 'organizations/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'practice':
+
+                                        link = 'practices/' + change.data.id;
+
+                                        if (typeof change.data.name == 'string') {
+
+                                            linkTxt = change.data.name;
+
+                                        } else {
+
+                                            linkTxt = 'Un-named practice (' + change.data.id + ')';
+
+                                        }
+
+                                        break;
+
+                                    case 'program':
+
+                                        link = 'programs/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'project':
+
+                                        link = 'projects/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                    case 'project_member':
+
+                                        link = 'profile/' + change.data.user.id;
+
+                                        linkTxt = change.data.user.first_name + ' ' + change.data.user.last_name;
+
+                                        change.detail = ' added to project.';
+
+                                        break;
+
+                                    case 'report':
+
+                                        link = 'reports/' + change.data.id;
+
+                                        linkTxt = change.data.report_date;
+
+                                        break;
+
+                                    case 'site':
+
+                                        link = 'sites/' + change.data.id;
+
+                                        if (typeof change.data.name == 'string') {
+
+                                            linkTxt = change.data.name;
+
+                                        } else {
+
+                                            linkTxt = 'Un-named site (' + change.data.id + ')';
+
+                                        }
+
+                                        break;
+
+                                    case 'tag':
+
+                                        link = 'tags/' + change.data.id;
+
+                                        linkTxt = change.data.name;
+
+                                        break;
+
+                                }
+
+                                change.link = link;
+
+                                change.linkTxt = linkTxt;
+
+                            } else {
+
+                                // 
+                                // Extract feature name for display
+                                // in deletion log bodies.
+                                // 
+
+                                if (featureType.indexOf('target') < 0) {
+
+                                    if (featureType === 'project_member') {
+
+                                        change.deletedName = change.data.user.first_name + ' ' + change.data.user.last_name;
+
+                                    } else {
+
+                                        change.deletedName = change.data.name;
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        console.log(
+                            'self.parseResponse.change:',
+                            change
+                        );
+
+                    });
+
+                });
+
+                console.log('parsedResponse', self.changeLog);
+
+            };
+
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+            */
+            self.createStaticMapURLs = function(arr, feature_type) {
+
+                console.log('createStaticMapURLS -> arr', arr);
+
+                arr.forEach(function(feature, index) {
+
+                    if (feature.geometry != null) {
+
+                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type);
+
+                        if (feature.staticURL.length >= 4096) {
+
+                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
+
+                        console.log('feature.staticURL', feature.staticURL);
+
+                        if (feature_type == 'site') {
+
+                            self.changeLog[index].staticURL = feature.staticURL;
+
+                            console.log('self.sites' + index + '.staticURL', self.changeLog[index].staticURL);
+
+                        }
+                        if (feature_type == 'practice') {
+                            self.changeLog[index].staticURL = feature.staticURL;
+
+                            console.log('self.practices' + index + '.staticURL', self.changeLog[index].staticURL);
+
+                        }
+
+                    } else {
+
+                        if (feature_type == 'site') {
+                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+
+                        }
+                        if (feature_type == 'practice') {
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+                        }
+
+                    }
+
+                });
+
+            };
+
+            // 
+            // Verify Account information for proper UI element display
+            //
+
+            self.parseRouteParams();
+
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
+                    };
+
+                    // 
+                    // Retrieve the system's time zone offset.
+                    // 
+
+                    self.tzOffset = new Date().getTimezoneOffset();
+
+                    self.loadHistory(true);
+
+                });
+
+
+            } else {
+
+                $location.path('/logout');
+
+            }
+
+        });
 (function() {
 
     'use strict';
@@ -10942,6 +11536,8 @@ angular.module('FieldDoc')
             };
 
             self.alerts = [];
+
+            self.createAlert = false;
 
             function closeAlerts() {
 
@@ -10997,37 +11593,41 @@ angular.module('FieldDoc')
 
             self.assignOrganization = function() {
 
+                console.log("ASSIGN")
                 console.log('self.organizationSelection', self.organizationSelection);
 
-                self.status.processing = true;
+      //          self.status.processing = true;
 
                 if (typeof self.organizationSelection === 'string') {
+                    console.log("STRING");
+                    console.log(self.organizationSelection);
 
-                    var _organization = new Organization({
-                        'name': self.organizationSelection
-                    });
+                     self.createAlert = true;
+                  //  var _organization = new Organization({
+                 //       'name': self.organizationSelection
+                 //   });
 
-                    _organization.$save(function(successResponse) {
+           //         _organization.$save(function(successResponse) {
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                            'msg': 'Select an organization to join.',
                             'prompt': 'OK'
                         }];
 
                         $timeout(closeAlerts, 2000);
 
-                        self.updateRelation(successResponse.properties);
+                //        self.updateRelation(successResponse.properties);
 
-                    }, function(errorResponse) {
+            //        }, function(errorResponse) {
 
-                        self.status.processing = false;
+            //            self.status.processing = false;
 
-                    });
+             //       });
 
                 } else {
-
+                    console.log("NOT STRING");
                     self.updateRelation(self.organizationSelection);
 
                 }
@@ -11035,6 +11635,8 @@ angular.module('FieldDoc')
             };
 
             self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
 
                 return SearchService.organization({
                     q: value
@@ -11479,7 +12081,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope, $routeParams,
-            $route, user, User, Image, $timeout) {
+            $route, user, User, Image, SearchService, $timeout) {
 
             var self = this;
 
@@ -11499,13 +12101,18 @@ angular.module('FieldDoc')
 
             self.alerts = [];
 
+            self.createAlert = false;
+
             function closeAlerts() {
 
                 self.alerts = [];
 
+
             }
              var featureId = $routeParams.id;
-      
+
+
+
             //
             // Assign project to a scoped variable
             //
@@ -11518,6 +12125,20 @@ angular.module('FieldDoc')
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    //    self.organizationSelection = self.user.properties.organization;
+
+                        self.organizationSelection =
+                                                    {
+                                                        id: self.user.properties.organization.id,
+                                                        name: self.user.properties.organization.properties.name,
+                                                        category: self.user.properties.organization.properties.category_id
+
+                                                    }
+
+                        console.log("self.organizationSelection",self.organizationSelection);
+
+                        console.log("self.user", self.user);
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
@@ -11550,32 +12171,77 @@ angular.module('FieldDoc')
 
             }
 
+            self.searchOrganizations = function(value) {
+
+                 self.createAlert = false;
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+
             self.actions = {
 
                 save: function() {
                       self.status.processing = true;
 
-                      if (self.image) {
+                      if (typeof self.organizationSelection === 'string' || self.organizationSelection === null) {
+                            console.log("STRING");
+                            console.log(self.organizationSelection);
 
-                        var fileData = new FormData();
+                            self.createAlert = true;
 
-                        fileData.append('image', self.image);
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Select an organization to join.',
+                                'prompt': 'OK'
+                            }];
 
-                        Image.upload({
-
-                        }, fileData).$promise.then(function(successResponse) {
-                            console.log('YO YO ');
-                            console.log('successResponse', successResponse);
-
-                            self.user.properties.picture = successResponse.original;
-
-                            self.updateUser();
-
-                        });
+                            $timeout(closeAlerts, 2000);
+                            self.status.processing = false;
 
                       } else {
-                             self.updateUser();
+                            console.log("NOT STRING");
+                             if (self.image) {
+
+                                var fileData = new FormData();
+
+                                fileData.append('image', self.image);
+
+                                Image.upload({
+
+                                }, fileData).$promise.then(function(successResponse) {
+
+                                    console.log('successResponse', successResponse);
+
+                                    self.user.properties.picture = successResponse.original;
+
+                                    self.updateUser();
+
+                                });
+
+                              } else {
+                                     self.updateUser();
+                              }
                       }
+
+
+
 
 
                 },
@@ -11595,7 +12261,8 @@ angular.module('FieldDoc')
                         'last_name': self.user.properties.last_name,
                         'picture': self.user.properties.picture,
                         'bio': self.user.properties.bio,
-                        'title': self.user.properties.title
+                        'title': self.user.properties.title,
+                        'organization_id': self.organizationSelection.id
                     });
 
                     _user.$update(function(successResponse) {
@@ -11704,6 +12371,10 @@ angular.module('FieldDoc')
                 'profile': true
             };
 
+        //    self.member = {
+        //                    picture : null
+        //                   };
+
             self.status = {
                 loading: true,
                 processing: false,
@@ -11751,8 +12422,10 @@ angular.module('FieldDoc')
                                self.actions.getMember();
                         }else{
                             self.member = self.user.properties;
+                            console.log("self.member -->",self.member);
                             var picture = self.member.picture;
                             self.member.picture = picture.replace("original", "square");
+
                         }
 
 
@@ -11788,7 +12461,7 @@ angular.module('FieldDoc')
                                }
 
                                  self.status.loading = false;
-
+                                console.log("self.member", self.member);
                        }, function(errorResponse) {
 
                             self.status.processing = false;
@@ -11844,11 +12517,6 @@ angular.module('FieldDoc')
 
                             return Account.userObject;
 
-                        },
-                        nodes: function(Site, $route) {
-                            return Site.nodes({
-                                id: $route.current.params.siteId
-                            });
                         },
                         practices: function(Site, $route) {
                             return Site.practices({
@@ -11937,80 +12605,6 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                .when('/sites/:siteId/photos', {
-                    templateUrl: '/modules/components/sites/views/sitePhoto--view.html?t=' + environment.version,
-                    controller: 'SitePhotoController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
-
-                            $rootScope.targetPath = document.location.pathname;
-
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-
-                            return Account.userObject;
-
-                        },
-                        site: function(Site, $route) {
-                            return Site.get({
-                                id: $route.current.params.siteId
-                            });
-                        }
-                    }
-                })
-                .when('/sites/:siteId/partnerships', {
-                    templateUrl: '/modules/components/sites/views/sitePartnership--view.html?t=' + environment.version,
-                    controller: 'SitePartnershipController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
-
-                            $rootScope.targetPath = document.location.pathname;
-
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-
-                            return Account.userObject;
-
-                        },
-                        site: function(Site, $route) {
-
-                            var exclude = [
-                                'centroid',
-                                'creator',
-                                'dashboards',
-                                'extent',
-                                'geometry',
-                                'members',
-                                'metric_types',
-                                'practices',
-                                'practice_types',
-                                'properties',
-                                'tags',
-                                'targets',
-                                'tasks',
-                                'type',
-                                'sites'
-                            ].join(',');
-
-                            return Site.get({
-                                id: $route.current.params.siteId,
-                                exclude: exclude
-                            });
-
-                        },
-                        partnerships: function(Site, $route) {
-
-                            return Site.partnerships({
-                                id: $route.current.params.siteId
-                            });
-
-                        }
-                    }
-                })
                 .when('/sites/:siteId/tags', {
                     templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
                     controller: 'SiteTagController',
@@ -12056,7 +12650,7 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                 .when('/sites/:siteId/batchDelete', {
+                 .when('/sites/:siteId/batch-delete', {
                     templateUrl: '/modules/components/sites/views/siteBatchDelete--view.html?t=' + environment.version,
                     controller: 'SiteBatchDeleteController',
                     controllerAs: 'page',
@@ -12098,7 +12692,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
+                $route, user, Utility, site, mapbox, Site, Project, practices,
                 $interval, LayerService, MapManager,
                 Shapefile, Task) {
 
@@ -12680,7 +13274,6 @@ angular.module('FieldDoc')
                 self.createPractice = function() {
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.project.id,
                         'organization_id': self.site.organization_id
@@ -14274,889 +14867,6 @@ angular.module('FieldDoc')
                     $location.path('/logout');
 
                 }
-
-            });
-
-}());
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('SitePartnershipController',
-        function(Account, $location, $log, Site, site, Partnership,
-            $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships, Allocation) {
-
-            var self = this;
-
-            $rootScope.toolbarState = {
-                'partnerships': true
-            };
-
-            $rootScope.page = {};
-
-            self.status = {
-                loading: true,
-                processing: true
-            };
-
-            self.showElements = function() {
-
-                $timeout(function() {
-
-                    self.status.loading = false;
-
-                    self.status.processing = false;
-
-                }, 1000);
-
-            };
-
-            self.alerts = [];
-
-            self.closeAlerts = function() {
-
-                self.alerts = [];
-
-            };
-
-            self.closeRoute = function() {
-
-                $location.path('/sites');
-
-            };
-
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            self.loadAllocations = function() {
-
-                Site.allocations({
-                    id: self.site.id
-                }).$promise.then(function(successResponse) {
-
-                    self.tempAllocations = successResponse.features;
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    $log.error('Unable to load site allocations.');
-
-                    self.showElements();
-
-                });
-
-            };
-
-            self.loadPartnerships = function() {
-
-                Site.partnerships({
-                    id: self.site.id
-                }).$promise.then(function(successResponse) {
-
-                    self.partnerships = successResponse.features;
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    $log.error('Unable to load site partnerships.');
-
-                    self.showElements();
-
-                });
-
-            };
-
-            // self.searchOrganizations = function(value) {
-
-            //     return SearchService.organization({
-            //         q: value
-            //     }).$promise.then(function(response) {
-
-            //         console.log('SearchService.organization response', response);
-
-            //         response.results.forEach(function(result) {
-
-            //             result.category = null;
-
-            //         });
-
-            //         return response.results.slice(0, 5);
-
-            //     });
-
-            // };
-
-            self.addRelation = function(item, model, label, collection, queryAttr) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                collection.push(_datum);
-
-                queryAttr = null;
-
-                console.log('Updated ' + collection + ' (addition)', collection);
-
-            };
-
-            self.removeRelation = function(id, collection) {
-
-                var _index;
-
-                collection.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove item at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    collection.splice(_index, 1);
-
-                }
-
-                console.log('Updated ' + collection + ' (removal)', collection);
-
-            };
-
-            self.processRelations = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.processFeature = function(data) {
-
-                self.site = data;
-
-                // if (self.site.program) {
-
-                //     self.program = self.site.program;
-
-                // }
-
-                // self.tempAllocations = self.site.partnerships;
-
-                self.status.processing = false;
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [
-                    'creator',
-                    'extent',
-                    'geometry',
-                    'last_modified_by',
-                    'organization',
-                    'partnership',
-                    'project',
-                    'tags',
-                    'tasks'
-                ];
-
-                var reservedProperties = [
-                    'links',
-                    'permissions',
-                    '$promise',
-                    '$resolved'
-                ];
-
-                excludedKeys.forEach(function(key) {
-
-                    if (feature.properties) {
-
-                        delete feature.properties[key];
-
-                    } else {
-
-                        delete feature[key];
-
-                    }
-
-                });
-
-                reservedProperties.forEach(function(key) {
-
-                    delete feature[key];
-
-                });
-
-            };
-
-            self.createAllocation = function() {
-
-                var params = {
-                    amount: self.newAllocation.amount,
-                    description: self.newAllocation.description,
-                    partnership_id: self.targetPartner.id
-                },
-                allocation = new Allocation(params);
-
-                allocation.$save().then(function(successResponse) {
-
-                    self.tempAllocations.push({
-                        id: successResponse.id
-                    });
-
-                    console.log('self.createPartnership.self.tempAllocations', self.tempAllocations);
-
-                    self.saveFeature();
-
-                }).catch(function(error) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to create allocation.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            self.editAllocation = function(obj) {
-
-                self.editMode = true;
-
-                self.displayModal = true;
-
-                self.targetFeature = obj;
-
-                $window.scrollTo(0, 0);
-
-            };
-
-            self.addAllocation = function(obj) {
-
-                // self.editMode = true;
-
-                self.newAllocation = {};
-
-                self.addMode = true;
-
-                self.displayModal = true;
-
-                self.targetPartner = obj;
-
-                $window.scrollTo(0, 0);
-
-            };
-
-            self.updateAllocation = function() {
-
-                self.targetFeature.partnership_id = self.targetFeature.partnership.id;
-
-                self.scrubFeature(self.targetFeature);
-
-                Allocation.update({
-                    id: self.targetFeature.id
-                }, self.targetFeature).$promise.then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Allocation changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.displayModal = false;
-
-                    self.editMode = false;
-
-                    $window.scrollTo(0, 0);
-
-                    self.loadAllocations();
-
-                }).catch(function(error) {
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong and the changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                    self.displayModal = false;
-
-                    self.editMode = false;
-
-                    $window.scrollTo(0, 0);
-
-                });
-
-            };
-
-            self.removeAllocation = function(feature, index) {
-
-                Allocation.delete({
-                    id: feature.id
-                }).$promise.then(function(successResponse) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this allocation.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.tempAllocations.splice(index, 1);
-
-                }).catch(function(error) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to delete allocation.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            self.saveFeature = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.site);
-
-                self.site.allocations = self.processRelations(self.tempAllocations);
-
-                // self.site.workflow_state = "Draft";
-
-                var exclude = [
-                    'centroid',
-                    'creator',
-                    'dashboards',
-                    'extent',
-                    'geometry',
-                    'members',
-                    'metric_types',
-                    // 'partners',
-                    'practices',
-                    'practice_types',
-                    'project',
-                    'properties',
-                    'tags',
-                    'targets',
-                    'tasks',
-                    'type',
-                    // 'sites'
-                ].join(',');
-
-                Site.update({
-                    id: $route.current.params.siteId,
-                    exclude: exclude
-                }, self.site).then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Site changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.displayModal = false;
-
-                    self.targetPartner = null;
-
-                    self.loadAllocations();
-
-                    self.loadPartnerships();
-
-                }).catch(function(error) {
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong and the changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                    self.displayModal = false;
-
-                    self.targetPartner = null;
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.site) {
-
-                    targetId = self.site.id;
-
-                } else {
-
-                    targetId = self.site.id;
-
-                }
-
-                Site.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this site.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.site.name + '”. There are pending tasks affecting this site.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this site.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this site.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
-
-                    //
-                    // Assign site to a scoped variable
-                    //
-                    site.$promise.then(function(successResponse) {
-
-                        self.site = successResponse;
-
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
-
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.loadAllocations();
-
-                        self.loadPartnerships();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load site.');
-
-                        self.showElements();
-
-                    });
-
-                });
-
-            } else {
-
-                $location.path('/logout');
-
-            }
-
-        });
-(function() {
-
-    'use strict';
-
-    /**
-     * @ngdoc function
-     * @name FieldDoc.controller:SiteEditController
-     * @description
-     * # SiteEditController
-     * Controller of the FieldDoc
-     */
-    angular.module('FieldDoc')
-        .controller('SitePhotoController',
-            function(Account, environment, $http, $location, Notifications, 
-                Site, site, $rootScope, $route, $scope,
-                $timeout, $interval, user, Shapefile) {
-
-                var self = this,
-                    timeout;
-
-                $rootScope.toolbarState = {
-                    'editPhotos': true
-                };
-
-                $rootScope.page = {};
-
-                site.$promise.then(function(successResponse) {
-
-                    console.log('self.site', successResponse);
-
-                    self.site = successResponse;
-
-                    if (successResponse.permissions.read &&
-                        successResponse.permissions.write) {
-
-                        self.makePrivate = false;
-
-                    } else {
-
-                        self.makePrivate = true;
-
-                    }
-
-                    self.permissions.can_edit = successResponse.permissions.write;
-                    self.permissions.can_delete = successResponse.permissions.write;
-
-                    $rootScope.page.title = self.site.name;
-
-                    //
-                    // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-                    // selected their property, so we just need to display it on the map for them again.
-                    //
-                    // if (self.site && self.site.properties && self.site.segment) {
-                    //     self.geolocation.drawSegment(self.site.segment);
-                    // }
-
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-
-                        user.$promise.then(function(userResponse) {
-
-                            $rootScope.user = Account.userObject = userResponse;
-
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0],
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: false
-                            };
-
-                        });
-
-                    }
-
-                }, function(errorResponse) {
-
-                });
-
-                self.uploadShapefile = function() {
-
-                    if (!self.shapefile ||
-                        !self.shapefile.length) {
-
-                        $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
-
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 1200);
-
-                        return false;
-
-                    }
-
-                    // self.status.saving.action = true;
-
-                    if (self.shapefile) {
-
-                        self.progressMessage = 'Uploading your file...';
-
-                        var fileData = new FormData();
-
-                        fileData.append('file', self.shapefile[0]);
-
-                        console.log('fileData', fileData);
-
-                        self.fillMeter = $interval(function() {
-
-                            var tempValue = (self.progressValue || 10) * 0.50;
-
-                            if (!self.progressValue) {
-
-                                self.progressValue = tempValue;
-
-                            } else if ((100 - tempValue) > self.progressValue) {
-
-                                self.progressValue += tempValue;
-
-                            }
-
-                            console.log('progressValue', self.progressValue);
-
-                            if (self.progressValue > 75) {
-
-                                self.progressMessage = 'Analyzing data...';
-
-                            }
-
-                        }, 100);
-
-                        console.log('Shapefile', Shapefile);
-
-                        try {
-
-                            Shapefile.upload({}, fileData, function(shapefileResponse) {
-
-                                console.log('shapefileResponse', shapefileResponse);
-
-                                self.progressValue = 100;
-
-                                self.progressMessage = 'Upload successful, rendering shape...';
-
-                                $interval.cancel(self.fillMeter);
-
-                                $timeout(function() {
-
-                                    self.progressValue = null;
-
-                                    if (shapefileResponse.msg.length) {
-
-                                        console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
-
-                                        if (shapefileResponse.msg[0] !== null &&
-                                            typeof shapefileResponse.msg[0].geometry !== 'undefined') {
-
-                                            self.setGeoJsonLayer(shapefileResponse.msg[0]);
-
-                                        }
-
-                                    }
-
-                                }, 1600);
-
-                                self.error = null;
-
-                            }, function(errorResponse) {
-
-                                console.log(errorResponse);
-
-                                $interval.cancel(self.fillMeter);
-
-                                self.progressValue = null;
-
-                                $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
-
-                                $timeout(function() {
-                                    $rootScope.notifications.objects = [];
-                                }, 2000);
-
-                                return;
-
-                            });
-
-                        } catch (error) {
-
-                            console.log('Shapefile upload error', error);
-
-                        }
-
-                    }
-
-                };
-
-                self.saveSite = function() {
-
-                    self.site.$update().then(function(successResponse) {
-
-                        $location.path('/sites/' + $route.current.params.siteId);
-
-                    }, function(errorResponse) {
-
-                    });
-
-                };
-
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
-
-                function closeRoute() {
-
-                    $location.path(self.site.links.project.html);
-
-                }
-
-                self.confirmDelete = function(obj) {
-
-                    console.log('self.confirmDelete', obj);
-
-                    self.deletionTarget = self.deletionTarget ? null : obj;
-
-                };
-
-                self.cancelDelete = function() {
-
-                    self.deletionTarget = null;
-
-                };
-
-                self.deleteFeature = function() {
-
-                    Site.delete({
-                        id: +self.deletionTarget.id
-                    }).$promise.then(function(data) {
-
-                        self.alerts.push({
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Successfully deleted this site.',
-                            'prompt': 'OK'
-                        });
-
-                        $timeout(closeRoute, 2000);
-
-                    }).catch(function(errorResponse) {
-
-                        console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                        if (errorResponse.status === 409) {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this site.',
-                                'prompt': 'OK'
-                            }];
-
-                        } else if (errorResponse.status === 403) {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this site.',
-                                'prompt': 'OK'
-                            }];
-
-                        } else {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this site.',
-                                'prompt': 'OK'
-                            }];
-
-                        }
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                };
 
             });
 
@@ -16779,6 +16489,9 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/reports/:reportId', {
+                redirectTo: '/reports/:reportId/edit'
+            })
             .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
                 controller: 'ReportEditController',
@@ -17076,9 +16789,10 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image,$location,
-        $log, $location, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Utility) {
+    .controller('PracticeEditController', function(Account, Image,
+        $log, $location, Media, Practice, PracticeType, practice,
+        Project, $q, $rootScope, $route, $scope, $timeout, $interval,
+        site, user, Utility) {
 
         var self = this;
 
@@ -17298,9 +17012,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                if (successResponse.category) {
+                if (successResponse.practice_type) {
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                 }
 
@@ -17328,6 +17042,8 @@ angular.module('FieldDoc')
                     successResponse.features.forEach(function(item) {
 
                         item.category = item.group;
+
+                        item.practice_type = item.group;
 
                     });
 
@@ -17564,7 +17280,7 @@ angular.module('FieldDoc')
 
             self.practiceType = $item;
 
-            self.practice.category_id = $item.id;
+            self.practice.practice_type_id = $item.id;
 
         };
 
@@ -18375,7 +18091,7 @@ angular.module('FieldDoc')
     .controller('PracticeLocationController',
         function(Account, Image, $location, $log, mapbox, Media,
             Site, Practice, practice, $q, $rootScope, $route,
-            $scope, $timeout, $interval, site, Site, user, Shapefile,
+            $scope, $timeout, $interval, site, user, Shapefile,
             Utility, Task, LayerService, MapManager) {
 
             var self = this;
@@ -18509,7 +18225,7 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.practiceType = successResponse.properties.category  || successResponse.category;
+                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -18754,7 +18470,7 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    self.practiceType = successResponse.category;
+                    self.practiceType = successResponse.practice_type;
 
                     self.showElements();
 
@@ -19177,14 +18893,30 @@ angular.module('FieldDoc')
                     }
 
 
+                    var map_ctrl_linestring = false;
+                    var map_ctrl_point = true;
+                    var map_ctrl_polygon = false;
+
+                    console.log("self.practiceType.unit.dimension",self.practiceType.unit.dimension);
+
+                    if(self.practiceType.unit.dimension == 'area'){
+                        map_ctrl_polygon = true;
+                    }
+                    else if(self.practiceType.unit.dimension == 'length'){
+                        map_ctrl_linestring = true;
+                    }else{
+                        map_ctrl_polygon = true;
+                          map_ctrl_linestring = true;
+                    }
+
 
 
                     self.drawControls = new MapboxDraw({
                         displayControlsDefault: false,
                         controls: {
-                            line_string: true,
-                            point: true,
-                            polygon: true,
+                            line_string: map_ctrl_linestring,
+                            point: map_ctrl_point,
+                            polygon: map_ctrl_polygon,
                             trash: true
                         },
                         userProperties: true,
@@ -20407,557 +20139,6 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticePartnershipController',
-        function(Account, $location, $log, Project, Practice, practice, Partnership,
-            $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships) {
-
-            var self = this;
-
-            $rootScope.toolbarState = {
-                'partnerships': true
-            };
-
-            $rootScope.page = {};
-
-            self.status = {
-                loading: true,
-                processing: true
-            };
-
-            self.showElements = function() {
-
-                $timeout(function() {
-
-                    self.status.loading = false;
-
-                    self.status.processing = false;
-
-                }, 1000);
-
-            };
-
-            self.alerts = [];
-
-            self.closeAlerts = function() {
-
-                self.alerts = [];
-
-            };
-
-            function closeRoute() {
-
-                    if(self.practice.site != null){
-                         $location.path(self.practice.links.site.html);
-                    }else{
-
-                    } $location.path("/projects/"+self.practice.project.id);
-
-            }
-
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            self.loadPartnerships = function() {
-
-                Practice.partnerships({
-                    id: self.practice.id
-                }).$promise.then(function(successResponse) {
-
-                    self.tempPartnerships = successResponse.features;
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    $log.error('Unable to load practice partnerships.');
-
-                    self.showElements();
-
-                });
-
-            };
-
-            self.searchOrganizations = function(value) {
-
-                return SearchService.organization({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.organization response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
-            self.addRelation = function(item, model, label, collection, queryAttr) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                collection.push(_datum);
-
-                queryAttr = null;
-
-                console.log('Updated ' + collection + ' (addition)', collection);
-
-            };
-
-            self.removeRelation = function(id, collection) {
-
-                var _index;
-
-                collection.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove item at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    collection.splice(_index, 1);
-
-                }
-
-                console.log('Updated ' + collection + ' (removal)', collection);
-
-            };
-
-            self.processRelations = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.processFeature = function(data) {
-
-                self.practice = data;
-
-                // if (self.practice.program) {
-
-                //     self.program = self.practice.program;
-
-                // }
-
-                // self.tempPartnerships = self.practice.partnerships;
-
-                self.status.processing = false;
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [
-                    'creator',
-                    'extent',
-                    'geometry',
-                    'last_modified_by',
-                    'organization',
-                    'tags',
-                    'tasks'
-                ];
-
-                var reservedProperties = [
-                    'links',
-                    'permissions',
-                    '$promise',
-                    '$resolved'
-                ];
-
-                excludedKeys.forEach(function(key) {
-
-                    if (feature.properties) {
-
-                        delete feature.properties[key];
-
-                    } else {
-
-                        delete feature[key];
-
-                    }
-
-                });
-
-                reservedProperties.forEach(function(key) {
-
-                    delete feature[key];
-
-                });
-
-            };
-
-            self.createPartnership = function() {
-
-                var params = {
-                    amount: self.partnerQuery.amount,
-                    description: self.partnerQuery.description,
-                    organization_id: self.partnerQuery.id
-                },
-                partnership = new Partnership(params);
-
-                partnership.$save().then(function(successResponse) {
-
-                    self.tempPartnerships.push({
-                        id: successResponse.id
-                    });
-
-                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
-
-                    self.saveProject();
-
-                }).catch(function(error) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to create partnership.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            self.editPartnership = function(obj) {
-
-                self.editMode = true;
-
-                self.displayModal = true;
-
-                self.targetFeature = obj;
-
-                $window.scrollTo(0, 0);
-
-            };
-
-            self.updatePartnership = function() {
-
-                self.scrubFeature(self.targetFeature);
-
-                Partnership.update({
-                    id: self.targetFeature.id
-                }, self.targetFeature).$promise.then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Partnership changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.displayModal = false;
-
-                    self.editMode = false;
-
-                    $window.scrollTo(0, 0);
-
-                    self.loadPartnerships();
-
-                }).catch(function(error) {
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong and the changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                    self.displayModal = false;
-
-                    self.editMode = false;
-
-                    $window.scrollTo(0, 0);
-
-                });
-
-            };
-
-            self.removePartnership = function(partnershipId, index) {
-
-                Partnership.delete({
-                    id: partnershipId
-                }).$promise.then(function(successResponse) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this partnership.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.tempPartnerships.splice(index, 1);
-
-                }).catch(function(error) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to delete partnership.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            self.saveProject = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.practice);
-
-                self.practice.partnerships = self.processRelations(self.tempPartnerships);
-
-                // self.practice.workflow_state = "Draft";
-
-                var exclude = [
-                    'centroid',
-                    'creator',
-                    'dashboards',
-                    'extent',
-                    'geometry',
-                    'members',
-                    'metric_types',
-                    // 'partners',
-                    'practices',
-                    'practice_types',
-                    'properties',
-                    'tags',
-                    'targets',
-                    'tasks',
-                    'type',
-                    'sites'
-                ].join(',');
-
-                Project.update({
-                    id: $route.current.params.practiceId,
-                    exclude: exclude
-                }, self.practice).then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Project changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.displayModal = false;
-
-                    self.partnerQuery = null;
-
-                    self.loadPartnerships();
-
-                }).catch(function(error) {
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong and the changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                    self.displayModal = false;
-
-                    self.partnerQuery = null;
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.practice) {
-
-                    targetId = self.practice.id;
-
-                } else {
-
-                    targetId = self.practice.id;
-
-                }
-
-                Project.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.practice.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                });
-
-            };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
-
-                    //
-                    // Assign practice to a scoped variable
-                    //
-                    practice.$promise.then(function(successResponse) {
-
-                        self.practice = successResponse;
-
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
-
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.loadPartnerships();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load practice.');
-
-                        self.showElements();
-
-                    });
-
-                });
-
-            } else {
-
-                $location.path('/logout');
-
-            }
-
-        });
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
     .controller('PracticePhotoController', function(
         Account, Image, $location, $log, mapbox, Media, Practice,
         practice, $q, $rootScope, $route, $scope, $timeout,
@@ -21998,7 +21179,8 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval) {
+            MetricType, Model, $filter, $interval, Program) {
+
 
             var self = this;
 
@@ -22027,6 +21209,10 @@ angular.module('FieldDoc')
                 self.alerts = [];
 
             };
+
+            self.metricMatrix = [];
+
+            self.activeDomain = [];
 
             function closeRoute() {
 
@@ -22248,44 +21434,7 @@ angular.module('FieldDoc')
 
             };
 
-            // self.runModel = function() {
 
-            //     var data = {
-            //         practice_code: self.practice.category.model_key,
-            //         geometry: self.practice.geometry,
-            //         units: $filter('convertArea')(self.practice.area, 'acre')
-            //     };
-
-            //     Model.cast({}, data).$promise.then(function(successResponse) {
-
-            //         console.log('Run model successResponse', successResponse);
-
-            //         self.modelTargets.forEach(function(metric) {
-
-            //             if (successResponse.hasOwnProperty(metric.model_key)) {
-
-            //                 metric.value = successResponse[metric.model_key];
-
-            //                 self.targets.active.push({
-            //                     name: metric.name,
-            //                     value: metric.value,
-            //                     metric_id: metric.id,
-            //                     metric: metric
-            //                 });
-
-            //             }
-
-            //         });
-
-            //         self.modelTargets = [];
-
-            //     }, function(errorResponse) {
-
-            //         console.log('Run model errorResponse', errorResponse);
-
-            //     });
-
-            // };
 
             self.loadPractice = function() {
 
@@ -22341,7 +21490,14 @@ angular.module('FieldDoc')
 
                         self.calculating = true;
 
-                        self.bgLoadMatrix();
+                  //      self.bgLoadMatrix();
+
+
+                        self.loadMetrics();
+                 //       self.loadMatrix();
+                   //     self.loadMatrix();
+              //     self.bgLoadMatrix();
+                //        self.loadProgramMetrics();
                 //    }
 
 
@@ -22358,7 +21514,8 @@ angular.module('FieldDoc')
 
             };
 
-            self.search = function(value) {
+
+/*            self.search = function(value) {
 
                 if (self.searchScope.target === 'metric') {
 
@@ -22399,7 +21556,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.directQuery = function(item, model, label) {
 
                 if (self.searchScope.target === 'program') {
@@ -22413,7 +21571,8 @@ angular.module('FieldDoc')
                 }
 
             };
-
+*/
+/*
             self.removeAll = function() {
 
                 self.targets.active.forEach(function (item) {
@@ -22425,7 +21584,8 @@ angular.module('FieldDoc')
                 self.targets.active = [];
 
             };
-
+*/
+/*
             self.addTarget = function(item, idx) {
 
                 if (!item.value ||
@@ -22475,7 +21635,7 @@ angular.module('FieldDoc')
                 console.log('Updated targets (removal)');
 
             };
-
+*/
             self.processTargets = function(list) {
 
                 var _list = [];
@@ -22496,7 +21656,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadFeatures = function(programId) {
+         /*   self.loadFeatures = function(programId) {
 
                 var params = {
                     program: programId
@@ -22521,7 +21681,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+        */
             self.processPractice = function(data) {
 
                 console.log('process-data -->', data);
@@ -22529,11 +21689,15 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                if(self.practice.custom_extent == null){
+                    self.practice.custom_extent = self.practice.calculated_extent.converted;
+                }
+
                 self.calculating ==  self.practice.calculating;
 
                 self.geometryMismatch = false;
 
-                if(self.practice_category.unit != undefined){
+          /*      if(self.practice_category.unit != undefined){
                     if(self.practice.geometry != undefined){
                         if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
                             self.geometryMismatch = true;
@@ -22543,12 +21707,12 @@ angular.module('FieldDoc')
                         }
                      }
                 }
-
+*/
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
 
-                console.log("process practice->>",self.practice)
+                console.log("process practice->>",self.practice);
 
             };
 
@@ -22598,7 +21762,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveTargets = function() {
+   /*         self.saveTargets = function() {
 
                 self.status.processing = true;
 
@@ -22664,7 +21828,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+*/
             self.savePractice = function() {
 
                 self.status.processing = true;
@@ -22698,7 +21862,7 @@ angular.module('FieldDoc')
                     self.calculating = true;
                  //   setTimeout(function(){
                  //     console.log("Timeout complete");
-                      self.bgLoadMatrix();
+                      self.bgLoadMetrics();
                  //    }, 2000);
 
 
@@ -22813,6 +21977,7 @@ angular.module('FieldDoc')
 
             };
 
+
             self.checkStatus = function(){
                 console.log("Checking Calc Status");
 
@@ -22824,8 +21989,8 @@ angular.module('FieldDoc')
 
                      self.calculating = successResponse.calculating;
 
-                    self.bgLoadMatrix();
-
+                  //  self.bgLoadMatrix();
+                    self.bgLoadMetrics();
                     //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
@@ -22837,49 +22002,283 @@ angular.module('FieldDoc')
 
             }
 
-/*
-            self.backgroundLoadMatrix = function(){
-                console.log("YESSSS", self.practice.calculating);
 
-//                var matrixLoadInterval;
-//                var matrixLoadIntervalRunning;
-                    self.matrixLoadInterval = false;
+            self.loadMetrics = function(){
+                console.log("LoadMetrics A");
+                Practice.metrics({
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
+                    id: self.practice.id
 
-                    console.log("Checking Practice");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
+                }).$promise.then(function(successResponse){
 
-                     self.matrixLoadIntervalRunning = true;
 
-                     self.matrixLoadInterval = $interval(function() {
-                         self.loadPractice();
+                    console.log("loadMetrics",successResponse);
+
+                    self.info = successResponse;
+                    self.programMetrics = self.info.metrics.secondary;
+                    //                    self.assignedMetrics = self.info.metrics.primary;
+
+                    self.assignedMetrics = self.info.targets;
+
+              /*      self.programMetrics.forEach(function(pm){
+                       self.assignedMetrics.forEach(function(am){
+
+                       });
+
+                    });
+*/
+//                    var i = 0;
+
+
+                    console.log("self.assignedMetrics",self.assignedMetrics);
+                    console.log("self.programMetrics",self.programMetrics);
+                    self.assignedMetrics.forEach(function(am){
+
+                        self.activeDomain.push(am.id);
+
+                        var i = 0;
+
+                        self.programMetrics.forEach(function(pm){
+
+                            if(am.metric.id == pm.id){
+
+                                self.programMetrics.splice(i,1);
+                            }
+
+                            i = i+1;
+                        });
+
+                    //
+
+                    });
+
+                     self.loadModels(self.activeDomain);
+
+                     self.calculating = false;
+
+                //    console.log("self.info",self.info);
+                //     console.log("self.programMetrics",self.programMetrics);
+
+                },function(errorResponse){
+                     console.log("loadMetrics error",errorResponse);
+                });
+            };
+
+            self.bgLoadMetrics = function(){
+                console.log("BG LOAD MATRIX", self.calculating);
+
+                //self.practice.calculating
+                if(self.calculating == true){
+                     console.log("Checking Practice");
+                     var timer = setTimeout(function(){
+                          self.checkStatus();
+
                     }, 2000);
                 }else{
-                    console.log("Reloading Matrix");
-                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
-                //    if(self.matrixLoadIntervalRunning == true){
-
-                        console.log("Terminating Matrix Load Interval");
-
-                        self.matrixLoadIntervalRunning = false;
-
-                      //  setTimeout(function(){
-                            $interval.cancel(self.matrixLoadInterval);
-
-
-                            self.matrixLoadInterval = false;
-                     //   }, 2000);
-
-
-              //      }
-
-                    self.loadMatrix();
+                    clearTimeout(timer);
+                    self.loadMetrics();
                 }
+
+            };
+
+
+
+            self.addMetric = function($item, $model, $label) {
+
+                self.programMetric = '';
+             //   document.getElementById("whatever").focus();
+              //  delete $item.id;
+
+                var temp_id = $item.id;
+
+                $item.metric_id = temp_id;
+
+                delete $item.id;
+
+                self.metricMatrix.push($item);
+
+           //     self.assignedMetrics.push($item);
+
+                var i = 0;
+
+                var tempProgramMetrics = [];
+
+                self.programMetrics.forEach(function(newItem){
+
+                     if($item.id == newItem.id){
+
+                      //  delete self.programMetrics[i];
+
+                     }else{
+
+                         tempProgramMetrics.push(self.programMetrics[i]);
+
+                         self.activeDomain.push(newItem.id);
+
+                     }
+
+                     i = i+1;
+                });
+
+                self.programMetrics = tempProgramMetrics;
+
+                 self.saveTarget($item, null, 0);
+
+               document.getElementById("assignTargetsBlock").blur();
+
+             //   console.log("searchinputHTML",searchinputHTML);
+
+                self.loadModels(self.activeDomain);
 
 
             };
-*/
+
+            self.saveTarget =  function($item,$index,$value){
+                console.log("save $item", $item);
+
+                var target_arr = [];
+                target_arr.push($item);
+
+                var data = {
+                    targets: target_arr
+                };
+
+                Practice.updateMatrix({
+                    id: +self.practice.id,
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.updateMatrix", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('updateMatrix.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+            }
+
+            self.removeMetric = function($item,$index){
+
+                console.log($item+" "+$index);
+
+                self.metricMatrix.splice($index,1);
+
+                self.programMetrics.push($item);
+
+            }
+
+            self.deleteTarget = function($item,$index){
+
+                console.log("$delete $item,",$item)
+
+                var target_arr = [];
+                target_arr.push($item);
+
+                var data = {
+                    targets: target_arr
+                };
+
+                Practice.targetDelete({
+                    id: +self.practice.id,
+                    target_id : $item.id
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target deleted.',
+                        'prompt': 'OK'
+                    }];
+
+                    console.log("assignedMetrics",self.assignedMetrics);
+
+                    var i = 0;
+                    self.assignedMetrics.forEach(function(am){
+
+                        if(am.id == $item.id){
+
+                            self.assignedMetrics.splice(i,1);
+                        }
+                        i = i+1;
+                    });
+
+                    self.programMetrics.push($item.metric);
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.delete", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('practiceDelete.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+
+            }
+
+        /*
+            self.loadProgramMetrics = function (){
+
+                Program.metrics({
+
+                        id  : self.practice.project.program_id
+
+                    }).$promise.then(function(successResponse) {
+
+                    console.log("Program Metrics -->", successResponse);
+
+                    }, function(errorResponse) {
+
+                        console.log("Program Metrics --> ERROR",errorResponse );
+
+
+                     });
+
+
+
+            };
+
+
+
             /*
             END Custom Extent Logic
             */
@@ -22898,6 +22297,10 @@ angular.module('FieldDoc')
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
+
+                    console.log();
+
+            //        self.loadMetrics();
 
                     self.loadPractice();
 
@@ -23205,12 +22608,6 @@ angular.module('FieldDoc')
 
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-
-                            if (!self.report.practice_extent) {
-
-                                self.report.practice_extent = convertPracticeArea(self.practice);
-
-                            }
 
                         }
 
@@ -32357,28 +31754,31 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            // .when('/tags/:tagId', {
+            //     templateUrl: '/modules/components/tags/views/tagSummary--view.html?t=' + environment.version,
+            //     controller: 'TagSummaryController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         tag: function(Tag, $route) {
+            //             return Tag.get({
+            //                 id: $route.current.params.tagId
+            //             });
+            //         }
+            //     }
+            // })
             .when('/tags/:tagId', {
-                templateUrl: '/modules/components/tags/views/tagSummary--view.html?t=' + environment.version,
-                controller: 'TagSummaryController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    tag: function(Tag, $route) {
-                        return Tag.get({
-                            id: $route.current.params.tagId
-                        });
-                    }
-                }
+                redirectTo: '/tags/:tagId/edit'
             })
             .when('/tags/:tagId/edit', {
                 templateUrl: '/modules/components/tags/views/tagEdit--view.html?t=' + environment.version,
@@ -32515,8 +31915,6 @@ angular.module('FieldDoc')
                 self.permissions.can_delete = successResponse.permissions.write;
 
                 $rootScope.page.title = self.tag.name ? self.tag.name : 'Un-named Tag';
-
-                self.scrubFeature(self.tag);
 
                 self.showElements();
 
@@ -37579,7 +36977,8 @@ angular
     angular.module('FieldDoc')
         .service('Practice', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
-                'id': '@id'
+                'id': '@id',
+                'target_id': '@target_id'
             }, {
                 'query': {
                     'isArray': false
@@ -37681,6 +37080,28 @@ angular
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/clone')
+                },
+                metrics: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/metrics/')
+                },
+                target: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+                },
+                targetUpdate: {
+                    method: 'PATCH',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
+                },
+                targetDelete: {
+                    method: 'DELETE',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
+
                 }
 
             });
@@ -38018,7 +37439,12 @@ angular
                 members: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/project/:id/members')
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
+                },
+                post_members: {
+                     method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/members')
                 },
                 partnerships: {
                     method: 'GET',
@@ -38414,63 +37840,33 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                   // console.log('COLOR 0');
+                    console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                     //    console.log('COLOR 1');
+                         console.log('COLOR 1');
                     }else{
-                   //      console.log('COLOR 2');
+                         console.log('COLOR 2');
                     }
                 }else{
-                 //    console.log('COLOR 3');
+                     console.log('COLOR 3');
                 }
 
-                console.log("STATIC GEOMETRY",geometry);
-
-             //   var geometry_type
-
-                var fillOpacity = 0.5;
-
-                if(geometry.type === "LineString"){
-                    fillOpacity = 0.0;
-                    geometry_type = "LineString";
-
-                    console.log("CONVERTING STATIC GEOMETRY",geometry);
-                    console.log("CONVERTING STATIC GEOMETRY",geometry.coordinates );
-
-                    geometry.type = geometry_type;
-
-                      var styledFeature = {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": color,
-                                "stroke": color,
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-
-                            }
-                        };
-
-                }else{
-                      var styledFeature = {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": color,
-                                "stroke": color,
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-                                "fill": color,
-                                "fill-opacity": fillOpacity
-                            }
-                        };
-                }
-
-
+                var styledFeature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "marker-size": "small",
+                        "marker-color": color,
+                        "stroke": color,
+                        "stroke-opacity": 1.0,
+                        "stroke-width": 2,
+                        "fill": color,
+                        "fill-opacity": 0.5
+                    }
+                };
+                
                 // Build static map URL for Mapbox API
+                
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
@@ -39138,6 +38534,33 @@ angular.module('FieldDoc')
                 }
             });
 
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('ChangeLog', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/:type/:id/history'), {
+                'id': '@id',
+                'type':'@type'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                history: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/:type/:id/history')
+                }
+            });
         });
 
 }());
@@ -40234,3 +39657,84 @@ angular.module('FieldDoc')
         }]);
 
 }());
+'use strict';
+
+angular.module('FieldDoc')
+    .filter('elapsedTime', ['$filter', function($filter) {
+
+        return function(timer) {
+
+            var period,
+                minutes,
+                hours,
+                days,
+                currentDate,
+                originDate,
+                delta;
+
+            currentDate = moment.utc(new Date());
+
+            console.log('$filter.elapsedTime --> currentDate', currentDate);
+
+            originDate = moment.utc(timer);
+
+            console.log('$filter.elapsedTime --> originDate', originDate);
+
+            delta = currentDate.diff(originDate);
+
+            console.log('$filter.elapsedTime --> timeDelta', delta);
+
+            // 
+            // The value of delta is greater than or equal to 1 day
+            // (86400000 milliseconds)
+            // 
+
+            if (delta >= 86400000) {
+
+                period = $filter('date')(timer, 'longDate');
+
+                if (currentDate.year() !== originDate.year()) {
+
+                    period += (', ' + originDate.year());
+
+                }
+
+                period += ' at ';
+
+                period += $filter('date')(timer, 'shortTime');
+
+            } else if (3600000 <= delta && delta < 86400000) {
+
+                // 
+                // The value of delta is less than 1 day (86400000 milliseconds)
+                // and greater than or equal to 1 hour (3600000 milliseconds)
+                // 
+
+                hours = Math.round(delta / 3600000);
+
+                console.log('$filter.elapsedTime --> hours', hours);
+
+                period = hours + ' hours ago';
+
+            } else {
+
+                // 
+                // The value of delta is less than 1 hour
+                // (3600000 milliseconds)
+                // 
+
+                minutes = Math.floor(delta / 60000);
+
+                console.log('$filter.elapsedTime --> minutes', minutes);
+
+                period = minutes > 0 ? minutes + ' minutes ago' : 'moments ago';
+
+            }
+
+            console.log('$filter.elapsedTime --> period', period);
+
+            return period;
+
+        };
+
+    }]);
