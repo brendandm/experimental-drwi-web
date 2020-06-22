@@ -370,7 +370,7 @@
 
                 self.loadProgramMetrics = function(){
 
-                      Program.metricTypes({
+                      Program.metrics({
                         id: self.program.id
                         }).$promise.then(function(successResponse) {
 
