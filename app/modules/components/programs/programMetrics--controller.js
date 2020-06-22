@@ -266,6 +266,8 @@
 
                         self.loadMetrics();
 
+                        loadProgramMetrics();
+
                         self.loadProjects();
 
                         self.loadTags();
@@ -365,6 +367,32 @@
                     });
 
                 };
+
+                self.loadProgramMetrics = function(){
+
+                      Program.metricTypes({
+                        id: self.program.id
+                        }).$promise.then(function(successResponse) {
+
+                        console.log('Metric Types', successResponse);
+
+                        self.metricsTypes = successResponse
+
+                        // self.processLocations(successResponse.features);
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+
+
+                }
 
                 self.addLayers = function(arr) {
 
