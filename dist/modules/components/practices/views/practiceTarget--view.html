@@ -285,6 +285,7 @@
                             <p style="display:block; clear:both;">{{ model.model.name }}</p>
 
                             <a href="/practices/{{ page.practice.id }}/model-data"
+                               data-ng-if="page.practice_category.require_inputs"
                                title="{{ model.model.name }}"
                                style="margin-right:30px;">
                                <sub>
