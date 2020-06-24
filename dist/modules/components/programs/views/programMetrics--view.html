@@ -259,7 +259,7 @@
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="metricType in metricsTypes = (page.metricsTypes | orderBy:'name' | filter: page.queryToken)"
+                                data-ng-repeat="metric in metricsTypes = (page.metricsTypes | orderBy:'name' | filter: page.queryToken)"
                                >
 
                                 <div class="card--content" >
