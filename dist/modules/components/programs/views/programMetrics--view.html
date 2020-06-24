@@ -240,7 +240,7 @@
                         <h2>Metric Types</h2>
                         </a>
                         <p>
-                            Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
+                            Showing <b>{{ metricsTypes.length }}</b> of <b>{{ page.metricCount }}</b> total metric types in program <b>{{page.program.name}}</b>.
                         </p>
 
                            <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
@@ -251,7 +251,12 @@
                                                                          "
                              >
 
-                                 <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search practices types">
+                                 <input style="float:left; display:inline-block; clear:right;"
+                                        type="text"
+                                        class="search-bar list-filter"
+                                        data-ng-if="!page.status.loading"
+                                        data-ng-model="page.queryToken"
+                                        placeholder="Search practices types">
 
 
                             </div>
