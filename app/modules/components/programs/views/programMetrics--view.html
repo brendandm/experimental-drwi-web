@@ -237,7 +237,7 @@
 
                     <section class="pad shadow">
                         <a name="practiceTypes">
-                        <h2>Practices Types</h2>
+                        <h2>Metric Types</h2>
                         </a>
                         <p>
                             Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
@@ -259,14 +259,14 @@
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
+                                data-ng-repeat="metricType in metricsTypes = (page.metricsTypes | orderBy:'name' | filter: page.queryToken)"
                                >
 
                                 <div class="card--content" >
 
                                     <div class="name" style="flex-flow: column; align-items: flex-start;">
-                                        <label for="practice-{{ practice.id }}">
-                                            {{ practice.name }}
+                                        <label for="metric-{{ metric.id }}">
+                                            {{ metric.name }}
                                         </label>
                                         <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
                                     </div>
