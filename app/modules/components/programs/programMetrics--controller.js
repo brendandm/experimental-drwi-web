@@ -378,7 +378,7 @@
 
                         console.log('Metric Types', successResponse);
 
-                        self.metricsTypes = successResponse
+                        self.metricsTypes = successResponse.features;
 
                         // self.processLocations(successResponse.features);
 
