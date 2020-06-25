@@ -69,7 +69,7 @@
 
                         self.status.processing = false;
 
-                        $timeout(function() {
+                     /*   $timeout(function() {
 
                             if (!self.mapOptions) {
 
@@ -80,7 +80,7 @@
                             self.createMap(self.mapOptions);
 
                         }, 500);
-
+                    */
                     }, 1000);
 
                 };
