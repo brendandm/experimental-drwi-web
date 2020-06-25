@@ -123,6 +123,31 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/programs/:programId/metrics', {
+                templateUrl: '/modules/components/programs/views/programMetrics--view.html?t=' + environment.version,
+                controller: 'ProgramMetricsController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        // $rootScope.programContext = $route.current.params.programId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
 
             ;
             // .when('/programs/:programId/tags', {
