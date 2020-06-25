@@ -115,6 +115,13 @@
                     </i>
                 </a>
             </li>
+           <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/programs/{{ page.program.id  }}/metrics" title="Metrics">
+                    <i class="material-icons">
+                        multiline_chart
+                    </i>
+                </a>
+            </li>
         </ul>
     </nav>
 
