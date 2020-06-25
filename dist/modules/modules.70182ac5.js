@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593111342788})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1593111552891})
 
 ;
 /**
@@ -5274,7 +5274,6 @@ angular.module('FieldDoc')
                     console.log("self.project.organization_id",self.project.organization_id);
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': null,
                         'project_id': self.project.id,
                         'organization_id': self.project.organization_id
@@ -5783,6 +5782,8 @@ angular.module('FieldDoc')
                 arr.forEach(function(feature, index) {
 
                             if(feature.geometry != null){
+
+                                console.log("THUMB", feature);
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
 
@@ -13273,7 +13274,6 @@ angular.module('FieldDoc')
                 self.createPractice = function() {
 
                     self.practice = new Practice({
-                        'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.project.id,
                         'organization_id': self.site.organization_id
