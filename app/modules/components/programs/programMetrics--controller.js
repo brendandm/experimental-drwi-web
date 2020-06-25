@@ -264,13 +264,13 @@
 
                         self.status.loading = false;
 
-                        self.loadMetrics();
+   //                     self.loadMetrics();
 
                         self.loadProgramMetrics();
 
-                        self.loadProjects();
+                   //     self.loadProjects();
 
-                        self.loadTags();
+ //                       self.loadTags();
 
                     }, function(errorResponse) {
 
@@ -279,7 +279,7 @@
                     });
 
                 };
-
+/*
                 self.loadTags = function() {
 
                     Program.tags({
@@ -367,7 +367,7 @@
                     });
 
                 };
-
+*/
                 self.loadProgramMetrics = function(){
 
                       console.log("loadProgramMetrics");
@@ -399,7 +399,7 @@
 
 
                 }
-
+/*
                 self.addLayers = function(arr) {
 
                     arr.forEach(function(feature) {
@@ -631,6 +631,7 @@
                     });
 
                 };
+                */
 
                 //
                 // Verify Account information for proper UI element display
