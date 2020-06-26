@@ -67,13 +67,15 @@
                 },
                 update: {
                     method: 'PATCH'
-                },
+                }
+              /*  ,
                 practiceType: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
                 }
+                */
 
             });
         });
