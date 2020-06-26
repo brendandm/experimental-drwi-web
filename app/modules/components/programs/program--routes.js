@@ -148,6 +148,31 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/programs/:programId/practice-type', {
+                templateUrl: '/modules/components/programs/views/programPracticeType--view.html?t=' + environment.version,
+                controller: 'ProgramPracticeTypeController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        // $rootScope.programContext = $route.current.params.programId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
 
             ;
             // .when('/programs/:programId/tags', {
