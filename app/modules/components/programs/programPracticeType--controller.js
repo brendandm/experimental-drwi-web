@@ -322,7 +322,7 @@
 
                     Program.practiceType({
 
-                        id: self.practiceType.id,
+                        id: self.practiceTypeId,
                         program: self.program.id
 
                         }).$promise.then(function(successResponse) {

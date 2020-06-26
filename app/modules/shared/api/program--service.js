@@ -75,7 +75,7 @@
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
                 }
-                
+
 
             });
         });
