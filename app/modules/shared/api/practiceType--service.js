@@ -23,6 +23,7 @@
                 update: {
                     'method': 'PATCH'
                 }
+
             });
         });
 

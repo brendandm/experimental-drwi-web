@@ -148,7 +148,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/programs/:programId/practice-type', {
+            .when('/programs/:programId/practice-type/:practiceTypeId', {
                 templateUrl: '/modules/components/programs/views/programPracticeType--view.html?t=' + environment.version,
                 controller: 'ProgramPracticeTypeController',
                 controllerAs: 'page',
