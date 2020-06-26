@@ -23,7 +23,7 @@
             'Project',
             'program',
             'LayerService',
-            'PracticeType'
+            'PracticeType',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, mapbox, Program,
                 Project, program, LayerService) {
