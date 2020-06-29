@@ -255,31 +255,31 @@
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
                                >
-                                <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}"
-                                        style="text-decoration: none;"
-                                >
+
                                     <div class="card--content" >
+                                        <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}"
+                                                style="text-decoration: none;"
+                                        >
+                                            <div class="name" style="flex-flow: column; align-items: flex-start;">
 
-                                        <div class="name" style="flex-flow: column; align-items: flex-start;">
+                                                <label for="practice-{{ practice.id }}">
+                                                   {{ practice.name }}
+                                                </label>
 
-                                            <label for="practice-{{ practice.id }}">
-                                               {{ practice.name }}
-                                            </label>
+                                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                            </div>
 
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                        </div>
+                                            <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
+                                                {{ practice.name }}
+                                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                            </label> -->
 
-                                        <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
-                                            {{ practice.name }}
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                        </label> -->
-
-                                        <div class="body">
-                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
-                                        </div>
-
+                                            <div class="body">
+                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
+                                            </div>
+                                         </a>
                                     </div>
-                                </a>
+
 
                             </li>
 
