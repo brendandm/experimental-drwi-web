@@ -331,9 +331,9 @@
 
                         self.metricsTypes = successResponse.features;
 
-                        self.metricCount = self.metricsTypes.length;
+                    //    self.metricCount = self.metricsTypes.length;
 
-                        console.log("self.metricCount", self.metricCount);
+                   //     console.log("self.metricCount", self.metricCount);
 
                         // self.processLocations(successResponse.features);
 
