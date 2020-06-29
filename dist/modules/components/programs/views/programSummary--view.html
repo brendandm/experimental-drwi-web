@@ -260,7 +260,7 @@
 
                                     <div class="name" style="flex-flow: column; align-items: flex-start;">
                                         <label for="practice-{{ practice.id }}">
-                                            {{ practice.name }}
+                                            <a href="/programs/{{page.program.id}}/practice-types/{{practice.id}}">{{ practice.name }}</a>
                                         </label>
                                         <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
                                     </div>
