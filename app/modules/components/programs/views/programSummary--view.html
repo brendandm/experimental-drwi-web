@@ -255,7 +255,9 @@
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
                                >
-                                <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}">
+                                <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}"
+                                        style="text-decoration: none;"
+                                >
                                     <div class="card--content" >
 
                                         <div class="name" style="flex-flow: column; align-items: flex-start;">
