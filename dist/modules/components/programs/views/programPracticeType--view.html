@@ -50,14 +50,9 @@
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="metric in metricList = (page.practiceType.metrics | orderBy:'name' | filter: page.queryToken)"
                                style="height:63px; background-color:#f5f5f5;">
-                                    <div>{{metric.name}}</div>
+                                    <div style="display:inline-block;min-height:42px;">{{metric.name}}</div>
 
-                                         <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                                         <button type="button" class="add-item" data-ng-click="page.saveTarget(assigned, $index, assigned.value)" data-ng-disabled="page.status.processing">
-                                             <i class="material-icons">
-                                                done
-                                            </i>
-                                        </button>
+
                                          <button type="button" class="add-item" data-ng-click="page.deleteTarget(assigned, $index)" data-ng-disabled="page.status.processing">
                                              <i class="material-icons">
                                                 remove_circle
