@@ -329,11 +329,11 @@
 
                         console.log('practiceType', successResponse);
 
-                        self.PracticeType = successResponse;
+                        self.practiceType = successResponse;
 
-                    //    self.metricCount = self.metricsTypes.length;
+                       self.metricCount = self.PracticeType.length;
 
-                   //     console.log("self.metricCount", self.metricCount);
+                        console.log("self.metricCount", self.metricCount);
 
                         // self.processLocations(successResponse.features);
 
