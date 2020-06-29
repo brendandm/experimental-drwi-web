@@ -333,7 +333,7 @@
 
                 //       self.metricCount = self.PracticeType.length;
 
-                 ..       console.log("self.metricCount", self.metricCount);
+                 //       console.log("self.metricCount", self.metricCount);
 
                         // self.processLocations(successResponse.features);
 
