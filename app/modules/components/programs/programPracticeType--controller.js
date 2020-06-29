@@ -329,7 +329,7 @@
 
                         console.log('practiceType', successResponse);
 
-                        self.metricsTypes = successResponse.features;
+                        self.PracticeType = successResponse;
 
                     //    self.metricCount = self.metricsTypes.length;
 
