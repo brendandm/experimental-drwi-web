@@ -23,6 +23,7 @@
                     </div>
                 </div>
 
+                <!-- START Summary-->
                 <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
@@ -37,6 +38,27 @@
                     </section>
 
                 </div>
+                <!-- END Summary-->
+                <!-- START Metrics-->
+                <div class="group reveal fade-in t2">
+
+                    <section class="pad shadow">
+
+                        <h2>Assigned Metrics</h2>
+
+                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="metric in metricList = (page.practiceType.metrics | orderBy:'name' | filter: page.queryToken)"
+                               >
+                                    {{metric.name}}
+                            </li>
+                        </ul>
+
+                    </section>
+
+                </div>
+                <!-- END Metrics-->
+
 
 
             </div>
