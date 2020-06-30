@@ -269,7 +269,7 @@
 
    //                     self.loadMetrics();
 
-                  //      self.loadProgramMetrics();
+                          self.loadProgramMetrics();
 
                             self.loadPracticeType();
 
