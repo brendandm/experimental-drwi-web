@@ -367,7 +367,7 @@
 
                         self.metricTypes = successResponse.features;
 
-                        self.metricCount = self.metricsTypes.length;
+                        self.metricCount = self.metricTypes.length;
 
                         console.log("self.metricCount", self.metricCount);
 
