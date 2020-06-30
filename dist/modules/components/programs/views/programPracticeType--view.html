@@ -68,8 +68,8 @@
                                    name="programMetric_type_id"
                                    type="text"
                                    placeholder="Search metrics"
-                                   data-ng-model="page.metricsTypes"
-                                   uib-typeahead="metricsType as metricsType.name for metricsType in page.metricsTypes | filter:{name: $viewValue} | limitTo:5"
+                                   data-ng-model="page.metricType"
+                                   uib-typeahead="metricType as metricType.name for metricType in page.metricTypes | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.addMetric($item,$model,$label)"
                                    typeahead-min-length="0"
                                    typeahead-template-url="templates/search--tpl.html" />
