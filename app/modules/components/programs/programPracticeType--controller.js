@@ -383,13 +383,56 @@
 
                     });
 
+                };
 
 
-                }
 /*
-
                 /*END LOAD PROGRAM METRICS
                 */
+
+             self.addMetric = function($item, $model, $label) {
+
+                    self.programMetric = '';
+
+                    var temp_id = $item.id;
+
+                    $item.metric_id = temp_id;
+
+                    delete $item.id;
+
+                    self.metricMatrix.push($item);
+
+                    var i = 0;
+
+                    var tempProgramMetrics = [];
+
+                    self.programMetrics.forEach(function(newItem){
+
+                         if($item.id == newItem.id){
+
+                          //  delete self.programMetrics[i];
+
+                         }else{
+
+                             tempProgramMetrics.push(self.programMetrics[i]);
+
+                             self.activeDomain.push(newItem.id);
+
+                         }
+
+                         i = i+1;
+                    });
+
+                    self.programMetrics = tempProgramMetrics;
+
+           //          self.saveTarget($item, null, 0);
+
+                       document.getElementById("assignTargetsBlock").blur();
+
+                   //     self.loadModels(self.activeDomain);
+                    //
+
+            };
 
 
 
