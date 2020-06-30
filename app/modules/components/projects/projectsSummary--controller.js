@@ -1249,7 +1249,7 @@ angular.module('FieldDoc')
                     var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
                     var bbox = turf.bbox(line);
 
-                    self.map.fitBounds(bbox, { duration: 0, padding: 40 })
+                    self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
                     var projectExtent = {
                         'type': 'Feature',
