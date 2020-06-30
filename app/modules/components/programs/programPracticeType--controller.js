@@ -408,7 +408,7 @@
 
                     var tempProgramMetrics = [];
 
-                    self.programMetrics.forEach(function(newItem){
+              /*      self.programMetrics.forEach(function(newItem){
 
                          if($item.id == newItem.id){
 
@@ -418,7 +418,7 @@
 
                              tempProgramMetrics.push(self.programMetrics[i]);
 
-                             self.activeDomain.push(newItem.id);
+                         //    self.activeDomain.push(newItem.id);
 
                          }
 
@@ -426,7 +426,7 @@
                     });
 
                     self.programMetrics = tempProgramMetrics;
-
+             */
            //          self.saveTarget($item, null, 0);
 
                        document.getElementById("assignTargetsBlock").blur();
