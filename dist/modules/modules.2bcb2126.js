@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593552265403})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593552647475})
 
 ;
 /**
@@ -32828,7 +32828,7 @@ angular.module('FieldDoc')
 
              self.addMetric = function($item, $model, $label) {
 
-                    self.programMetric = '';
+                    self.metricType = '';
 
                     var temp_id = $item.id;
 
@@ -32863,7 +32863,7 @@ angular.module('FieldDoc')
              */
            //          self.saveTarget($item, null, 0);
 
-                       document.getElementById("assignTargetsBlock").blur();
+             //          document.getElementById("assignTargetsBlock").blur();
 
                    //     self.loadModels(self.activeDomain);
                     //

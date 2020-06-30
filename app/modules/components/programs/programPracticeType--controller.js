@@ -394,7 +394,7 @@
 
              self.addMetric = function($item, $model, $label) {
 
-                    self.programMetric = '';
+                    self.metricType = '';
 
                     var temp_id = $item.id;
 
@@ -429,7 +429,7 @@
              */
            //          self.saveTarget($item, null, 0);
 
-                       document.getElementById("assignTargetsBlock").blur();
+             //          document.getElementById("assignTargetsBlock").blur();
 
                    //     self.loadModels(self.activeDomain);
                     //
