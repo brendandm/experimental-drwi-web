@@ -331,6 +331,8 @@
 
                         self.practiceType = successResponse;
 
+                        self.self.metricMatrix = successResponse.metrics;
+
                 //       self.metricCount = self.PracticeType.length;
 
                  //       console.log("self.metricCount", self.metricCount);

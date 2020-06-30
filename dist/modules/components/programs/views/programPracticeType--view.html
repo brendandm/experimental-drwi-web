@@ -96,7 +96,7 @@
 
                         <ul class="target-lst target-lst-inactive" >
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="metric in metricList = (page.practiceType.metrics | orderBy:'name' | filter: page.queryToken)"
+                                data-ng-repeat="metric in page.metricMatrix"
                                style="height:63px; background-color:#f5f5f5;">
                                     <div style="display:inline-block;min-height:42px;" style="padding-top:10px;">{{metric.name}}</div>
 
