@@ -331,7 +331,7 @@
 
                         self.practiceType = successResponse;
 
-                        self.self.metricMatrix = successResponse.metrics;
+                        self.metricMatrix = successResponse.metrics;
 
                 //       self.metricCount = self.PracticeType.length;
 
