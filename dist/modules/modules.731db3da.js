@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593465471093})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593528109922})
 
 ;
 /**
@@ -6143,11 +6143,19 @@ angular.module('FieldDoc')
 
                     self.map.addControl(fullScreen, 'top-left');
 
+
+                    var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                    var bbox = turf.bbox(line);
+
+                    self.map.fitBounds(bbox, { duration: 0, padding: 40 })
+
                     var projectExtent = {
                         'type': 'Feature',
                         'geometry': self.project.extent,
                         'properties': {}
                     };
+
+
 
                     MapManager.addFeature(
                         self.map,
