@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593528759570})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593541022934})
 
 ;
 /**
@@ -6142,7 +6142,6 @@ angular.module('FieldDoc')
                     var fullScreen = new mapboxgl.FullscreenControl();
 
                     self.map.addControl(fullScreen, 'top-left');
-
 
                     var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
                     var bbox = turf.bbox(line);
@@ -32783,6 +32782,50 @@ angular.module('FieldDoc')
                     });
 
                 };
+
+                /*START LOAD PROGRAM METRICS
+                    this is for search. We want a list of all metrics to add
+                    to th practice type. This makes a list object that we need
+                    to maintain (ie remove add list items from
+                */
+
+                 self.loadProgramMetrics = function(){
+
+                      console.log("loadProgramMetrics");
+
+                      Program.metrics({
+                        id: self.program.id
+                        }).$promise.then(function(successResponse) {
+
+                        console.log('Metric Types', successResponse);
+
+                        self.metricsTypes = successResponse.features;
+
+                        self.metricCount = self.metricsTypes.length;
+
+                        console.log("self.metricCount", self.metricCount);
+
+                        // self.processLocations(successResponse.features);
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+
+
+                }
+/*
+
+                /*END LOAD PROGRAM METRICS
+                */
+
+
 
                 //
                 // Verify Account information for proper UI element display

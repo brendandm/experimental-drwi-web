@@ -349,6 +349,50 @@
 
                 };
 
+                /*START LOAD PROGRAM METRICS
+                    this is for search. We want a list of all metrics to add
+                    to th practice type. This makes a list object that we need
+                    to maintain (ie remove add list items from
+                */
+
+                 self.loadProgramMetrics = function(){
+
+                      console.log("loadProgramMetrics");
+
+                      Program.metrics({
+                        id: self.program.id
+                        }).$promise.then(function(successResponse) {
+
+                        console.log('Metric Types', successResponse);
+
+                        self.metricsTypes = successResponse.features;
+
+                        self.metricCount = self.metricsTypes.length;
+
+                        console.log("self.metricCount", self.metricCount);
+
+                        // self.processLocations(successResponse.features);
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+
+
+                }
+/*
+
+                /*END LOAD PROGRAM METRICS
+                */
+
+
+
                 //
                 // Verify Account information for proper UI element display
                 //
