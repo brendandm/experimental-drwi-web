@@ -1010,6 +1010,9 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
                      /*   var paintFeature = true;
 
                         if (self.site &&
