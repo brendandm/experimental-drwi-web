@@ -18,21 +18,19 @@
             'Utility',
             'user',
             '$window',
-            'mapbox',
             'Program',
             'Project',
             'program',
-            'LayerService',
             'PracticeType',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, mapbox, Program,
-                Project, program, LayerService) {
+                $route, Utility, user, $window, Program,
+                Project, program, PracticeType) {
 
                 var self = this;
 
                 self.programId = $route.current.params.programId;
-                self.practiceTypeId = $route.current.params.practiceTypeId;
 
+                self.practiceTypeId = $route.current.params.practiceTypeId;
 
                 $rootScope.viewState = {
                     'program': true
@@ -44,8 +42,6 @@
 
                 $rootScope.page = {};
 
-                self.map = undefined;
-
                 self.status = {
                     loading: true
                 };
@@ -56,7 +52,7 @@
 
                     self.alerts = [];
 
-                }
+                };
 
                 function closeRoute() {
 
@@ -72,18 +68,6 @@
 
                         self.status.processing = false;
 
-                     /*   $timeout(function() {
-
-                            if (!self.mapOptions) {
-
-                                self.mapOptions = self.getMapOptions();
-
-                            }
-
-                            self.createMap(self.mapOptions);
-
-                        }, 500);
-                    */
                     }, 1000);
 
                 };
@@ -155,7 +139,7 @@
 
                             self.cancelDelete();
 
-                            $timeout(closeAlerts, 2000);
+                            $timeout(self.closeAlerts, 2000);
 
                             if (index === 0) {
 
@@ -202,52 +186,7 @@
 
                         }
 
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                };
-
-                self.popupTemplate = function(feature) {
-
-                    return '<div class=\"project--popup\">' +
-                        '<div class=\"title--group\">' +
-                        '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
-                        '<a href=\"projects/' + feature.properties.id + '\">' +
-                        '<i class=\"material-icons\">keyboard_arrow_right</i>' +
-                        '</a>' +
-                        '</div>' +
-                        '</div>';
-
-                };
-
-                self.processLocations = function(map, features) {
-
-                    console.log(
-                        'self.processLocations --> features',
-                        features);
-
-                    features.forEach(function(feature, index) {
-
-                        if (feature.geometry &&
-                            feature.geometry.coordinates) {
-
-                            var tpl = self.popupTemplate(feature);
-
-                            var popup = new mapboxgl.Popup()
-                                .setLngLat(feature.geometry.coordinates)
-                                .setHTML(tpl);
-
-                            var markerEl = document.createElement('div');
-
-                            markerEl.className = 'project--marker';
-
-                            new mapboxgl.Marker(markerEl)
-                                .setLngLat(feature.geometry.coordinates)
-                                .setPopup(popup)
-                                .addTo(map);
-
-                        }
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -267,15 +206,9 @@
 
                         self.status.loading = false;
 
-   //                     self.loadMetrics();
+                        self.loadProgramMetrics();
 
-                          self.loadProgramMetrics();
-
-                            self.loadPracticeType();
-
-                   //     self.loadProjects();
-
- //                       self.loadTags();
+                        self.loadPracticeType();
 
                     }, function(errorResponse) {
 
@@ -285,13 +218,13 @@
 
                 };
 
-                self.loadProgramMetrics = function(){
+                self.loadProgramMetrics = function() {
 
-                      console.log("loadProgramMetrics");
+                    console.log("loadProgramMetrics");
 
-                      Program.metrics({
+                    Program.metrics({
                         id: self.program.id
-                        }).$promise.then(function(successResponse) {
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Metric Types', successResponse);
 
@@ -300,8 +233,6 @@
                         self.metricCount = self.metricsTypes.length;
 
                         console.log("self.metricCount", self.metricCount);
-
-                        // self.processLocations(successResponse.features);
 
                         self.showElements();
 
@@ -313,31 +244,20 @@
 
                     });
 
-
-
                 };
 
-                self.loadPracticeType = function(){
+                self.loadPracticeType = function() {
 
-
-                    Program.practiceType({
-
+                    PracticeType.getSingle({
                         id: self.practiceTypeId,
                         program: self.program.id
-
-                        }).$promise.then(function(successResponse) {
+                    }).$promise.then(function(successResponse) {
 
                         console.log('practiceType', successResponse);
 
                         self.practiceType = successResponse;
 
                         self.metricMatrix = successResponse.metrics;
-
-                //       self.metricCount = self.PracticeType.length;
-
-                 //       console.log("self.metricCount", self.metricCount);
-
-                        // self.processLocations(successResponse.features);
 
                         self.showElements();
 
@@ -357,13 +277,13 @@
                     to maintain (ie remove add list items from
                 */
 
-                 self.loadProgramMetrics = function(){
+                self.loadProgramMetrics = function() {
 
-                      console.log("loadProgramMetrics");
+                    console.log("loadProgramMetrics");
 
-                      Program.metrics({
+                    Program.metrics({
                         id: self.program.id
-                        }).$promise.then(function(successResponse) {
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Metric Types', successResponse);
 
@@ -372,8 +292,6 @@
                         self.metricCount = self.metricTypes.length;
 
                         console.log("self.metricCount", self.metricCount);
-
-                        // self.processLocations(successResponse.features);
 
                         self.showElements();
 
@@ -387,82 +305,59 @@
 
                 };
 
+                self.addMetric = function($item, $model, $label) {
 
-/*
-                /*END LOAD PROGRAM METRICS
-                */
-
-             self.addMetric = function($item, $model, $label) {
-
-                    self.metricType = '';
-
-                    var temp_id = $item.id;
-
-                 //   $item.metric_id = temp_id;
-
-                   // delete $item.id;
+                    self.metricType = undefined;
 
                     self.metricMatrix.push($item);
 
                     console.log("addMetric $item", $item);
 
-                    self.saveMetric($item,null,0);
+                    self.saveMetric($item);
 
-//                    var i = 0;
+                };
 
-  //                  var tempProgramMetrics = [];
+                self.saveMetric = function(metricType) {
 
+                    PracticeType.addMetric({
+                        id: self.practiceType.id,
+                        metricId: $item.id,
+                        program: self.program.id
+                    }).$promise.then(function(successResponse) {
 
-            };
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Target changes saved.',
+                            'prompt': 'OK'
+                        }];
 
-            self.saveMetric = function($item,$index,$value){
+                        $timeout(self.closeAlerts, 2000);
 
-                 console.log("+self.practiceType.id",+self.practiceType.id);
-                 console.log("+$item",+$item.id);
-                 console.log("self.program.id",self.program.id);
+                        self.status.processing = false;
 
-                Program.practiceTypeMetricAdd({
-                    practiceType_id: +self.practiceType.id,
-                    id: +self.program.id,
-                    metric_id: +$item.id
+                        console.log("practice.updateMatrix", successResponse);
 
-                }).$promise.then(function(successResponse) {
+                    }).catch(function(error) {
 
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Target changes saved.',
-                        'prompt': 'OK'
-                    }];
+                        console.log('updateMatrix.error', error);
 
-                    $timeout(self.closeAlerts, 2000);
+                        // Do something with the error
 
-                    self.status.processing = false;
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the changes were not saved.',
+                            'prompt': 'OK'
+                        }];
 
-                    console.log("practice.updateMatrix", successResponse);
+                        $timeout(self.closeAlerts, 2000);
 
-                }).catch(function(error) {
+                        self.status.processing = false;
 
-                    console.log('updateMatrix.error', error);
+                    });
 
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Something went wrong and the target changes were not saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-
+                };
 
                 //
                 // Verify Account information for proper UI element display
