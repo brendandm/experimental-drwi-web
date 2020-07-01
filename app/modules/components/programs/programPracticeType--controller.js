@@ -52,7 +52,7 @@
 
                 self.alerts = [];
 
-                function closeAlerts() {
+                self.closeAlerts = function() {
 
                     self.alerts = [];
 
@@ -398,11 +398,13 @@
 
                     var temp_id = $item.id;
 
-                    $item.metric_id = temp_id;
+                 //   $item.metric_id = temp_id;
 
-                    delete $item.id;
+                   // delete $item.id;
 
                     self.metricMatrix.push($item);
+
+                    console.log("addMetric $item", $item);
 
                     self.saveMetric($item,null,0);
 
@@ -416,10 +418,12 @@
             self.saveMetric = function($item,$index,$value){
 
                  console.log("+self.practiceType.id",+self.practiceType.id);
-                 console.log("+$item.id",+$item.id);
+                 console.log("+$item",+$item.id);
+                 console.log("self.program.id",self.program.id);
 
                 Program.practiceTypeMetricAdd({
-                    id: +self.practiceType.id,
+                    practiceType_id: +self.practiceType.id,
+                    id: +self.program.id,
                     metric_id: +$item.id
 
                 }).$promise.then(function(successResponse) {

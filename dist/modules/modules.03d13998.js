@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593615220969})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593620419642})
 
 ;
 /**
@@ -32486,7 +32486,7 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
-                function closeAlerts() {
+                self.closeAlerts = function() {
 
                     self.alerts = [];
 
@@ -32832,11 +32832,13 @@ angular.module('FieldDoc')
 
                     var temp_id = $item.id;
 
-                    $item.metric_id = temp_id;
+                 //   $item.metric_id = temp_id;
 
-                    delete $item.id;
+                   // delete $item.id;
 
                     self.metricMatrix.push($item);
+
+                    console.log("addMetric $item", $item);
 
                     self.saveMetric($item,null,0);
 
@@ -32850,10 +32852,12 @@ angular.module('FieldDoc')
             self.saveMetric = function($item,$index,$value){
 
                  console.log("+self.practiceType.id",+self.practiceType.id);
-                 console.log("+$item.id",+$item.id);
+                 console.log("+$item",+$item.id);
+                 console.log("self.program.id",self.program.id);
 
                 Program.practiceTypeMetricAdd({
-                    id: +self.practiceType.id,
+                    practiceType_id: +self.practiceType.id,
+                    id: +self.program.id,
                     metric_id: +$item.id
 
                 }).$promise.then(function(successResponse) {
@@ -38500,7 +38504,8 @@ angular
         .service('Program', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/program/:id'), {
                 id: '@id',
-                metric_id: '@metric_id'
+                metric_id: '@metric_id',
+                practiceType_id: '@practiceType_id'
             }, {
                 query: {
                     isArray: false
@@ -38567,7 +38572,7 @@ angular
                 practiceTypeMetricAdd: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
+                    url: environment.apiUrl.concat('/v1/practice-type/:practiceType_id/metrics/:metric_id/add/program=:id')
 
                 }
 
