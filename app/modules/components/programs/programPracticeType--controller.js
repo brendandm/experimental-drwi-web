@@ -415,6 +415,9 @@
 
             self.saveMetric = function($item,$index,$value){
 
+                 console.log("+self.practiceType.id",+self.practiceType.id);
+                 console.log("+$item.id",+$item.id);
+
                 Program.practiceTypeMetricAdd({
                     id: +self.practiceType.id,
                     metric_id: +$item.id
