@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593552647475})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593602823523})
 
 ;
 /**
@@ -32842,31 +32842,46 @@ angular.module('FieldDoc')
 
                     var tempProgramMetrics = [];
 
-              /*      self.programMetrics.forEach(function(newItem){
 
-                         if($item.id == newItem.id){
+            };
 
-                          //  delete self.programMetrics[i];
+            self.saveMetric = function($item,$index,$value){
 
-                         }else{
+                Practice.updateMatrix({
+                    id: +self.practice.id,
+                }).$promise.then(function(successResponse) {
 
-                             tempProgramMetrics.push(self.programMetrics[i]);
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
 
-                         //    self.activeDomain.push(newItem.id);
+                    $timeout(self.closeAlerts, 2000);
 
-                         }
+                    self.status.processing = false;
 
-                         i = i+1;
-                    });
+                    console.log("practice.updateMatrix", successResponse);
 
-                    self.programMetrics = tempProgramMetrics;
-             */
-           //          self.saveTarget($item, null, 0);
+                }).catch(function(error) {
 
-             //          document.getElementById("assignTargetsBlock").blur();
+                    console.log('updateMatrix.error', error);
 
-                   //     self.loadModels(self.activeDomain);
-                    //
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
 
             };
 
@@ -38534,12 +38549,23 @@ angular
                 },
                 update: {
                     method: 'PATCH'
-                }
-               ,
+                },
                 practiceType: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
+
+                },
+                practiceTypeMetricAdd: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
+
+                },
+                 practiceTypeMetricRemove: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/remove')
 
                 }
 

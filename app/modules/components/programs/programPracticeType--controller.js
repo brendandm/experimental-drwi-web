@@ -408,31 +408,46 @@
 
                     var tempProgramMetrics = [];
 
-              /*      self.programMetrics.forEach(function(newItem){
 
-                         if($item.id == newItem.id){
+            };
 
-                          //  delete self.programMetrics[i];
+            self.saveMetric = function($item,$index,$value){
 
-                         }else{
+                Practice.updateMatrix({
+                    id: +self.practice.id,
+                }).$promise.then(function(successResponse) {
 
-                             tempProgramMetrics.push(self.programMetrics[i]);
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
 
-                         //    self.activeDomain.push(newItem.id);
+                    $timeout(self.closeAlerts, 2000);
 
-                         }
+                    self.status.processing = false;
 
-                         i = i+1;
-                    });
+                    console.log("practice.updateMatrix", successResponse);
 
-                    self.programMetrics = tempProgramMetrics;
-             */
-           //          self.saveTarget($item, null, 0);
+                }).catch(function(error) {
 
-             //          document.getElementById("assignTargetsBlock").blur();
+                    console.log('updateMatrix.error', error);
 
-                   //     self.loadModels(self.activeDomain);
-                    //
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
 
             };
 

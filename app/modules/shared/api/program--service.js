@@ -67,12 +67,23 @@
                 },
                 update: {
                     method: 'PATCH'
-                }
-               ,
+                },
                 practiceType: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
+
+                },
+                practiceTypeMetricAdd: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
+
+                },
+                 practiceTypeMetricRemove: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/remove')
 
                 }
 
