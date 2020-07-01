@@ -997,23 +997,15 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        /*   var paintFeature = true;
-
-                        if (self.site &&
-                            self.site.geometry &&
-                            self.site.geometry.type === 'Point') {
-
-                            paintFeature = false;
-
-                        }
-                    */
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
                         MapManager.addFeature(
                             self.map,
                             self.site,
                             'geometry',
                             true,
-                            //      paintFeature,
                             true);
 
                         if (self.layers && self.layers.length) {

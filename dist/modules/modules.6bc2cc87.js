@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1593112630071})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1593529269365})
 
 ;
 /**
@@ -6142,6 +6142,10 @@ angular.module('FieldDoc')
                     var fullScreen = new mapboxgl.FullscreenControl();
 
                     self.map.addControl(fullScreen, 'top-left');
+
+                    var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                    var bbox = turf.bbox(line);
+                    self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
                     var projectExtent = {
                         'type': 'Feature',
@@ -13692,6 +13696,9 @@ angular.module('FieldDoc')
 
                         self.map.addControl(fullScreen, 'top-left');
 
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
                      /*   var paintFeature = true;
 
                         if (self.site &&
@@ -18031,6 +18038,10 @@ angular.module('FieldDoc')
                         var fullScreen = new mapboxgl.FullscreenControl();
 
                         self.map.addControl(fullScreen, 'top-left');
+
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
                         MapManager.addFeature(
                             self.map,
