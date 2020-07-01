@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593602823523})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1593604802972})
 
 ;
 /**
@@ -32838,17 +32838,21 @@ angular.module('FieldDoc')
 
                     self.metricMatrix.push($item);
 
-                    var i = 0;
+                    self.saveMetric($item,null,0);
 
-                    var tempProgramMetrics = [];
+//                    var i = 0;
+
+  //                  var tempProgramMetrics = [];
 
 
             };
 
             self.saveMetric = function($item,$index,$value){
 
-                Practice.updateMatrix({
-                    id: +self.practice.id,
+                program.practiceTypeMetricAction({
+                    id: +self.practiceType.id,
+                    metric_id: +$item.id,
+                    action: 'add'
                 }).$promise.then(function(successResponse) {
 
                     self.alerts = [{
@@ -38556,16 +38560,10 @@ angular
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
                 },
-                practiceTypeMetricAdd: {
+                practiceTypeMetricAction: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
-
-                },
-                 practiceTypeMetricRemove: {
-                    method: 'POST',
-                    isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/remove')
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/:action')
 
                 }
 

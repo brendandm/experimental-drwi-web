@@ -74,16 +74,10 @@
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
                 },
-                practiceTypeMetricAdd: {
+                practiceTypeMetricAction: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
-
-                },
-                 practiceTypeMetricRemove: {
-                    method: 'POST',
-                    isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/remove')
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/:action')
 
                 }
 

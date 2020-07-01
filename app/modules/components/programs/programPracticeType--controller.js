@@ -404,17 +404,21 @@
 
                     self.metricMatrix.push($item);
 
-                    var i = 0;
+                    self.saveMetric($item,null,0);
 
-                    var tempProgramMetrics = [];
+//                    var i = 0;
+
+  //                  var tempProgramMetrics = [];
 
 
             };
 
             self.saveMetric = function($item,$index,$value){
 
-                Practice.updateMatrix({
-                    id: +self.practice.id,
+                program.practiceTypeMetricAction({
+                    id: +self.practiceType.id,
+                    metric_id: +$item.id,
+                    action: 'add'
                 }).$promise.then(function(successResponse) {
 
                     self.alerts = [{
