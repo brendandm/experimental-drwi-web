@@ -10,7 +10,8 @@
     angular.module('FieldDoc')
         .service('Program', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/program/:id'), {
-                id: '@id'
+                id: '@id',
+                metric: '@metric_id'
             }, {
                 query: {
                     isArray: false
@@ -74,10 +75,10 @@
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
                 },
-                practiceTypeMetricAction: {
+                practiceTypeMetricAdd: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/:action')
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/metrics/:metric_id/add')
 
                 }
 

@@ -415,10 +415,10 @@
 
             self.saveMetric = function($item,$index,$value){
 
-                program.practiceTypeMetricAction({
+                program.practiceTypeMetricAdd({
                     id: +self.practiceType.id,
-                    metric_id: +$item.id,
-                    action: 'add'
+                    metric_id: +$item.id
+
                 }).$promise.then(function(successResponse) {
 
                     self.alerts = [{
