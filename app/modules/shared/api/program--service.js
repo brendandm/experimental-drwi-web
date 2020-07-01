@@ -11,7 +11,7 @@
         .service('Program', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/program/:id'), {
                 id: '@id',
-                metric: '@metric_id'
+                metric_id: '@metric_id'
             }, {
                 query: {
                     isArray: false
