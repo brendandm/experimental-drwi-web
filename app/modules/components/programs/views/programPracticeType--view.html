@@ -17,44 +17,42 @@
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        <span>Practice Type: </span><a href="/programs/{{page.program.id}}/practice-types/{{page.practiceType.id}}">
-                        {{page.practiceType.name}}
+                        <span>Practice Type:&nbsp;</span>
+                        <a href="/programs/{{page.program.id}}/practice-types/{{page.practiceType.id}}">
+                            {{ page.practiceType.name }}
                         </a>
                     </div>
                 </div>
 
-                <!-- START Summary-->
                 <div class="group reveal fade-in t2">
 
-                    <section class="pad shadow">
+                    <section class="pad">
 
-                        <h2>{{page.practiceType.name}}</h2>
+                        <h2>{{ page.practiceType.name }}</h2>
 
                         <div>
-                            <p>{{page.practiceType.description || 'no description'}}</p>
+                            <p>{{ page.practiceType.description || 'No description provided.' }}</p>
 
                         </div>
 
                     </section>
 
                 </div>
-                <!-- END Summary-->
 
-                   <!-- Add Metrics-->
-        <div class="target-block-wrapper" style="">
-              <div class="target-block-header">
+                <div class="target-block-wrapper">
 
-                    <div class="target-block-number-circle" >
-                                           <b data-ng-if="!page.models.length">2</b>
-                                           <b data-ng-if="page.models.length">3</b>
+                    <div class="target-block-header">
 
-                    </div>
+                        <div class="target-block-number-circle" >
+                            <b data-ng-if="!page.models.length">2</b>
+                            <b data-ng-if="page.models.length">3</b>
+                        </div>
 
 
-                    <div class="target-block-title">
-                        <b> Add Metric </b>
-                    </div>
-               </div>
+                <div class="target-block-title">
+                <b> Add Metric </b>
+                </div>
+                </div>
 
             <p style="clear:both;" >
                 Automated and Reportable Metrics can be added to this Practice using the search form below.
@@ -85,14 +83,11 @@
 
             </div>
 
-     <!-- END Add Metrics-->
-
-                <!-- START Metrics-->
                 <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
-                        <h2>Assigned Metrics</h2>
+                        <h2>Associated metrics</h2>
 
                         <ul class="target-lst target-lst-inactive" >
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
@@ -112,9 +107,6 @@
                     </section>
 
                 </div>
-                <!-- END Metrics-->
-
-
 
             </div>
 
