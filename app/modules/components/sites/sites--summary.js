@@ -35,8 +35,18 @@
 
                 };
 
+                self.presentChildModal = function(featureType) {
+
+                    if (featureType !== 'practice') return;
+
+                    self.showChildModal = true;
+
+                    self.childType = featureType;
+
+                };
+
                 /**/
-                 self.alerts = [];
+                self.alerts = [];
 
                 function closeAlerts() {
 
@@ -45,75 +55,71 @@
                 }
 
 
-           /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
-
-
-            self.calculateViewCount = function(){
-               console.log("A");
-               if(self.page > 1){
-                    console.log("B");
-
-                    if(self.page == 1){
-                         console.log("C");
-                        self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
-                    }
-                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("D");
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                    }
-                    else{
-                         console.log("E");
-                        self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
-               }
-               else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("F");
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
-                    }
-                    else{
-                         console.log("G");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-               }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
+                /*START Pagniation vars*/
+                self.limit = 12;
                 self.page = 1;
-                self.loadPractices();
-            }
 
-             self.getPage = function(page){
-                console.log("PAGE",page);
-               // console.log("LIMIT",limit);
+                self.viewCountLow = self.page;
+                self.viewCountHigh = self.limit;
 
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
 
-                     self.loadPractices();
+                self.calculateViewCount = function() {
+                    console.log("A");
+                    if (self.page > 1) {
+                        console.log("B");
+
+                        if (self.page == 1) {
+                            console.log("C");
+                            self.viewCountHigh = self.limit;
+                            self.viewCountLow = ((self.page - 1) * self.limit);
+                        } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                            console.log("D");
+                            self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
+                            self.viewCountLow = ((self.page - 1) * self.limit) + 1;
+
+                        } else {
+                            console.log("E");
+                            self.viewCountHigh = self.summary.feature_count;
+                            self.viewCountLow = ((self.page - 1) * self.limit) + 1;
+                        }
+                    } else {
+                        if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
+                            console.log("F");
+                            self.viewCountLow = 1;
+                            self.viewCountHigh = self.limit;
+                        } else {
+                            console.log("G");
+                            self.viewCountLow = 1;
+                            self.viewCountHigh = self.summary.feature_count;
+
+                        }
+
+                    }
+
                 }
 
-            };
-             /*END Pagniation vars*/
+                self.changeLimit = function(limit) {
+                    self.limit = limit;
+                    self.page = 1;
+                    self.loadPractices();
+                }
+
+                self.getPage = function(page) {
+                    console.log("PAGE", page);
+                    // console.log("LIMIT",limit);
+
+                    if (page < 1) {
+                        self.page = 1;
+                    } else if (page > self.summary.page_count) {
+                        self.page = self.summary.page_count;
+                    } else {
+                        self.page = page;
+
+                        self.loadPractices();
+                    }
+
+                };
+                /*END Pagniation vars*/
 
 
 
@@ -137,7 +143,7 @@
 
                             if (self.practices && self.practices.length) {
 
-                            //    self.addMapPreviews(self.practices);
+                                //    self.addMapPreviews(self.practices);
                                 self.createStaticMapURLs(self.practices);
 
                             }
@@ -153,7 +159,7 @@
                     $location.path(self.site.links.project.html);
 
                 }
-/*DELETE LOGIC*/
+                /*DELETE LOGIC*/
                 self.confirmDelete = function(obj, targetCollection) {
 
                     console.log('self.confirmDelete', obj, targetCollection);
@@ -284,151 +290,151 @@
                     });
 
                 };
-/*END DELETE LOGIC*/
+                /*END DELETE LOGIC*/
 
-/*COPY LOGIC */
-            self.confirmCopy = function(obj, targetCollection) {
+                /*COPY LOGIC */
+                self.confirmCopy = function(obj, targetCollection) {
 
-                console.log('self.confirmCopy', obj, targetCollection);
+                    console.log('self.confirmCopy', obj, targetCollection);
 
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-                    console.log("self.practices-->",self.practices)
-
-                    if (typeof index === 'number' &&
-                        featureType === 'practice') {
-
-                     //   var practice = angular.toJSON(data);
-
-                        data.properties = data;
-
-                        self.practices.unshift(data);
-
-                        if(self.practices.length > self.limit){
-                            self.practices.pop();
-                        }
-                        self.createStaticMapURLs(self.practices,"practice");
+                    if (self.copyTarget &&
+                        self.copyTarget.collection === 'project') {
 
                         self.cancelCopy();
 
+                    } else {
+
+                        self.copyTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
+
+                };
+
+                self.cancelCopy = function() {
+
+                    self.copyTarget = null;
+
+                };
+
+                self.copyFeature = function(featureType, index) {
+
+                    var targetCollection,
+                        targetId;
+
+                    switch (featureType) {
+
+                        case 'practice':
+
+                            targetCollection = Practice;
+
+                            break;
+
+                        case 'site':
+
+                            targetCollection = Site;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Project;
+
+                            break;
+
+                    }
+
+                    if (self.copyTarget.feature.properties) {
+
+                        targetId = self.copyTarget.feature.properties.id;
+
+                    } else {
+
+                        targetId = self.copyTarget.feature.id;
+
+                    }
+
+                    Practice.copy({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully copied this ' + featureType + '.',
+                            'prompt': 'OK'
+                        });
+
+                        console.log("COPIED PRACTICE DATA", data)
+                        console.log("self.practices-->", self.practices)
+
+                        if (typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            //   var practice = angular.toJSON(data);
+
+                            data.properties = data;
+
+                            self.practices.unshift(data);
+
+                            if (self.practices.length > self.limit) {
+                                self.practices.pop();
+                            }
+                            self.createStaticMapURLs(self.practices, "practice");
+
+                            self.cancelCopy();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+
+                            $timeout(closeRoute, 2000);
+
+                        }
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.copyFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to copy this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
                         $timeout(closeAlerts, 2000);
 
-                    } else {
+                    });
 
-
-                        $timeout(closeRoute, 2000);
-
-                    }
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-       /*END COPY LOGIC*/
-/*END COPY LOGIC*/
+                };
+                /*END COPY LOGIC*/
+                /*END COPY LOGIC*/
                 self.cleanName = function(string_) {
                     return Utility.machineName(string_);
                 };
@@ -473,7 +479,7 @@
 
                         self.loadMetrics();
 
-//                        self.loadTags();
+                        //                        self.loadTags();
 
                         self.tags = Utility.processTags(self.site.tags);
 
@@ -483,45 +489,45 @@
 
                 };
 
-                self.loadPractices = function(){
-                     Site.practices({
-                            id: self.site.id,
-                             limit:  self.limit,
-                             page:   self.page,
-                            currentTime: Date.UTC()
+                self.loadPractices = function() {
+                    Site.practices({
+                        id: self.site.id,
+                        limit: self.limit,
+                        page: self.page,
+                        currentTime: Date.UTC()
 
-                        }).$promise.then(function(successResponse) {
+                    }).$promise.then(function(successResponse) {
 
-                            console.log("PRACTICE RESPONSE");
+                        console.log("PRACTICE RESPONSE");
 
-                            self.practices = successResponse.features;
+                        self.practices = successResponse.features;
 
-                            self.summary = successResponse.summary;
+                        self.summary = successResponse.summary;
 
-                            console.log("SUMMARY", self.summary);
+                        console.log("SUMMARY", self.summary);
 
-                            console.log('self.practices', successResponse);
+                        console.log('self.practices', successResponse);
 
-                            self.showElements();
+                        self.showElements();
 
-                            self.calculateViewCount();
+                        self.calculateViewCount();
 
 
-                            self.loadMetrics();
+                        self.loadMetrics();
 
-//                          self.loadTags();
+                        //                          self.loadTags();
 
-                            self.tags = Utility.processTags(self.site.tags);
+                        self.tags = Utility.processTags(self.site.tags);
 
-                        }, function(errorResponse) {
+                    }, function(errorResponse) {
 
-                            self.showElements();
+                        self.showElements();
 
-                        });
+                    });
 
                 };
 
-        /*        self.loadSite = function() {
+                /*        self.loadSite = function() {
 
                     console.log("LOAD SITE");
 
@@ -589,25 +595,6 @@
                 };
 
                 */
-                self.createPractice = function() {
-
-                    self.practice = new Practice({
-                        'site_id': self.site.id,
-                        'project_id': self.site.project.id,
-                        'organization_id': self.site.organization_id
-                    });
-
-                    self.practice.$save(function(successResponse) {
-
-                        $location.path('/practices/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        console.error('Unable to create your practice, please try again later');
-
-                    });
-
-                };
 
                 self.loadTags = function() {
 
@@ -725,42 +712,42 @@
 
                 };
 
-            /*  createStaticMapUrls:
-                takes self.sites as self.practices as argument
-                iterates of self.practices
-                checks if project extent exists
-                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to practices[] as staticURL property
-                if no site geometry, adds default URL to practices[].staticURL
-            */
-                self.createStaticMapURLs = function(arr){
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
+                self.createStaticMapURLs = function(arr) {
 
                     arr.forEach(function(feature, index) {
 
-                   //      if (feature.properties.project.extent) {
+                        //      if (feature.properties.project.extent) {
 
-                            if(feature.geometry != null){
+                        if (feature.geometry != null) {
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,'practice');
+                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice');
 
-                                if(feature.staticURL.length >= 4096){
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
-                                }
-
-                                self.practices[index].staticURL = feature.staticURL;
-
-                            }else{
-
-                                self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                            if (feature.staticURL.length >= 4096) {
+                                feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                    '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
                             }
 
-                   //     }
+                            self.practices[index].staticURL = feature.staticURL;
+
+                        } else {
+
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
+
+                        //     }
 
                     });
                 }
@@ -1010,7 +997,7 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                     /*   var paintFeature = true;
+                        /*   var paintFeature = true;
 
                         if (self.site &&
                             self.site.geometry &&
@@ -1026,7 +1013,7 @@
                             self.site,
                             'geometry',
                             true,
-                      //      paintFeature,
+                            //      paintFeature,
                             true);
 
                         if (self.layers && self.layers.length) {
@@ -1050,7 +1037,7 @@
                                     true,
                                     false,
                                     'practice'
-                                    );
+                                );
 
                             });
 
@@ -1061,9 +1048,9 @@
                 };
 
 
-            /*
-            START BATCH UPLOAD METHODS
-            */
+                /*
+                START BATCH UPLOAD METHODS
+                */
                 self.uploadShapefile = function() {
 
 
@@ -1075,9 +1062,9 @@
                     tempFileImport.push(self.fileImport);
                     self.fileImport = tempFileImport;
 
-                    if (!self.fileImport  ||
+                    if (!self.fileImport ||
                         !self.fileImport.length
-                        ) {
+                    ) {
 
                         self.alerts = [{
                             'type': 'error',
@@ -1106,7 +1093,7 @@
 
                     fileData.append('collection', true);
 
-                    fileData.append('project_id',self.site.project_id);
+                    fileData.append('project_id', self.site.project_id);
 
                     console.log('fileData', fileData);
 
@@ -1164,7 +1151,7 @@
 
                 };
 
-                self.reloadPage = function (){
+                self.reloadPage = function() {
                     location.reload();
                 };
 
@@ -1179,9 +1166,9 @@
                     }
                     $timeout(function() {
 
-                          self.loadPractices();
-                    //      self.reloadPage();
-                    //    self.loadSite();
+                        self.loadPractices();
+                        //      self.reloadPage();
+                        //    self.loadSite();
 
                     }, 500);
 
@@ -1220,16 +1207,16 @@
 
                             if (self.pendingTasks.length < 1) {
 
-                                 console.log("FOUR FOUR");
+                                console.log("FOUR FOUR");
 
                                 //self.loadSite();
 
-                                 $timeout(function() {
+                                $timeout(function() {
                                     self.loadPractices();
-                                   //  self.reloadPage();
-                                   //     self.loadSite();
+                                    //  self.reloadPage();
+                                    //     self.loadSite();
 
-                                 }, 500);
+                                }, 500);
 
                                 $interval.cancel(self.taskPoll);
 
@@ -1241,10 +1228,9 @@
 
                 };
 
-            /*
-            END BATCH UPLOAD METHODS
-            */
-
+                /*
+                END BATCH UPLOAD METHODS
+                */
 
 
 

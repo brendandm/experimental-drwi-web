@@ -404,8 +404,8 @@
                                class="add--new--wrapper"
                                data-ng-if="page.permissions.can_edit"
                           >
-                            <!--<span style="">Create site</span>-->
-                            <a title="Create practice" class="add--new--btn" data-ng-click="page.createPractice()" style="float:right; width:56px; height:56px;">
+
+                            <a title="Create practice" class="add--new--btn" data-ng-click="page.presentChildModal('practice')" style="float:right; width:56px; height:56px;">
                                 <i class="material-icons" >
                                 add
                                 </i>
@@ -762,6 +762,8 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" site="page.site.id" project="page.site.project.id" organization="page.site.project.organization_id" type="page.childType" visible="page.showChildModal"></div>
 
 </main>
 

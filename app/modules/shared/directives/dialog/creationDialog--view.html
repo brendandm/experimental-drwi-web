@@ -1,0 +1,30 @@
+<div class="creation-dialog-container" data-ng-if="visible">
+    <div class="dialog">
+        <div class="title">
+            <span class="title-text">Create {{ type }}</span>
+            <div class="dismiss-container">
+                <div class="dismiss" data-ng-click="closeChildModal()">
+                    <span class="material-icons">
+                        close
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="inputs">
+            <div>
+                <span class="prompt">
+                    Enter a name for this {{ type }}.
+                </span>
+                <input type="text" data-ng-model="name" class="form-control animate" id="name" name="name" placeholder="&hellip;" />
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button type="button" class="cancel" data-ng-click="closeChildModal()">
+                Cancel
+            </button>
+            <button type="button" class="confirm" data-ng-click="createChild(name)" data-ng-disabled="!name">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
