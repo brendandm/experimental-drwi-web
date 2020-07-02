@@ -50,7 +50,7 @@
 
                         <p data-ng-if="page.program.website" style="display: flex; flex-flow: row nowrap; align-items: center;">
                             <i class="material-icons">
-                            open_in_new
+                                open_in_new
                             </i>
                             <a href="{{ page.program.website }}" target="_blank">&nbsp;View website</a>
                         </p>
@@ -71,7 +71,7 @@
                                         <span>{{ tag.name }}</span>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                         </div>
@@ -82,45 +82,56 @@
 
                 <div class="group reveal fade-in t2">
 
-                    <section class="pad shadow">
+                    <section class="pad">
 
-                        <h2>Practice Types</h2>
+                        <h2>Practice types</h2>
 
                         <p>
-                            This program contains <strong>{{ page.practiceTypes.length }}</strong> practice <ng-pluralize count="page.practiceTypes.length" when="{'one': 'type','other': 'types'}"></ng-pluralize>.
+                            This program contains <strong>{{ page.summary.matches }}</strong> practice <ng-pluralize count="page.summary.matches" when="{'one': 'type','other': 'types'}"></ng-pluralize>.
                         </p>
 
-                        <div class="collection-search reveal fade-in t0" style="justify-content:left; align-items:left; overflow: auto;flex-wrap: wrap;">
+                        <div class="collection-search reveal fade-in t0">
 
-                             <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search practices types">
+                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Find a practice type&hellip;">
 
                         </div>
 
-                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                        <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>
 
-                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.queryToken">
+                        <div data-ng-repeat="(key, group) in page.practiceTypes">
 
-                                <div class="card--content">
+                            <h2 id="{{ key }}">
+                                <a href="#{{ key }}"></a>
+                                <span>{{ key }}</span>
+                            </h2>
 
-                                    <div class="name" style="flex-flow: column; align-items: flex-start;">
+                            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                                        <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}" style="text-decoration: none;">
-                                            {{ practice.name }}
-                                        </a>
+                                <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="practice in group | orderBy:'name' | filter: page.queryToken">
 
-                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                    <div class="card--content">
+
+                                        <div class="name" style="flex-flow: column; align-items: flex-start;">
+
+                                            <a href="/programs/{{page.program.id}}/practice-type/{{practice.id}}" style="text-decoration: none;">
+                                                {{ practice.name }}
+                                            </a>
+
+                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+
+                                        </div>
+
+                                        <div class="body">
+                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description provided.') }}</p>
+                                        </div>
 
                                     </div>
 
-                                    <div class="body">
-                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description provided.') }}</p>
-                                    </div>
+                                </li>
 
-                                </div>
+                            </ul>
 
-                            </li>
-
-                        </ul>
+                        </div>
 
                     </section>
 

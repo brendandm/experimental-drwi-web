@@ -200,41 +200,15 @@
 
                         self.program = successResponse;
 
+                        self.permissions = successResponse.permissions;
+
                         $rootScope.program = successResponse;
 
                         $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
                         self.status.loading = false;
 
-                        self.loadProgramMetrics();
-
                         self.loadPracticeType();
-
-                    }, function(errorResponse) {
-
-
-
-                    });
-
-                };
-
-                self.loadProgramMetrics = function() {
-
-                    console.log("loadProgramMetrics");
-
-                    Program.metrics({
-                        id: self.program.id
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('Metric Types', successResponse);
-
-                        self.metricsTypes = successResponse.features;
-
-                        self.metricCount = self.metricsTypes.length;
-
-                        console.log("self.metricCount", self.metricCount);
-
-                        self.showElements();
 
                     }, function(errorResponse) {
 
@@ -257,9 +231,9 @@
 
                         self.practiceType = successResponse;
 
-                        self.metricMatrix = successResponse.metrics;
+                        self.linkedMetrics = successResponse.metrics;
 
-                        self.showElements();
+                        self.loadProgramMetrics();
 
                     }, function(errorResponse) {
 
@@ -279,17 +253,25 @@
 
                 self.loadProgramMetrics = function() {
 
-                    console.log("loadProgramMetrics");
-
                     Program.metrics({
-                        id: self.program.id
+                        id: self.program.id,
+                        group: 'alphabet',
+                        mapping: 'ptype:' + self.practiceType.id,
+                        program_only: 'true',
+                        sort: 'name'
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Metric Types', successResponse);
+                        console.log(
+                            'self.loadProgramMetrics.successResponse',
+                            successResponse);
 
-                        self.metricTypes = successResponse.features;
+                        self.metricTypes = successResponse.features.groups;
 
                         self.metricCount = self.metricTypes.length;
+
+                        self.letters = successResponse.features.letters;
+
+                        self.summary = successResponse.summary;
 
                         console.log("self.metricCount", self.metricCount);
 
@@ -305,30 +287,68 @@
 
                 };
 
-                self.addMetric = function($item, $model, $label) {
+                self.syncMetricArrays = function(metricType, action) {
 
-                    self.metricType = undefined;
+                    if (action === 'add') {
 
-                    self.metricMatrix.push($item);
+                        self.linkedMetrics.push(metricType);
 
-                    console.log("addMetric $item", $item);
+                        self.metricTypes = self.metricTypes.filter(function (feature) {
 
-                    self.saveMetric($item);
+                            return feature.id !== metricType.id;
+
+                        });
+
+                    } else {
+
+                        self.metricTypes.push(metricType);
+
+                        self.linkedMetrics = self.linkedMetrics.filter(function (feature) {
+
+                            return feature.id !== metricType.id;
+
+                        });
+
+                    }
 
                 };
 
-                self.saveMetric = function(metricType) {
+                self.filterBaseMetrics = function(sourceArray) {
 
-                    PracticeType.addMetric({
+                    let linkedIndex = [];
+
+                    self.linkedMetrics.forEach(function (feature) {
+
+                        linkedIndex.push(feature.id);
+
+                    });
+
+                    return sourceArray.filter(function (feature) {
+
+                        return linkedIndex.indexOf(feature.id) < 0;
+
+                    });
+
+                };
+
+                self.manageMetric = function(metricType, action) {
+
+                    PracticeType.manageMetric({
                         id: self.practiceType.id,
-                        metricId: $item.id,
+                        metricId: metricType.id,
+                        action: action,
                         program: self.program.id
-                    }).$promise.then(function(successResponse) {
+                    }, {}).$promise.then(function(successResponse) {
+
+                        console.log(
+                            'self.manageMetric.successResponse',
+                            successResponse
+                        );
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Target changes saved.',
+                            'msg': 'Metric type added to practice type.',
                             'prompt': 'OK'
                         }];
 
@@ -336,11 +356,14 @@
 
                         self.status.processing = false;
 
-                        console.log("practice.updateMatrix", successResponse);
+                        self.syncMetricArrays(metricType, action);
 
-                    }).catch(function(error) {
+                    }).catch(function(errorResponse) {
 
-                        console.log('updateMatrix.error', error);
+                        console.log(
+                            'self.manageMetric.errorResponse',
+                            errorResponse
+                        );
 
                         // Do something with the error
 
@@ -356,6 +379,8 @@
                         self.status.processing = false;
 
                     });
+
+                    self.metricType = undefined;
 
                 };
 

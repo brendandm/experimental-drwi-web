@@ -24,7 +24,7 @@
     <!-- Material icons -->
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
+
     <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -70,7 +70,6 @@
 
       ga('create', 'UA-75868314-1', 'auto');
       ga('send', 'pageview');
-
     </script>
 
     <!-- Google Tag Manager (noscript) -->
@@ -96,8 +95,6 @@
         environment: 'zt_sentry_angular_local'
       });
     </script>
-
-    <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
     <!-- build:js(.) /scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -147,6 +144,8 @@
 
         <script src="modules/shared/pdf/save2pdf.js"></script>
 
+        <script src="modules/shared/anchor-scroll/anchorScroll--service.js"></script>
+
             <!-- Security Module -->
             <script src="modules/shared/security/security--routes.js"></script>
             <script src="modules/shared/security/securityLogin--controller.js"></script>
@@ -188,8 +187,6 @@
             <script src="modules/components/change-log/changeLog--routes.js"></script>
             <script src="modules/components/change-log/changeLog--controller.js"></script>
 
-
-
             <!-- Onboarding Module -->
             <script src="modules/components/onboarding/onboarding--routes.js"></script>
             <script src="modules/components/onboarding/onboardingOrganization--controller.js"></script>
@@ -201,8 +198,6 @@
             <!-- Account Module -->
             <script src="modules/components/account/account--routes.js"></script>
             <script src="modules/components/account/accountEdit--controller.js"></script>
-         <!--     <script src="modules/components/account/accountProfileView--controller.js"></script> -->
-
 
            <!-- Profile Module -->
             <script src="modules/components/profile/profile--routes.js"></script>
@@ -216,8 +211,6 @@
             <script src="modules/components/sites/siteGeography--controller.js"></script>
             <script src="modules/components/sites/siteTag--controller.js"></script>
             <script src="modules/components/sites/siteBatchDelete--controller.js"></script>
-
-       <!--     <script src="modules/components/sites/siteBatchDelete--controller.js"></script>-->
 
             <!-- Practices Module -->
             <script src="modules/components/practices/practice--routes.js"></script>
@@ -383,7 +376,7 @@
             <!-- Factories -->
 
             <script src="modules/shared/filter-store/filter-store--service.js"></script>
-            <script src="modules/shared/project-store/project-store--service.js"></script>            
+            <script src="modules/shared/project-store/project-store--service.js"></script>
 
             <!-- Directives -->
             <script src="modules/shared/directives/relationship/relationship.js"></script>
@@ -397,6 +390,8 @@
             <script src="modules/shared/directives/viewFrame--directive.js"></script>
 
             <script src="modules/shared/directives/upload--directive.js"></script>
+
+            <script src="modules/shared/directives/control/alphabet/alphabetControl--directive.js"></script>
 
             <!-- Filters -->
             <script src="modules/shared/filters/toAcres--filter.js"></script>

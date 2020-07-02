@@ -21,9 +21,10 @@
             'Program',
             'program',
             'PracticeType',
+            'AnchorScroll',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Program,
-                program, PracticeType) {
+                program, PracticeType, AnchorScroll) {
 
                 var self = this;
 
@@ -38,6 +39,10 @@
                 };
 
                 $rootScope.page = {};
+
+                console.log(AnchorScroll);
+
+                self.scrollManager = AnchorScroll;
 
                 self.status = {
                     loading: true
@@ -65,19 +70,9 @@
 
                         self.status.processing = false;
 
-                        $timeout(function() {
+                        self.scrollManager.scrollToAnchor();
 
-                            if (!self.mapOptions) {
-
-                                self.mapOptions = self.getMapOptions();
-
-                            }
-
-                            self.createMap(self.mapOptions);
-
-                        }, 500);
-
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -204,12 +199,17 @@
                 self.loadPracticeTypes = function() {
 
                     PracticeType.collection({
-                        program: self.program.id
+                        program: self.program.id,
+                        group: 'alphabet'
                     }).$promise.then(function(successResponse) {
 
                         console.log('practiceType', successResponse);
 
-                        self.practiceTypes = successResponse.features;
+                        self.practiceTypes = successResponse.features.groups;
+
+                        self.letters = successResponse.features.letters;
+
+                        self.summary = successResponse.summary;
 
                         self.showElements();
 

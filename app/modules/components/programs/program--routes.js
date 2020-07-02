@@ -147,6 +147,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/programs/views/programPracticeTypeList--view.html?t=' + environment.version,
                 controller: 'ProgramPracticeTypeListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 
@@ -170,6 +171,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/programs/views/programPracticeType--view.html?t=' + environment.version,
                 controller: 'ProgramPracticeTypeController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 

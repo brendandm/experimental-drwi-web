@@ -18,7 +18,7 @@
                     </div>
                     <div>
                         <span>Practice Type:&nbsp;</span>
-                        <a href="/programs/{{page.program.id}}/practice-types/{{page.practiceType.id}}">
+                        <a href="/programs/{{ page.program.id }}/practice-types/{{ page.practiceType.id }}">
                             {{ page.practiceType.name }}
                         </a>
                     </div>
@@ -26,7 +26,7 @@
 
                 <div class="group reveal fade-in t2">
 
-                    <section class="pad">
+                    <section style="min-height: 0;" class="pad">
 
                         <h2>{{ page.practiceType.name }}</h2>
 
@@ -39,70 +39,123 @@
 
                 </div>
 
-                <div class="target-block-wrapper">
+<!--                <div class="target-block-wrapper">-->
 
-                    <div class="target-block-header">
+<!--                    <div class="target-block-header">-->
 
-                        <div class="target-block-number-circle" >
-                            <b data-ng-if="!page.models.length">2</b>
-                            <b data-ng-if="page.models.length">3</b>
-                        </div>
+<!--                        <div class="target-block-title">-->
+<!--                            <strong>Add Metric</strong>-->
+<!--                        </div>-->
 
+<!--                    </div>-->
 
-                <div class="target-block-title">
-                <b> Add Metric </b>
-                </div>
-                </div>
+<!--                    <p style="clear:both;" >-->
+<!--                        Automated and Reportable Metrics can be added to this Practice using the search form below.-->
+<!--                        For a list of metrics available please visit <a href="/programs/{{ page.program.id }}/metrics">here</a>-->
+<!--                    </p>-->
 
-            <p style="clear:both;" >
-                Automated and Reportable Metrics can be added to this Practice using the search form below.
-                For a list of metrics available please visit <a href="/programs/{{ page.program.id }}/metrics">here</a>
-            </p>
+<!--                    <div class="form-element">-->
 
-             <div class="form-element">
-                            <span class="meta-label"><b>Add Metric</b></span>
+<!--                        <span class="meta-label"><b>Add Metric</b></span>-->
 
-                            <input id="programMetric_type_id"
-                                   name="programMetric_type_id"
-                                   type="text"
-                                   placeholder="Search metrics"
-                                   data-ng-model="page.metricType"
-                                   uib-typeahead="metricType as metricType.name for metricType in page.metricTypes | filter:{name: $viewValue} | limitTo:5"
-                                   typeahead-on-select="page.addMetric($item,$model,$label)"
-                                   typeahead-min-length="0"
-                                   typeahead-template-url="templates/search--tpl.html" />
+<!--                        <input id="programMetric_type_id"-->
+<!--                               name="programMetric_type_id"-->
+<!--                               type="text"-->
+<!--                               placeholder="Search metrics"-->
+<!--                               data-ng-model="page.metricType"-->
+<!--                               uib-typeahead="metricType as metricType.name for metricType in page.metricTypes | filter:{name: $viewValue} | limitTo:5"-->
+<!--                               typeahead-on-select="page.manageMetric($item, 'add')"-->
+<!--                               typeahead-min-length="2"-->
+<!--                               typeahead-template-url="templates/search&#45;&#45;tpl.html" />-->
 
-                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                {{ page.practice.category.description || page.practiceType.description }}
-                            </p>
+<!--                        <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">-->
+<!--                            {{ page.practice.category.description || page.practiceType.description }}-->
+<!--                        </p>-->
 
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
-                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
-                            </p>
-             </div>
+<!--                        <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">-->
+<!--                            This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.-->
+<!--                        </p>-->
 
-            </div>
+<!--                    </div>-->
+
+<!--                </div>-->
 
                 <div class="group reveal fade-in t2">
 
-                    <section class="pad shadow">
+                    <section style="min-height: 0;" class="pad">
 
-                        <h2>Associated metrics</h2>
+                        <h2>Linked metrics</h2>
 
-                        <ul class="target-lst target-lst-inactive" >
-                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="metric in page.metricMatrix"
-                               style="height:63px; background-color:#f5f5f5;">
-                                    <div style="display:inline-block;min-height:42px;" style="padding-top:10px;">{{metric.name}}</div>
+                        <p>The {{ page.program.name }} program tracks the following core metrics for the {{ page.practiceType.name }} practice type.</p>
 
+                        <ul class="target-lst">
 
-                                         <button type="button" class="add-item" data-ng-click="page.removeMetric(metric)" data-ng-disabled="page.status.processing">
-                                             <i class="material-icons">
-                                                remove_circle
-                                            </i>
-                                        </button>
+                            <li class="card reveal fade-in" data-ng-repeat="metric in page.linkedMetrics">
+
+                                <div style="padding-top:10px;">{{ metric.name }}</div>
+
+                                <button type="button" class="add-item" data-ng-if="!metric.automated" data-ng-click="page.manageMetric(metric, 'remove')" data-ng-disabled="page.status.processing">
+                                    <i class="material-icons">
+                                        remove_circle
+                                    </i>
+                                </button>
+
                             </li>
+
                         </ul>
+
+                    </section>
+
+                </div>
+
+                <div class="group reveal fade-in t2" data-ng-if="page.permissions.write">
+
+                    <section style="min-height: 0;" class="pad">
+
+                        <h2>Manage linked metrics</h2>
+
+<!--                        <p>-->
+<!--                            This program contains <strong>{{ page.summary.matches }}</strong> practice <ng-pluralize count="page.summary.matches" when="{'one': 'type','other': 'types'}"></ng-pluralize>.-->
+<!--                        </p>-->
+
+                        <div class="collection-search reveal fade-in t0">
+
+                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Find a metric type&hellip;">
+
+                        </div>
+
+                        <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>
+
+                        <div data-ng-repeat="(key, group) in page.metricTypes">
+
+                            <h2 id="{{ key }}">
+                                <a href="#{{ key }}"></a>
+                                <span>{{ key }}</span>
+                            </h2>
+
+                            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                                <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
+
+                                    <div class="card--content">
+
+                                        <div class="name" style="flex-flow: column; align-items: flex-start;">
+
+                                            <span>{{ feature.name }}</span>
+
+                                        </div>
+
+                                        <div class="body">
+                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (feature.description || 'No description provided.') }}</p>
+                                        </div>
+
+                                    </div>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
 
                     </section>
 
@@ -137,7 +190,7 @@
                     </i>
                 </a>
             </li>
-           <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/programs/{{ page.program.id  }}/metrics" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
