@@ -108,7 +108,7 @@
 
                 </div>
 
-                <div class="group reveal fade-in t2" data-ng-if="page.permissions.write">
+                <div class="group reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
 
                     <section style="min-height: 0;" class="pad">
 
@@ -128,7 +128,7 @@
 
                         <div data-ng-repeat="(key, group) in page.metricTypes">
 
-                            <h2 id="{{ key }}">
+                            <h2 id="{{ key | lowercase }}">
                                 <a href="#{{ key }}"></a>
                                 <span>{{ key }}</span>
                             </h2>

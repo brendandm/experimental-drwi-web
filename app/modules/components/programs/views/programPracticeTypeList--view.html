@@ -80,7 +80,7 @@
 
                 </div>
 
-                <div class="group reveal fade-in t2">
+                <div class="group reveal fade-in t2" data-ng-if="page.practiceTypes">
 
                     <section class="pad">
 
@@ -100,7 +100,7 @@
 
                         <div data-ng-repeat="(key, group) in page.practiceTypes">
 
-                            <h2 id="{{ key }}">
+                            <h2 id="{{ key | lowercase }}">
                                 <a href="#{{ key }}"></a>
                                 <span>{{ key }}</span>
                             </h2>

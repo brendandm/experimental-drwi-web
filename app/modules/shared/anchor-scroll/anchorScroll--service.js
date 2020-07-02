@@ -31,7 +31,7 @@
 
                             try {
 
-                                hash = letter.toUpperCase();
+                                hash = letter.toLowerCase();
 
                                 $location.hash(hash);
 
