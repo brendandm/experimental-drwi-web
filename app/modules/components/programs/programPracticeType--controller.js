@@ -43,7 +43,8 @@
                 $rootScope.page = {};
 
                 self.status = {
-                    loading: true
+                    loading: true,
+                    processing: true
                 };
 
                 self.alerts = [];
@@ -293,15 +294,7 @@
 
                         self.linkedMetrics.push(metricType);
 
-                        self.metricTypes = self.metricTypes.filter(function (feature) {
-
-                            return feature.id !== metricType.id;
-
-                        });
-
                     } else {
-
-                        self.metricTypes.push(metricType);
 
                         self.linkedMetrics = self.linkedMetrics.filter(function (feature) {
 
@@ -333,6 +326,9 @@
 
                 self.manageMetric = function(metricType, action) {
 
+                    if ((action !== 'add' && action !== 'remove') ||
+                        self.status.processing) return;
+
                     PracticeType.manageMetric({
                         id: self.practiceType.id,
                         metricId: metricType.id,
@@ -345,12 +341,27 @@
                             successResponse
                         );
 
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Metric type added to practice type.',
-                            'prompt': 'OK'
-                        }];
+                        metricType.linked = !metricType.linked;
+
+                        if (action === 'add') {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Metric type linked to practice type.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Metric type un-linked from practice type.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
 
                         $timeout(self.closeAlerts, 2000);
 
