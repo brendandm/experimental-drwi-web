@@ -521,21 +521,37 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <a href="/practices/{{ page.practice.id }}/edit" title="Edit">
-                    <i class="material-icons">
+                    <i data-ng-if="!page.practice.practice_type"
+                         class="glow material-icons">
+                        edit
+                    </i>
+                    <i data-ng-if="page.practice.practice_type"
+                       class="material-icons" >
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.practice_type" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.id }}/location" title="Location">
-                    <i class="material-icons">
+            <li style="max-width: 59px; max-height: 59px;"
+                data-ng-if="page.permissions.can_edit && page.practice.practice_type"
+                data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a class="" href="/practices/{{ page.practice.id }}/location" title="Location">
+                    <i data-ng-if="page.next_action == 'add_geometry'"
+                       class="glow material-icons">
+                       location_on
+                    </i>
+                    <i data-ng-if="page.next_action != 'add_geometry'">
                         location_on
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+            <li data-ng-if="page.permissions.can_edit && page.states.has_geometry" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
-                    <i class="material-icons">
+                    <i data-ng-if="page.next_action == 'add_targets'
+                            class="glow material-icons">
+                        multiline_chart
+                    </i>
+                    
+                    <i data-ng-if="page.next_action != 'add_targets'">
                         multiline_chart
                     </i>
                 </a>

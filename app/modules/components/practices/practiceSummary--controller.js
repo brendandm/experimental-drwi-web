@@ -39,6 +39,8 @@
 
                 $rootScope.page = {};
 
+                self.state = undefined;
+
                 self.map = undefined;
 
                 self.status = {
@@ -385,6 +387,8 @@
 
                         self.loadMetrics();
 
+                        self.processSetup(self.practice.setup);
+
 //                        self.loadTags();
 
                         self.tags = Utility.processTags(self.practice.tags);
@@ -400,6 +404,50 @@
                     });
 
                 };
+
+                /*START STATE CALC*/
+
+                self.processSetup = function(setup){
+
+                    const next_action = setup.next_action;
+
+                    self.states = setup.states;
+
+                    self.next_action = next_action;
+
+                    console.log("self.states",self.states);
+
+                    console.log("self.next_action",self.next_action);
+
+                    switch (next_action) {
+                        case 'add_name':
+
+                            break;
+
+                        case 'add_type':
+
+                            break;
+
+                        case 'add_geometry':
+
+                            break;
+
+                        case 'add_targets':
+
+                            break;
+
+                        case 'edit_targets':
+
+                            break;
+
+                        default:
+                    }
+
+
+
+                };
+
+                /*END STATE CALC*/
 
                 self.addReading = function(measurementPeriod) {
 
