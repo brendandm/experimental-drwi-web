@@ -558,7 +558,7 @@ header .header {
       flex-grow: 1;
       border-radius: 4px;
       margin-bottom: 2em;
-      min-height: 20em;
+      //min-height: 20em;
       overflow: hidden;
 
       h2 {
@@ -583,6 +583,7 @@ header .header {
     .map--module {
       min-width: 40%;
       max-width: 60%;
+      min-height: 20em;
     }
 
   }
@@ -715,4 +716,10 @@ header .header {
   p {
     color: #424242;
   }
+}
+
+.callout {
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }

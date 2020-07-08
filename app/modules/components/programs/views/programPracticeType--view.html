@@ -1,4 +1,4 @@
-<div data-ng-include="'/templates/header--view.html'"></div>
+<div data-ng-include="'/templates/header--view.html'" xmlns="http://www.w3.org/1999/html"></div>
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
@@ -24,15 +24,36 @@
                     </div>
                 </div>
 
+                <h1>{{ page.practiceType.name }}</h1>
+
                 <div class="group reveal fade-in t2">
 
-                    <section style="min-height: 0;" class="pad">
+                    <section class="pad space-right">
 
-                        <h2>{{ page.practiceType.name }}</h2>
+                        <h2>Description</h2>
 
                         <div>
                             <p>{{ page.practiceType.description || 'No description provided.' }}</p>
+                        </div>
 
+                    </section>
+
+                    <section>
+
+                        <h2>Usage</h2>
+
+                        <div>
+                            <p>There <ng-pluralize
+                                    count="page.practiceType.practice_count"
+                                    when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{
+                                page.practiceType.practice_count }}</strong> <ng-pluralize
+                                    count="page.practiceType.practice_count"
+                                    when="{'one': 'practice','other': 'practices'}"></ng-pluralize> implementing the {{
+                                page.practiceType.name }} practice type across <strong>{{
+                                    page.practiceType.project_count }}</strong> <ng-pluralize
+                                        count="page.practiceType.project_count"
+                                        when="{'one': 'project','other': 'projects'}"></ng-pluralize>.
+                            </p>
                         </div>
 
                     </section>
@@ -41,15 +62,32 @@
 
                 <div class="group reveal fade-in t2">
 
-                    <section style="min-height: 0;" class="pad">
+                    <section style="min-height: 0;" class="space-right pad">
 
                         <h2>Linked metrics</h2>
 
-                        <p>The {{ page.program.name }} program tracks the following core metrics for the {{ page.practiceType.name }} practice type.</p>
+                        <p>
+                            The {{ page.program.name }} program tracks the following core metrics for the {{
+                            page.practiceType.name }} practice type. FieldDoc will always present this selection
+                            first when it comes time to add metric targets to a practice.
+                        </p>
+
+                        <p data-ng-if="page.permissions.write && page.metricTypes" style="padding: 1rem; margin:
+                        0; background: #5b21f3; border-radius: 4px; color: #FFFFFF;">
+                            <strong>Pro tip:&nbsp;</strong>This feature is designed to help you improve the
+                            accuracy
+                            and standardization of your program's metric data in FieldDoc. We strongly recommend
+                            assigning one or more relevant metrics to each practice type in your
+                            program.<br/><br/>
+                            <em>Linking or un-linking metric types will not affect new or existing targets
+                                or target data.</em>
+                        </p>
 
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="feature in page.linkedMetrics | orderBy: 'name'">
+                            <li class="card reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="feature in page.linkedMetrics | orderBy: 'name'">
 
                                 <div class="card--content">
 
@@ -60,7 +98,8 @@
                                     </div>
 
                                     <div class="body">
-                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (feature.description || 'No description') }}</p>
+                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
+                                            {{ (feature.description || 'No description') }}</p>
                                     </div>
 
                                 </div>
@@ -68,6 +107,26 @@
                             </li>
 
                         </ul>
+
+                    </section>
+
+                    <section>
+
+                        <h2>Models</h2>
+
+                        <div>
+                            <p>There <ng-pluralize
+                                    count="page.practiceType.practice_count"
+                                    when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{
+                                page.practiceType.practice_count }}</strong> <ng-pluralize
+                                    count="page.practiceType.practice_count"
+                                    when="{'one': 'practice','other': 'practices'}"></ng-pluralize> implementing the {{
+                                page.practiceType.name }} practice type across <strong>{{
+                                    page.practiceType.project_count }}</strong> <ng-pluralize
+                                        count="page.practiceType.project_count"
+                                        when="{'one': 'project','other': 'projects'}"></ng-pluralize>.
+                            </p>
+                        </div>
 
                     </section>
 
@@ -79,7 +138,9 @@
 
                     <div class="collection-search reveal fade-in t0">
 
-                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Find a metric type&hellip;">
+                        <input style="float:left; display:inline-block; clear:right;" type="text"
+                               class="search-bar list-filter" data-ng-if="!page.status.loading"
+                               data-ng-model="page.queryToken" placeholder="Find a metric type&hellip;">
 
                     </div>
 
@@ -94,20 +155,24 @@
 
                         <ul class="selection-group list-unstyled" style="margin-top: 2em;">
 
-                            <li class="selection-item reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
+                            <li class="selection-item reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
 
                                 <span>{{ feature.name }}</span>
 
                                 <div class="link-action">
 
-                                    <button class="link" data-ng-if="!feature.linked" data-ng-click="page.manageMetric(feature, 'add')">
+                                    <button class="link" data-ng-if="!feature.linked"
+                                            data-ng-click="page.manageMetric(feature, 'add')">
                                         <span class="material-icons">
                                             link
                                         </span>
                                         Link metric type
                                     </button>
 
-                                    <button class="unlink" data-ng-if="feature.linked" data-ng-click="page.manageMetric(feature, 'remove')">
+                                    <button class="unlink" data-ng-if="feature.linked"
+                                            data-ng-click="page.manageMetric(feature, 'remove')">
                                         <span class="material-icons">
                                             link_off
                                         </span>
@@ -165,7 +230,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
