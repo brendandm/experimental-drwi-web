@@ -193,7 +193,9 @@
 
                 </div>
 
-                <div class="group reveal fade-in t2">
+                <div class="group reveal fade-in t2"
+                     data-ng-if="page.next_action == 'edit_targets'"
+                >
 
                     <section class="pad shadow">
 
@@ -531,27 +533,30 @@
                     </i>
                 </a>
             </li>
-            <li style="max-width: 59px; max-height: 59px;"
-                data-ng-if="page.permissions.can_edit && page.practice.practice_type"
+
+
+            <li data-ng-if="page.permissions.can_edit && page.practice.practice_type"
                 data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a class="" href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i data-ng-if="page.next_action == 'add_geometry'"
                        class="glow material-icons">
                        location_on
                     </i>
-                    <i data-ng-if="page.next_action != 'add_geometry'">
+                    <i data-ng-if="page.next_action != 'add_geometry'"
+                       class="material-icons" >
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit && page.states.has_geometry" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
-                    <i data-ng-if="page.next_action == 'add_targets'
+                    <i data-ng-if="page.next_action == 'add_targets'"
                             class="glow material-icons">
                         multiline_chart
                     </i>
-                    
-                    <i data-ng-if="page.next_action != 'add_targets'">
+
+                    <i data-ng-if="page.next_action != 'add_targets'"
+                       class="material-icons" >
                         multiline_chart
                     </i>
                 </a>
