@@ -4,9 +4,7 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div
-            class="content--container"
-         style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
         <div class="breadcrumb pad-crumb">
             <div>
@@ -35,8 +33,11 @@
 
         <div class="main--ui target-ui reveal fade-in t0">
 
-            <div data-ng-if="page.practice.category">
-                <p >The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
+            <div data-ng-if="page.practice.practice_type">
+
+                <p>
+                    The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.
+                </p>
 
                 <h2>{{ page.practice_category.name }} &middot; Definition</h2>
 
@@ -46,410 +47,359 @@
                         {{ page.practice_category.description }}
                     </p>
                     <p data-ng-if="!page.practice_category.description" style="width:70%">
-                       This Practice Type's definition has not been defined.
+                        This practice type lacks a definition. Please contact your program’s funder for more information.
                     </p>
                 </div>
             </div>
-            <div data-ng-if="!page.practice.category">
-                <p style="width:70%">
-                       This Practice does not have a specified Practice Type.
-                    Please choose a  <a href="/programs/{{ page.practice.project.program_id }}">Practice Type</a> on the <a href="/practices/{{ page.practice.id }}/edit">Practice Edit Page</a>
+
+            <div data-ng-if="!page.practice.practice_type">
+                <p>
+                    Metric targets can only be added to practices with a valid practice type. Please <a href="/practices/{{ page.practice.id }}/edit">head over to the edit page</a> and choose a  <a href="/programs/{{ page.practice.project.program_id }}">practice type</a>.
                 </p>
             </div>
 
+            <!-- START EXTENT -->
 
+            <div class="target-block-wrapper">
 
-
- <!-- Extent-->
-        <div class="target-block-wrapper">
-            <div class="target-block-header">
+                <div class="target-block-header">
 
                     <div class="target-block-number-circle">
-                                           <b>1</b>
+                        <strong>1</strong>
                     </div>
 
                     <div class="target-block-title">
-                        <b> Practice Extent </b>
+                        <strong>Practice extent</strong>
                     </div>
-               </div>
 
-        <!--    <div style="text-align: left;margin-bottom:20px;">
-                         {{page.practice_category.unit.instructions}}
-            </div>
-         -->
-            <ul class="target-lst target-lst-inactive" >
+                </div>
 
-                <li style="display:block; min-height:20px; color:#000000; width: 100%; ">
+                <p>
+                    FieldDoc generates the practice footprint based on the length or area of its geometry. Many models and practice types use this number to calculate estimated nutrient and sediment reductions and other modeled parameters. To generate estimated reduction calculations, enter an extent value for the requested unit in the provided field.
+                </p>
 
-                         <p style="display:block; clear:both;">
-                        The system generates the footprint based on the length or area of this practice's geometry.
-                             Many models and practice types use this number to calculate the estimated reductions.
-                             To generate estimated reduction calculations,
-                             enter the value for the requested unit in the provided field.
-                        </p>
+                <ul class="target-lst">
 
-                 <!--       <p style="display:block; clear:both;">
-                    This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
-                        </p>
-                -->
-                </li>
-                <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
-                <li style="height:63px; margin-bottom:20px;" data-ng-if="(
-                                                (page.practice.extent.calculated.converted)
-                                                    && (page.practice.category.unit.dimension == 'count')
-                                                    && (page.practice.geometry.type == 'Polygon')
-                                            )"
-                >
-                          <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
-                         <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
+                    <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
 
-                         <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                              <nobr  >
-                                     square meters
-                                </nobr>
-                         </span>
-                </li>
+                    <li style="margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.practice.practice_type.unit.dimension == 'count' && page.practice.geometry.type == 'Polygon'"
+                    >
 
-                 <li style="height:63px; margin-bottom:20px;" data-ng-if="(
-                                                (page.practice.extent.calculated.converted  )
-                                                    && (page.practice.category.unit.dimension == 'count')
-                                                    && (page.practice.geometry.type == 'LineString')
-                                            )"
-                >
-                          <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
-                         <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
-
-                         <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                              <nobr  >
-                                     linear meters
-                                </nobr>
-                         </span>
-                </li>
-
-                  <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
-
-
-
-                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.geometryMismatch == false">
-
-                     <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
-                     <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
-                  <!--   <div style="float:left; clear:left; color:#666666; font-size:10px;">
-                           This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
+                        <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural !== 'linear feet'">
+                            Calculated area value
                         </div>
-                   -->
-                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
-                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'">
-                             {{page.practice_category.unit.unit.plural}}
-                         </nobr>
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" >
-                             acres
-                         </nobr>
-                     </span>
+                        <span style="margin-right: 20px;">
+                            {{ page.practice.extent.calculated.converted | number:2 }}
+                        </span>
 
-                     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
-                        <i class="material-icons">
+                        <span style="text-align: left; margin-right: 20px;">
+                            square meters
+                        </span>
 
-                        </i>
-                    </button>
+                    </li>
 
-                    <button type="button" class="add-item" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
+                    <li style="margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.practice.practice_type.unit.dimension == 'count' && page.practice.geometry.type == 'LineString'"
+                    >
 
-                        </i>
-                    </button>
+                        <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'">
+                            Calculated area value
+                        </div>
 
-                </li>
+                        <span style="margin-right: 20px;">
+                            {{ page.practice.extent.calculated.converted | number:2 }}
+                        </span>
 
-                  <!--
-                -->
-                <li style="display:block; min-height:20px; margin-bottom:20px; color:#000000; width: 100%;"
-                    data-ng-if="((page.practice.geometry.type == 'LineString' && page.practice_category.unit.dimension != 'length')  && (page.practice_category.unit.dimension != 'count'))"
-                >
-                    Calculated Extent Values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">Polygonal Geometries</a>.
-                </li>
+                        <span style="text-align: left; margin-right: 20px;">
+                            linear meters
+                        </span>
 
-                <li style="display:block; min-height:20px; margin-bottom:20px; color:#000000; width: 100%;"
-                    data-ng-if="((page.practice.geometry.type == 'Polygon' && page.practice_category.unit.dimension != 'area') && (page.practice_category.unit.dimension != 'count'))"
-                >
-                    Calculated Extent Values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">Line Geometries</a>.
-                </li>
-                <!--
-                -->
+                    </li>
 
-                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
-                    data-ng-if="(!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point')">
-                    A&nbsp;
-                    <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>
-                    &nbsp;must be defined for a Calculated&nbsp;
-                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
-                        {{page.practice_category.unit.dimension}}
-                    </span>
-                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
-                        area
-                    </span>
-                    &nbsp;Value to be generated.
-                </li>
+                    <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
 
-                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
-                    data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
-                    Calculated&nbsp;
-                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
-                        {{page.practice_category.unit.dimension}}
-                    </span>
-                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
-                        area
-                    </span>
-                    &nbsp;Values are not available for&nbsp;
-                    <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
-                </li>
+                    <li style="margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.geometryMismatch == false">
 
+                        <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'">
+                            Calculated {{ page.practice_category.unit.dimension }} value
+                        </div>
 
+                        <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'">
+                            Calculated area value
+                        </div>
 
-                <li style="display:block; clear:both; color:#000000; width: 100%; ">
+                        <span style="margin-right: 20px;">
+                            {{ page.practice.extent.calculated.converted | number:2 }}
+                        </span>
 
-                        <p style="display:block; clear:both;" >
-                         {{page.practice_category.unit.instructions}}
+                        <span style="text-align: left; margin-right: 20px;">
+                            <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'">
+                                {{ page.practice_category.unit.unit.plural }}
+                            </nobr>
+                            <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'">
+                                acres
+                            </nobr>
+                        </span>
+
+                    </li>
+
+                    <li style="margin-bottom:20px; color:#000000; width: 100%;"
+                        data-ng-if="((page.practice.geometry.type == 'LineString' && page.practice_category.unit.dimension != 'length')  && (page.practice_category.unit.dimension != 'count'))">
+                        Calculated extent values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">polygonal geometries</a>.
+                    </li>
+
+                    <li style="margin-bottom:20px; color:#000000; width: 100%;"
+                        data-ng-if="((page.practice.geometry.type == 'Polygon' && page.practice_category.unit.dimension != 'area') && (page.practice_category.unit.dimension != 'count'))">
+                        Calculated extent values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">line geometries</a>.
+                    </li>
+
+                    <li style="margin-bottom:20px;" data-ng-if="(!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point')">
+                        A&nbsp;
+                        <a href="/practices/{{ page.practice.id }}/location">Practice location geometry</a>
+                        &nbsp;must be defined for a Calculated&nbsp;
+                        <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
+                            {{ page.practice_category.unit.dimension }}
+                        </span>
+                         <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
+                            area
+                        </span>
+                        &nbsp;Value to be generated.
+                    </li>
+
+                    <li style="margin-bottom:20px; font-size:0.8em;"
+                        data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
+                        Calculated&nbsp;
+                        <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
+                            {{ page.practice_category.unit.dimension }}
+                        </span>
+                         <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
+                            area
+                        </span>
+                        &nbsp;Values are not available for&nbsp;
+                        <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
+                    </li>
+
+                    <li>
+                        <p>
+                            {{ page.practice_category.unit.instructions }}
                         </p>
+                    </li>
 
-                </li>
+                    <li>
 
-                <li style="height:63px; margin-bottom:8px;">
+                        <div>
+                            Custom {{ page.practice_category.unit.dimension }} value
+                        </div>
 
-                    <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
+                        <input type="number" id="custom_extent" name="custom_extent" class="form-control" style="margin-right: 20px; text-align: right; padding-right: 10px;" data-ng-model="page.practice.custom_extent" placeholder="0" step="0.001" min="0" autocomplete="off" />
 
-                    <input type="number"
-                           class="form-control"
-                           style="margin-right: 20px; text-align: right; padding-right: 10px;"
-                           data-ng-model="page.practice.custom_extent"
-                           id="custom_extent"
-                           name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                         <span style="text-align: left; margin-right: 20px;">
+                             {{ page.practice_category.unit.unit.plural }}
+                         </span>
 
-                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr > {{page.practice_category.unit.unit.plural}} </nobr>
-                     </span>
+                         <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                            <i class="material-icons">
+                                delete
+                            </i>
+                        </button>
 
-                     <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
-                        <i class="material-icons">
-                            delete
-                        </i>
-                    </button>
+                        <button type="button" class="add-item" data-ng-click="page.savePractice()" data-ng-disabled="page.status.processing">
+                            <i class="material-icons">
+                                done
+                            </i>
+                        </button>
 
-                    <button type="button" class="add-item" data-ng-click="page.savePractice()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
-                </li>
+                    </li>
 
-               <!-- <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;"></li>
-                -->
-            </ul>
-        </div>
+                </ul>
 
+            </div>
 
-            <!-- END extent-->
-                <!-- Modeled Inputs-->
-           <div class="target-block-wrapper" data-ng-if="page.models.length">
-            <div data-ng-if="page.models.length">
-               <div class="target-block-header">
+            <!-- END EXTENT-->
 
-                    <div class="target-block-number-circle">
-                                           <b>2</b>
+            <!-- START MODEL INPUTS-->
+
+            <div class="target-block-wrapper" data-ng-if="page.models.length">
+            
+                <div data-ng-if="page.models.length">
+               
+                    <div class="target-block-header">
+
+                        <div class="target-block-number-circle">
+                            <strong>2</strong>
+                        </div>
+
+                        <div class="target-block-title">
+                            <strong>Model inputs</strong>
+                        </div>
+
                     </div>
 
-                    <div class="target-block-title">
-                        <b> Modeled Inputs </b>
-                    </div>
-               </div>
-                    <p style="clear:both;" data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
+                    <p data-ng-if="page.practice.practice_type.require_inputs">
+                        This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a>
+                    </p>
 
-                  <ul class="snapshot--cards list-unstyled">
-                     <li class="card" data-ng-repeat="model in page.models"
-                         style="min-height:25px;
-                                    min-width: 400px;
-                                    display:block;
-                                    clear:both;
-                                    background-color: #f5f5f5;
-                                    margin-left: 40px;
-                                    padding: 20px 20px 30px 20px;
-                                "
-                     >
+                    <ul class="snapshot--cards list-unstyled">
 
-                      <!--  <div data-ng-repeat="model in page.models"
+                        <li class="card" data-ng-repeat="model in page.models"
+                        style="min-height:25px; min-width: 400px; display:block; clear:both; background-color: #f5f5f5; margin-left: 40px;padding: 20px 20px 30px 20px;">
 
-                        ">-->
-                         <div class="card-content">
-                            <p style="display:block; clear:both;">{{ model.model.name }}</p>
+                            <div class="card-content">
 
-                            <a href="/practices/{{ page.practice.id }}/model-data"
-                               data-ng-if="page.practice_category.require_inputs"
-                               title="{{ model.model.name }}"
-                               style="margin-right:30px;">
-                               <sub>
-                                   <i class="material-icons">
-                                    multiline_chart
-                                    </i>
-                               </sub>
-                                Modify Inputs
-                            </a>
-                            <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">
-                                <sub>
-                                    <i class="material-icons">
+                                <p>{{ model.model.name }}</p>
+
+                                <a href="/practices/{{ page.practice.id }}/model-data" data-ng-if="page.practice_category.require_inputs" title="{{ model.model.name }}" style="margin-right:30px;">
+                                    <span class="material-icons">
+                                        multiline_chart
+                                    </span>
+                                    Modify inputs
+                                </a>
+
+                                <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">
+                                    <span class="material-icons">
                                         dashboard
-                                    </i>
-                                </sub>
-                                 Model Summary
+                                    </span>
+                                    Model summary
+                                </a>
 
-                            </a>
-                         </div>
+                            </div>
 
-                       <!-- </div>-->
+                        </li>
 
-                     </li>
-                  </ul>
+                    </ul>
 
-            </div>
-           </div>
-            <!-- END Modeled inputs -->
-
-
-
-
-        <!-- Add Metrics-->
-        <div class="target-block-wrapper" style="">
-              <div class="target-block-header">
-
-                    <div class="target-block-number-circle" >
-                                           <b data-ng-if="!page.models.length">2</b>
-                                           <b data-ng-if="page.models.length">3</b>
-
-                    </div>
-
-
-                    <div class="target-block-title">
-                        <b> Add Metric </b>
-                    </div>
-               </div>
-
-            <p style="clear:both;" >
-                Automated and Reportable Metrics can be added to this Practice using the search form below.
-                For a list of metrics available please visit <a href="/programs/{{ page.practice.project.program_id }}/metrics">here</a>
-            </p>
-
-             <div class="form-element">
-                            <span class="meta-label"><b>Add Metric</b></span>
-
-                            <input id="programMetric_type_id"
-                                   name="programMetric_type_id"
-                                   type="text"
-                                   placeholder="Search metrics"
-                                   data-ng-model="page.programMetric"
-                                   uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5"
-                                   typeahead-on-select="page.addMetric($item,$model,$label)"
-                                   typeahead-min-length="0"
-                                   typeahead-template-url="templates/search--tpl.html" />
-
-                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                {{ page.practice.category.description || page.practiceType.description }}
-                            </p>
-
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
-                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
-                            </p>
-             </div>
+                </div>
 
             </div>
 
-     <!-- END Add Metrics-->
+            <!-- END MODEL INPUTS -->
 
-       <!-- assign Metrics -->
+            <!-- START ADD METRICS -->
 
-       <div class="target-block-wrapper" id="assignTargetsBlock" data-ng-if="page.assignedMetrics && page.metricMatrix">
+            <div class="target-block-wrapper">
 
-               <div class="target-block-header">
+                <div class="target-block-header">
 
                     <div class="target-block-number-circle" >
-                                           <b data-ng-if="!page.models.length">3</b>
-                                           <b data-ng-if="page.models.length">4</b>
-
+                        <strong data-ng-if="!page.models.length">2</strong>
+                        <strong data-ng-if="page.models.length">3</strong>
                     </div>
-
-
 
                     <div class="target-block-title">
-                        <b> Assign Targets </b>
+                        <strong>Add metric</strong>
                     </div>
-               </div>
 
-                <p style="clear:both;" >
-                Enter a target value for each metric manually added to this practice.
-                    Automated metric targets cannot be edited.
+                </div>
+
+                <p>
+                    Automated and manual metrics can be added to this practice using the search form below. If you’re not sure where to start, please <a href="/programs/{{ page.practice.project.program_id }}/metrics">follow this link</a> to see a list of available metrics.
                 </p>
 
-                <div style="border:0px solid green;">
+                <div class="form-element">
+                
+                    <span class="meta-label">
+                        <strong>Add metric</strong>
+                    </span>
 
-                        <ul class="target-lst target-lst-inactive">
-                            <li data-ng-repeat="assigned in page.assignedMetrics"
-                                data-ng-if="assigned.metric.automated"
-                                style="height:63px; background-color:#f5f5f5;">
-                                   <div>{{assigned.metric.name}}</div> <div style="">{{assigned.value}}</div>
-                            </li>
-                            <li data-ng-repeat="assigned in page.assignedMetrics"
-                                data-ng-if="!assigned.metric.automated"
-                                style="height:63px; ">
-                                         <div>{{assigned.metric.name}}</div>
+                    <input id="programMetric_type_id" name="programMetric_type_id" type="text" placeholder="Search metrics" data-ng-model="page.programMetric" uib-typeahead="programMetric as programMetric.name for programMetric in page.programMetrics | filter:{name: $viewValue} | limitTo:5" typeahead-on-select="page.addMetric($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" />
 
-                                         <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                                         <button type="button" class="add-item" data-ng-click="page.saveTarget(assigned, $index, assigned.value)" data-ng-disabled="page.status.processing">
-                                             <i class="material-icons">
-                                                done
-                                            </i>
-                                        </button>
-                                         <button type="button" class="add-item" data-ng-click="page.deleteTarget(assigned, $index)" data-ng-disabled="page.status.processing">
-                                             <i class="material-icons">
-                                                remove_circle
-                                            </i>
-                                        </button>
-                            </li>
-                        </ul>
+                    <!-- <p data-ng-if="page.practice.practice_type_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                        {{ page.practice.practice_type.description || page.practiceType.description }}
+                    </p> -->
+
+                    <!-- <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.practice_type.model.id">
+                    This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.practice_type.model.id }}" title="{{ page.practiceType.model.name || page.practice.practice_type.model.name }}">here</a> to learn more about the model.
+                    </p> -->
 
                 </div>
 
+            </div>
 
+            <!-- END ADD METRICS-->
 
-                <div style="border:0px solid green;">
-                  <!--  <div data-ng-repeat="secondary in page.metricMatrix">
-                        {{secondary.name}}
+            <!-- START ASSIGN METRICS -->
+
+            <div class="target-block-wrapper" id="assignTargetsBlock" data-ng-if="page.assignedMetrics && page.metricMatrix">
+
+                <div class="target-block-header">
+
+                    <div class="target-block-number-circle" >
+                        <strong data-ng-if="!page.models.length">3</strong>
+                        <strong data-ng-if="page.models.length">4</strong>
                     </div>
-                        -->
-                     <ul class="target-lst target-lst-inactive">
-                        <li data-ng-repeat="metric in page.metricMatrix">
-                             <div>{{ metric.name }}</div>
-                            <input type="number" class="form-control" data-ng-model="metric.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                             <button type="button" class="add-item" data-ng-click="page.saveTarget(metric, $index, metric.value)" data-ng-disabled="page.status.processing">
-                                 <i class="material-icons">
-                                    done
-                                </i>
-                            </button>
-                             <button type="button" class="add-item" data-ng-click="page.removeMetric(metric, $index)" data-ng-disabled="page.status.processing">
-                                 <i class="material-icons">
-                                    remove_circle
-                                </i>
-                            </button>
-                        </li>
-                        </ul>
+
+                    <div class="target-block-title">
+                        <strong>Active targets</strong>
+                    </div>
 
                 </div>
 
-       </div>
+                <p>
+                    Enter a target value for each metric manually added to this practice. Automated metric targets cannot be edited.
+                </p>
 
-        <!-- end assign metrics -->
+                <ul class="target-lst">
 
+                    <li data-ng-repeat="assigned in page.assignedMetrics" data-ng-if="assigned.metric.automated" style="background-color:#f5f5f5;">
+
+                        <div>{{ assigned.metric.name }}</div>
+
+                        <div>{{ assigned.value | number:2 }}</div>
+
+                    </li>
+
+                    <li data-ng-repeat="assigned in page.assignedMetrics" data-ng-if="!assigned.metric.automated">
+                    
+                        <div>{{ assigned.metric.name }}</div>
+
+                        <input type="number" class="form-control" data-ng-model="assigned.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                    
+                        <button type="button" class="add-item" data-ng-click="page.saveTarget(assigned, $index, assigned.value)" data-ng-disabled="page.status.processing">
+                            <span class="material-icons">
+                                done
+                            </span>
+                        </button>
+
+                        <button type="button" class="add-item" data-ng-click="page.deleteTarget(assigned, $index)" data-ng-disabled="page.status.processing">
+                            <span class="material-icons">
+                                remove_circle
+                            </span>
+                        </button>
+
+                    </li>
+
+                </ul>
+
+                <ul class="target-lst">
+
+                    <li data-ng-repeat="metric in page.metricMatrix">
+                    
+                        <div>{{ metric.name }}</div>
+                    
+                        <input type="number" class="form-control" data-ng-model="metric.value" id="name-inactive-{{ $index }}" name="name-inactive-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                    
+                        <button type="button" class="add-item" data-ng-click="page.saveTarget(metric, $index, metric.value)" data-ng-disabled="page.status.processing">
+                            <span class="material-icons">
+                                done
+                            </span>
+                        </button>
+
+                        <button type="button" class="add-item" data-ng-click="page.removeMetric(metric, $index)" data-ng-disabled="page.status.processing">
+                            <span class="material-icons">
+                                remove_circle
+                            </span>
+                        </button>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- END ASSIGN METRICS -->
 
         </div>
+
     </div>
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
@@ -475,15 +425,6 @@
                     </i>
                 </a>
             </li>
-          <!--  <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
-                    <i class="material-icons">
-                        insert_photo
-                    </i>
-                </a>
-            </li>
-
-            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">
@@ -498,17 +439,11 @@
                     </i>
                 </a>
             </li>
-
-             <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.copyTarget && page.copyTarget.feature.id === page.practice.id && page.copyTarget.collection === 'practice'">
                     <p>Make a copy of this practice?</p>
                     <div class="actions">
-                        <a class="snapshot--title"
-                           href="#"
-                           style="background-color:#29cc82"
-                           title="Copy"
-                           data-ng-click="page.copyFeature('practice')"
-                        >
+                        <a class="snapshot--title" href="#" style="background-color:#29cc82" title="Copy" data-ng-click="page.copyFeature('practice')">
                             Yes
                         </a>
                         <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelCopy()">
@@ -517,12 +452,11 @@
                     </div>
                 </div>
                 <a href="#" data-ng-click="page.confirmCopy(page.practice, 'practice')" title="Copy">
-                    <i class="material-icons">
+                    <span class="material-icons">
                         file_copy
-                    </i>
+                    </span>
                 </a>
             </li>
-
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
                     <p>Do you want to delete this practice?</p>
