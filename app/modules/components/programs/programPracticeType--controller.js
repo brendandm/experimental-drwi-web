@@ -37,7 +37,7 @@
                 };
 
                 $rootScope.toolbarState = {
-                    'dashboard': true
+                    'viewPracticeTypes': true
                 };
 
                 $rootScope.page = {};

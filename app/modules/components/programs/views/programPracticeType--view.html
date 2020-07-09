@@ -24,13 +24,18 @@
                     </div>
                 </div>
 
-                <h1>{{ page.practiceType.name }}</h1>
+                <h1 class="pad-2" style="margin: 0;">{{ page.practiceType.name }}</h1>
 
                 <div class="group reveal fade-in t2">
 
                     <section class="pad space-right">
 
-                        <h2>Description</h2>
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                description
+                            </span>
+                            Description
+                        </h2>
 
                         <div>
                             <p>{{ page.practiceType.description || 'No description provided.' }}</p>
@@ -40,7 +45,12 @@
 
                     <section>
 
-                        <h2>Usage</h2>
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                analytics
+                            </span>
+                            Usage
+                        </h2>
 
                         <div>
                             <p>There <ng-pluralize
@@ -64,7 +74,12 @@
 
                     <section style="min-height: 0;" class="space-right pad">
 
-                        <h2>Linked metrics</h2>
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                multiline_chart
+                            </span>
+                            Linked metrics
+                        </h2>
 
                         <p>
                             The {{ page.program.name }} program tracks the following core metrics for the {{
@@ -72,15 +87,10 @@
                             first when it comes time to add metric targets to a practice.
                         </p>
 
-                        <p data-ng-if="page.permissions.write && page.metricTypes" style="padding: 1rem; margin:
-                        0; background: #5b21f3; border-radius: 4px; color: #FFFFFF;">
-                            <strong>Pro tip:&nbsp;</strong>This feature is designed to help you improve the
-                            accuracy
-                            and standardization of your program's metric data in FieldDoc. We strongly recommend
-                            assigning one or more relevant metrics to each practice type in your
-                            program.<br/><br/>
-                            <em>Linking or un-linking metric types will not affect new or existing targets
-                                or target data.</em>
+                        <p data-ng-if="page.permissions.write && page.metricTypes">
+                            <a href="#idx">
+                                Manage linked metrics &rarr;
+                            </a>
                         </p>
 
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
@@ -98,8 +108,9 @@
                                     </div>
 
                                     <div class="body">
-                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                            {{ (feature.description || 'No description') }}</p>
+                                        <p style="padding: 0 0 1em; margin: 0;">
+                                            {{ (feature.description || 'No description') }}
+                                        </p>
                                     </div>
 
                                 </div>
@@ -112,21 +123,64 @@
 
                     <section>
 
-                        <h2>Models</h2>
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                calculate
+                            </span>
+                            Models
+                        </h2>
 
                         <div>
                             <p>There <ng-pluralize
-                                    count="page.practiceType.practice_count"
+                                    count="page.practiceType.models.length"
                                     when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{
-                                page.practiceType.practice_count }}</strong> <ng-pluralize
-                                    count="page.practiceType.practice_count"
-                                    when="{'one': 'practice','other': 'practices'}"></ng-pluralize> implementing the {{
-                                page.practiceType.name }} practice type across <strong>{{
-                                    page.practiceType.project_count }}</strong> <ng-pluralize
-                                        count="page.practiceType.project_count"
-                                        when="{'one': 'project','other': 'projects'}"></ng-pluralize>.
+                                page.practiceType.models.length }}</strong> mathematical <ng-pluralize
+                                    count="page.practiceType.models.length"
+                                    when="{'one': 'model','other': 'models'}"></ng-pluralize> that <ng-pluralize
+                                        count="page.practiceType.models.length"
+                                        when="{'one': 'provides','other': 'provide'}"></ng-pluralize> estimated
+                                values for environmental parameters associated with the {{
+                                page.practiceType.name }} practice type.
                             </p>
                         </div>
+
+                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                            <li class="card reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="feature in page.practiceType.models | orderBy: 'name'">
+
+                                <div class="card--content">
+
+                                    <div class="name" style="flex-flow: column; align-items: flex-start;">
+
+                                        <span>{{ feature.name }}</span>
+
+                                    </div>
+
+                                    <div class="body">
+                                        <p style="padding: 0 0 1em; margin: 0;">
+                                            {{ (feature.description || 'No description') }}
+                                        </p>
+                                        <p>
+                                            <strong>Metrics</strong>
+                                        </p>
+                                        <span data-ng-repeat="metric in feature.metrics | orderBy: 'name'">
+                                            {{ metric.name }}
+                                        </span>
+                                        <p>
+                                            <br />
+                                            <a href="models/{{ feature.id }}">
+                                                View model documentation &rarr;
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </li>
+
+                        </ul>
 
                     </section>
 
@@ -135,6 +189,17 @@
                 <div class="index reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
 
                     <h2>Manage linked metrics</h2>
+
+                    <p data-ng-if="page.permissions.write && page.metricTypes" style="padding: 1rem; margin:
+                        0; background: #5b21f3; border-radius: 4px; color: #FFFFFF;">
+                        <strong>Pro tip:&nbsp;</strong>This feature is designed to help you improve the
+                        accuracy
+                        and standardization of your program's metric data in FieldDoc. We strongly recommend
+                        assigning one or more relevant metrics to each practice type in your
+                        program.<br/><br/>
+                        <em>Linking or un-linking metric types will not affect new or existing targets
+                            or target data.</em>
+                    </p>
 
                     <div class="collection-search reveal fade-in t0">
 
@@ -195,38 +260,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/programs/{{ page.program.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write">
-                <a href="/programs/{{ page.program.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/programs/{{ page.program.id }}/tags" title="Tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/programs/{{ page.program.id  }}/metrics" title="Metrics">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div data-ng-include="'/templates/toolbars/program.html'"></div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">

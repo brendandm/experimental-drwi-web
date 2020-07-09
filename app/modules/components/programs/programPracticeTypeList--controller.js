@@ -35,7 +35,7 @@
                 };
 
                 $rootScope.toolbarState = {
-                    'dashboard': true
+                    'viewPracticeTypes': true
                 };
 
                 $rootScope.page = {};
@@ -230,6 +230,8 @@
                         console.log('self.program', successResponse);
 
                         self.program = successResponse;
+
+                        self.permissions = successResponse.permissions;
 
                         $rootScope.program = successResponse;
 

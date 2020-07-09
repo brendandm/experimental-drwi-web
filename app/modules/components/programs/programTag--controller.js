@@ -112,6 +112,8 @@ angular.module('FieldDoc')
 
                     self.program = successResponse;
 
+                    self.permissions = successResponse.permissions;
+
                     self.tempGroups = successResponse.tag_groups;
 
                     self.tempTags = successResponse.tags;

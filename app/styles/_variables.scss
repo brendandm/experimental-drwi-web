@@ -61,6 +61,95 @@ $color-vivid-green: #21f37e; // rgb(33,243,126)
 //$font-serif: "Times New Roman", "Times", serif;
 $font-serif: Georgia,Cambria,"Times New Roman",Times,serif;
 //$font-sans: "Roboto", "Helvetica Neue", "Helvetica", Arial, sans-serif;
-$font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",
+"Helvetica Neue", sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 //$font-sans-plain: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-$font-sans-plain: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-sans-plain: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",
+"Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-monospace: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+
+//
+// Padding Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/padding
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated padding rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply padding rules to surrounding elements to achieve the
+// desired result.
+//
+
+$pad-0: 0;
+$pad-1: 1rem;
+$pad-2: 2rem;
+$pad-3: 3rem;
+$pad-4: 4rem;
+$pad-1-0: 1rem 0;
+$pad-0-1: 0 1rem;
+$pad-2-0: 2rem 0;
+$pad-0-2: 0 2rem;
+$pad-3-0: 3rem 0;
+$pad-0-3: 0 3rem;
+$pad-4-0: 4rem 0;
+$pad-0-4: 0 4rem;
+$pad-1-0-0-0: 1rem 0 0 0;
+$pad-0-1-0-0: 0 1rem 0 0;
+$pad-0-0-1-0: 0 0 1rem 0;
+$pad-0-0-0-1: 0 0 0 1rem;
+$pad-2-0-0-0: 2rem 0 0 0;
+$pad-0-2-0-0: 0 2rem 0 0;
+$pad-0-0-2-0: 0 0 2rem 0;
+$pad-0-0-0-2: 0 0 0 2rem;
+$pad-3-0-0-0: 3rem 0 0 0;
+$pad-0-3-0-0: 0 3rem 0 0;
+$pad-0-0-3-0: 0 0 3rem 0;
+$pad-0-0-0-3: 0 0 0 3rem;
+$pad-4-0-0-0: 4rem 0 0 0;
+$pad-0-4-0-0: 0 4rem 0 0;
+$pad-0-0-4-0: 0 0 4rem 0;
+$pad-0-0-0-4: 0 0 0 4rem;
+
+//
+// Margin Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/margin
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated margin rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply margin rules to surrounding elements to achieve the
+// desired result.
+//
+
+$margin-0: 0 !important;
+$margin-1: 1rem;
+$margin-2: 2rem;
+$margin-3: 3rem;
+$margin-4: 4rem;
+$margin-1-0: 1rem 0;
+$margin-0-1: 0 1rem;
+$margin-2-0: 2rem 0;
+$margin-0-2: 0 2rem;
+$margin-3-0: 3rem 0;
+$margin-0-3: 0 3rem;
+$margin-4-0: 4rem 0;
+$margin-0-4: 0 4rem;
+$margin-1-0-0-0: 1rem 0 0 0;
+$margin-0-1-0-0: 0 1rem 0 0;
+$margin-0-0-1-0: 0 0 1rem 0;
+$margin-0-0-0-1: 0 0 0 1rem;
+$margin-2-0-0-0: 2rem 0 0 0;
+$margin-0-2-0-0: 0 2rem 0 0;
+$margin-0-0-2-0: 0 0 2rem 0;
+$margin-0-0-0-2: 0 0 0 2rem;
+$margin-3-0-0-0: 3rem 0 0 0;
+$margin-0-3-0-0: 0 3rem 0 0;
+$margin-0-0-3-0: 0 0 3rem 0;
+$margin-0-0-0-3: 0 0 0 3rem;
+$margin-4-0-0-0: 4rem 0 0 0;
+$margin-0-4-0-0: 0 4rem 0 0;
+$margin-0-0-4-0: 0 0 4rem 0;
+$margin-0-0-0-4: 0 0 0 4rem;

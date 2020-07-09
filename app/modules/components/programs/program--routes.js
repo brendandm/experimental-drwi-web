@@ -124,6 +124,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/programs/views/programMetrics--view.html?t=' + environment.version,
                 controller: 'ProgramMetricsController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 

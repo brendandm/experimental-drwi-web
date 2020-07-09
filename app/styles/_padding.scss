@@ -1,0 +1,168 @@
+//
+// _padding.scss
+//
+// This stylesheet is written in SASS(1) and contains variables that apply to
+// the site as a whole. This makes us more effective in retaining a consistency
+// throughout the entire site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Padding Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/padding
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated padding rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply padding rules to surrounding elements to achieve the
+// desired result.
+//
+
+$pad-0: 0 !important;
+$pad-1: 1rem;
+$pad-2: 2rem;
+$pad-3: 3rem;
+$pad-4: 4rem;
+$pad-1-0: 1rem 0;
+$pad-0-1: 0 1rem;
+$pad-2-0: 2rem 0;
+$pad-0-2: 0 2rem;
+$pad-3-0: 3rem 0;
+$pad-0-3: 0 3rem;
+$pad-4-0: 4rem 0;
+$pad-0-4: 0 4rem;
+$pad-1-0-0-0: 1rem 0 0 0;
+$pad-0-1-0-0: 0 1rem 0 0;
+$pad-0-0-1-0: 0 0 1rem 0;
+$pad-0-0-0-1: 0 0 0 1rem;
+$pad-2-0-0-0: 2rem 0 0 0;
+$pad-0-2-0-0: 0 2rem 0 0;
+$pad-0-0-2-0: 0 0 2rem 0;
+$pad-0-0-0-2: 0 0 0 2rem;
+$pad-3-0-0-0: 3rem 0 0 0;
+$pad-0-3-0-0: 0 3rem 0 0;
+$pad-0-0-3-0: 0 0 3rem 0;
+$pad-0-0-0-3: 0 0 0 3rem;
+$pad-4-0-0-0: 4rem 0 0 0;
+$pad-0-4-0-0: 0 4rem 0 0;
+$pad-0-0-4-0: 0 0 4rem 0;
+$pad-0-0-0-4: 0 0 0 4rem;
+
+.pad-0 {
+    padding: $pad-0;
+}
+
+.pad-1 {
+    padding: $pad-1;
+}
+
+.pad-2 {
+    padding: $pad-2;
+}
+
+.pad-3 {
+    padding: $pad-3;
+}
+
+.pad-4 {
+    padding: $pad-4;
+}
+
+.pad-1-0 {
+    padding: $pad-1-0;
+}
+
+.pad-0-1 {
+    padding: $pad-0-1;
+}
+
+.pad-2-0 {
+    padding: $pad-2-0;
+}
+
+.pad-0-2 {
+    padding: $pad-0-2;
+}
+
+.pad-3-0 {
+    padding: $pad-3-0;
+}
+
+.pad-0-3 {
+    padding: $pad-0-3;
+}
+
+.pad-4-0 {
+    padding: $pad-4-0;
+}
+
+.pad-0-4 {
+    padding: $pad-0-4;
+}
+
+.pad-1-0-0-0 {
+    padding: $pad-1-0-0-0;
+}
+
+.pad-0-1-0-0 {
+    padding: $pad-0-1-0-0;
+}
+
+.pad-0-0-1-0 {
+    padding: $pad-0-0-1-0;
+}
+
+.pad-0-0-0-1 {
+    padding: $pad-0-0-0-1;
+}
+
+.pad-2-0-0-0 {
+    padding: $pad-2-0-0-0;
+}
+
+.pad-0-2-0-0 {
+    padding: $pad-0-2-0-0;
+}
+
+.pad-0-0-2-0 {
+    padding: $pad-0-0-2-0;
+}
+
+.pad-0-0-0-2 {
+    padding: $pad-0-0-0-2;
+}
+
+.pad-3-0-0-0 {
+    padding: $pad-3-0-0-0;
+}
+
+.pad-0-3-0-0 {
+    padding: $pad-0-3-0-0;
+}
+
+.pad-0-0-3-0 {
+    padding: $pad-0-0-3-0;
+}
+
+.pad-0-0-0-3 {
+    padding: $pad-0-0-0-3;
+}
+
+.pad-4-0-0-0 {
+    padding: $pad-4-0-0-0;
+}
+
+.pad-0-4-0-0 {
+    padding: $pad-0-4-0-0;
+}
+
+.pad-0-0-4-0 {
+    padding: $pad-0-0-4-0;
+}
+
+.pad-0-0-0-4 {
+    padding: $pad-0-0-0-4;
+}

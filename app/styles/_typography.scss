@@ -120,6 +120,17 @@ p.lead {
   margin-top: 0;
 }
 
+h2.with-icon {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  span {
+      margin-right: 0.5rem;
+  }
+
+}
+
 p.introduction {
   font-size: 2em;
   line-height: 1.4;

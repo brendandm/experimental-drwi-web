@@ -87,12 +87,17 @@
                         <h2>Practice types</h2>
 
                         <p>
-                            This program contains <strong>{{ page.summary.matches }}</strong> practice <ng-pluralize count="page.summary.matches" when="{'one': 'type','other': 'types'}"></ng-pluralize>.
+                            This program contains <strong>{{ page.summary.matches }}</strong> practice
+                            <ng-pluralize count="page.summary.matches"
+                                          when="{'one': 'type','other': 'types'}"></ng-pluralize>
+                            .
                         </p>
 
                         <div class="collection-search reveal fade-in t0">
 
-                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Find a practice type&hellip;">
+                            <input style="float:left; display:inline-block; clear:right;" type="text"
+                                   class="search-bar list-filter" data-ng-if="!page.status.loading"
+                                   data-ng-model="page.queryToken" placeholder="Find a practice type&hellip;">
 
                         </div>
 
@@ -107,22 +112,29 @@
 
                             <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                                <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="practice in group | orderBy:'name' | filter: page.queryToken">
+                                <li class="card reveal fade-in"
+                                    style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                    data-ng-repeat="practice in group | orderBy:'name' | filter: page.queryToken">
 
                                     <div class="card--content">
 
                                         <div class="name" style="flex-flow: column; align-items: flex-start;">
 
-                                            <a href="/programs/{{ page.program.id }}/practice-type/{{ practice.id }}" style="text-decoration: none;">
+                                            <a href="/programs/{{ page.program.id }}/practice-type/{{ practice.id }}"
+                                               style="text-decoration: none;">
                                                 {{ practice.name }}
                                             </a>
 
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;"
+                                                  data-ng-if="practice.group">{{ practice.group }}
+                                            </span>
 
                                         </div>
 
                                         <div class="body">
-                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ practice.description || 'No description provided.' }}</p>
+                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
+                                                {{ practice.description || 'No description provided.' }}
+                                            </p>
                                         </div>
 
                                     </div>
@@ -143,38 +155,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/programs/{{ page.program.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/programs/{{ page.program.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/programs/{{ page.program.id }}/tags" title="Tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/programs/{{ page.program.id  }}/metrics" title="Metrics">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div data-ng-include="'/templates/toolbars/program.html'"></div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
