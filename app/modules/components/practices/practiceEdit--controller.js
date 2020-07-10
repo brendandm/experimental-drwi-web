@@ -243,6 +243,8 @@ angular.module('FieldDoc')
 
                  self.loadSites();
 
+                self.processSetup(self.practice.setup);
+
                 //
                 // Load practice types
                 //
@@ -283,6 +285,28 @@ angular.module('FieldDoc')
             });
 
         };
+
+        /*START STATE CALC*/
+
+        self.processSetup = function(setup){
+
+            const next_action = setup.next_action;
+
+            self.states = setup.states;
+
+            self.next_action = next_action;
+
+            console.log("self.states",self.states);
+
+            console.log("self.next_action",self.next_action);
+
+            console.log("self.next_action_lable",self.next_action_lable);
+
+
+
+        };
+
+        /*END STATE CALC*/
 
 
            self.loadSites = function() {
