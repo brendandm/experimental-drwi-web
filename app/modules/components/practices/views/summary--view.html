@@ -49,7 +49,30 @@
                     </div>
                 </div>
 
+                <!-- START Rails Instructions-->
+
+                <div class="group reveal fade-in t2"
+                     data-ng-if="page.next_action != 'edit_targets'"
+                >
+                    <section class="pad shadow"
+                             ng-bind-html="page.next_action_lable"
+                             style="min-height:0px;
+                                    background-color: #fff6c6;
+                                    padding-top: 16px;
+                                    padding-bottom: 16px;
+                                    margin-bottom: 16px;
+                                    "
+                    >
+                        {{page.next_action_lable}}
+
+                    </section>
+                </div>
+
+                <!-- END Rails Instructions-->
+
                 <div class="group">
+
+
 
                     <!-- Descriptors -->
 
@@ -193,14 +216,20 @@
 
                 </div>
 
-                <div class="group reveal fade-in t2"
+               <!-- <div class="group reveal fade-in t2"
                      data-ng-if="page.next_action != 'edit_targets'"
                 >
-                    <section class="pad shadow" ng-bind-html="page.next_action_lable">
+                    <section class="pad shadow"
+                             ng-bind-html="page.next_action_lable"
+                             style="min-height:0px;
+                                    background-color: #fff6c6;
+                                    "
+                    >
                         {{page.next_action_lable}}
 
                     </section>
                 </div>
+                -->
 
                 <div class="group reveal fade-in t2"
                      data-ng-if="page.next_action == 'edit_targets'"
