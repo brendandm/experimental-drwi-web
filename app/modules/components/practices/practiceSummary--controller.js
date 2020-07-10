@@ -445,7 +445,6 @@
                                 "</p>"
                             ;
 
-
                             break;
 
                         case 'add_targets':
