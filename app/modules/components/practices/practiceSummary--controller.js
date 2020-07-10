@@ -421,17 +421,19 @@
 
                     switch (next_action) {
                         case 'add_name':
-                            self.next_action_lable =    "This practice needs a name. " +
+                            self.next_action_lable =    "<p>This practice needs a name. " +
                                 "Click <i class='material-icons'>edit</i> " +
-                                "to <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>"
+                                "to <a href='value'>edit this practice</a>" +
+                                "</p>"
                                 ;
 
                             break;
 
                         case 'add_type':
-                            self.next_action_lable =    "This practice needs a Practice Type. " +
+                            self.next_action_lable =  String("<p> This practice needs a Practice Type. " +
                                 "Click <i class='material-icons'>edit</i> " +
-                                "to <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>"
+                                "to <a href='value'>edit this practice</a>" +
+                                "</p>");
                             ;
 
                             break;
@@ -439,7 +441,8 @@
                         case 'add_geometry':
                             self.next_action_lable =    "This practice needs a Location Geometry. " +
                                 "Click <i class='material-icons'>location_on</i> " +
-                                "to <a href='/practices/{{ page.practice.id }}/location '>edit this practice</a>"
+                                "to <a href='/practices/{{ page.practice.id }}/location '>edit this practice</a>" +
+                                "</p>"
                             ;
 
 
@@ -448,7 +451,8 @@
                         case 'add_targets':
                             self.next_action_lable =    "This practice needs Metric Targets added. " +
                                 "Click <i class='material-icons'>multiline_chart</i> " +
-                                "to <a href='/practices/{{ page.practice.id }}/targets '>edit this practice</a>"
+                                "to <a href='/practices/{{ page.practice.id }}/targets '>edit this practice</a>" +
+                                "</p>"
                             ;
 
                             break;
@@ -459,6 +463,8 @@
 
                         default:
                     }
+
+                    console.log("self.next_action_lable",self.next_action_lable);
 
 
 
