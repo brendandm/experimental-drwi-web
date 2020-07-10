@@ -194,6 +194,15 @@
                 </div>
 
                 <div class="group reveal fade-in t2"
+                     data-ng-if="page.next_action != 'edit_targets'"
+                >
+                    <section class="pad shadow" ng-bind-html="page.next_action_lable">
+                        {{page.next_action_lable}}
+
+                    </section>
+                </div>
+
+                <div class="group reveal fade-in t2"
                      data-ng-if="page.next_action == 'edit_targets'"
                 >
 
