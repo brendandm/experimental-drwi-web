@@ -7,7 +7,6 @@
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
 
-
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
                 <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
@@ -59,136 +58,110 @@
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative; overflow: visible;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()" autocomplete="off">
+                    <form role="form" class="form" style="position:relative; overflow: visible;" id="form--PracticeEdit"
+                          name="form--PracticeEdit" data-ng-submit="page.savePractice()" autocomplete="off">
 
                         <!-- Practice Name -->
-                         <p style="font-style: normal;
-                                    font-size: 1em;
-                                    margin-top: 1em;
-                                    margin-bottom: 1em;
-                                    padding-bottom: 1em;
-                                    color: #616161;">
-                            Use the below form to enter a name, description, practice type on privacy status for your Practice.
-                             <a href="/programs/{{page.practice.project.program_id}}" target="_blank">Click here</a> to view a <a href="/programs/{{page.practice.project.program_id}}" target="_blank">full list of Practices Types</a> available from this funder.
-                         </p>
+                        <p>
+                            Use the below form to enter a name, description, practice type, and privacy status for your
+                            practice.
+                        </p>
+                        <p>
+                            <a href="/programs/{{ page.practice.project.program_id }}/practice-types"
+                               target="_blank">Click here to view the full list of practice types</a> available
+                            through this project's program.
+                        </p>
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
+                            <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name"
+                                   name="name" placeholder="Practice name"/>
                         </div>
 
                         <!-- Practice Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.practice.description" maxlength="1500" rows="10">{{ page.practice.description }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.practice.description"
+                                      maxlength="1500" rows="10">{{ page.practice.description }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,500 characters, including spaces and punctuation. <strong>({{ (page.practice.description.length || 0) | number }} used)</strong>
+                                Descriptions may contain up to 1,500 characters, including spaces and punctuation.
+                                <strong>({{ (page.practice.description.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
                         <!-- Practice Type -->
 
-
                         <div class="form-element">
 
                             <span class="meta-label"><b>Practice type</b></span>
 
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceType"
+                            <input id="practice_type_id" name="practice_type_id" type="text"
+                                   placeholder="Search categories" data-ng-model="page.practiceType"
                                    uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"
-                                   typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" />
+                                   typeahead-on-select="page.setPracticeType($item,$model,$label)"
+                                   typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html"/>
 
-                            <p data-ng-if="page.practice.category.id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                            <p data-ng-if="page.practice.category.id"
+                               style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.category.description || page.practiceType.description }}
                             </p>
 
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
-                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;"
+                               data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
+                                This practice type is linked to an automated model that calculates estimated values for
+                                various environmental metrics. Click <a
+                                    href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}"
+                                    title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a>
+                                to learn more about the model.
                             </p>
 
                         </div>
-
 
                         <div class="form-element">
 
                             <span class="meta-label"><b>Site</b></span>
 
-                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites" data-ng-model="page.site"
+                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites"
+                                   data-ng-model="page.site"
                                    uib-typeahead="site as site.name for site in page.sites | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.setSite($item)"
                                    typeahead-min-length="0"
-                                   typeahead-template-url="templates/search--tpl.html" />
-
+                                   typeahead-template-url="templates/search--tpl.html"/>
 
                             <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 Sites are an optional way to organize your practices.
-                                To use sites you must first create your site(s) from <the></the>
+                                To use sites you must first create your site(s) from
+                                <the></the>
                                 <a href="/projects/{{page.practice.project.id}}">Project Summary</a> page.
                                 If you do not wish to use a site with this practice, either leave this
                                 field blank or select 'None'.
                             </p>
-                           <!-- <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                {{ page.practice.site.description || 'No description' }}
-                            </p>
-                            -->
-
-                        <!--   <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
-                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
-                            </p>
-                        -->
-                        </div>
-
-
-<!--
-                        <div data-ng-if="page.sites">
-
-                            <div style="padding-top: 2em; margin: 2em 0; border-top: 1px solid #e0e0e0;" >
-
-                                <p style="font-style: normal; font-size: 1em; color: #212121; margin: 0 0 2em;">
-                                    <strong>Sites</strong>
-                                </p>
-
-                                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
-
-                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="site in page.sites | orderBy:'name'">
-
-                                        <div class="card--content">
-
-                                            <label class="name">
-                                                {{ site.properties.name }}
-                                                <input type="checkbox" data-ng-model="site.selected" data-ng-checked="site.selected" />
-                                            </label>
-
-                                            <div class="body">
-                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (site.properties.description || 'No description') | truncate:250 }}</p>
-                                            </div>
-
-                                        </div>
-
-                                    </li>
-
-                                </ul>
-
-                            </div>
 
                         </div>
--->
-
-
 
                         <h2 class="">Privacy</h2>
 
                         <div class="scope--control">
                             <span>Off</span>
                             <label class="switch">
-                                <input class="inputdemo" type="checkbox" data-ng-model="page.practice.private" data-ng-checked="page.practice.private">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.practice.private"
+                                       data-ng-checked="page.practice.private">
                                 <div class="slider round"></div>
                             </label>
                             <span>On</span>
                         </div>
 
-                        <p class="" data-ng-if="page.practice.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will not</strong> appear on dashboard maps.</p>
+                        <p class="" data-ng-if="page.practice.private"
+                           style="font-style: normal; font-size: 1em; color: #616161;">This practice is
+                            <strong>private</strong>. It can only be viewed and edited by project collaborators and
+                            program managers. Geographic data related to this practice <strong>will not</strong> appear
+                            on dashboard maps.</p>
 
-                        <p class="" data-ng-if="!page.practice.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will</strong> appear on dashboard maps.</p>
+                        <p class="" data-ng-if="!page.practice.private"
+                           style="font-style: normal; font-size: 1em; color: #616161;">This practice is
+                            <strong>public</strong>. It can only be viewed and edited by project collaborators and
+                            program managers. Geographic data related to this practice <strong>will</strong> appear on
+                            dashboard maps.</p>
 
                         <div class="save--action--wrapper save--action--bottom">
                             <button type="submit" data-ng-disabled="page.status.processing" title="Save">
@@ -227,7 +200,8 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.category"
+                data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
@@ -248,8 +222,9 @@
                     </i>
                 </a>
             </li>
-             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.copyTarget && page.copyTarget.feature.id === page.practice.id && page.copyTarget.collection === 'practice'">
+            <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup"
+                     data-ng-if="page.copyTarget && page.copyTarget.feature.id === page.practice.id && page.copyTarget.collection === 'practice'">
                     <p>Make a copy of this practice?</p>
                     <div class="actions">
                         <a class="snapshot--title"
@@ -294,7 +269,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
