@@ -1,0 +1,168 @@
+//
+// _margin.scss
+//
+// This stylesheet is written in SASS(1) and contains variables that apply to
+// the site as a whole. This makes us more effective in retaining a consistency
+// throughout the entire site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Margin Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/margin
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated margin rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply margin rules to surrounding elements to achieve the
+// desired result.
+//
+
+$margin-0: 0 !important;
+$margin-1: 1rem;
+$margin-2: 2rem;
+$margin-3: 3rem;
+$margin-4: 4rem;
+$margin-1-0: 1rem 0;
+$margin-0-1: 0 1rem;
+$margin-2-0: 2rem 0;
+$margin-0-2: 0 2rem;
+$margin-3-0: 3rem 0;
+$margin-0-3: 0 3rem;
+$margin-4-0: 4rem 0;
+$margin-0-4: 0 4rem;
+$margin-1-0-0-0: 1rem 0 0 0;
+$margin-0-1-0-0: 0 1rem 0 0;
+$margin-0-0-1-0: 0 0 1rem 0;
+$margin-0-0-0-1: 0 0 0 1rem;
+$margin-2-0-0-0: 2rem 0 0 0;
+$margin-0-2-0-0: 0 2rem 0 0;
+$margin-0-0-2-0: 0 0 2rem 0;
+$margin-0-0-0-2: 0 0 0 2rem;
+$margin-3-0-0-0: 3rem 0 0 0;
+$margin-0-3-0-0: 0 3rem 0 0;
+$margin-0-0-3-0: 0 0 3rem 0;
+$margin-0-0-0-3: 0 0 0 3rem;
+$margin-4-0-0-0: 4rem 0 0 0;
+$margin-0-4-0-0: 0 4rem 0 0;
+$margin-0-0-4-0: 0 0 4rem 0;
+$margin-0-0-0-4: 0 0 0 4rem;
+
+.margin-0 {
+    margin: $margin-0;
+}
+
+.margin-1 {
+    margin: $margin-1;
+}
+
+.margin-2 {
+    margin: $margin-2;
+}
+
+.margin-3 {
+    margin: $margin-3;
+}
+
+.margin-4 {
+    margin: $margin-4;
+}
+
+.margin-1-0 {
+    margin: $margin-1-0;
+}
+
+.margin-0-1 {
+    margin: $margin-0-1;
+}
+
+.margin-2-0 {
+    margin: $margin-2-0;
+}
+
+.margin-0-2 {
+    margin: $margin-0-2;
+}
+
+.margin-3-0 {
+    margin: $margin-3-0;
+}
+
+.margin-0-3 {
+    margin: $margin-0-3;
+}
+
+.margin-4-0 {
+    margin: $margin-4-0;
+}
+
+.margin-0-4 {
+    margin: $margin-0-4;
+}
+
+.margin-1-0-0-0 {
+    margin: $margin-1-0-0-0;
+}
+
+.margin-0-1-0-0 {
+    margin: $margin-0-1-0-0;
+}
+
+.margin-0-0-1-0 {
+    margin: $margin-0-0-1-0;
+}
+
+.margin-0-0-0-1 {
+    margin: $margin-0-0-0-1;
+}
+
+.margin-2-0-0-0 {
+    margin: $margin-2-0-0-0;
+}
+
+.margin-0-2-0-0 {
+    margin: $margin-0-2-0-0;
+}
+
+.margin-0-0-2-0 {
+    margin: $margin-0-0-2-0;
+}
+
+.margin-0-0-0-2 {
+    margin: $margin-0-0-0-2;
+}
+
+.margin-3-0-0-0 {
+    margin: $margin-3-0-0-0;
+}
+
+.margin-0-3-0-0 {
+    margin: $margin-0-3-0-0;
+}
+
+.margin-0-0-3-0 {
+    margin: $margin-0-0-3-0;
+}
+
+.margin-0-0-0-3 {
+    margin: $margin-0-0-0-3;
+}
+
+.margin-4-0-0-0 {
+    margin: $margin-4-0-0-0;
+}
+
+.margin-0-4-0-0 {
+    margin: $margin-0-4-0-0;
+}
+
+.margin-0-0-4-0 {
+    margin: $margin-0-0-4-0;
+}
+
+.margin-0-0-0-4 {
+    margin: $margin-0-0-0-4;
+}

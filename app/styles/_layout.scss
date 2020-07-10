@@ -35,691 +35,751 @@ $screen-xs-portrait-min: 20em; // Extra small device, portrait orientation up to
 // Grid System
 //
 $susy: (
-  flow: ltr,
-  math: fluid,
-  output: float,
-  gutter-position: split,
-  container: auto,
-  container-position: center,
-  columns: 16,
-  gutters: 0.25,
-  column-width: 4em,
-  global-box-sizing: border-box
+        flow: ltr,
+        math: fluid,
+        output: float,
+        gutter-position: split,
+        container: auto,
+        container-position: center,
+        columns: 16,
+        gutters: 0.25,
+        column-width: 4em,
+        global-box-sizing: border-box
 );
 
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 //
 // Default to a small device size, such as a smart phone
 //
 .container {
-  @include container($screen-sm-min); // Base pixel size is 16px, so 80em === 1280px
-  margin: 0;
-  padding: 0 1em;
+    @include container($screen-sm-min); // Base pixel size is 16px, so 80em === 1280px
+    margin: 0;
+    padding: 0 1em;
 }
 
 .element-invisible {
-  display: none;
+    display: none;
 }
 
 .element-hidden {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 //
 // Show the grid layout
 //
 .show-grid {
-  [class*="row"] {
-    border-bottom: 1px solid $color-grid-border !important;
-    border-top: 1px solid $color-grid-border !important;
-  }
-  [class*="column-"] {
-    background-color: $color-grid-background !important;
+    [class*="row"] {
+        border-bottom: 1px solid $color-grid-border !important;
+        border-top: 1px solid $color-grid-border !important;
+    }
+    [class*="column-"] {
+        background-color: $color-grid-background !important;
 
-    border-left: 1px solid $color-grid-border !important;
-    border-right: 1px solid $color-grid-border !important;
+        border-left: 1px solid $color-grid-border !important;
+        border-right: 1px solid $color-grid-border !important;
 
-    min-height: 12px !important;
+        min-height: 12px !important;
 
-    opacity: 0.5 !important;
+        opacity: 0.5 !important;
 
-  }
+    }
 }
 
-  .row {
+.row {
     float: left;
     margin: 8px 0;
     padding: 0;
     width: 100%;
 
     .row {
-      margin: 0;
+        margin: 0;
 
-      &.row--spacer {
-        margin: 8px 0;
-      }
+        &.row--spacer {
+            margin: 8px 0;
+        }
     }
 
     &.nested-row {
-      margin-bottom: 32px;
+        margin-bottom: 32px;
     }
-  }
+}
 
-  .row-set .row {
+.row-set .row {
     margin-bottom: 16px;
 
     .row-set-label {
-      color: lighten($color-black-base, 10%);
-      font-size: 0.875em;
+        color: lighten($color-black-base, 10%);
+        font-size: 0.875em;
     }
-  }
+}
 
-  .column-flex {
+.column-flex {
     display: inline-block;
     float: left;
     margin-left: 0.625%;
     margin-right: 0.625%;
-  }
+}
 
-  [class*="column-"] {
+[class*="column-"] {
     box-sizing: border-box;
     min-height: 1px;
-  }
+}
 
-  //
-  // Extra Small Device sizes
-  //
-  //  Nexus 5 phone and iPhone
-  //
-  @media screen and (min-width: $screen-xs-landscape-min) {
+//
+// Extra Small Device sizes
+//
+//  Nexus 5 phone and iPhone
+//
+@media screen and (min-width: $screen-xs-landscape-min) {
     body {
 
     }
 
     .hidden-sm {
-      display: none;
+        display: none;
     }
-  }
+}
 
-  @media screen and (min-width: $screen-xs-portrait-min) {
+@media screen and (min-width: $screen-xs-portrait-min) {
     body {
 
     }
 
     .hidden-sm {
-      display: none;
+        display: none;
     }
-  }
+}
 
-  //
-  // Small Device sizes
-  //
-  //  Tablets such as the Nexus or iPad
-  //
-  @media screen and (min-width: $screen-sm-min) {
+//
+// Small Device sizes
+//
+//  Tablets such as the Nexus or iPad
+//
+@media screen and (min-width: $screen-sm-min) {
     .container {
-      @include container($screen-sm-min);
+        @include container($screen-sm-min);
     }
 
     .hidden-sm {
-      display: none;
+        display: none;
     }
 
     .visible-sm {
-      display: block;
+        display: block;
     }
 
     [class*="column-"] {
-      box-sizing: border-box;
+        box-sizing: border-box;
     }
 
     .column-1 {
-      @include span(4);
+        @include span(4);
     }
     .column-2 {
-      @include span(4);
+        @include span(4);
     }
     .column-3 {
-      @include span(4);
+        @include span(4);
     }
     .column-4 {
-      @include span(4);
+        @include span(4);
     }
     .column-5 {
-      @include span(8);
+        @include span(8);
     }
     .column-6 {
-      @include span(8);
+        @include span(8);
     }
     .column-7 {
-      @include span(8);
+        @include span(8);
     }
     .column-8 {
-      @include span(8);
+        @include span(8);
     }
     .column-9 {
-      @include span(12);
+        @include span(12);
     }
     .column-10 {
-      @include span(12);
+        @include span(12);
     }
     .column-11 {
-      @include span(12);
+        @include span(12);
     }
     .column-12 {
-      @include span(12);
+        @include span(12);
     }
     .column-13 {
-      @include span(16);
+        @include span(16);
     }
     .column-14 {
-      @include span(16);
+        @include span(16);
     }
     .column-15 {
-      @include span(16);
+        @include span(16);
     }
     .column-16 {
-      @include span(16);
+        @include span(16);
     }
-  }
+}
 
-  //
-  // Medium Device sizes
-  //
-  //   Medium desktop displays such as 13" and below laptops
-  //
-  @media screen and (min-width: $screen-md-min) {
+//
+// Medium Device sizes
+//
+//   Medium desktop displays such as 13" and below laptops
+//
+@media screen and (min-width: $screen-md-min) {
     .container {
-      @include container($screen-md-min-container);
+        @include container($screen-md-min-container);
     }
 
     .hidden-md {
-      display: none;
+        display: none;
     }
 
     .hidden-sm,
     .visible-md,
     .hidden-lg {
-      display: block;
+        display: block;
     }
 
     .map {
-      display: inline-block;
-      height: 40em;
-      width: 100%;
+        display: inline-block;
+        height: 40em;
+        width: 100%;
     }
 
     .column-1 {
-      @include span(1);
+        @include span(1);
     }
     .column-2 {
-      @include span(2);
+        @include span(2);
     }
     .column-3 {
-      @include span(3);
+        @include span(3);
     }
     .column-4 {
-      @include span(4);
+        @include span(4);
     }
     .column-5 {
-      @include span(5);
+        @include span(5);
     }
     .column-6 {
-      @include span(6);
+        @include span(6);
     }
     .column-7 {
-      @include span(7);
+        @include span(7);
     }
     .column-8 {
-      @include span(8);
+        @include span(8);
     }
     .column-9 {
-      @include span(9);
+        @include span(9);
     }
     .column-10 {
-      @include span(10);
+        @include span(10);
     }
     .column-11 {
-      @include span(11);
+        @include span(11);
     }
     .column-12 {
-      @include span(12);
+        @include span(12);
     }
     .column-13 {
-      @include span(13);
+        @include span(13);
     }
     .column-14 {
-      @include span(14);
+        @include span(14);
     }
     .column-15 {
-      @include span(15);
+        @include span(15);
     }
     .column-16 {
-      @include span(16);
+        @include span(16);
     }
 
-  }
+}
 
-  //
-  // Large Device sizes
-  //
-  //   Large desktop displays of 1280px and higher, for example Macbook Pro, Macbook Air, and other desktops
-  //
-  @media screen and (min-width: $screen-lg-min) {
+//
+// Large Device sizes
+//
+//   Large desktop displays of 1280px and higher, for example Macbook Pro, Macbook Air, and other desktops
+//
+@media screen and (min-width: $screen-lg-min) {
     .container {
-      @include container($screen-lg-min);
+        @include container($screen-lg-min);
     }
 
     .hidden-lg {
-      display: none;
+        display: none;
     }
 
     .map {
-      display: inline-block;
-      height: 40em;
-      width: 100%;
+        display: inline-block;
+        height: 40em;
+        width: 100%;
     }
 
     .visible-lg,
     .hidden-sm,
     .hidden-md {
-      display: block;
+        display: block;
     }
 
     .column-1 {
-      @include span(1);
+        @include span(1);
     }
     .column-2 {
-      @include span(2);
+        @include span(2);
     }
     .column-3 {
-      @include span(3);
+        @include span(3);
     }
     .column-4 {
-      @include span(4);
+        @include span(4);
     }
     .column-5 {
-      @include span(5);
+        @include span(5);
     }
     .column-6 {
-      @include span(6);
+        @include span(6);
     }
     .column-7 {
-      @include span(7);
+        @include span(7);
     }
     .column-8 {
-      @include span(8);
+        @include span(8);
     }
     .column-9 {
-      @include span(9);
+        @include span(9);
     }
     .column-10 {
-      @include span(10);
+        @include span(10);
     }
     .column-11 {
-      @include span(11);
+        @include span(11);
     }
     .column-12 {
-      @include span(12);
+        @include span(12);
     }
     .column-13 {
-      @include span(13);
+        @include span(13);
     }
     .column-14 {
-      @include span(14);
+        @include span(14);
     }
     .column-15 {
-      @include span(15);
+        @include span(15);
     }
     .column-16 {
-      @include span(16);
+        @include span(16);
     }
-  }
+}
 
 
-  //
-  // Large Device sizes
-  //
-  //   Large desktop displays of 1600px and higher, for example Apple Cinema Displays and Televisions
-  //
-  @media screen and (min-width: $screen-xl-min) {
+//
+// Large Device sizes
+//
+//   Large desktop displays of 1600px and higher, for example Apple Cinema Displays and Televisions
+//
+@media screen and (min-width: $screen-xl-min) {
     body {
-      //font-size: 118%;
+        //font-size: 118%;
     }
 
     .container {
-      @include container($screen-lg-min);
+        @include container($screen-lg-min);
     }
 
     .map {
-      display: inline-block;
-      height: 60em;
-      width: 100%;
+        display: inline-block;
+        height: 60em;
+        width: 100%;
     }
 
     .hidden-lg {
-      display: none;
+        display: none;
     }
 
     .visible-lg,
     .hidden-sm,
     .hidden-md {
-      display: block;
+        display: block;
     }
 
     .column-1 {
-      @include span(1);
+        @include span(1);
     }
     .column-2 {
-      @include span(2);
+        @include span(2);
     }
     .column-3 {
-      @include span(3);
+        @include span(3);
     }
     .column-4 {
-      @include span(4);
+        @include span(4);
     }
     .column-5 {
-      @include span(5);
+        @include span(5);
     }
     .column-6 {
-      @include span(6);
+        @include span(6);
     }
     .column-7 {
-      @include span(7);
+        @include span(7);
     }
     .column-8 {
-      @include span(8);
+        @include span(8);
     }
     .column-9 {
-      @include span(9);
+        @include span(9);
     }
     .column-10 {
-      @include span(10);
+        @include span(10);
     }
     .column-11 {
-      @include span(11);
+        @include span(11);
     }
     .column-12 {
-      @include span(12);
+        @include span(12);
     }
     .column-13 {
-      @include span(13);
+        @include span(13);
     }
     .column-14 {
-      @include span(14);
+        @include span(14);
     }
     .column-15 {
-      @include span(15);
+        @include span(15);
     }
     .column-16 {
-      @include span(16);
+        @include span(16);
     }
-  }
+}
 
 //
 // Generic
 //
 body {
-  //background-color: $color-white-darker;
-  //background-color: $color-white-darker;
-  color: $color-black-base;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+    //background-color: $color-white-darker;
+    //background-color: $color-white-darker;
+    color: $color-black-base;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
 body > div {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
 }
 
 .container.meta {
-  //background-color: $color-white-bright;
-  padding-top: 6px;
+    //background-color: $color-white-bright;
+    padding-top: 6px;
 }
 
 main {
-  flex: 1;
+    flex: 1;
 }
 
 main.container {
-  //flex: 1;
-  width: 100%;
-  //background-color: $color-white-bright;
-  margin-bottom: 32px;
-  padding-bottom: 64px;
+    //flex: 1;
+    width: 100%;
+    //background-color: $color-white-bright;
+    margin-bottom: 32px;
+    padding-bottom: 64px;
 }
 
 .rule-above {
-  border: 0;
-  border-top: 1px solid $color-white-dark;
+    border: 0;
+    border-top: 1px solid $color-white-dark;
 }
 
 .rule-right {
-  border-right: 1px solid $color-white-dark;
+    border-right: 1px solid $color-white-dark;
 }
 
 .rule-below {
-  border: 0;
-  border-bottom: 1px solid $color-white-dark;
+    border: 0;
+    border-bottom: 1px solid $color-white-dark;
 }
 
 .rule-left {
-  border-left: 1px solid $color-white-dark;
+    border-left: 1px solid $color-white-dark;
 }
 
 .no-rule {
-  border: 0 !important;
+    border: 0 !important;
 }
 
 .pull-left {
-  float: left;
+    float: left;
 }
 
 .pull-right {
-  float: right;
+    float: right;
 }
 
 header .header {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0;
-  padding: 1em 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 1em 0;
 }
 
 .module--grid {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-
-  .group {
     display: flex;
-    flex-flow: row nowrap;
-    align-items: stretch;
-    justify-content: space-between;
-    width: 100%;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
 
-    > div,
-    > article,
-    > section {
-      display: flex;
-      flex-flow: column;
-      flex-basis: 0;
-      flex-grow: 1;
-      border-radius: 4px;
-      margin-bottom: 2em;
-      //min-height: 20em;
-      overflow: hidden;
+    .group {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: stretch;
+        justify-content: space-between;
+        width: 100%;
 
-      h2 {
-        margin: 0 0 1rem;
-      }
-      
+        > div,
+        > article,
+        > section {
+            display: flex;
+            flex-flow: column;
+            flex-basis: 0;
+            flex-grow: 1;
+            border-radius: 4px;
+            margin-bottom: 2em;
+            //min-height: 20em;
+            overflow: hidden;
+
+            h2 {
+                margin: 0 0 1rem;
+            }
+
+        }
+
+        .shadow {
+            background: #f5f5f5;
+            box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+        }
+
+        .pad {
+            padding: 2em;
+        }
+
+        .space-right {
+            margin-right: 2em;
+        }
+
+        .map--module {
+            min-width: 40%;
+            max-width: 60%;
+            min-height: 20em;
+        }
+
     }
 
-    .shadow {
-      background: #f5f5f5;
-      box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
-    }
-
-    .pad {
-      padding: 2em;
-    }
-
-    .space-right {
-      margin-right: 2em;
-    }
-
-    .map--module {
-      min-width: 40%;
-      max-width: 60%;
-      min-height: 20em;
-    }
-
-  }
-
-  //> div,
-  //> article,
-  //> section {
+    //> div,
+    //> article,
+    //> section {
     //flex-basis: 0;
     //flex-grow: 1;
     //border-radius: 4px;
     //margin-bottom: 2em;
     //overflow: hidden;
     //box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
-  //}
+    //}
 
-  //.map--module {
+    //.map--module {
     //min-width: 40%;
     //max-width: 60%;
-  //}
+    //}
 
 }
 
 .related--nodes {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 
-  li {
-    display: flex;
-    flex-flow: column;
-    margin-bottom: 0.5em;
+    li {
+        display: flex;
+        flex-flow: column;
+        margin-bottom: 0.5em;
 
-    span:last-child {
-      font-size: 0.7em;
-      //font-style: italic;
-      //font-weight: bold;
-      //font-family: $font-serif;
-      color: #757575;
-      text-transform: uppercase;
+        span:last-child {
+            font-size: 0.7em;
+            //font-style: italic;
+            //font-weight: bold;
+            //font-family: $font-serif;
+            color: #757575;
+            text-transform: uppercase;
+        }
+
     }
-
-  }
 
 }
 
 #access-form {
-  background: #252f3a;
-  padding-top: 4em;
+    background: #252f3a;
+    padding-top: 4em;
 
-  .meta-label {
-    color: #e0e0e0;
-  }
-
-  button[disabled] {
-    background: #343b44;
-  }
-  
-  input {
-    position: relative;
-    appearance: none;
-    outline: none;
-    width: 100%;
-    //max-width: 400px;
-    //margin: 0 auto;
-    //border: 1px solid #32393f;
-    border: 0 none;
-    border-radius: 4px;
-    //border-top: 1px solid #e0e0e0;
-    //border-bottom: 1px solid #e0e0e0;
-    //border-left: 1px solid #e0e0e0;
-    //border-top-left-radius: 4px;
-    //border-bottom-left-radius: 4px;
-    background: rgba(0,0,0,0.1);
-    color: #f5f5f5;
-    padding: 2.8em 1em 1em;
-    font-size: 1.2em;
-    box-shadow: inset 0 1px 10px rgba(0,0,0,0.3),0 1px 0 rgba(255,255,255,0.1),0 -1px 0 rgba(0,0,0,0.5);
-  }
-
-  // Override clashing yellow fill in Chrome
-
-  @-webkit-keyframes autofill {
-    to {
-      color: #f5f5f5;
-      background: rgba(0,0,0,0.1);
+    .meta-label {
+        color: #e0e0e0;
     }
-  }
 
-  input:-webkit-autofill {
-    -webkit-animation-name: autofill;
-    -webkit-animation-fill-mode: both;
-  }
+    button[disabled] {
+        background: #343b44;
+    }
 
-  .save--action--wrapper {
-    position: relative;
-    z-index: 99999999;
-  }
+    input {
+        position: relative;
+        appearance: none;
+        outline: none;
+        width: 100%;
+        //max-width: 400px;
+        //margin: 0 auto;
+        //border: 1px solid #32393f;
+        border: 0 none;
+        border-radius: 4px;
+        //border-top: 1px solid #e0e0e0;
+        //border-bottom: 1px solid #e0e0e0;
+        //border-left: 1px solid #e0e0e0;
+        //border-top-left-radius: 4px;
+        //border-bottom-left-radius: 4px;
+        background: rgba(0,0,0,0.1);
+        color: #f5f5f5;
+        padding: 2.8em 1em 1em;
+        font-size: 1.2em;
+        box-shadow: inset 0 1px 10px rgba(0,0,0,0.3),0 1px 0 rgba(255,255,255,0.1),0 -1px 0 rgba(0,0,0,0.5);
+    }
 
-  //.transient--notification {
+    // Override clashing yellow fill in Chrome
+
+    @-webkit-keyframes autofill {
+        to {
+            color: #f5f5f5;
+            background: rgba(0,0,0,0.1);
+        }
+    }
+
+    input:-webkit-autofill {
+        -webkit-animation-name: autofill;
+        -webkit-animation-fill-mode: both;
+    }
+
+    .save--action--wrapper {
+        position: relative;
+        z-index: 99999999;
+    }
+
+    //.transient--notification {
     //position: absolute;
     //bottom: 0;
     //opacity: 0;
     //z-index: 0;
-  //}
+    //}
 
-  //.show {
+    //.show {
     //opacity: 1;
-  //}
+    //}
 
-  .transient--notification .event--container {
-    background: #2a333d;
+    .transient--notification .event--container {
+        background: #2a333d;
 
-    .event--message {
-      color: #f5f5f5;
+        .event--message {
+            color: #f5f5f5;
+        }
+
     }
-
-  }
 
 }
 
 .privacy-message {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: #424242;
-  text-align: center;
-
-  p {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     color: #424242;
-  }
+    text-align: center;
+
+    p {
+        color: #424242;
+    }
 }
 
 .callout {
-  padding: 1rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
 }
+
+.grow {
+    flex-grow: 1;
+}
+
+.no-grow {
+    flex-grow: 0 !important;
+}
+
+.shrink {
+    flex-shrink: 1;
+}
+
+.no-shrink {
+    flex-shrink: 0 !important;
+}
+
+.flex-align-stretch {
+    align-items: stretch;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-align-start {
+    align-items: flex-start;
+}
+
+.flex-align-end {
+    align-items: flex-end;
+}
+
+.dyad,
+.triad,
+.tetrad {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    justify-content: center;
+}
+
+.dyad > div,
+.triad > div,
+.tetrad > div {
+    display: flex;
+}
+
+.dyad > div {
+    flex-basis: 50%;
+}
+
+.triad > div {
+    flex-basis: 33.33333333%;
+}
+
+.tetrad > div {
+    flex-basis: 25%;
+}
+

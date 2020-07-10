@@ -88,7 +88,7 @@
                         </p>
 
                         <p data-ng-if="page.permissions.write && page.metricTypes">
-                            <a href="#idx">
+                            <a href="#idx" data-ng-click="page.jumpToMetricManager()">
                                 Manage linked metrics &rarr;
                             </a>
                         </p>
@@ -188,18 +188,34 @@
 
                 <div class="index reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
 
-                    <h2>Manage linked metrics</h2>
+                    <h2 class="margin-0-0-2-0">Manage linked metrics</h2>
 
-                    <p data-ng-if="page.permissions.write && page.metricTypes" style="padding: 1rem; margin:
-                        0; background: #5b21f3; border-radius: 4px; color: #FFFFFF;">
-                        <strong>Pro tip:&nbsp;</strong>This feature is designed to help you improve the
-                        accuracy
-                        and standardization of your program's metric data in FieldDoc. We strongly recommend
-                        assigning one or more relevant metrics to each practice type in your
-                        program.<br/><br/>
-                        <em>Linking or un-linking metric types will not affect new or existing targets
-                            or target data.</em>
-                    </p>
+                    <div class="dyad margin-0-0-3-0 flex-align-start">
+
+                        <div class="pad-0-3-0-0">
+
+                            <p>
+                                This feature is designed to help you maintain the accuracy and standardization of your
+                                program's metric data in FieldDoc. Making clear associations between metrics
+                                and practice types helps your users report on practice implementation without
+                                unnecessary guesswork.<br/><br/>
+                                <strong>Important:&nbsp;</strong>Linking or un-linking metric types will not affect new
+                                or existing targets or target data.
+                            </p>
+
+                        </div>
+
+                        <div>
+
+                            <p class="pad-1 margin-0" style="background: #5b21f3; border-radius: 4px; color:
+                            #FFFFFF;">
+                                <strong>Pro tip:&nbsp;</strong>To ensure consistent data collection, we strongly
+                                recommend assigning one or more relevant metrics to each practice type in your program.
+                            </p>
+
+                        </div>
+
+                    </div>
 
                     <div class="collection-search reveal fade-in t0">
 

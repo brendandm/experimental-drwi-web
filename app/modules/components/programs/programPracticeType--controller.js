@@ -22,9 +22,10 @@
             'Project',
             'program',
             'PracticeType',
+            '$anchorScroll',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Program,
-                Project, program, PracticeType) {
+                Project, program, PracticeType, $anchorScroll) {
 
                 var self = this;
 
@@ -321,6 +322,12 @@
                         return linkedIndex.indexOf(feature.id) < 0;
 
                     });
+
+                };
+
+                self.jumpToMetricManager = function() {
+
+                    $anchorScroll('idx');
 
                 };
 
