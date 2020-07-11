@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594398309162})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594434284758})
 
 ;
 /**
@@ -16956,6 +16956,8 @@ angular.module('FieldDoc')
 
                  self.loadSites();
 
+                self.processSetup(self.practice.setup);
+
                 //
                 // Load practice types
                 //
@@ -16996,6 +16998,28 @@ angular.module('FieldDoc')
             });
 
         };
+
+        /*START STATE CALC*/
+
+        self.processSetup = function(setup){
+
+            const next_action = setup.next_action;
+
+            self.states = setup.states;
+
+            self.next_action = next_action;
+
+            console.log("self.states",self.states);
+
+            console.log("self.next_action",self.next_action);
+
+            console.log("self.next_action_lable",self.next_action_lable);
+
+
+
+        };
+
+        /*END STATE CALC*/
 
 
            self.loadSites = function() {
@@ -17116,37 +17140,81 @@ angular.module('FieldDoc')
 
             }
 
-            Practice.update({
-                id: self.practice.id
-            }, self.practice).then(function(successResponse) {
+            var invalid = [];
+
+            self.invalidType = false;
+            self.invalidName = false;
+
+            if(self.practice.name == undefined){
+
+                console.log("self.practice.name", self.practice.name);
+
+                invalid.push("Name");
+
+                self.invalidName = true;
+
+            }
+            if(self.practice.category_id == undefined){
+
+                console.log("self.practiceType", self.practiceType);
+
+                invalid.push("Practice Type");
+
+                self.invalidType = true;
+
+            }
+
+
+            if(invalid.length > 0   ){
+                self.status.processing = false;
+
+                console.log("invalid",invalid);
 
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Practice changes saved.',
+                    'msg': 'One or more required fields are missing!',
                     'prompt': 'OK'
                 }];
 
                 $timeout(closeAlerts, 2000);
+            }else{
 
-                self.showElements();
+                Practice.update({
+                    id: self.practice.id
+                }, self.practice).then(function(successResponse) {
 
-            }).catch(function(errorResponse) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes saved.',
+                        'prompt': 'OK'
+                    }];
 
-                // Error message
+                    $timeout(closeAlerts, 2000);
 
-                self.alerts = [{
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'Practice changes could not be saved.',
-                    'prompt': 'OK'
-                }];
+                    self.showElements();
 
-                $timeout(closeAlerts, 2000);
+                }).catch(function(errorResponse) {
 
-                self.showElements();
+                    // Error message
 
-            });
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.showElements();
+
+                });
+
+
+            }
+
 
         };
 
@@ -17701,7 +17769,6 @@ angular.module('FieldDoc')
                                 "to <a href='/practices/{{ page.practice.id }}/location '>edit this practice</a>" +
                                 "</p>"
                             ;
-
 
                             break;
 
