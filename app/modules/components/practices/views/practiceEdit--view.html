@@ -76,6 +76,13 @@
                             <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name"
                                    name="name" placeholder="Practice name"/>
                         </div>
+                        <div data-ng-if="page.invalidName"
+                             style="width:100%;
+                                    color: #ff0000;
+                                    "
+                        >
+                            A name is required.
+                        </div>
 
                         <!-- Practice Description -->
 
@@ -100,6 +107,14 @@
                                    uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.setPracticeType($item,$model,$label)"
                                    typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html"/>
+
+                            <div data-ng-if="page.invalidType"
+                                 style="width:100%;
+                                    color: #ff0000;
+                                    "
+                            >
+                                A practice type is required.
+                            </div>
 
                             <p data-ng-if="page.practice.category.id"
                                style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">

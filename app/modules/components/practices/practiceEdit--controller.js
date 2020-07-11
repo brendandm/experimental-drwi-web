@@ -427,37 +427,81 @@ angular.module('FieldDoc')
 
             }
 
-            Practice.update({
-                id: self.practice.id
-            }, self.practice).then(function(successResponse) {
+            var invalid = [];
+
+            self.invalidType = false;
+            self.invalidName = false;
+
+            if(self.practice.name == undefined){
+
+                console.log("self.practice.name", self.practice.name);
+
+                invalid.push("Name");
+
+                self.invalidName = true;
+
+            }
+            if(self.practice.category_id == undefined){
+
+                console.log("self.practiceType", self.practiceType);
+
+                invalid.push("Practice Type");
+
+                self.invalidType = true;
+
+            }
+
+
+            if(invalid.length > 0   ){
+                self.status.processing = false;
+
+                console.log("invalid",invalid);
 
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Practice changes saved.',
+                    'msg': 'One or more required fields are missing!',
                     'prompt': 'OK'
                 }];
 
                 $timeout(closeAlerts, 2000);
+            }else{
 
-                self.showElements();
+                Practice.update({
+                    id: self.practice.id
+                }, self.practice).then(function(successResponse) {
 
-            }).catch(function(errorResponse) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes saved.',
+                        'prompt': 'OK'
+                    }];
 
-                // Error message
+                    $timeout(closeAlerts, 2000);
 
-                self.alerts = [{
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'Practice changes could not be saved.',
-                    'prompt': 'OK'
-                }];
+                    self.showElements();
 
-                $timeout(closeAlerts, 2000);
+                }).catch(function(errorResponse) {
 
-                self.showElements();
+                    // Error message
 
-            });
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.showElements();
+
+                });
+
+
+            }
+
 
         };
 
