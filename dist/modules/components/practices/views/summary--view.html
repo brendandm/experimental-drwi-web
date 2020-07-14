@@ -55,7 +55,6 @@
                      data-ng-if="page.next_action != 'edit_targets'"
                 >
                     <section class="pad shadow"
-                             ng-bind-html="page.next_action_lable"
                              style="min-height:0px;
                                     background-color: #fff6c6;
                                     padding-top: 16px;
@@ -63,7 +62,22 @@
                                     margin-bottom: 16px;
                                     "
                     >
-                        {{page.next_action_lable}}
+                        <p data-ng-if="page.next_action == 'add_name'">This practice needs a name.
+                            Click <i class='material-icons'>edit</i>
+                            <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>
+                        </p>
+                        <p data-ng-if="page.next_action == 'add_type'">This practice needs a practice type.
+                            Click <i class='material-icons'>edit</i>
+                            <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>
+                        </p>
+                        <p data-ng-if="page.next_action == 'add_geometry'">This practice needs a location geometry.
+                            Click <i class='material-icons'>location_on</i>
+                            to <a href='/practices/{{ page.practice.id }}/location'>edit this practice</a>
+                        </p>
+                        <p data-ng-if="page.next_action == 'add_targets'">This practice needs metric targets.
+                            Click <i class='material-icons'>multiline_chart</i>
+                            to <a href='/practices/{{ page.practice.id }}/targets'>edit this practice</a>
+                        </p>
 
                     </section>
                 </div>

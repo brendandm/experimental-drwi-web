@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594760475651})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594762867615})
 
 ;
 /**
@@ -18319,14 +18319,13 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                Practice.get({
-                    id: $route.current.params.practiceId,
-                    format: 'geojson'
-                }).$promise.then(function(successResponse) {
+                practice.$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
                     self.practice = successResponse;
+
+                    self.processSetup(self.practice.properties.setup);
 
                     self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
@@ -18353,6 +18352,22 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+            };
+
+            /*START STATE CALC*/
+
+            self.processSetup = function(setup){
+
+                const next_action = setup.next_action;
+
+                self.states = setup.states;
+
+                self.next_action = next_action;
+
+                console.log("self.states",self.states);
+
+                console.log("self.next_action",self.next_action);
 
             };
 
@@ -20857,7 +20872,7 @@ angular.module('FieldDoc')
                     self.practice = successResponse;
 
                     self.processSetup(self.practice.setup);
-                    
+
                     // self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&

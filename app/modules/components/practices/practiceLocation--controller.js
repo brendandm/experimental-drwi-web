@@ -134,14 +134,13 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                Practice.get({
-                    id: $route.current.params.practiceId,
-                    format: 'geojson'
-                }).$promise.then(function(successResponse) {
+                practice.$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
                     self.practice = successResponse;
+
+                    self.processSetup(self.practice.properties.setup);
 
                     self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
 
@@ -168,6 +167,22 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+            };
+
+            /*START STATE CALC*/
+
+            self.processSetup = function(setup){
+
+                const next_action = setup.next_action;
+
+                self.states = setup.states;
+
+                self.next_action = next_action;
+
+                console.log("self.states",self.states);
+
+                console.log("self.next_action",self.next_action);
 
             };
 
