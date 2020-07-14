@@ -786,7 +786,7 @@ angular.module('FieldDoc')
 
                 self.map.on('load', function () {
 
-                      if(self.site != null && self.site.geometry != null){
+                    if(self.site != null && self.site.geometry != null){
 
                         if(self.practice.geometry == null
                            || self.practice.geometry == 'undefined'
@@ -808,8 +808,22 @@ angular.module('FieldDoc')
                                 false,
                                 'site'
                                 );
-                    }
+                    }else if(self.practice.geometry == null
+                        || self.practice.geometry == 'undefined'
+                    ){
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
+                        MapManager.addFeature(
+                            self.map,
+                            self.practice,
+                            'geometry',
+                            true,
+                            true,
+                            'practice'
+                        );
+                    }
 
                     var map_ctrl_linestring = false;
                     var map_ctrl_point = false;

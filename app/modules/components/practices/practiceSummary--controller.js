@@ -418,7 +418,7 @@
                     console.log("self.states",self.states);
 
                     console.log("self.next_action",self.next_action);
-
+/*
                     switch (next_action) {
                         case 'add_name':
                             self.next_action_lable =    "<p>This practice needs a name. " +
@@ -465,7 +465,7 @@
 
                     console.log("self.next_action_lable",self.next_action_lable);
 
-
+ */
 
                 };
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594753958835})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594760475651})
 
 ;
 /**
@@ -5771,7 +5771,7 @@ angular.module('FieldDoc')
 
                         if (feature_type == "site") {
                             self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                             ].join('');
 
@@ -5779,7 +5779,7 @@ angular.module('FieldDoc')
                         }
                         if (feature_type == "practice") {
                             self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                             ].join('');
 
@@ -13376,7 +13376,7 @@ angular.module('FieldDoc')
                         } else {
 
                             self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                             ].join('');
                         }
@@ -14726,6 +14726,23 @@ angular.module('FieldDoc')
                     self.map = new mapboxgl.Map(options);
 
                     self.map.on('load', function() {
+
+                        if(self.site.geometry == null
+                            || self.site.geometry == 'undefined'
+                        ){
+                            var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            var bbox = turf.bbox(line);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+                            MapManager.addFeature(
+                                self.map,
+                                self.practice,
+                                'geometry',
+                                true,
+                                true,
+                                'practice'
+                            );
+                        }
 
                         self.drawControls = new MapboxDraw({
                             displayControlsDefault: false,
@@ -16755,6 +16772,10 @@ angular.module('FieldDoc')
 
          }
 
+         function railsRedirection(){
+             window.location.replace("/practices/"+self.practice.id+"/location");
+         }
+
         self.confirmDelete = function(obj) {
 
             console.log('self.confirmDelete', obj);
@@ -17193,6 +17214,11 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
+                    if(self.practice.geometry == null || self.practice.geometry == undefined){
+                        $timeout(railsRedirection,3000);
+                    }
+
+
                     self.showElements();
 
                 }).catch(function(errorResponse) {
@@ -17217,6 +17243,11 @@ angular.module('FieldDoc')
 
 
         };
+
+
+
+        /*END STATE CALC*/
+
 
         self.deleteFeature = function() {
 
@@ -17743,7 +17774,7 @@ angular.module('FieldDoc')
                     console.log("self.states",self.states);
 
                     console.log("self.next_action",self.next_action);
-
+/*
                     switch (next_action) {
                         case 'add_name':
                             self.next_action_lable =    "<p>This practice needs a name. " +
@@ -17790,7 +17821,7 @@ angular.module('FieldDoc')
 
                     console.log("self.next_action_lable",self.next_action_lable);
 
-
+ */
 
                 };
 
@@ -18940,7 +18971,7 @@ angular.module('FieldDoc')
 
                 self.map.on('load', function () {
 
-                      if(self.site != null && self.site.geometry != null){
+                    if(self.site != null && self.site.geometry != null){
 
                         if(self.practice.geometry == null
                            || self.practice.geometry == 'undefined'
@@ -18962,8 +18993,22 @@ angular.module('FieldDoc')
                                 false,
                                 'site'
                                 );
-                    }
+                    }else if(self.practice.geometry == null
+                        || self.practice.geometry == 'undefined'
+                    ){
+                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                        var bbox = turf.bbox(line);
+                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
+                        MapManager.addFeature(
+                            self.map,
+                            self.practice,
+                            'geometry',
+                            true,
+                            true,
+                            'practice'
+                        );
+                    }
 
                     var map_ctrl_linestring = false;
                     var map_ctrl_point = false;
@@ -20811,6 +20856,8 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
+                    self.processSetup(self.practice.setup);
+                    
                     // self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&
@@ -20836,6 +20883,25 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            /*START STATE CALC*/
+
+            self.processSetup = function(setup){
+
+                const next_action = setup.next_action;
+
+                self.states = setup.states;
+
+                self.next_action = next_action;
+
+                console.log("self.states",self.states);
+
+                console.log("self.next_action",self.next_action);
+
+            };
+
+            /*END STATE CALC*/
+
 
             self.setGroupSelection = function(group) {
 

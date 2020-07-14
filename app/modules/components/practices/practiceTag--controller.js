@@ -255,6 +255,8 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
+                    self.processSetup(self.practice.setup);
+                    
                     // self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&
@@ -280,6 +282,25 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            /*START STATE CALC*/
+
+            self.processSetup = function(setup){
+
+                const next_action = setup.next_action;
+
+                self.states = setup.states;
+
+                self.next_action = next_action;
+
+                console.log("self.states",self.states);
+
+                console.log("self.next_action",self.next_action);
+
+            };
+
+            /*END STATE CALC*/
+
 
             self.setGroupSelection = function(group) {
 

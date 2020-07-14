@@ -42,6 +42,10 @@ angular.module('FieldDoc')
 
          }
 
+         function railsRedirection(){
+             window.location.replace("/practices/"+self.practice.id+"/location");
+         }
+
         self.confirmDelete = function(obj) {
 
             console.log('self.confirmDelete', obj);
@@ -480,6 +484,11 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
+                    if(self.practice.geometry == null || self.practice.geometry == undefined){
+                        $timeout(railsRedirection,3000);
+                    }
+
+
                     self.showElements();
 
                 }).catch(function(errorResponse) {
@@ -504,6 +513,11 @@ angular.module('FieldDoc')
 
 
         };
+
+
+
+        /*END STATE CALC*/
+
 
         self.deleteFeature = function() {
 

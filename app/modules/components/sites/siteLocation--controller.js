@@ -562,6 +562,23 @@
 
                     self.map.on('load', function() {
 
+                        if(self.site.geometry == null
+                            || self.site.geometry == 'undefined'
+                        ){
+                            var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            var bbox = turf.bbox(line);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+                            MapManager.addFeature(
+                                self.map,
+                                self.practice,
+                                'geometry',
+                                true,
+                                true,
+                                'practice'
+                            );
+                        }
+
                         self.drawControls = new MapboxDraw({
                             displayControlsDefault: false,
                             controls: {
