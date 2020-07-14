@@ -812,7 +812,7 @@ angular.module('FieldDoc')
 
 
                     var map_ctrl_linestring = false;
-                    var map_ctrl_point = true;
+                    var map_ctrl_point = false;
                     var map_ctrl_polygon = false;
 
                     console.log("self.practiceType.unit.dimension",self.practiceType.unit.dimension);
@@ -824,7 +824,8 @@ angular.module('FieldDoc')
                         map_ctrl_linestring = true;
                     }else{
                         map_ctrl_polygon = true;
-                          map_ctrl_linestring = true;
+                        map_ctrl_linestring = true;
+                        map_ctrl_point = true;
                     }
 
 
