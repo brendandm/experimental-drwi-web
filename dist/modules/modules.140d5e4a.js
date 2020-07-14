@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'livedev',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'http://127.0.0.1:9000',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',version:1594753156958})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594753958835})
 
 ;
 /**
@@ -18966,7 +18966,7 @@ angular.module('FieldDoc')
 
 
                     var map_ctrl_linestring = false;
-                    var map_ctrl_point = true;
+                    var map_ctrl_point = false;
                     var map_ctrl_polygon = false;
 
                     console.log("self.practiceType.unit.dimension",self.practiceType.unit.dimension);
@@ -18978,7 +18978,8 @@ angular.module('FieldDoc')
                         map_ctrl_linestring = true;
                     }else{
                         map_ctrl_polygon = true;
-                          map_ctrl_linestring = true;
+                        map_ctrl_linestring = true;
+                        map_ctrl_point = true;
                     }
 
 
