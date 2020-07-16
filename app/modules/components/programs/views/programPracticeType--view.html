@@ -93,7 +93,7 @@
                             </a>
                         </p>
 
-                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                        <ul class="selectable-group-items list-unstyled margin-t-2">
 
                             <li class="card reveal fade-in"
                                 style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
@@ -144,7 +144,7 @@
                             </p>
                         </div>
 
-                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                        <ul class="selectable-group-items list-unstyled margin-t-2">
 
                             <li class="card reveal fade-in"
                                 style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
@@ -188,11 +188,11 @@
 
                 <div class="index reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
 
-                    <h2 class="margin-0-0-2-0">Manage linked metrics</h2>
+                    <h2 class="margin-b-2">Manage linked metrics</h2>
 
-                    <div class="dyad margin-0-0-3-0 flex-align-start">
+                    <div class="dyad margin-b-3 flex-align-start">
 
-                        <div class="pad-0-3-0-0">
+                        <div class="pad-r-3">
 
                             <p>
                                 This feature is designed to help you maintain the accuracy and standardization of your
@@ -229,12 +229,12 @@
 
                     <div data-ng-repeat="(key, group) in page.metricTypes">
 
-                        <h2 class="index-group-heading" id="{{ key | lowercase }}">
+                        <h2 class="index-group-heading margin-y-2" id="{{ key | lowercase }}">
                             <a href="#{{ key }}"></a>
                             <span>{{ key }}</span>
                         </h2>
 
-                        <ul class="selection-group list-unstyled" style="margin-top: 2em;">
+                        <ul class="selection-group list-unstyled margin-t-2">
 
                             <li class="selection-item reveal fade-in"
                                 style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
