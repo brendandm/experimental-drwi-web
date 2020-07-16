@@ -26,6 +26,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -113,7 +114,7 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 site({
-                    id: self.practice.properties.site.id,
+                    id: self.practice.site.id,
                     format: 'geojson'
                   //  exclude: exclude
                 }).$promise.then(function(successResponse) {
@@ -140,9 +141,9 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.processSetup(self.practice.properties.setup);
+                    self.processSetup(self.practice.setup);
 
-                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
+                    self.practiceType = successResponse.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -366,9 +367,9 @@ angular.module('FieldDoc')
 
                 excludedKeys.forEach(function(key) {
 
-                    if (feature.properties) {
+                    if (feature) {
 
-                        delete feature.properties[key];
+                        delete feature[key];
 
                     } else {
 
@@ -392,37 +393,61 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                self.practice.$update().then(function(successResponse) {
+                console.log("Save Geometry", self.practice);
 
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Practice location saved.',
-                        'prompt': 'OK'
-                    }];
+                if(self.practice.geometry != null && self.practice.geometry != undefined) {
 
-                    $timeout(closeAlerts, 2000);
+                    self.practice.$update().then(function (successResponse) {
 
-                    self.practiceType = successResponse.practice_type;
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Practice location saved.',
+                            'prompt': 'OK'
+                        }];
 
-                    self.showElements();
+                        console.log("Save response", successResponse);
 
-                }, function(errorResponse) {
+                        $timeout(closeAlerts, 2000);
 
+                        self.practiceType = successResponse.practice_type;
+
+                        if(self.states.has_targets == false){
+                            $timeout(railsRedirection,3000);
+                        }
+
+                        self.showElements();
+
+                    }, function (errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the location could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
+
+                    });
+                }else{
+                    self.status.processing = false;
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Something went wrong and the location could not be saved.',
+                        'msg': 'Please a Location Geometry to this practice',
                         'prompt': 'OK'
                     }];
-
                     $timeout(closeAlerts, 2000);
-
-                    self.showElements();
-
-                });
+                }
 
             };
+
+            function railsRedirection(){
+                window.location.replace("/practices/"+self.practice.id+"/targets");
+            }
 
             self.alerts = [];
 
@@ -480,7 +505,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                             'prompt': 'OK'
                         }];
 
@@ -565,9 +590,9 @@ angular.module('FieldDoc')
 
                 }
 
-                if (self.copyTarget.feature.properties) {
+                if (self.copyTarget.feature) {
 
-                    targetId = self.copyTarget.feature.properties.id;
+                    targetId = self.copyTarget.feature.id;
 
                 } else {
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594762867615})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594920472120})
 
 ;
 /**
@@ -16527,8 +16527,8 @@ angular.module('FieldDoc')
                     },
                     practice: function(Practice, $route) {
                         return Practice.get({
-                            id: $route.current.params.practiceId,
-                            format: 'geojson'
+                            id: $route.current.params.practiceId
+                        //    format: 'geojson'
                         });
                     }
                 }
@@ -17409,6 +17409,26 @@ angular.module('FieldDoc')
 
                 };
 
+                /*
+                START CREATE MODAL
+                */
+
+                self.presentChildModal = function(featureType) {
+
+                    if (featureType !== 'practice' &&
+                        featureType !== 'site' &&
+                        featureType !== 'report') return;
+
+                    self.showChildModal = true;
+
+                    self.childType = featureType;
+
+                };
+
+                /*
+                END CREATE MODAL
+                */
+
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -18211,6 +18231,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -18298,7 +18319,7 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 site({
-                    id: self.practice.properties.site.id,
+                    id: self.practice.site.id,
                     format: 'geojson'
                   //  exclude: exclude
                 }).$promise.then(function(successResponse) {
@@ -18325,9 +18346,9 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.processSetup(self.practice.properties.setup);
+                    self.processSetup(self.practice.setup);
 
-                    self.practiceType = successResponse.properties.practice_type  || successResponse.practice_type;
+                    self.practiceType = successResponse.practice_type  || successResponse.practice_type;
 
                     console.log('self.practiceType',  self.practiceType);
 
@@ -18551,9 +18572,9 @@ angular.module('FieldDoc')
 
                 excludedKeys.forEach(function(key) {
 
-                    if (feature.properties) {
+                    if (feature) {
 
-                        delete feature.properties[key];
+                        delete feature[key];
 
                     } else {
 
@@ -18577,37 +18598,61 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                self.practice.$update().then(function(successResponse) {
+                console.log("Save Geometry", self.practice);
 
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Practice location saved.',
-                        'prompt': 'OK'
-                    }];
+                if(self.practice.geometry != null && self.practice.geometry != undefined) {
 
-                    $timeout(closeAlerts, 2000);
+                    self.practice.$update().then(function (successResponse) {
 
-                    self.practiceType = successResponse.practice_type;
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Practice location saved.',
+                            'prompt': 'OK'
+                        }];
 
-                    self.showElements();
+                        console.log("Save response", successResponse);
 
-                }, function(errorResponse) {
+                        $timeout(closeAlerts, 2000);
 
+                        self.practiceType = successResponse.practice_type;
+
+                        if(self.states.has_targets == false){
+                            $timeout(railsRedirection,3000);
+                        }
+
+                        self.showElements();
+
+                    }, function (errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the location could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
+
+                    });
+                }else{
+                    self.status.processing = false;
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Something went wrong and the location could not be saved.',
+                        'msg': 'Please a Location Geometry to this practice',
                         'prompt': 'OK'
                     }];
-
                     $timeout(closeAlerts, 2000);
-
-                    self.showElements();
-
-                });
+                }
 
             };
+
+            function railsRedirection(){
+                window.location.replace("/practices/"+self.practice.id+"/targets");
+            }
 
             self.alerts = [];
 
@@ -18665,7 +18710,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                             'prompt': 'OK'
                         }];
 
@@ -18750,9 +18795,9 @@ angular.module('FieldDoc')
 
                 }
 
-                if (self.copyTarget.feature.properties) {
+                if (self.copyTarget.feature) {
 
-                    targetId = self.copyTarget.feature.properties.id;
+                    targetId = self.copyTarget.feature.id;
 
                 } else {
 
@@ -40259,14 +40304,16 @@ angular.module('FieldDoc')
             '$location',
             'Site',
             'Practice',
+            'Report',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Site, Practice, $timeout) {
+            function($routeParams, $filter, $parse, $location, Site, Practice, Report, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'alerts': '=?',
                         'organization': '=?',
                         'project': '=?',
+                        'parent': '=?',
                         'site': '=?',
                         'type': '=?',
                         'visible': '=?'
@@ -40294,59 +40341,73 @@ angular.module('FieldDoc')
 
                         scope.createChild = function(name) {
 
-                            if (scope.type !== 'practice' &&
-                                scope.type !== 'site') return;
+                            console.log("creationDialog scope.Type",scope.type)
 
                             if (!name || typeof name === 'undefined') return;
 
-                            var data = {
-                                'name': name,
-                                'project_id': scope.project,
-                                'organization_id': scope.organization
-                            };
-
                             var newFeature;
 
-                            if (scope.type === 'site') {
+                            if (scope.type === 'practice' ||
+                                scope.type === 'site') {
 
-                                newFeature = new Site(data);
+                                var data = {
+                                    'name': name,
+                                    'project_id': scope.project,
+                                    'organization_id': scope.organization
+                                };
 
-                            } else {
+                                if (scope.type === 'site') {
 
-                                if (scope.site) {
+                                    newFeature = new Site(data);
 
-                                    data.site_id = scope.site;
+                                } else {
+
+                                    if (scope.site) {
+
+                                        data.site_id = scope.site;
+                                    }
+                                    newFeature = new Practice(data);
 
                                 }
+                            }else if(scope.type === 'report'){
 
-                                newFeature = new Practice(data);
+                                var data = {
+                                    'measurement_period': name,
+                                    'report_date': new Date(),
+                                    'practice_id': scope.parent,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new Report(data);
 
                             }
 
+                            console.log("newFeature",newFeature);
+
                             newFeature.$save(function(successResponse) {
 
-                                var nextPath = [
-                                    '/',
-                                    scope.type,
-                                    's/',
-                                    successResponse.id,
-                                    '/edit'
-                                ].join('');
+                                    var nextPath = [
+                                        '/',
+                                        scope.type,
+                                        's/',
+                                        successResponse.id,
+                                        '/edit'
+                                    ].join('');
 
-                                $location.path(nextPath);
-
+                                    $location.path(nextPath);
                             }, function(errorResponse) {
 
-                                scope.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
-                                    'prompt': 'OK'
-                                }];
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                        'prompt': 'OK'
+                                    }];
 
-                                $timeout(closeAlerts, 2000);
+                                    $timeout(closeAlerts, 2000);
 
                             });
+
 
                         };
 

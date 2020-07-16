@@ -53,6 +53,26 @@
 
                 };
 
+                /*
+                START CREATE MODAL
+                */
+
+                self.presentChildModal = function(featureType) {
+
+                    if (featureType !== 'practice' &&
+                        featureType !== 'site' &&
+                        featureType !== 'report') return;
+
+                    self.showChildModal = true;
+
+                    self.childType = featureType;
+
+                };
+
+                /*
+                END CREATE MODAL
+                */
+
                 self.showElements = function() {
 
                     $timeout(function() {

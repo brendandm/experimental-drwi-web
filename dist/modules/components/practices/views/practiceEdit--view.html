@@ -75,14 +75,24 @@
                             <span class="meta-label"><b>Name</b></span>
                             <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name"
                                    name="name" placeholder="Practice name"/>
-                        </div>
-                        <div data-ng-if="page.invalidName"
-                             style="width:100%;
+                            <div data-ng-if="page.invalidName"
+                                 style="width:100%;
                                     color: #ff0000;
+                                    margin-left: 10px;
                                     "
-                        >
-                            A name is required.
+                            >
+                                <i>A name is required.</i>
+                            </div>
+                            <div data-ng-if="!page.invalidName"
+                                 style="width:100%;
+                                    color: #cccccc;
+                                    margin-left: 10px;
+                                    "
+                            >
+                                <i>A name is required.</i>
+                            </div>
                         </div>
+
 
                         <!-- Practice Description -->
 
@@ -98,6 +108,9 @@
 
                         <!-- Practice Type -->
 
+
+
+
                         <div class="form-element">
 
                             <span class="meta-label"><b>Practice type</b></span>
@@ -111,10 +124,20 @@
                             <div data-ng-if="page.invalidType"
                                  style="width:100%;
                                     color: #ff0000;
+                                    margin-left: 10px;
                                     "
                             >
-                                A practice type is required.
+                                <i> A practice type is required. </i>
                             </div>
+                            <div data-ng-if="!page.invalidType"
+                                 style="width:100%;
+                                    color: #cccccc;
+                                    margin-left: 10px;
+                                    "
+                            >
+                                <i> A practice type is required. </i>
+                            </div>
+
 
                             <p data-ng-if="page.practice.category.id"
                                style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">

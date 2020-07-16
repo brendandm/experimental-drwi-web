@@ -10,14 +10,16 @@
             '$location',
             'Site',
             'Practice',
+            'Report',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Site, Practice, $timeout) {
+            function($routeParams, $filter, $parse, $location, Site, Practice, Report, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'alerts': '=?',
                         'organization': '=?',
                         'project': '=?',
+                        'parent': '=?',
                         'site': '=?',
                         'type': '=?',
                         'visible': '=?'
@@ -45,59 +47,73 @@
 
                         scope.createChild = function(name) {
 
-                            if (scope.type !== 'practice' &&
-                                scope.type !== 'site') return;
+                            console.log("creationDialog scope.Type",scope.type)
 
                             if (!name || typeof name === 'undefined') return;
 
-                            var data = {
-                                'name': name,
-                                'project_id': scope.project,
-                                'organization_id': scope.organization
-                            };
-
                             var newFeature;
 
-                            if (scope.type === 'site') {
+                            if (scope.type === 'practice' ||
+                                scope.type === 'site') {
 
-                                newFeature = new Site(data);
+                                var data = {
+                                    'name': name,
+                                    'project_id': scope.project,
+                                    'organization_id': scope.organization
+                                };
 
-                            } else {
+                                if (scope.type === 'site') {
 
-                                if (scope.site) {
+                                    newFeature = new Site(data);
 
-                                    data.site_id = scope.site;
+                                } else {
+
+                                    if (scope.site) {
+
+                                        data.site_id = scope.site;
+                                    }
+                                    newFeature = new Practice(data);
 
                                 }
+                            }else if(scope.type === 'report'){
 
-                                newFeature = new Practice(data);
+                                var data = {
+                                    'measurement_period': name,
+                                    'report_date': new Date(),
+                                    'practice_id': scope.parent,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new Report(data);
 
                             }
 
+                            console.log("newFeature",newFeature);
+
                             newFeature.$save(function(successResponse) {
 
-                                var nextPath = [
-                                    '/',
-                                    scope.type,
-                                    's/',
-                                    successResponse.id,
-                                    '/edit'
-                                ].join('');
+                                    var nextPath = [
+                                        '/',
+                                        scope.type,
+                                        's/',
+                                        successResponse.id,
+                                        '/edit'
+                                    ].join('');
 
-                                $location.path(nextPath);
-
+                                    $location.path(nextPath);
                             }, function(errorResponse) {
 
-                                scope.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
-                                    'prompt': 'OK'
-                                }];
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                        'prompt': 'OK'
+                                    }];
 
-                                $timeout(closeAlerts, 2000);
+                                    $timeout(closeAlerts, 2000);
 
                             });
+
 
                         };
 

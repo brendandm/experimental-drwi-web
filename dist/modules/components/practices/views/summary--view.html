@@ -496,9 +496,35 @@
 
             </div>
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3"
+                     style="padding: 0;"
+                     data-ng-if="page.next_action == 'edit_targets'"
 
-                <h2>Reports</h2>
+            >
+                <div style="border:0px solid red; float:left; display:inline-block">
+                    <span style="display:block;float:left;"><h2>Reports</h2></span>
+                </div>
+                <div style="  border:0px solid purple;
+                                        position:relative;
+                                        float: right;
+                                        display:inline-block;
+                                        width:56px;
+                                        height: 56px;
+                                        top:10px;
+                                        margin-left:30px;
+
+                                       "
+                     class="add--new--wrapper"
+                     data-ng-if="page.permissions.can_edit"
+                >
+                    <!--<span style="">Create site</span>-->
+                    <a title="Create practice" class="add--new--btn" data-ng-click="page.presentChildModal('report')" style="float:right; width:56px; height:56px;">
+                        <i class="material-icons" >
+                            add
+                        </i>
+                    </a>
+
+                </div>
 
                 <ul class="snapshot--cards list-unstyled">
 
@@ -547,7 +573,7 @@
                     <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.addReading('Installation')" title="Create report">
+                                <button type="button" class="snapshot--title" data-ng-click="page.presentChildModal('report')" title="Create report">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -610,6 +636,19 @@
                     <i data-ng-if="page.next_action != 'add_targets'"
                        class="material-icons" >
                         multiline_chart
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit && page.states.has_targets" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
+                    <i data-ng-if="page.states.has_reports != true"
+                       class="glow material-icons">
+                        assignment
+                    </i>
+
+                    <i data-ng-if="page.states.has_reports == true"
+                       class="material-icons" >
+                        assignment
                     </i>
                 </a>
             </li>
@@ -679,6 +718,9 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" parent="page.practice.id" organization="page.practice.project.organization_id" type="page.childType" visible="page.showChildModal"></div>
+
 
 </main>
 
