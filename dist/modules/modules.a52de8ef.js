@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594920472120})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1594938790906})
 
 ;
 /**
@@ -16728,7 +16728,7 @@ angular.module('FieldDoc')
             });
 
     });
- 'use strict';
+'use strict';
 
 /**
  * @ngdoc function
@@ -16736,10 +16736,10 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image,
-        $log, $location, Media, Practice, PracticeType, practice,
-        Project, $q, $rootScope, $route, $scope, $timeout, $interval,
-        site, user, Utility) {
+    .controller('PracticeEditController',
+        function(Account, Image, $log, $location, Media, Practice,
+                 PracticeType, practice, Project, $q, $rootScope,
+                 $route, $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
 
@@ -16762,156 +16762,19 @@ angular.module('FieldDoc')
 
         }
 
-         function closeRoute() {
+        function closeRoute() {
 
-                    if(self.practice.site != null){
-                         $location.path(self.practice.links.site.html);
-                    }else{
+            if (self.practice.site !== null) {
+                $location.path(self.practice.links.site.html);
+            } else {
+                $location.path("/projects/" + self.practice.project.id);
+            }
 
-                    } $location.path("/projects/"+self.practice.project.id);
+        }
 
-         }
-
-         function railsRedirection(){
-             window.location.replace("/practices/"+self.practice.id+"/location");
-         }
-
-        self.confirmDelete = function(obj) {
-
-            console.log('self.confirmDelete', obj);
-
-            self.deletionTarget = self.deletionTarget ? null : obj;
-
-        };
-
-        self.cancelDelete = function() {
-
-            self.deletionTarget = null;
-
-        };
-
-        /*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
+        function railsRedirection(){
+            window.location.replace("/practices/"+self.practice.id+"/location");
+        }
 
         self.showElements = function() {
 
@@ -16975,7 +16838,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-                 self.loadSites();
+                self.loadSites();
 
                 self.processSetup(self.practice.setup);
 
@@ -17036,61 +16899,56 @@ angular.module('FieldDoc')
 
             console.log("self.next_action_lable",self.next_action_lable);
 
-
-
         };
 
         /*END STATE CALC*/
 
+        self.loadSites = function() {
 
-           self.loadSites = function() {
+            console.log('self.loadSites --> Starting...');
 
-                console.log('self.loadSites --> Starting...');
+            Project.sites({
 
-                Project.sites({
+                id: self.practice.project.id,
 
-                    id: self.practice.project.id,
+                currentTime: Date.UTC()
 
-                    currentTime: Date.UTC()
+            }).$promise.then(function(successResponse) {
 
-                }).$promise.then(function(successResponse) {
+                console.log('Project sites --> ', successResponse);
 
-                    console.log('Project sites --> ', successResponse);
+                //   self.sites = successResponse.features;
 
-                 //   self.sites = successResponse.features;
+                //self.sites = [];
 
-                    //self.sites = [];
-
-                  var sites = [];
-                   successResponse.features.forEach(function(item){
-                        sites.push(item.properties);
-                    });
-                    sites.push(
-                                {
-                                    "name"  :   "None - this Practice is not associated with a Site",
-                                    "id"    :   null
-                                });
-                    self.sites = sites;
-
-
-               ///     self.showElements(true);
-
-
-                    // self.populateMap(self.map, siteCollection, null, true);
-
-                    // self.addMapPreviews(self.sites);
-
-                }, function(errorResponse) {
-
-                    console.log('loadSites.errorResponse', errorResponse);
-
-                 //   self.showElements(false);
-
+                var sites = [];
+                successResponse.features.forEach(function(item){
+                    sites.push(item.properties);
                 });
+                sites.push(
+                    {
+                        "name"  :   "None - this Practice is not associated with a Site",
+                        "id"    :   null
+                    });
+                self.sites = sites;
 
-            };
+
+                ///     self.showElements(true);
 
 
+                // self.populateMap(self.map, siteCollection, null, true);
+
+                // self.addMapPreviews(self.sites);
+
+            }, function(errorResponse) {
+
+                console.log('loadSites.errorResponse', errorResponse);
+
+                //   self.showElements(false);
+
+            });
+
+        };
 
         self.scrubFeature = function(feature) {
 
@@ -17244,64 +17102,7 @@ angular.module('FieldDoc')
 
         };
 
-
-
         /*END STATE CALC*/
-
-
-        self.deleteFeature = function() {
-
-            Practice.delete({
-                id: +self.deletionTarget.id
-            }).$promise.then(function(data) {
-
-                self.alerts.push({
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'Successfully deleted this practice.',
-                    'prompt': 'OK'
-                });
-
-                $timeout(closeRoute, 2000);
-
-            }).catch(function(errorResponse) {
-
-                console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                if (errorResponse.status === 409) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else if (errorResponse.status === 403) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'You don’t have permission to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong while attempting to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                }
-
-                $timeout(closeAlerts, 2000);
-
-            });
-
-        };
 
         self.setPracticeType = function($item, $model, $label) {
 
@@ -17313,7 +17114,7 @@ angular.module('FieldDoc')
 
         };
 
-         self.setSite = function($item) {
+        self.setSite = function($item) {
 
             console.log('self.site', $item);
 
@@ -17323,13 +17124,10 @@ angular.module('FieldDoc')
 
         };
 
-
-
-
-
         //
         // Verify Account information for proper UI element display
         //
+
         if (Account.userObject && user) {
 
             user.$promise.then(function(userResponse) {
@@ -17343,7 +17141,6 @@ angular.module('FieldDoc')
                     can_edit: false
                 };
 
-            //    self.loadSite();
                 self.loadPractice();
             });
 
@@ -17470,7 +17267,7 @@ angular.module('FieldDoc')
 
                 }
 
-/*DELETE LOGIC*/
+                /*DELETE LOGIC*/
 
                 self.confirmDelete = function(obj, targetCollection) {
 
@@ -17592,130 +17389,7 @@ angular.module('FieldDoc')
 
                 };
 
-/*END DELETE LOGIC*/
-
-/*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
+                /*END DELETE LOGIC*/
 
                 self.loadReports = function() {
 
@@ -18672,197 +18346,6 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
-
-                console.log('self.confirmDelete', obj);
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            self.deleteFeature = function() {
-
-                Practice.delete({
-                    id: +self.deletionTarget.id
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-
-/*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature) {
-
-                    targetId = self.copyTarget.feature.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
-
             self.populateMap = function(map, practice) {
 
                 console.log('practice.geometry', practice.geometry);
@@ -19391,15 +18874,9 @@ angular.module('FieldDoc')
                         can_edit: true
                     };
 
-                    // self.createMap();
-
-                //    self.loadSite();
-
                     self.loadPractice();
 
                     self.fetchTasks();
-
-                    // self.fetchLayers();
 
                 });
 
@@ -19688,18 +19165,6 @@ angular.module('FieldDoc')
                     } $location.path("/projects/"+self.practice.project.id);
 
             }
-
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
 
             self.loadMatrix = function() {
 
@@ -20204,77 +19669,10 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.practice.properties) {
-
-                    targetId = self.practice.properties.id;
-
-                } else {
-
-                    targetId = self.practice.id;
-
-                }
-
-                Practice.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.practice.properties.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
             //
             // Verify Account information for proper UI element display
             //
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
@@ -20296,6 +19694,7 @@ angular.module('FieldDoc')
                     //
                     // Setup page meta data
                     //
+
                     $rootScope.page = {
                         'title': 'Add model data'
                     };
@@ -20716,143 +20115,6 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
-
-                console.log('self.confirmDelete', obj);
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            /*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
-
             self.showElements = function() {
 
                 $timeout(function() {
@@ -20961,7 +20223,6 @@ angular.module('FieldDoc')
             };
 
             /*END STATE CALC*/
-
 
             self.setGroupSelection = function(group) {
 
@@ -21282,63 +20543,10 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
-
-                Practice.delete({
-                    id: +self.deletionTarget.id
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-
             //
             // Verify Account information for proper UI element display
             //
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
@@ -21377,9 +20585,8 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
-            $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $interval, Program) {
-
+                 $rootScope, $route, user, FilterStore, $timeout, SearchService,
+                 MetricType, Model, $filter, $interval, Program) {
 
             var self = this;
 
@@ -21415,151 +20622,17 @@ angular.module('FieldDoc')
 
             function closeRoute() {
 
-                    if(self.practice.site != null){
-                         $location.path(self.practice.links.site.html);
-                    }else{
+                if(self.practice.site != null){
+                    $location.path(self.practice.links.site.html);
+                }else{
 
-                    } $location.path("/projects/"+self.practice.project.id);
+                } $location.path("/projects/"+self.practice.project.id);
 
             }
 
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            /*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(self.closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
-
             self.loadMatrix = function() {
-               console.log("self.practice.project.program_id",self.practice.project.program_id);
+
+                console.log("self.practice.project.program_id",self.practice.project.program_id);
                 //
                 // Assign practice to a scoped variable
                 //
@@ -21623,7 +20696,7 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.modelTargets = modelTargets;            
+                    self.modelTargets = modelTargets;
 
                 }, function(errorResponse) {
 
@@ -21633,15 +20706,13 @@ angular.module('FieldDoc')
 
             };
 
-
-
             self.loadPractice = function() {
 
                 var exclude = [
                     'centroid',
                     'creator',
                     'dashboards',
-                  //  'extent',
+                    //  'extent',
                     // 'geometry',
                     'members',
                     'metric_types',
@@ -21655,7 +20726,7 @@ angular.module('FieldDoc')
                     'type',
                     'practices'
                 ].join(',');
-                
+
                 Practice.getSingle({
                     id: $route.current.params.practiceId,
                     exclude: exclude
@@ -21679,29 +20750,9 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
+                    self.calculating = true;
 
-
-                 //   if(self.practice.calculating === false){
-                 //       $interval.cancel(self.matrixLoadInterval);
-                 //       self.loadMatrix();
-                 //   }else{
-
-
-                        self.calculating = true;
-
-                  //      self.bgLoadMatrix();
-
-
-                        self.loadMetrics();
-                 //       self.loadMatrix();
-                   //     self.loadMatrix();
-              //     self.bgLoadMatrix();
-                //        self.loadProgramMetrics();
-                //    }
-
-
-
-                    //self.loadMatrix();
+                    self.loadMetrics();
 
                 }).catch(function(errorResponse) {
 
@@ -21713,128 +20764,6 @@ angular.module('FieldDoc')
 
             };
 
-
-/*            self.search = function(value) {
-
-                if (self.searchScope.target === 'metric') {
-
-                    return SearchService.metric({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else {
-
-                    return SearchService.program({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                }
-
-            };
-*/
-/*
-            self.directQuery = function(item, model, label) {
-
-                if (self.searchScope.target === 'program') {
-
-                    self.loadFeatures(item.id);
-
-                } else {
-
-                    self.addMetric(item);
-
-                }
-
-            };
-*/
-/*
-            self.removeAll = function() {
-
-                self.targets.active.forEach(function (item) {
-
-                    self.targets.inactive.unshift(item);
-
-                });
-
-                self.targets.active = [];
-
-            };
-*/
-/*
-            self.addTarget = function(item, idx) {
-
-                if (!item.value ||
-                    typeof item.value !== 'number') {
-
-                    item.value = 0;
-
-                };
-
-                if (typeof idx === 'number') {
-
-                    item.action = 'add';
-
-                    if (!item.metric ||
-                        typeof item.metric === 'undefined') {
-
-                        item.metric_id = item.id;
-
-                        delete item.id;
-
-                    }
-
-                    self.targets.inactive.splice(idx, 1);
-
-                    self.targets.active.push(item);
-
-                }
-
-                console.log('Updated targets (addition)');
-
-            };
-
-            self.removeTarget = function(item, idx) {
-
-                if (typeof idx === 'number') {
-
-                    self.targets.active.splice(idx, 1);
-
-                    item.action = 'remove';
-
-                    item.value = null;
-
-                    self.targets.inactive.unshift(item);
-
-                }
-
-                console.log('Updated targets (removal)');
-
-            };
-*/
             self.processTargets = function(list) {
 
                 var _list = [];
@@ -21855,32 +20784,6 @@ angular.module('FieldDoc')
 
             };
 
-         /*   self.loadFeatures = function(programId) {
-
-                var params = {
-                    program: programId
-                };
-
-                MetricType.collection(params).$promise.then(function(successResponse) {
-
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        self.addMetric(feature);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            };
-        */
             self.processPractice = function(data) {
 
                 console.log('process-data -->', data);
@@ -21892,21 +20795,10 @@ angular.module('FieldDoc')
                     self.practice.custom_extent = self.practice.calculated_extent.converted;
                 }
 
-                self.calculating ==  self.practice.calculating;
+                self.calculating = self.practice.calculating;
 
                 self.geometryMismatch = false;
 
-          /*      if(self.practice_category.unit != undefined){
-                    if(self.practice.geometry != undefined){
-                        if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
-                            self.geometryMismatch = true;
-                        }
-                        if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
-                            self.geometryMismatch = true;
-                        }
-                     }
-                }
-*/
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
@@ -21920,7 +20812,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'category',
                     'creator',
-            //        'extent',
+                    //        'extent',
                     'geometry',
                     'last_modified_by',
                     'members',
@@ -21961,73 +20853,6 @@ angular.module('FieldDoc')
 
             };
 
-   /*         self.saveTargets = function() {
-
-                self.status.processing = true;
-
-               // self.scrubFeature(self.practice);
-
-            //    console.log('self.savePractice.practice', self.practice);
-
-            //    console.log('self.savePractice.Practice', Practice);
-
-                var data = {
-                    targets: self.targets.active.slice(0)
-                };
-
-                console.log('id: +self.practice.id', self.practice.id);
-
-                self.targets.inactive.forEach(function (item) {
-
-                    if (item.action &&
-                        item.action === 'remove') {
-
-                        data.targets.push(item);
-
-                    }
-
-                });
-
-                console.log("data.targets",data.targets);
-
-                Practice.updateMatrix({
-                    id: +self.practice.id,
-                }, data).$promise.then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Target changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                    console.log("practice.updateMatrix", successResponse);
-
-                }).catch(function(error) {
-
-                    console.log('savePractice.error', error);
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Something went wrong and the target changes were not saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-*/
             self.savePractice = function() {
 
                 self.status.processing = true;
@@ -22035,8 +20860,6 @@ angular.module('FieldDoc')
                 self.scrubFeature(self.practice);
 
                 console.log('self.tempTargets', self.tempTargets);
-
-            //    self.practice.targets = self.processTargets(self.tempTargets);
 
                 console.log('self.savePractice.practice', self.practice);
 
@@ -22059,13 +20882,8 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
                     self.calculating = true;
-                 //   setTimeout(function(){
-                 //     console.log("Timeout complete");
-                      self.bgLoadMetrics();
-                 //    }, 2000);
 
-
-                  //  self.loadPractice();
+                    self.bgLoadMetrics();
 
                 }).catch(function(error) {
 
@@ -22079,94 +20897,29 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.practice.properties) {
-
-                    targetId = self.practice.properties.id;
-
-                } else {
-
-                    targetId = self.practice.id;
-
-                }
-
-                Practice.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.practice.properties.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
             /*
             START Custom Extent Logic
             */
 
             self.deleteCustomExtent = function(){
-                   self.calculating == true;
-                   self.practice.custom_extent = null;
 
-                   self.savePractice();
+                self.calculating = true;
+
+                self.practice.custom_extent = null;
+
+                self.savePractice();
 
             };
 
             self.bgLoadMatrix = function(){
+
                 console.log("BG LOAD MATRIX", self.calculating);
 
                 //self.practice.calculating
                 if(self.calculating == true){
-                     console.log("Checking Practice");
-                     var timer = setTimeout(function(){
-                          self.checkStatus();
+                    console.log("Checking Practice");
+                    var timer = setTimeout(function(){
+                        self.checkStatus();
 
                     }, 2000);
                 }else{
@@ -22176,19 +20929,18 @@ angular.module('FieldDoc')
 
             };
 
-
             self.checkStatus = function(){
                 console.log("Checking Calc Status");
 
-                 Practice.checkStatus({
+                Practice.checkStatus({
                     id: $route.current.params.practiceId,
                 }).$promise.then(function(successResponse) {
 
-                     console.log(successResponse);
+                    console.log(successResponse);
 
-                     self.calculating = successResponse.calculating;
+                    self.calculating = successResponse.calculating;
 
-                  //  self.bgLoadMatrix();
+                    //  self.bgLoadMatrix();
                     self.bgLoadMetrics();
                     //self.loadMatrix();
 
@@ -22198,9 +20950,7 @@ angular.module('FieldDoc')
 
                 });
 
-
-            }
-
+            };
 
             self.loadMetrics = function(){
                 console.log("LoadMetrics A");
@@ -22215,19 +20965,8 @@ angular.module('FieldDoc')
 
                     self.info = successResponse;
                     self.programMetrics = self.info.metrics.secondary;
-                    //                    self.assignedMetrics = self.info.metrics.primary;
 
                     self.assignedMetrics = self.info.targets;
-
-              /*      self.programMetrics.forEach(function(pm){
-                       self.assignedMetrics.forEach(function(am){
-
-                       });
-
-                    });
-*/
-//                    var i = 0;
-
 
                     console.log("self.assignedMetrics",self.assignedMetrics);
                     console.log("self.programMetrics",self.programMetrics);
@@ -22247,19 +20986,19 @@ angular.module('FieldDoc')
                             i = i+1;
                         });
 
-                    //
+                        //
 
                     });
 
-                     self.loadModels(self.activeDomain);
+                    self.loadModels(self.activeDomain);
 
-                     self.calculating = false;
+                    self.calculating = false;
 
-                //    console.log("self.info",self.info);
-                //     console.log("self.programMetrics",self.programMetrics);
+                    //    console.log("self.info",self.info);
+                    //     console.log("self.programMetrics",self.programMetrics);
 
                 },function(errorResponse){
-                     console.log("loadMetrics error",errorResponse);
+                    console.log("loadMetrics error",errorResponse);
                 });
             };
 
@@ -22268,9 +21007,9 @@ angular.module('FieldDoc')
 
                 //self.practice.calculating
                 if(self.calculating == true){
-                     console.log("Checking Practice");
-                     var timer = setTimeout(function(){
-                          self.checkStatus();
+                    console.log("Checking Practice");
+                    var timer = setTimeout(function(){
+                        self.checkStatus();
 
                     }, 2000);
                 }else{
@@ -22280,13 +21019,9 @@ angular.module('FieldDoc')
 
             };
 
-
-
             self.addMetric = function($item, $model, $label) {
 
                 self.programMetric = '';
-             //   document.getElementById("whatever").focus();
-              //  delete $item.id;
 
                 var temp_id = $item.id;
 
@@ -22296,46 +21031,43 @@ angular.module('FieldDoc')
 
                 self.metricMatrix.push($item);
 
-           //     self.assignedMetrics.push($item);
-
                 var i = 0;
 
                 var tempProgramMetrics = [];
 
                 self.programMetrics.forEach(function(newItem){
 
-                     if($item.id == newItem.id){
+                    if($item.id == newItem.id){
 
-                      //  delete self.programMetrics[i];
+                        //  delete self.programMetrics[i];
 
-                     }else{
+                    }else{
 
-                         tempProgramMetrics.push(self.programMetrics[i]);
+                        tempProgramMetrics.push(self.programMetrics[i]);
 
-                         self.activeDomain.push(newItem.id);
+                        self.activeDomain.push(newItem.id);
 
-                     }
+                    }
 
-                     i = i+1;
+                    i = i+1;
                 });
 
                 self.programMetrics = tempProgramMetrics;
 
-                 self.saveTarget($item, null, 0);
+                self.saveTarget($item, null, 0);
 
-               document.getElementById("assignTargetsBlock").blur();
-
-             //   console.log("searchinputHTML",searchinputHTML);
+                document.getElementById("assignTargetsBlock").blur();
 
                 self.loadModels(self.activeDomain);
-
 
             };
 
             self.saveTarget =  function($item,$index,$value){
+
                 console.log("save $item", $item);
 
                 var target_arr = [];
+
                 target_arr.push($item);
 
                 var data = {
@@ -22454,37 +21186,10 @@ angular.module('FieldDoc')
 
             }
 
-        /*
-            self.loadProgramMetrics = function (){
-
-                Program.metrics({
-
-                        id  : self.practice.project.program_id
-
-                    }).$promise.then(function(successResponse) {
-
-                    console.log("Program Metrics -->", successResponse);
-
-                    }, function(errorResponse) {
-
-                        console.log("Program Metrics --> ERROR",errorResponse );
-
-
-                     });
-
-
-
-            };
-
-
-
-            /*
-            END Custom Extent Logic
-            */
-
             //
             // Verify Account information for proper UI element display
             //
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
@@ -22497,19 +21202,12 @@ angular.module('FieldDoc')
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
-                    console.log();
-
-            //        self.loadMetrics();
-
                     self.loadPractice();
-
-//                    self.loadMatrix();
-
-                    // self.loadModels();
 
                     //
                     // Setup page meta data
                     //
+
                     $rootScope.page = {
                         'title': 'Edit practice targets'
                     };
@@ -40312,8 +39010,8 @@ angular.module('FieldDoc')
                     scope: {
                         'alerts': '=?',
                         'organization': '=?',
-                        'project': '=?',
                         'parent': '=?',
+                        'resetType': '=?',
                         'site': '=?',
                         'type': '=?',
                         'visible': '=?'
@@ -40325,6 +39023,12 @@ angular.module('FieldDoc')
                     },
                     link: function(scope, element, attrs) {
 
+                        if (scope.resetType === 'undefined') {
+
+                            scope.resetType = true;
+
+                        }
+
                         function closeAlerts() {
 
                             scope.alerts = [];
@@ -40335,24 +39039,28 @@ angular.module('FieldDoc')
 
                             scope.visible = false;
 
-                            scope.type = undefined;
+                            if (scope.resetType) scope.type = undefined;
 
                         };
 
                         scope.createChild = function(name) {
 
-                            console.log("creationDialog scope.Type",scope.type)
+                            if (scope.type !== 'report' &&
+                                scope.type !== 'practice' &&
+                                scope.type !== 'site') return;
 
                             if (!name || typeof name === 'undefined') return;
 
                             var newFeature;
 
+                            var data;
+
                             if (scope.type === 'practice' ||
                                 scope.type === 'site') {
 
-                                var data = {
+                                data = {
                                     'name': name,
-                                    'project_id': scope.project,
+                                    'project_id': scope.parent,
                                     'organization_id': scope.organization
                                 };
 
@@ -40366,12 +39074,14 @@ angular.module('FieldDoc')
 
                                         data.site_id = scope.site;
                                     }
+
                                     newFeature = new Practice(data);
 
                                 }
-                            }else if(scope.type === 'report'){
 
-                                var data = {
+                            } else {
+
+                                data = {
                                     'measurement_period': name,
                                     'report_date': new Date(),
                                     'practice_id': scope.parent,
@@ -40382,32 +39092,266 @@ angular.module('FieldDoc')
 
                             }
 
-                            console.log("newFeature",newFeature);
-
                             newFeature.$save(function(successResponse) {
 
-                                    var nextPath = [
-                                        '/',
-                                        scope.type,
-                                        's/',
-                                        successResponse.id,
-                                        '/edit'
-                                    ].join('');
+                                var nextPath = [
+                                    '/',
+                                    scope.type,
+                                    's/',
+                                    successResponse.id,
+                                    '/edit'
+                                ].join('');
 
-                                    $location.path(nextPath);
+                                $location.path(nextPath);
+
                             }, function(errorResponse) {
+
+                                scope.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+
+                        };
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function () {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('practiceToolbar', [
+            '$window',
+            '$rootScope',
+            '$routeParams',
+            '$filter',
+            '$parse',
+            '$location',
+            'Practice',
+            '$timeout',
+            function ($window, $rootScope, $routeParams, $filter,
+                      $parse, $location, Practice, $timeout) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'alerts': '=?',
+                        'practice': '=?',
+                        'showChildModal': '=?',
+                        'toolbarState': '@'
+                    },
+                    templateUrl: function (elem, attrs) {
+
+                        return 'modules/shared/directives/toolbar/practice/practiceToolbar--view.html';
+
+                    },
+                    link: function (scope, element, attrs) {
+
+                        //
+                        // Additional scope vars.
+                        //
+
+                        scope.nextAction = scope.practice.setup.next_action;
+
+                        scope.states = scope.practice.setup.states;
+
+                        //
+                        // Generic helper functions.
+                        //
+
+                        function closeRoute() {
+
+                            if (scope.practice.site !== null){
+
+                                $location.path(scope.practice.links.site.html);
+
+                            } else {
+
+                                $location.path('/projects/' + scope.practice.project.id);
+
+                            }
+
+                        }
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
+
+                        //
+                        // Generic print functionality.
+                        //
+
+                        scope.print = function() {
+
+                            $window.print();
+
+                        };
+
+                        //
+                        // Handling for report creation modal.
+                        //
+
+                        scope.presentChildModal = function() {
+
+                            scope.showChildModal = true;
+
+                            scope.type = 'report';
+
+                        };
+
+                        //
+                        // Feature deletion.
+                        //
+
+                        scope.confirmDelete = function () {
+
+                            scope.showDeletionDialog = true;
+
+                        };
+
+                        scope.cancelDelete = function() {
+
+                            scope.showDeletionDialog = false;
+
+                        };
+
+                        scope.deleteFeature = function () {
+
+                            Practice.delete({
+                                id: +scope.practice.id
+                            }).$promise.then(function (data) {
+
+                                scope.alerts = [{
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': 'Successfully deleted this practice.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeRoute, 2000);
+
+                            }).catch(function (errorResponse) {
+
+                                console.log('scope.deleteFeature.errorResponse', errorResponse);
+
+                                if (errorResponse.status === 409) {
 
                                     scope.alerts = [{
                                         'type': 'error',
                                         'flag': 'Error!',
-                                        'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                        'msg': 'There are pending tasks affecting this feature.',
                                         'prompt': 'OK'
                                     }];
 
-                                    $timeout(closeAlerts, 2000);
+                                } else if (errorResponse.status === 403) {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'You don’t have permission to delete this practice.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                } else {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Something went wrong while attempting to delete this practice.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                }
+
+                                $timeout(closeAlerts, 2000);
 
                             });
 
+                        };
+
+                        //
+                        // Feature copy.
+                        //
+
+                        scope.confirmCopy = function() {
+
+                            scope.showCopyDialog = true;
+
+                        };
+
+                        scope.cancelCopy = function() {
+
+                            scope.showCopyDialog = false;
+
+                        };
+
+                        scope.copyFeature = function() {
+
+                            Practice.copy({
+                                id: +scope.practice.id
+                            }).$promise.then(function(data) {
+
+                                scope.alerts.push({
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': 'Successfully copied this practice.',
+                                    'prompt': 'OK'
+                                });
+
+                                scope.cancelCopy();
+
+                                $timeout(closeAlerts, 2000);
+                                
+                            }).catch(function(errorResponse) {
+
+                                console.log('scope.copyFeature.errorResponse', errorResponse);
+
+                                if (errorResponse.status === 409) {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'There are pending tasks affecting this practice.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                } else if (errorResponse.status === 403) {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'You don’t have permission to copy this practice.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                } else {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Something went wrong while attempting to copy this practice.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                }
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
 
                         };
 

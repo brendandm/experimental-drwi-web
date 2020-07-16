@@ -51,18 +51,6 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
             self.loadMatrix = function() {
 
                 Practice.targetMatrix({
@@ -566,77 +554,10 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.practice.properties) {
-
-                    targetId = self.practice.properties.id;
-
-                } else {
-
-                    targetId = self.practice.id;
-
-                }
-
-                Practice.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.practice.properties.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
             //
             // Verify Account information for proper UI element display
             //
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
@@ -658,6 +579,7 @@ angular.module('FieldDoc')
                     //
                     // Setup page meta data
                     //
+
                     $rootScope.page = {
                         'title': 'Add model data'
                     };

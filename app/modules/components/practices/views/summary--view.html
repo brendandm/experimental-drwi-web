@@ -49,44 +49,7 @@
                     </div>
                 </div>
 
-                <!-- START Rails Instructions-->
-
-                <div class="group reveal fade-in t2"
-                     data-ng-if="page.next_action != 'edit_targets'"
-                >
-                    <section class="pad shadow"
-                             style="min-height:0px;
-                                    background-color: #fff6c6;
-                                    padding-top: 16px;
-                                    padding-bottom: 16px;
-                                    margin-bottom: 16px;
-                                    "
-                    >
-                        <p data-ng-if="page.next_action == 'add_name'">This practice needs a name.
-                            Click <i class='material-icons'>edit</i>
-                            <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>
-                        </p>
-                        <p data-ng-if="page.next_action == 'add_type'">This practice needs a practice type.
-                            Click <i class='material-icons'>edit</i>
-                            <a href='/practices/{{ page.practice.id }}/edit'>edit this practice</a>
-                        </p>
-                        <p data-ng-if="page.next_action == 'add_geometry'">This practice needs a location geometry.
-                            Click <i class='material-icons'>location_on</i>
-                            to <a href='/practices/{{ page.practice.id }}/location'>edit this practice</a>
-                        </p>
-                        <p data-ng-if="page.next_action == 'add_targets'">This practice needs metric targets.
-                            Click <i class='material-icons'>multiline_chart</i>
-                            to <a href='/practices/{{ page.practice.id }}/targets'>edit this practice</a>
-                        </p>
-
-                    </section>
-                </div>
-
-                <!-- END Rails Instructions-->
-
                 <div class="group">
-
-
 
                     <!-- Descriptors -->
 
@@ -96,8 +59,11 @@
 
                         <div class="last-modified-summary">
 
-                            <div data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="modtime">
-                                Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                            <div data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name"
+                                 class="modtime">
+                                Last modified by {{ page.practice.last_modified_by.first_name }} {{
+                                page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on |
+                                date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
                             </div>
 
                             <div class="history-link-wrapper">
@@ -112,61 +78,64 @@
                         </div>
 
                         <p>
-                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name || 'Un-named' }}</a>
+                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{
+                            page.practice.project.name || 'Un-named' }}</a>
                         </p>
 
                         <p data-ng-if="page.practice.site != null">
-                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.site.name || 'Un-named' }}</a>
+                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{
+                            page.practice.site.name || 'Un-named' }}</a>
                         </p>
 
                         <p>
                             <strong>Practice Type:</strong> {{ page.practice.practice_type.name }}
                         </p>
 
-                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.practice_type.unit.dimension != 'count'))" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong>
-                                {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
-                               <!-- {{ calculated_extent.practice.calculated_extent }} -->
-                            </p>
+                        <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.practice_type.unit.dimension != 'count'))"
+                           style="text-transform:capitalize;">
+                            <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong>
+                            {{ page.practice.extent.calculated.converted | number:2 }}
+                            {{page.practice.practice_type.unit.unit.plural}}
+                            <!-- {{ calculated_extent.practice.calculated_extent }} -->
+                        </p>
 
-                              <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
+                        <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
 
-                                     <p data-ng-if="(
+                        <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
                                                             && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'LineString')
                                                     )
 
                                                 " style="text-transform:capitalize;">
-                                        <strong>Practice length extent:</strong>
-                                        {{ page.practice.extent.calculated.converted | number:2 }} Linear meters
-                                    </p>
+                            <strong>Practice length extent:</strong>
+                            {{ page.practice.extent.calculated.converted | number:2 }} Linear meters
+                        </p>
 
-                                     <p data-ng-if="(
+                        <p data-ng-if="(
                                                         (page.practice.extent.calculated.converted && !page.practice.custom_extent)
                                                             && (page.practice.practice_type.unit.dimension == 'count')
                                                             && (page.practice.geometry.type == 'Polygon')
                                                     )
 
                                                 " style="text-transform:capitalize;">
-                                        <strong>Practice area extent:</strong>
-                                        {{ page.practice.extent.calculated.converted | number:2 }} Square meters
-                                    </p>
-
-
-                              <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
-
-                             <p data-ng-if="page.practice.custom_extent" style="text-transform:capitalize;">
-                                <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
-                            </p>
-
-
-
-
-                    <!--    <p data-ng-if="page.practice.area && page.practice.area > 0">
-                            <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
+                            <strong>Practice area extent:</strong>
+                            {{ page.practice.extent.calculated.converted | number:2 }} Square meters
                         </p>
-                    -->
+
+
+                        <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
+
+                        <p data-ng-if="page.practice.custom_extent" style="text-transform:capitalize;">
+                            <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong> {{
+                            page.practice.custom_extent | number:2 }} {{page.practice.practice_type.unit.unit.plural}}
+                        </p>
+
+
+                        <!--    <p data-ng-if="page.practice.area && page.practice.area > 0">
+                                <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
+                            </p>
+                        -->
                         <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
 
                         <p data-ng-if="!page.practice.description">{{ page.practice.practice_type.description }}</p>
@@ -177,9 +146,11 @@
 
                             <div class="tag--group">
 
-                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}"
+                                     data-ng-repeat="tag in page.tags">
                                     <div class="colorize" data-ng-if="tag.color">
-                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span class="category"
+                                              style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
                                         <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
                                     </div>
                                     <div data-ng-if="!tag.color || tag.color.length < 7">
@@ -187,7 +158,7 @@
                                         <span>{{ tag.name }}</span>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                         </div>
@@ -204,22 +175,31 @@
 
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
-                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                            <div class="mapboxgl-layer-ctrl"
+                                 data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
                                 <i class="material-icons">
                                     layers
                                 </i>
                                 <div class="layer-group" data-ng-show="page.showLayerOptions">
                                     <form>
-                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
-                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        <label data-ng-repeat="style in page.mapStyles"
+                                               data-ng-class="{'active': page.activeStyle === $index}"
+                                               title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style"
+                                                   data-ng-model="page.activeStyle" data-ng-value="{{ $index }}"
+                                                   data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
                                         </label>
                                     </form>
                                     <form class="layers" data-ng-show="page.layers && page.layers.length">
-                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
-                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers"
+                                               data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}"
+                                                   data-ng-model="layer.selected" data-ng-value="{{ $index }}"
+                                                   data-ng-change="page.toggleLayer(layer)">
                                             <span> {{ layer.name }}</span>
                                             <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
-                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors"
+                                                     style="background: {{ color }};"></div>
                                             </div>
                                         </label>
                                     </form>
@@ -230,20 +210,20 @@
 
                 </div>
 
-               <!-- <div class="group reveal fade-in t2"
-                     data-ng-if="page.next_action != 'edit_targets'"
-                >
-                    <section class="pad shadow"
-                             ng-bind-html="page.next_action_lable"
-                             style="min-height:0px;
-                                    background-color: #fff6c6;
-                                    "
-                    >
-                        {{page.next_action_lable}}
+                <!-- <div class="group reveal fade-in t2"
+                      data-ng-if="page.next_action != 'edit_targets'"
+                 >
+                     <section class="pad shadow"
+                              ng-bind-html="page.next_action_lable"
+                              style="min-height:0px;
+                                     background-color: #fff6c6;
+                                     "
+                     >
+                         {{page.next_action_lable}}
 
-                    </section>
-                </div>
-                -->
+                     </section>
+                 </div>
+                 -->
 
                 <div class="group reveal fade-in t2"
                      data-ng-if="page.next_action == 'edit_targets'"
@@ -253,121 +233,43 @@
 
                         <h2>Metrics</h2>
 
-                        <p style="color: #616161; margin: 0; padding: 2em; font-size: 0.9em;" data-ng-if="page.practice.legacy_self_id && page.practice.legacy_self_id > 0">
-                            The practice data you entered into the old version of FieldDoc can be viewed <a href="/practices/{{ page.practice.id }}/legacy-data">here</a>. Please <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions or need help managing this practice.
+                        <p style="color: #616161; margin: 0; padding: 2em; font-size: 0.9em;"
+                           data-ng-if="page.practice.legacy_self_id && page.practice.legacy_self_id > 0">
+                            The practice data you entered into the old version of FieldDoc can be viewed <a
+                                href="/practices/{{ page.practice.id }}/legacy-data">here</a>. Please <a
+                                href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions
+                            or need help managing this practice.
                         </p>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
-                            <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
+                            <table class="table table-practices with-metrics"
+                                   data-ng-repeat="model in page.metrics.models">
 
                                 <thead>
-                                    <tr>
-                                        <th>
-                                            <strong>{{ model.datum.name }}</strong>
-                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
-                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
-                                            </p>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                        <th class="table-metrics-header">Estimated value</th>
-                                     <!--
-                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
-                                        -->
-                                     <!--
-                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
-                                        -->
-                                    </tr>
-                                </thead>
-
-                                <tbody class="metrics" data-ng-repeat="metric in model.collection track by $index" >
-                                    <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
-                                        <td class="table-column-wide">
-                                            <p class="metric--title">
-                                                {{ metric.name }}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
-                                            <!--
-                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
-                                            -->
-                                        </td>
-                                     <!--
-                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                            <strong class="metrics--metric--percentage">
-                                                {{ metric.selfProgress.value * 100 | number:1 }}%
-                                            </strong>
-                                        </td>
-                                       -->
-                                     <!--
-                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                            <progress-arc
-                                                size="32"
-                                                stroke="#2196F3"
-                                                stroke-width="4"
-                                                complete="metric.selfProgress.arcValue"
-                                                counter-clockwise="false"
-                                                background="rgba(0,0,0,0.2)">
-                                            </progress-arc>
-                                        </td>
-                                       -->
-                                    </tr>
-                                     <!-- Geography -->
-                                    <!--
-                                     <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
-                                            <td class="table-column-wide">
-                                                <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
-                                                    <i class="material-icons">
-                                                        public
-                                                    </i>
-                                                    &nbsp;
-                                                    {{ geography.name }}
-                                                    <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
-                                                    <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
-                                            </td>
-                                            <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                                <strong class="metrics--metric--percentage">
-                                                    {{ geography.progress | number:1 }}%
-                                                </strong>
-                                            </td>
-                                            <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                                <progress-arc
-                                                    size="32"
-                                                    stroke="#2196F3"
-                                                    stroke-width="4"
-                                                    complete="geography.arc_value"
-                                                    counter-clockwise="false"
-                                                    background="rgba(0,0,0,0.2)">
-                                                </progress-arc>
-                                            </td>
-                                    </tr>
-                                    -->
-                                    <!-- Geography -->
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;" data-ng-if="page.metrics && page.metrics.generic.length">
-
-                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>{{ model.datum.name }}</strong>
+                                        <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                            The following metric values were generated using data and algorithms
+                                            supplied by the {{ model.datum.name }} model. You can find more information
+                                            about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                        </p>
+                                    </th>
+                                </tr>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed / Planned</th>
-                                    <th class="table-metrics-header">% Installed</th>
-                                    <th>&nbsp;</th>
+                                    <th class="table-metrics-header">Estimated value</th>
+                                    <!--
+                                       <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                       -->
+                                    <!--
+                                       <th data-ng-if="model.datum.show_progress">&nbsp;</th>
+                                       -->
                                 </tr>
-                            </thead>
+                                </thead>
 
-                            <tbody class="metrics"  data-ng-repeat="metric in page.metrics.generic track by $index">
+                                <tbody class="metrics" data-ng-repeat="metric in model.collection track by $index">
                                 <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
@@ -375,61 +277,149 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value |
+                                            number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br/>
+                                        <!--
+                                            <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                        -->
+                                    </td>
+                                    <!--
+                                       <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                           <strong class="metrics--metric--percentage">
+                                               {{ metric.selfProgress.value * 100 | number:1 }}%
+                                           </strong>
+                                       </td>
+                                      -->
+                                    <!--
+                                       <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                           <progress-arc
+                                               size="32"
+                                               stroke="#2196F3"
+                                               stroke-width="4"
+                                               complete="metric.selfProgress.arcValue"
+                                               counter-clockwise="false"
+                                               background="rgba(0,0,0,0.2)">
+                                           </progress-arc>
+                                       </td>
+                                      -->
+                                </tr>
+                                <!-- Geography -->
+                                <!--
+                                 <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                        <td class="table-column-wide">
+                                            <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
+                                                <i class="material-icons">
+                                                    public
+                                                </i>
+                                                &nbsp;
+                                                {{ geography.name }}
+                                                <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ geography.progress | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="geography.arc_value"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                </tr>
+                                -->
+                                <!-- Geography -->
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;"
+                               data-ng-if="page.metrics && page.metrics.generic.length">
+
+                            <thead>
+                            <tr>
+                                <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                <th class="table-metrics-header">Installed / Planned</th>
+                                <th class="table-metrics-header">% Installed</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="metrics" data-ng-repeat="metric in page.metrics.generic track by $index">
+                            <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
+                                <td class="table-column-wide">
+                                    <p class="metric--title">
+                                        {{ metric.name }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2
+                                        }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br/>
                                             / {{ metric.self_target | number:2 }}</span>
-                                    </td>
-                                    <td>
-                                        <strong class="metrics--metric--percentage">
-                                            {{ metric.selfProgress.value * 100 | number:1 }}%
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <progress-arc
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--percentage">
+                                        {{ metric.selfProgress.value * 100 | number:1 }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    <progress-arc
                                             size="32"
                                             stroke="#2196F3"
                                             stroke-width="4"
                                             complete="metric.selfProgress.arcValue"
                                             counter-clockwise="false"
                                             background="rgba(0,0,0,0.2)">
-                                        </progress-arc>
-                                    </td>
-                                </tr>
+                                    </progress-arc>
+                                </td>
+                            </tr>
 
-                                 <!-- Geography -->
-                                <!--
-                                 <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
-                                            <td class="table-column-wide">
-                                                <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
-                                                    <i class="material-icons">
-                                                        public
-                                                    </i>
-                                                    &nbsp;
-                                                    {{ geography.name }}
-                                                    <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
-                                                    <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
-                                            </td>
-                                            <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                                <strong class="metrics--metric--percentage">
-                                                    {{ geography.progress | number:1 }}%
-                                                </strong>
-                                            </td>
-                                            <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                                <progress-arc
-                                                    size="32"
-                                                    stroke="#2196F3"
-                                                    stroke-width="4"
-                                                    complete="geography.arc_value"
-                                                    counter-clockwise="false"
-                                                    background="rgba(0,0,0,0.2)">
-                                                </progress-arc>
-                                            </td>
-                                 </tr>
-                                 -->
-                                    <!-- Geography -->
+                            <!-- Geography -->
+                            <!--
+                             <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                        <td class="table-column-wide">
+                                            <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
+                                                <i class="material-icons">
+                                                    public
+                                                </i>
+                                                &nbsp;
+                                                {{ geography.name }}
+                                                <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ geography.progress | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="geography.arc_value"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                             </tr>
+                             -->
+                            <!-- Geography -->
 
                             </tbody>
 
@@ -449,7 +439,8 @@
                             </i>
                         </button>
 
-                        <h2 class="metric--title" style="color: #e0e0e0; margin-bottom: 1em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1em;">
+                        <h2 class="metric--title"
+                            style="color: #e0e0e0; margin-bottom: 1em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1em;">
                             {{ page.selectedMetric.name }}
                         </h2>
 
@@ -459,35 +450,38 @@
 
                             <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
                                 <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
-                                <br />
+                                <br/>
                                 <progress-arc
-                                    size="80"
-                                    stroke="#2196F3"
-                                    stroke-width="8"
-                                    complete="page.selectedMetric.contextProgress.arcValue"
-                                    counter-clockwise="false"
-                                    background="rgba(0,0,0,0.2)">
+                                        size="80"
+                                        stroke="#2196F3"
+                                        stroke-width="8"
+                                        complete="page.selectedMetric.contextProgress.arcValue"
+                                        counter-clockwise="false"
+                                        background="rgba(0,0,0,0.2)">
                                 </progress-arc>
                                 <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                             </div>
 
                             <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
                                 <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Practice progress</span>
-                                <br />
+                                <br/>
                                 <progress-arc
-                                    size="80"
-                                    stroke="#2196F3"
-                                    stroke-width="8"
-                                    complete="page.selectedMetric.selfProgress.arcValue"
-                                    background="rgba(0,0,0,0.2)">
+                                        size="80"
+                                        stroke="#2196F3"
+                                        stroke-width="8"
+                                        complete="page.selectedMetric.selfProgress.arcValue"
+                                        background="rgba(0,0,0,0.2)">
                                 </progress-arc>
                                 <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
                             </div>
 
                         </div>
 
-                        <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;" data-ng-if="page.selectedMetric.model">
-                            This is an automated metric. The values above were generated using data and algorithms supplied by the {{ page.selectedMetric.model.name }} model. You can find more information about this model <a href="/models/{{ page.selectedMetric.model.id }}">here</a>.
+                        <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;"
+                           data-ng-if="page.selectedMetric.model">
+                            This is an automated metric. The values above were generated using data and algorithms
+                            supplied by the {{ page.selectedMetric.model.name }} model. You can find more information
+                            about this model <a href="/models/{{ page.selectedMetric.model.id }}">here</a>.
                         </p>
 
                     </div>
@@ -518,8 +512,9 @@
                      data-ng-if="page.permissions.can_edit"
                 >
                     <!--<span style="">Create site</span>-->
-                    <a title="Create practice" class="add--new--btn" data-ng-click="page.presentChildModal('report')" style="float:right; width:56px; height:56px;">
-                        <i class="material-icons" >
+                    <a title="Create report" class="add--new--btn" data-ng-click="page.presentChildModal('report')"
+                       style="float:right; width:56px; height:56px;">
+                        <i class="material-icons">
                             add
                         </i>
                     </a>
@@ -538,25 +533,31 @@
 
                             <div class="body">
 
-                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === report.id && page.deletionTarget.collection === 'report'">
+                                <div class="confirm--delete"
+                                     data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === report.id && page.deletionTarget.collection === 'report'">
                                     <p>Do you want to delete this report?</p>
                                     <div class="actions" style="flex: 0;">
-                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('report', $index)">
+                                        <a class="snapshot--title" href="#" title="Delete forever"
+                                           data-ng-click="page.deleteFeature('report', $index)">
                                             Yes
                                         </a>
-                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                        <a class="snapshot--title" href="#" title="Cancel"
+                                           data-ng-click="page.cancelDelete()">
                                             Cancel
                                         </a>
                                     </div>
                                 </div>
                                 <p>{{ (report.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/reports/{{ report.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="/reports/{{ report.id }}/edit" title="Edit report"
+                                       data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="#" title="Delete report"
+                                       data-ng-click="page.confirmDelete(report, 'report')"
+                                       data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -573,7 +574,8 @@
                     <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.presentChildModal('report')" title="Create report">
+                                <button type="button" class="snapshot--title"
+                                        data-ng-click="page.presentChildModal('report')" title="Create report">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -590,137 +592,20 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/practices/{{ page.practice.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/practices/{{ page.practice.id }}/edit" title="Edit">
-                    <i data-ng-if="!page.practice.practice_type"
-                         class="glow material-icons">
-                        edit
-                    </i>
-                    <i data-ng-if="page.practice.practice_type"
-                       class="material-icons" >
-                        edit
-                    </i>
-                </a>
-            </li>
-
-
-            <li data-ng-if="page.permissions.can_edit && page.practice.practice_type"
-                data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a class="" href="/practices/{{ page.practice.id }}/location" title="Location">
-                    <i data-ng-if="page.next_action == 'add_geometry'"
-                       class="glow material-icons">
-                       location_on
-                    </i>
-                    <i data-ng-if="page.next_action != 'add_geometry'"
-                       class="material-icons" >
-                        location_on
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit && page.states.has_geometry" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
-                    <i data-ng-if="page.next_action == 'add_targets'"
-                            class="glow material-icons">
-                        multiline_chart
-                    </i>
-
-                    <i data-ng-if="page.next_action != 'add_targets'"
-                       class="material-icons" >
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit && page.states.has_targets" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
-                    <i data-ng-if="page.states.has_reports != true"
-                       class="glow material-icons">
-                        assignment
-                    </i>
-
-                    <i data-ng-if="page.states.has_reports == true"
-                       class="material-icons" >
-                        assignment
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.id }}/tags" title="Tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-
-             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.copyTarget && page.copyTarget.feature.id === page.practice.id && page.copyTarget.collection === 'practice'">
-                    <p>Make a copy of this practice?</p>
-                    <div class="actions">
-                        <a class="snapshot--title"
-                           href="#"
-                           style="background-color:#29cc82"
-                           title="Copy"
-                           data-ng-click="page.copyFeature('practice')"
-                        >
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelCopy()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmCopy(page.practice, 'practice')" title="Copy">
-                    <i class="material-icons">
-                        file_copy
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.print()" title="Print">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.practice.id && page.deletionTarget.collection === 'practice'">
-                    <p>Do you want to delete this practice?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice')">
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practice, 'practice')" title="Delete">
-                    <i class="material-icons">
-                        delete
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div practice-toolbar practice="page.practice" toolbar-state="summary" alerts="page.alerts"
+         data-ng-if="page.practice"></div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
     </div>
 
-    <div creation-dialog alerts="page.alerts" parent="page.practice.id" organization="page.practice.project.organization_id" type="page.childType" visible="page.showChildModal"></div>
-
+    <div creation-dialog alerts="page.alerts" parent="page.practice.id"
+         organization="page.practice.project.organization_id" type="page.childType" visible="page.showChildModal"></div>
 
 </main>
 

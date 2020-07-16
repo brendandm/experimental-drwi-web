@@ -55,143 +55,6 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
-
-                console.log('self.confirmDelete', obj);
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            /*COPY LOGIC*/
-
-            self.confirmCopy = function(obj, targetCollection) {
-
-                console.log('self.confirmCopy', obj, targetCollection);
-
-                if (self.copyTarget &&
-                    self.copyTarget.collection === 'project') {
-
-                    self.cancelCopy();
-
-                } else {
-
-                    self.copyTarget = {
-                        'collection': targetCollection,
-                        'feature': obj
-                    };
-
-                }
-
-            };
-
-            self.cancelCopy = function() {
-
-                self.copyTarget = null;
-
-            };
-
-            self.copyFeature = function(featureType, index) {
-
-                var targetCollection,
-                    targetId;
-
-                switch (featureType) {
-
-                    case 'practice':
-
-                        targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
-
-                        break;
-
-                    default:
-
-                        targetCollection = Project;
-
-                        break;
-
-                }
-
-                if (self.copyTarget.feature.properties) {
-
-                    targetId = self.copyTarget.feature.properties.id;
-
-                } else {
-
-                    targetId = self.copyTarget.feature.id;
-
-                }
-
-                Practice.copy({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully copied this ' + featureType + '.',
-                        'prompt': 'OK'
-                    });
-
-                    console.log("COPIED PRACTICE DATA", data)
-
-                        self.cancelCopy();
-
-                        $timeout(closeAlerts, 2000);
-
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.copyFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-/*END COPY LOGIC*/
-
             self.showElements = function() {
 
                 $timeout(function() {
@@ -300,7 +163,6 @@ angular.module('FieldDoc')
             };
 
             /*END STATE CALC*/
-
 
             self.setGroupSelection = function(group) {
 
@@ -621,63 +483,10 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
-
-                Practice.delete({
-                    id: +self.deletionTarget.id
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-
             //
             // Verify Account information for proper UI element display
             //
+
             if (Account.userObject && user) {
 
                 user.$promise.then(function(userResponse) {
