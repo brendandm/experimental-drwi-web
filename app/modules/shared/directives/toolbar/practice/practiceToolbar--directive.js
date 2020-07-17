@@ -89,7 +89,7 @@
 
                         scope.confirmDelete = function () {
 
-                            scope.showDeletionDialog = true;
+                            scope.showDeletionDialog = !scope.showDeletionDialog;
 
                         };
 
@@ -159,7 +159,7 @@
 
                         scope.confirmCopy = function() {
 
-                            scope.showCopyDialog = true;
+                            scope.showCopyDialog = !scope.showCopyDialog;
 
                         };
 
