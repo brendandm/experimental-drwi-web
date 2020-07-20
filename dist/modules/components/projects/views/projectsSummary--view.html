@@ -556,7 +556,7 @@
                     <li data-ng-if="!page.practices.length" class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
+                                <button type="button" class="snapshot--title" data-ng-click="page.presentChildModal('practice')" title="Create practice">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -906,7 +906,9 @@
                             <li data-ng-if="!page.sites.length"class="card" data-ng-if="page.permissions.can_edit">
                                 <div class="card--content">
                                     <div class="body">
-                                        <button type="button" class="snapshot--title" data-ng-click="page.createChild(page.childName)()" title="Create site">
+                                        <button type="button" class="snapshot--title" data-ng-click="page.presentChildModal('site')" title="Create site">
+                                     <!-- <button type="button" class="snapshot--title" data-ng-click="page.createChild(page.childName)()" title="Create site">
+                                        -->
                                             <i class="material-icons">
                                                 add
                                             </i>
