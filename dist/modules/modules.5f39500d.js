@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595259004048})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595263310543})
 
 ;
 /**
@@ -16773,7 +16773,7 @@ angular.module('FieldDoc')
         }
 
         function railsRedirection(){
-            window.location.replace("/practices/"+self.report.practice.id);
+            window.location.replace("/practices/"+self.practice.id+"/location");
         }
 
         self.showElements = function() {
@@ -21277,8 +21277,9 @@ angular.module('FieldDoc')
                 }
 
                 function railsRedirection(){
-                    window.location.replace("/practices/"+self.practice.id);
+                    window.location.replace("/practices/"+self.report.practice.id);
                 }
+
 
                 self.confirmDelete = function(obj) {
 
@@ -21437,6 +21438,8 @@ angular.module('FieldDoc')
                         'numeric': '12'
                     }
                 ];
+
+
 
                 function parseISOLike(s) {
                     var b = s.split(/\D/);
@@ -39175,6 +39178,8 @@ angular.module('FieldDoc')
 
                         scope.states = scope.practice.setup.states;
 
+                        scope.showPrompt = true;
+
                         //
                         // Generic helper functions.
                         //
@@ -39290,6 +39295,16 @@ angular.module('FieldDoc')
                             });
 
                         };
+
+                        //
+                        // Close prompt
+                        //
+
+                        scope.closePrompt = function(){
+
+                            scope.showPrompt = false;
+
+                        }
 
                         //
                         // Feature copy.

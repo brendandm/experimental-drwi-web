@@ -52,8 +52,9 @@
                 }
 
                 function railsRedirection(){
-                    window.location.replace("/practices/"+self.practice.id);
+                    window.location.replace("/practices/"+self.report.practice.id);
                 }
+
 
                 self.confirmDelete = function(obj) {
 
@@ -212,6 +213,8 @@
                         'numeric': '12'
                     }
                 ];
+
+
 
                 function parseISOLike(s) {
                     var b = s.split(/\D/);

@@ -17,20 +17,23 @@
         <li data-ng-if="practice.permissions.write"
             data-ng-class="{active: toolbarState === 'edit'}">
             <div class="action-prompt"
-                 data-ng-if="nextAction === 'add_type' && toolbarState === 'summary'">
+                 data-ng-if="nextAction === 'add_type' && toolbarState === 'summary' && showPrompt === true">
                 <div class="step-icon">
                     <span class="material-icons">
                         next_plan
                     </span>
                 </div>
                 <div class="copy">
+
                     <span>
                         This practice isn’t linked to a practice type.
                     </span>
                     <a href="/practices/{{ practice.id }}/edit">
                         Click here to select one.
                     </a>
+
                 </div>
+
             </div>
             <a href="/practices/{{ practice.id }}/edit" title="Edit">
                 <i data-ng-class="{glow: !practice.practice_type}"
@@ -80,6 +83,7 @@
                     </span>
                 </div>
                 <div class="copy">
+
                     <span>
                         This practice needs metric targets.
                     </span>
@@ -107,12 +111,30 @@
                     </span>
                 </div>
                 <div class="copy">
+
                     <span>
                         This practice is ready for reporting.
                     </span>
                     <a href="#" data-ng-click="presentChildModal()">
                         Click here to create one.
                     </a>
+              <!--      <div style="border:0px solid red;
+                                position: absolute;
+                                float:right;
+                                height:20px;
+                                width: 20px;
+                                display: block;
+                                right: 4px;
+                                top: 0px;
+                            "
+                         data-ng-click="closePrompt()">
+
+                        <i class="material-icons">
+                            close
+                        </i>
+
+                    </div>
+                    -->
                 </div>
             </div>
             <a href="#" title="Reports" data-ng-click="presentChildModal()">

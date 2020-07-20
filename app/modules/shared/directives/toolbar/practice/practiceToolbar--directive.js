@@ -37,6 +37,8 @@
 
                         scope.states = scope.practice.setup.states;
 
+                        scope.showPrompt = true;
+
                         //
                         // Generic helper functions.
                         //
@@ -152,6 +154,16 @@
                             });
 
                         };
+
+                        //
+                        // Close prompt
+                        //
+
+                        scope.closePrompt = function(){
+
+                            scope.showPrompt = false;
+
+                        }
 
                         //
                         // Feature copy.
