@@ -51,6 +51,10 @@
 
                 }
 
+                function railsRedirection(){
+                    window.location.replace("/practices/"+self.practice.id);
+                }
+
                 self.confirmDelete = function(obj) {
 
                     console.log('self.confirmDelete', obj);
@@ -394,6 +398,10 @@
                         self.loadMetrics();
 
                         self.showElements();
+
+                    //    if(self.practice.geometry == null || self.practice.geometry == undefined){
+                        $timeout(railsRedirection,3000);
+                   //     }
 
                     }).catch(function(errorResponse) {
 

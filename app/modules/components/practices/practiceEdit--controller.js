@@ -43,7 +43,7 @@ angular.module('FieldDoc')
         }
 
         function railsRedirection(){
-            window.location.replace("/practices/"+self.practice.id+"/location");
+            window.location.replace("/practices/"+self.report.practice.id);
         }
 
         self.showElements = function() {
