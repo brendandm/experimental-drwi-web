@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595263310543})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595275436602})
 
 ;
 /**
@@ -21021,54 +21021,42 @@ angular.module('FieldDoc')
 
             self.addMetric = function($item, $model, $label) {
 
-                self.programMetric = '';
-
-                var temp_id = $item.id;
-
-                $item.metric_id = temp_id;
-
-                delete $item.id;
-
                 self.metricMatrix.push($item);
-
-                var i = 0;
 
                 var tempProgramMetrics = [];
 
                 self.programMetrics.forEach(function(newItem){
 
-                    if($item.id == newItem.id){
+                    if (!$item.id !== newItem.id){
 
-                        //  delete self.programMetrics[i];
-
-                    }else{
-
-                        tempProgramMetrics.push(self.programMetrics[i]);
+                        tempProgramMetrics.push(newItem);
 
                         self.activeDomain.push(newItem.id);
 
                     }
 
-                    i = i+1;
                 });
 
                 self.programMetrics = tempProgramMetrics;
 
                 self.saveTarget($item, null, 0);
 
-                document.getElementById("assignTargetsBlock").blur();
+                // document.getElementById("assignTargetsBlock").blur();
 
                 self.loadModels(self.activeDomain);
 
             };
 
-            self.saveTarget =  function($item,$index,$value){
+            self.saveTarget = function($item,$index,$value){
 
                 console.log("save $item", $item);
 
                 var target_arr = [];
 
-                target_arr.push($item);
+                target_arr.push({
+                    'metric': $item,
+                    'value': $value
+                });
 
                 var data = {
                     targets: target_arr
