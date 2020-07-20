@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595256950853})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595259004048})
 
 ;
 /**
@@ -16773,7 +16773,7 @@ angular.module('FieldDoc')
         }
 
         function railsRedirection(){
-            window.location.replace("/practices/"+self.practice.id+"/location");
+            window.location.replace("/practices/"+self.report.practice.id);
         }
 
         self.showElements = function() {
@@ -21276,6 +21276,10 @@ angular.module('FieldDoc')
 
                 }
 
+                function railsRedirection(){
+                    window.location.replace("/practices/"+self.practice.id);
+                }
+
                 self.confirmDelete = function(obj) {
 
                     console.log('self.confirmDelete', obj);
@@ -21619,6 +21623,10 @@ angular.module('FieldDoc')
                         self.loadMetrics();
 
                         self.showElements();
+
+                    //    if(self.practice.geometry == null || self.practice.geometry == undefined){
+                        $timeout(railsRedirection,3000);
+                   //     }
 
                     }).catch(function(errorResponse) {
 
