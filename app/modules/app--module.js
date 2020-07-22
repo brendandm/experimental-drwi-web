@@ -23,7 +23,7 @@ angular
         'save2pdf',
         'collaborator',
         'ui.bootstrap',
-        'angular-progress-arc'
+        'angular-progress-arc',
     ]).config(function($sceDelegateProvider) {
 
         $sceDelegateProvider.resourceUrlWhitelist([

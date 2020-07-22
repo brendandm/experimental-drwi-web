@@ -78,7 +78,7 @@ angular
         'save2pdf',
         'collaborator',
         'ui.bootstrap',
-        'angular-progress-arc'
+        'angular-progress-arc',
     ]).config(function($sceDelegateProvider) {
 
         $sceDelegateProvider.resourceUrlWhitelist([
@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595427255995})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595432415195})
 
 ;
 /**
