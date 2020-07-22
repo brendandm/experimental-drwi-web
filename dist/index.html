@@ -2,109 +2,112 @@
 
 <html class="no-js" data-ng-app="FieldDoc">
 
-  <head>
+    <head>
 
-    <meta charset="utf-8" />
+        <meta charset="utf-8" />
 
-    <!-- Sitewide meta tags -->
-    <meta data-ng-repeat="tag in $root.site.meta" name="{{ tag.name }}" content="{{ tag.content }}" />
+        <!-- Sitewide meta tags -->
+        <meta data-ng-repeat="tag in $root.site.meta" name="{{ tag.name }}" content="{{ tag.content }}" />
 
-    <!-- Page specific meta tags -->
-    <meta data-ng-repeat="tag in $root.page.meta" name="{{ tag.name }}" content="{{ tag.content }}" />
+        <!-- Page specific meta tags -->
+        <meta data-ng-repeat="tag in $root.page.meta" name="{{ tag.name }}" content="{{ tag.content }}" />
 
-    <!-- Page Title based on either the root site title or the page specific site title -->
-    <title>FieldDoc | {{ $root.page.title || '' }}</title>
+        <!-- Page Title based on either the root site title or the page specific site title -->
+        <title>FieldDoc | {{ $root.page.title || '' }}</title>
 
-    <!-- Mapbox -->
+        <!-- Mapbox -->
 
-    <!--<script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script> -->
-    <!-- <link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' /> -->
-    <!-- <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' /> -->
+        <!--<script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script> -->
+        <!-- <link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' /> -->
+        <!-- <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' /> -->
 
-    <!-- Material icons -->
+        <!-- Material icons -->
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
-    <link rel="stylesheet" href="/styles/mapbox-gl.190b2d4c.css" />
-    <link rel="stylesheet" href="/styles/mapbox-gl-draw.fd7f9def.css" />
-    <link rel="stylesheet" href="/styles/mapbox-gl-geocoder.717da178.css" />
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="/styles/main.2ca28a06.css" media="screen">
+        <link rel="stylesheet" href="/styles/mapbox-gl.190b2d4c.css" />
+        <link rel="stylesheet" href="/styles/mapbox-gl-draw.fd7f9def.css" />
+        <link rel="stylesheet" href="/styles/mapbox-gl-geocoder.717da178.css" />
 
-    <link href="/styles/print.bb339b7b.css" rel="stylesheet" media="print" />
+        <link rel="stylesheet" href="/styles/main.28d1ed6f.css" media="screen">
 
-    <link rel="shortcut icon" href="/images/favicon.png" />
-    <link rel="author" href="/humans.txt" />
+        <link href="/styles/print.bb339b7b.css" rel="stylesheet" media="print" />
 
-    <link data-ng-repeat="link in $root.site.links" rel="{{ link.rel }}" href="{{ link.href }}" />
+        <link rel="shortcut icon" href="/images/favicon.png" />
+        <link rel="author" href="/humans.txt" />
 
-    <base href="/" />
+        <link data-ng-repeat="link in $root.site.links" rel="{{ link.rel }}" href="{{ link.href }}" />
 
-      <!-- Google Tag Manager -->
-    <!--    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PG8N4PR');</script>
-      -->
+        <base href="/" />
+
+        <!-- Google Tag Manager -->
+        <!--    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-PG8N4PR');</script>
+          -->
         <!-- End Google Tag Manager -->
 
-  </head>
+    </head>
 
-  <body class="{{ $root.page.class }}">
+    <body class="{{ $root.page.class }}">
 
-    <div data-ng-view=""></div>
+        <div data-ng-view=""></div>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-75868314-1', 'auto');
-      ga('send', 'pageview');
+            ga('create', 'UA-75868314-1', 'auto');
+            ga('send', 'pageview');
 
-    </script>
+        </script>
 
-    <!-- Google Tag Manager (noscript) -->
-  <!--      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PG8N4PR"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        -->
-    <!-- End Google Tag Manager (noscript) -->
+        <!-- Google Tag Manager (noscript) -->
+        <!--      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PG8N4PR"
+              height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+              -->
+        <!-- End Google Tag Manager (noscript) -->
 
-    <!-- Sentry Bot Integration -->
+        <!-- Sentry Bot Integration -->
         <!-- Note that we now also provide a es6 build only -->
         <!-- <script src="https://browser.sentry-cdn.com/5.6.3/bundle.es6.min.js" integrity="sha384-NEWge0n6G1Kne9yTAYJ/i9ezaKNstK9IbfJS7vlZk53XtWjF4wEJs3TOkC3hGGN1" crossorigin="anonymous"></script> -->
-    <script src="https://browser.sentry-cdn.com/5.6.3/bundle.min.js" integrity="sha384-/Cqa/8kaWn7emdqIBLk3AkFMAHBk0LObErtMhO+hr52CntkaurEnihPmqYj3uJho" crossorigin="anonymous"></script>
+        <script src="https://browser.sentry-cdn.com/5.20.0/bundle.min.js"
+                integrity="sha384-9/pNuf5H3pGj4HeGyBhim2bPZAyv6ZfxgFc8EqCc2GgmuH5G8yZxynupC2FOc+y9"
+                crossorigin="anonymous"></script>
 
         <!-- If you include the integration it will be available under Sentry.Integrations.Angular -->
-    <script src="https://browser.sentry-cdn.com/5.6.3/angular.min.js" crossorigin="anonymous"></script>
+        <script src="https://browser.sentry-cdn.com/5.20.0/angular.min.js"
+                crossorigin="anonymous"></script>
 
-    <script>
-      Sentry.init({
-        dsn: 'https://377c0996898d47e2b2ff16254e92472e@sentry.io/1772244    ',
-        integrations: [
-          new Sentry.Integrations.Angular(),
-        ],
-        environment: 'zt_sentry_angular_local'
-      });
-    </script>
+        <script>
+            Sentry.init({
+                dsn: 'https://377c0996898d47e2b2ff16254e92472e@o308125.ingest.sentry.io/1772244',
+                integrations: [
+                    new Sentry.Integrations.Angular(),
+                ],
+                environment: 'fielddoc_web'
+            });
+        </script>
 
-    <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
+        <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
-    <!--[if lt IE 9]>
-    <script src="/scripts/oldieshim.5c6f6a62.js"></script>
-    <![endif]-->
+        <!--[if lt IE 9]>
+        <script src="/scripts/oldieshim.5c6f6a62.js"></script>
+        <![endif]-->
 
-    <script src="/modules/vendor.4475de2f.js"></script>
+        <script src="/modules/vendor.4475de2f.js"></script>
 
-        <script src="/modules/modules.4457b8f2.js"></script>
+        <script src="/modules/modules.e03cfac8.js"></script>
 
-  </body>
+    </body>
 
 </html>
