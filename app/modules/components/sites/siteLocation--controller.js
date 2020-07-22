@@ -569,7 +569,7 @@
                             var bbox = turf.bbox(line);
                             self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
-                            MapManager.addFeature(
+                          /*  MapManager.addFeature(
                                 self.map,
                                 self.practice,
                                 'geometry',
@@ -577,6 +577,8 @@
                                 true,
                                 'practice'
                             );
+                            
+                           */
                         }
 
                         self.drawControls = new MapboxDraw({

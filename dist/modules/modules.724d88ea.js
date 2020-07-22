@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595426626761})
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',castUrl:'http://127.0.0.1:4000',dnrUrl:'http://127.0.0.1:4000',siteUrl:'http://127.0.0.1:9000',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',version:1595427097441})
 
 ;
 /**
@@ -14734,7 +14734,7 @@ angular.module('FieldDoc')
                             var bbox = turf.bbox(line);
                             self.map.fitBounds(bbox, { duration: 0, padding: 40 });
 
-                            MapManager.addFeature(
+                          /*  MapManager.addFeature(
                                 self.map,
                                 self.practice,
                                 'geometry',
@@ -14742,6 +14742,8 @@ angular.module('FieldDoc')
                                 true,
                                 'practice'
                             );
+                            
+                           */
                         }
 
                         self.drawControls = new MapboxDraw({
