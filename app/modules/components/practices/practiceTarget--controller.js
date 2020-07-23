@@ -470,6 +470,49 @@ angular.module('FieldDoc')
 
             };
 
+            self.updateTarget = function($item){
+
+                console.log("self.updateTarget", $item);
+
+                Practice.updateTarget({
+                    id: +self.practice.id,
+                    targetId: $item.id
+                }, $item).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.updateMatrix", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('updateMatrix.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
             self.saveTarget = function($item,$index,$value){
 
                 console.log("save $item", $item);
@@ -520,7 +563,7 @@ angular.module('FieldDoc')
                     self.status.processing = false;
 
                 });
-            }
+            };
 
             self.removeMetric = function($item,$index){
 

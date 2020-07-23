@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595505833070})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595511075602})
 
 ;
 /**
@@ -21049,6 +21049,49 @@ angular.module('FieldDoc')
 
             };
 
+            self.updateTarget = function($item){
+
+                console.log("self.updateTarget", $item);
+
+                Practice.updateTarget({
+                    id: +self.practice.id,
+                    targetId: $item.id
+                }, $item).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    console.log("practice.updateMatrix", successResponse);
+
+                }).catch(function(error) {
+
+                    console.log('updateMatrix.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
             self.saveTarget = function($item,$index,$value){
 
                 console.log("save $item", $item);
@@ -21099,7 +21142,7 @@ angular.module('FieldDoc')
                     self.status.processing = false;
 
                 });
-            }
+            };
 
             self.removeMetric = function($item,$index){
 
@@ -36207,7 +36250,7 @@ angular
         });
 
 }());
- (function() {
+(function() {
 
     'use strict';
 
@@ -36220,7 +36263,8 @@ angular
         .service('Practice', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
                 'id': '@id',
-                'target_id': '@target_id'
+                'target_id': '@target_id',
+                'targetId': '@targetId'
             }, {
                 'query': {
                     'isArray': false
@@ -36336,8 +36380,7 @@ angular
                 targetUpdate: {
                     method: 'PATCH',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
-
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:targetId')
                 },
                 targetDelete: {
                     method: 'DELETE',

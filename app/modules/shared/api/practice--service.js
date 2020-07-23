@@ -1,4 +1,4 @@
- (function() {
+(function() {
 
     'use strict';
 
@@ -11,7 +11,8 @@
         .service('Practice', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
                 'id': '@id',
-                'target_id': '@target_id'
+                'target_id': '@target_id',
+                'targetId': '@targetId'
             }, {
                 'query': {
                     'isArray': false
@@ -127,8 +128,7 @@
                 targetUpdate: {
                     method: 'PATCH',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/target/:target_id')
-
+                    url: environment.apiUrl.concat('/v1/practice/:id/target/:targetId')
                 },
                 targetDelete: {
                     method: 'DELETE',
