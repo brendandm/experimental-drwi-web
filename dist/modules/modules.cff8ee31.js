@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595511075602})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595511345711})
 
 ;
 /**
@@ -21053,7 +21053,7 @@ angular.module('FieldDoc')
 
                 console.log("self.updateTarget", $item);
 
-                Practice.updateTarget({
+                Practice.targetUpdate({
                     id: +self.practice.id,
                     targetId: $item.id
                 }, $item).$promise.then(function(successResponse) {

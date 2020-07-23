@@ -474,7 +474,7 @@ angular.module('FieldDoc')
 
                 console.log("self.updateTarget", $item);
 
-                Practice.updateTarget({
+                Practice.targetUpdate({
                     id: +self.practice.id,
                     targetId: $item.id
                 }, $item).$promise.then(function(successResponse) {
