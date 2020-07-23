@@ -27,65 +27,52 @@
 
                         <h2>Metric Types</h2>
 
-                        <!--
                         <p>
-                            Showing <b>{{ metricsTypes.length }}</b> of <b>{{ page.metricCount }}</b> total metric types in program <b>{{page.program.name}}</b>.
+                            This program contains <strong>{{ page.metricCount
+                            }}</strong> metric <ng-pluralize count="page.metricCount"
+                                                             when="{'one': 'type','other': 'types'}"></ng-pluralize>.
                         </p>
 
-                           <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
-                                                                        justify-content:left;
-                                                                        align-items:left;
-                                                                        overflow: auto;
-                                                                        flex-wrap: wrap;
-                                                                         "
-                             >
+                        <div class="collection-search reveal fade-in t0"
+                             style="justify-content:flex-start; align-items: center; flex-wrap: wrap;">
 
-                                 <input style="float:left; display:inline-block; clear:right;"
-                                        type="text"
-                                        class="search-bar list-filter"
-                                        data-ng-if="!page.status.loading"
-                                        data-ng-model="page.queryToken"
-                                        placeholder="Search metric types">
+                            <input style="display: inline-block;"
+                                   type="text"
+                                   class="search-bar list-filter"
+                                   data-ng-if="!page.status.loading"
+                                   data-ng-model="page.queryToken"
+                                   placeholder="Search metric types">
 
+                        </div>
 
-                            </div>
-                        -->
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="metric in page.metricsTypes | orderBy:'name' | filter: page.queryToken"
-                               >
+                            <li class="card reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="metric in page.metricsTypes | orderBy:'name' | filter: page.queryToken">
 
-                                <div class="card--content" >
+                                <div class="card--content">
 
                                     <div class="name" style="flex-flow: column; align-items: flex-start;">
-                                        <label for="metric-{{ metric.id }}">
+                                        <strong>
                                             {{ metric.name }}
-                                        </label>
-                                      <!-- <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                        -->
+                                        </strong>
                                     </div>
 
-                                    <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
-                                        {{ practice.name }}
-                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                    </label> -->
-
                                     <div class="body">
-                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
+                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
+                                            {{ (practice.description || 'No description') }}</p>
                                     </div>
 
                                 </div>
 
                             </li>
 
-
                         </ul>
 
                     </section>
 
                 </div>
-
 
             </div>
 
@@ -116,7 +103,7 @@
                     </i>
                 </a>
             </li>
-           <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/programs/{{ page.program.id  }}/metrics" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
@@ -128,7 +115,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>

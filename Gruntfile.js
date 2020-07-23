@@ -77,7 +77,6 @@ module.exports = function(grunt) {
                     }
                 }
             },
-
             livedev: {
                 options: {
                     dest: '<%= yeoman.app %>/config/environment.js'
@@ -94,7 +93,6 @@ module.exports = function(grunt) {
                     }
                 }
             },
-
             staging: {
                 options: {
                     dest: '<%= yeoman.app %>/config/environment.js'
@@ -125,8 +123,20 @@ module.exports = function(grunt) {
                     }
                 }
             },
-
-
+            production_local: {
+                options: {
+                    dest: '<%= yeoman.app %>/config/environment.js'
+                },
+                constants: {
+                    environment: {
+                        name: 'production',
+                        apiUrl: 'https://api.fielddoc.org',
+                        siteUrl: 'http://127.0.0.1:9000',
+                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',
+                        version: version
+                    }
+                }
+            }
         },
 
         // Project settings
