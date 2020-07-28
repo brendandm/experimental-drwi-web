@@ -98,6 +98,11 @@ angular.module('FieldDoc')
                 /*
                 simplify thumbs
 
+                lets create a new var from our geojson object
+                then convert it to a string and store the length
+                A series of conditionals to check the length
+                depending on length, turf.simplify along tolerance scale.
+
                 */
 
                 let simplified = geometry;
