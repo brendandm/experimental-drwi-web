@@ -583,6 +583,13 @@ angular.module('FieldDoc')
 
                 self.map.setStyle(self.mapStyles[index].url);
 
+                /*
+                see PracticeLocation controller switchMapStyle () method.
+should store site geo in controller var, then redraw on map after style change.
+
+                 */
+
+
             };
 
             self.getMapOptions = function() {
