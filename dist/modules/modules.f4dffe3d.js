@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595608651161})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1595938556304})
 
 ;
 /**
@@ -5729,6 +5729,8 @@ angular.module('FieldDoc')
                 checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
                 adds return to site[] as staticURL property
                 if no site geometry, adds default URL to site[].staticURL
+
+                branch : FD_489-turf.simplify 2020.07.28
             */
             self.createStaticMapURLs = function(arr, feature_type) {
                 console.log("createStaticMapURLS -> arr", arr)
@@ -18463,6 +18465,13 @@ angular.module('FieldDoc')
                 console.log('self.switchMapStyle --> index', index);
 
                 self.map.setStyle(self.mapStyles[index].url);
+
+                /*
+                see PracticeLocation controller switchMapStyle () method.
+should store site geo in controller var, then redraw on map after style change.
+
+                 */
+
 
             };
 
@@ -37125,20 +37134,62 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+
                     if(colorScheme == 'practice'){
+
                         color = "#df063e";
-                         console.log('COLOR 1');
+
                     }else{
-                         console.log('COLOR 2');
+
                     }
                 }else{
+
                      console.log('COLOR 3');
+
                 }
+
+                /*
+                simplify thumbs
+
+                */
+
+                let simplified = geometry;
+
+                var lengthCheck = encodeURIComponent(JSON.stringify(geometry)).length;
+
+                if(lengthCheck > 8192) {
+
+                    let simplify_options = {tolerance: 0.6, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 4096) {
+
+                    let simplify_options = {tolerance: 0.4, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 1024){
+
+                    let simplify_options = {tolerance: 0.3, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+
+                }else{
+
+
+                }
+
+                //compose feature
+                console.log("geometry -->", geometry)
+                console.log("simplified -->", simplified)
+
+
 
                 var styledFeature = {
                     "type": "Feature",
-                    "geometry": geometry,
+                    "geometry": simplified,
                     "properties": {
                         "marker-size": "small",
                         "marker-color": color,
@@ -37149,9 +37200,12 @@ angular.module('FieldDoc')
                         "fill-opacity": 0.5
                     }
                 };
-                
+
+
+
                 // Build static map URL for Mapbox API
-                
+
+
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',

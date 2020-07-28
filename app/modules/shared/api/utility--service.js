@@ -81,20 +81,62 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+
                     if(colorScheme == 'practice'){
+
                         color = "#df063e";
-                         console.log('COLOR 1');
+
                     }else{
-                         console.log('COLOR 2');
+
                     }
                 }else{
+
                      console.log('COLOR 3');
+
                 }
+
+                /*
+                simplify thumbs
+
+                */
+
+                let simplified = geometry;
+
+                var lengthCheck = encodeURIComponent(JSON.stringify(geometry)).length;
+
+                if(lengthCheck > 8192) {
+
+                    let simplify_options = {tolerance: 0.6, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 4096) {
+
+                    let simplify_options = {tolerance: 0.4, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 1024){
+
+                    let simplify_options = {tolerance: 0.3, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+
+                }else{
+
+
+                }
+
+                //compose feature
+                console.log("geometry -->", geometry)
+                console.log("simplified -->", simplified)
+
+
 
                 var styledFeature = {
                     "type": "Feature",
-                    "geometry": geometry,
+                    "geometry": simplified,
                     "properties": {
                         "marker-size": "small",
                         "marker-color": color,
@@ -105,9 +147,12 @@ angular.module('FieldDoc')
                         "fill-opacity": 0.5
                     }
                 };
-                
+
+
+
                 // Build static map URL for Mapbox API
-                
+
+
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
