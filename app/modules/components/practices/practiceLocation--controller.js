@@ -583,6 +583,7 @@ angular.module('FieldDoc')
 
                 self.map.setStyle(self.mapStyles[index].url);
 
+                //Redraw site layer
             };
 
             self.getMapOptions = function() {
