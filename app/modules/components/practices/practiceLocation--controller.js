@@ -96,7 +96,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+/*
             self.loadSiteDirect = function(){
 
                  var exclude = [
@@ -131,7 +131,7 @@ angular.module('FieldDoc')
 
                 });
             }
-
+*/
 
             self.loadPractice = function() {
 
@@ -583,6 +583,17 @@ angular.module('FieldDoc')
 
                 self.map.setStyle(self.mapStyles[index].url);
 
+                if(self.site != null && self.site.geometry != null){
+                    MapManager.addFeature(
+                        self.map,
+                        self.site,
+                        'geometry',
+                        true,
+                        false,
+                        'site'
+                    );
+                }
+
                 //Redraw site layer
             };
 
@@ -647,8 +658,7 @@ angular.module('FieldDoc')
                                 padding: 40
                              });
                         }
-                        console.log("There is a site");
-                        console.log("site",self.site);
+
                          MapManager.addFeature(
 
                                 self.map,
