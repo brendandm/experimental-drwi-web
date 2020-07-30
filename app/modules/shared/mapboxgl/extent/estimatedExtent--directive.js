@@ -4,6 +4,7 @@
 
     angular.module('FieldDoc')
         .directive('estExtent', [
+            'environment',
             '$window',
             '$rootScope',
             '$routeParams',
@@ -12,7 +13,7 @@
             '$location',
             'Practice',
             '$timeout',
-            function ($window, $rootScope, $routeParams, $filter,
+            function (environment, $window, $rootScope, $routeParams, $filter,
                       $parse, $location, Practice, $timeout) {
                 return {
                     restrict: 'EA',
@@ -22,7 +23,7 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/mapboxgl/extent/estimatedExtent--view.html';
+                        return 'modules/shared/mapboxgl/extent/estimatedExtent--view.html?t=' + environment.version;
 
                     },
                     link: function (scope, element, attrs) {

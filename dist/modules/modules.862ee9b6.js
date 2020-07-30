@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596137474391})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596137708059})
 
 ;
 /**
@@ -34714,6 +34714,7 @@ angular.module('MapboxGL')
 
     angular.module('FieldDoc')
         .directive('estExtent', [
+            'environment',
             '$window',
             '$rootScope',
             '$routeParams',
@@ -34722,7 +34723,7 @@ angular.module('MapboxGL')
             '$location',
             'Practice',
             '$timeout',
-            function ($window, $rootScope, $routeParams, $filter,
+            function (environment, $window, $rootScope, $routeParams, $filter,
                       $parse, $location, Practice, $timeout) {
                 return {
                     restrict: 'EA',
@@ -34732,7 +34733,7 @@ angular.module('MapboxGL')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/mapboxgl/extent/estimatedExtent--view.html';
+                        return 'modules/shared/mapboxgl/extent/estimatedExtent--view.html?t=' + environment.version;
 
                     },
                     link: function (scope, element, attrs) {
