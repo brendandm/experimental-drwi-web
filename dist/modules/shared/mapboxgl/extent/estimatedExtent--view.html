@@ -11,7 +11,8 @@
         <span data-ng-if="options.type === 'linestring'">&nbsp;linear feet</span>
         <span style="display: block; font-size: 0.9rem; margin-top: 1rem;">The estimated {{ options.label ||
             'extent' }} was calculated using the geometry displayed on the map above. It may differ from the actual
-            {{ featureType }} extent stored in FieldDoc and/or the extent of this {{ featureType }} as determined by
+            {{ featureType }} {{ options.label || 'extent' }} stored in FieldDoc and/or the {{ options.label ||
+            'extent' }} of this {{ featureType }} as determined by
             other systems that process geospatial data.</span>
     </div>
     <div data-ng-if="!options.measurement">
