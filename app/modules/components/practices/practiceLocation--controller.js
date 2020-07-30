@@ -581,18 +581,26 @@ angular.module('FieldDoc')
 
                 console.log('self.switchMapStyle --> index', index);
 
+                if(self.site != null && self.site.geometry != null){
+
+                    self.map.on('style.load', function () {
+
+                        MapManager.addFeature(
+                            self.map,
+                            self.site,
+                            'geometry',
+                            true,
+                            false,
+                            'site'
+                        )
+
+                    });
+
+                }
+
                 self.map.setStyle(self.mapStyles[index].url);
 
-                if(self.site != null && self.site.geometry != null){
-                    MapManager.addFeature(
-                        self.map,
-                        self.site,
-                        'geometry',
-                        true,
-                        false,
-                        'site'
-                    );
-                }
+
 
                 //Redraw site layer
             };
@@ -671,6 +679,7 @@ angular.module('FieldDoc')
                     }else if(self.practice.geometry == null
                         || self.practice.geometry == 'undefined'
                     ){
+
                         var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
                         var bbox = turf.bbox(line);
                         self.map.fitBounds(bbox, { duration: 0, padding: 40 });
