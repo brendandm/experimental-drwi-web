@@ -9,10 +9,10 @@
         </span>
         <span data-ng-if="options.type === 'polygon'">&nbsp;acres</span>
         <span data-ng-if="options.type === 'linestring'">&nbsp;linear feet</span>
-        <span style="display: block; font-size: 0.9rem; margin-top: 1rem;">This estimated {{ options.label ||
-            'extent' }} value was calculated using the geometry displayed on the map above. It may differ from the
-            actual {{ featureType }} extent stored in FieldDoc and/or the extent of this {{ featureType }} as
-            determined by other systems that process geospatial data.</span>
+        <span style="display: block; font-size: 0.9rem; margin-top: 1rem;">The estimated {{ options.label ||
+            'extent' }} was calculated using the geometry displayed on the map above. It may differ from the actual
+            {{ featureType }} extent stored in FieldDoc and/or the extent of this {{ featureType }} as determined by
+            other systems that process geospatial data.</span>
     </div>
     <div data-ng-if="!options.measurement">
         <em>Unable to calculate estimated extent.</em>
