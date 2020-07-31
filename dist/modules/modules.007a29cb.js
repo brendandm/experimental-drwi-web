@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1595608651161})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596163694086})
 
 ;
 /**
@@ -17977,7 +17977,7 @@ angular.module('FieldDoc')
                 });
 
             };
-
+/*
             self.loadSiteDirect = function(){
 
                  var exclude = [
@@ -18012,7 +18012,7 @@ angular.module('FieldDoc')
 
                 });
             }
-
+*/
 
             self.loadPractice = function() {
 
@@ -18458,12 +18458,37 @@ angular.module('FieldDoc')
 
             self.switchMapStyle = function(styleId, index) {
 
-                console.log('self.switchMapStyle --> styleId', styleId);
+                if(self.site != null && self.site.geometry != null){
 
-                console.log('self.switchMapStyle --> index', index);
+                    self.map.on('style.load', function () {
+
+                        let mapLayer = self.map.getLayer('feature-site-'+self.site.properties.id);
+
+                        if(typeof mapLayer !== 'undefined') {
+
+                        }else{
+
+                            MapManager.addFeature(
+                                self.map,
+                                self.site,
+                                'geometry',
+                                true,
+                                false,
+                                'site'
+                            );
+
+                            self.map.moveLayer("feature-site-"+self.site.properties.id,"country-label");
+                            self.map.moveLayer("feature-outline-site-"+self.site.properties.id,"country-label");
+
+                        }
+
+                    });
+
+                }
 
                 self.map.setStyle(self.mapStyles[index].url);
 
+                //Redraw site layer
             };
 
             self.getMapOptions = function() {
@@ -18527,8 +18552,7 @@ angular.module('FieldDoc')
                                 padding: 40
                              });
                         }
-                        console.log("There is a site");
-                        console.log("site",self.site);
+
                          MapManager.addFeature(
 
                                 self.map,
@@ -18541,6 +18565,7 @@ angular.module('FieldDoc')
                     }else if(self.practice.geometry == null
                         || self.practice.geometry == 'undefined'
                     ){
+
                         var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
                         var bbox = turf.bbox(line);
                         self.map.fitBounds(bbox, { duration: 0, padding: 40 });
@@ -34774,12 +34799,12 @@ angular.module('FieldDoc')
             },
             addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
 
-                console.log("A");
+              //  console.log("A");
 
                 if (fitBounds === null ||
 
                     typeof fitBounds === 'undefined') {
-                     console.log("B");
+               //     console.log("B");
                     fitBounds = true;
 
                 }
@@ -34790,31 +34815,31 @@ angular.module('FieldDoc')
                 var geometryLineColor           = 'rgba(6, 170, 223, 0.8)';
 
                 if(featureType != null){
-                     console.log("C");
+         //            console.log("C");
                     if(featureType == 'site'){
-                         console.log("D");
+          //               console.log("D");
                     }else if(featureType == 'practice'){
-                         console.log("E");
+          //               console.log("E");
                         //df063e
                         geometryFillColor = '#df063e';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
                         geometryLineColor = 'rgba(223, 6, 62, 0.8)';
                     }
                 }else{
-                         console.log("F");
+         //                console.log("F");
                 }
 
                 var geojson = attribute ? feature[attribute] : feature;
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
-                     console.log("G");
+           //          console.log("G");
                     var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
 
                     var bounds = turf.bbox(geojson);
 
                     if (geometryType === 'Point') {
-                         console.log("H");
+            //             console.log("H");
                         var buffer = turf.buffer(
                             geojson,
                             0.5, {
@@ -34833,8 +34858,20 @@ angular.module('FieldDoc')
 
                     }
 
+                    let feature_id;
+
+                    if(feature.properties != null && feature.properties != undefined){
+
+                        feature_id = feature.properties.id;
+                        
+                    }else{
+
+                        feature_id = feature.id;
+                        
+                    }
+
                     if (addToMap) {
-                         console.log("J");
+              //           console.log("J");
                         if (geometryType === 'Point') {
                         //    console.log("K");
                             map.addLayer({
@@ -34883,7 +34920,8 @@ angular.module('FieldDoc')
                         } else {
                          //    console.log("M");
                             map.addLayer({
-                                'id': 'feature-' + Date.now(),
+                                'id': 'feature-' + featureType +"-"+feature_id,
+                           //     'id': 'feature-' + Date.now(),
                                 'type': 'fill',
                                 'source': {
                                     'type': 'geojson',
@@ -34899,7 +34937,8 @@ angular.module('FieldDoc')
                             });
 
                             map.addLayer({
-                                'id': 'feature-outline-' + Date.now(),
+                                'id': 'feature-outline-' + featureType +"-"+feature_id,
+                          //      'id': 'feature-outline-' + Date.now(),
                                 'type': 'line',
                                 'source': {
                                     'type': 'geojson',

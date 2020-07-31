@@ -57,12 +57,12 @@ angular.module('FieldDoc')
             },
             addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
 
-                console.log("A");
+              //  console.log("A");
 
                 if (fitBounds === null ||
 
                     typeof fitBounds === 'undefined') {
-                     console.log("B");
+               //     console.log("B");
                     fitBounds = true;
 
                 }
@@ -73,31 +73,31 @@ angular.module('FieldDoc')
                 var geometryLineColor           = 'rgba(6, 170, 223, 0.8)';
 
                 if(featureType != null){
-                     console.log("C");
+         //            console.log("C");
                     if(featureType == 'site'){
-                         console.log("D");
+          //               console.log("D");
                     }else if(featureType == 'practice'){
-                         console.log("E");
+          //               console.log("E");
                         //df063e
                         geometryFillColor = '#df063e';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
                         geometryLineColor = 'rgba(223, 6, 62, 0.8)';
                     }
                 }else{
-                         console.log("F");
+         //                console.log("F");
                 }
 
                 var geojson = attribute ? feature[attribute] : feature;
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
-                     console.log("G");
+           //          console.log("G");
                     var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
 
                     var bounds = turf.bbox(geojson);
 
                     if (geometryType === 'Point') {
-                         console.log("H");
+            //             console.log("H");
                         var buffer = turf.buffer(
                             geojson,
                             0.5, {
@@ -129,7 +129,7 @@ angular.module('FieldDoc')
                     }
 
                     if (addToMap) {
-                         console.log("J");
+              //           console.log("J");
                         if (geometryType === 'Point') {
                         //    console.log("K");
                             map.addLayer({

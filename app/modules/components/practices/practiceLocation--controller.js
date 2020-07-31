@@ -505,8 +505,6 @@ angular.module('FieldDoc')
 
                         };
 
-                        console.log("Draw control feature", feature);
-
                         self.drawControls.add(feature);
 
                         self.drawControls.changeMode(
@@ -600,10 +598,8 @@ angular.module('FieldDoc')
 
                             self.map.moveLayer("feature-site-"+self.site.properties.id,"country-label");
                             self.map.moveLayer("feature-outline-site-"+self.site.properties.id,"country-label");
-                            
-                        }
 
-                        console.log('map layers', self.map.getStyle().layers);
+                        }
 
                     });
 
