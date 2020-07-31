@@ -505,6 +505,8 @@ angular.module('FieldDoc')
 
                         };
 
+                        console.log("Draw control feature", feature);
+
                         self.drawControls.add(feature);
 
                         self.drawControls.changeMode(
@@ -577,30 +579,37 @@ angular.module('FieldDoc')
 
             self.switchMapStyle = function(styleId, index) {
 
-                console.log('self.switchMapStyle --> styleId', styleId);
-
-                console.log('self.switchMapStyle --> index', index);
-
                 if(self.site != null && self.site.geometry != null){
 
                     self.map.on('style.load', function () {
 
-                        MapManager.addFeature(
-                            self.map,
-                            self.site,
-                            'geometry',
-                            true,
-                            false,
-                            'site'
-                        )
+                        let mapLayer = self.map.getLayer('feature-site-'+self.site.properties.id);
+
+                        if(typeof mapLayer !== 'undefined') {
+
+                        }else{
+
+                            MapManager.addFeature(
+                                self.map,
+                                self.site,
+                                'geometry',
+                                true,
+                                false,
+                                'site'
+                            );
+
+                            self.map.moveLayer("feature-site-"+self.site.properties.id,"country-label");
+                            self.map.moveLayer("feature-outline-site-"+self.site.properties.id,"country-label");
+                            
+                        }
+
+                        console.log('map layers', self.map.getStyle().layers);
 
                     });
 
                 }
 
                 self.map.setStyle(self.mapStyles[index].url);
-
-
 
                 //Redraw site layer
             };

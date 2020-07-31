@@ -116,6 +116,18 @@ angular.module('FieldDoc')
 
                     }
 
+                    let feature_id;
+
+                    if(feature.properties != null && feature.properties != undefined){
+
+                        feature_id = feature.properties.id;
+                        
+                    }else{
+
+                        feature_id = feature.id;
+                        
+                    }
+
                     if (addToMap) {
                          console.log("J");
                         if (geometryType === 'Point') {
@@ -166,7 +178,8 @@ angular.module('FieldDoc')
                         } else {
                          //    console.log("M");
                             map.addLayer({
-                                'id': 'feature-' + Date.now(),
+                                'id': 'feature-' + featureType +"-"+feature_id,
+                           //     'id': 'feature-' + Date.now(),
                                 'type': 'fill',
                                 'source': {
                                     'type': 'geojson',
@@ -182,7 +195,8 @@ angular.module('FieldDoc')
                             });
 
                             map.addLayer({
-                                'id': 'feature-outline-' + Date.now(),
+                                'id': 'feature-outline-' + featureType +"-"+feature_id,
+                          //      'id': 'feature-outline-' + Date.now(),
                                 'type': 'line',
                                 'source': {
                                     'type': 'geojson',
