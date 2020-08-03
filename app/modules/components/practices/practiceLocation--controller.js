@@ -571,16 +571,35 @@ angular.module('FieldDoc')
 
             self.switchMapStyle = function(styleId, index) {
 
-                console.log('self.switchMapStyle --> styleId', styleId);
+                if(self.site != null && self.site.geometry != null){
 
-                console.log('self.switchMapStyle --> index', index);
+                    self.map.on('style.load', function () {
+
+                        let mapLayer = self.map.getLayer('feature-site-'+self.site.properties.id);
+
+                        if(typeof mapLayer !== 'undefined') {
+
+                        }else{
+
+                            MapManager.addFeature(
+                                self.map,
+                                self.site,
+                                'geometry',
+                                true,
+                                false,
+                                'site'
+                            );
+
+                            self.map.moveLayer("feature-site-"+self.site.properties.id,"country-label");
+                            self.map.moveLayer("feature-outline-site-"+self.site.properties.id,"country-label");
+
+                        }
+
+                    });
+
+                }
 
                 self.map.setStyle(self.mapStyles[index].url);
-
-                /*
-                see PracticeLocation controller switchMapStyle () method.
-should store site geo in controller var, then redraw on map after style change.
-                 */
 
 
             };
