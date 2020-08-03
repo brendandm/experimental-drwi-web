@@ -171,7 +171,9 @@ angular.module('FieldDoc')
 
             };
 
-            /*START STATE CALC*/
+            /*
+            START STATE CALC
+            * */
 
             self.processSetup = function(setup){
 
