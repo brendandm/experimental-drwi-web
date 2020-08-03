@@ -396,6 +396,8 @@
 
                         self.site = successResponse;
 
+                        self.dimension = Utility.measureGeometry(self.site);
+
                         if (successResponse.permissions.read &&
                             successResponse.permissions.write) {
 
@@ -417,6 +419,38 @@
                     }, function(errorResponse) {
 
                         self.showElements();
+
+                    });
+
+                };
+
+                self.updateGeometry = function(event) {
+
+                    var data = self.drawControls.getAll();
+
+                    console.log('self.updateGeometry --> data', data);
+
+                    $scope.$apply(function() {
+
+                        if (data.features.length > 0) {
+
+                            var feature = data.features[0];
+
+                            self.dimension = Utility.measureGeometry(feature);
+
+                            if (feature.geometry) {
+
+                                self.site.geometry = feature.geometry;
+
+                            }
+
+                        } else {
+
+                            self.dimension = Utility.measureGeometry({});
+
+                            self.site.geometry = null;
+
+                        }
 
                     });
 
@@ -456,45 +490,6 @@
                                 'simple_select', {
                                     featureId: 'feature-' + feature.id
                                 });
-
-                        }
-
-                    }
-
-                };
-
-                self.updateGeometry = function updateArea(e) {
-
-                    var data = self.drawControls.getAll();
-
-                    console.log('self.updateGeometry --> data', data);
-
-                    if (data.features.length > 0) {
-
-                        var area = turf.area(data);
-
-                        // Convert area to square meters (acres?)
-                        // restrict to area to 2 decimal points
-
-                        self.roundedArea = Math.round(area * 100) / 100;
-
-                        var feature = data.features[0];
-
-                        if (feature.geometry) {
-
-                            self.site.geometry = feature.geometry;
-
-                        }
-
-                    } else {
-
-                        self.roundedArea = null;
-
-                        self.site.geometry = null;
-
-                        if (e.type !== 'draw.delete') {
-
-                            alert('Use the draw tools to draw a polygon!');
 
                         }
 

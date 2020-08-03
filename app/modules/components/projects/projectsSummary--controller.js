@@ -831,6 +831,8 @@ angular.module('FieldDoc')
                 checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
                 adds return to site[] as staticURL property
                 if no site geometry, adds default URL to site[].staticURL
+
+                branch : FD_489-turf.simplify 2020.07.28
             */
             self.createStaticMapURLs = function(arr, feature_type) {
                 console.log("createStaticMapURLS -> arr", arr)

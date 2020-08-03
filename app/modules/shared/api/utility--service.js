@@ -81,20 +81,67 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+
                     if(colorScheme == 'practice'){
+
                         color = "#df063e";
-                         console.log('COLOR 1');
+
                     }else{
-                         console.log('COLOR 2');
+
                     }
                 }else{
+
                      console.log('COLOR 3');
+
                 }
+
+                /*
+                simplify thumbs
+
+                lets create a new var from our geojson object
+                then convert it to a string and store the length
+                A series of conditionals to check the length
+                depending on length, turf.simplify along tolerance scale.
+
+                */
+
+                let simplified = geometry;
+
+                var lengthCheck = encodeURIComponent(JSON.stringify(geometry)).length;
+
+                if(lengthCheck > 8192) {
+
+                    let simplify_options = {tolerance: 0.6, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 4096) {
+
+                    let simplify_options = {tolerance: 0.4, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+                }else if(lengthCheck > 1024){
+
+                    let simplify_options = {tolerance: 0.3, highQuality: true, mutate: false};
+
+                    simplified = turf.simplify(geometry, simplify_options);
+
+
+                }else{
+
+
+                }
+
+                //compose feature
+                console.log("geometry -->", geometry)
+                console.log("simplified -->", simplified)
+
+
 
                 var styledFeature = {
                     "type": "Feature",
-                    "geometry": geometry,
+                    "geometry": simplified,
                     "properties": {
                         "marker-size": "small",
                         "marker-color": color,
@@ -105,9 +152,12 @@ angular.module('FieldDoc')
                         "fill-opacity": 0.5
                     }
                 };
-                
+
+
+
                 // Build static map URL for Mapbox API
-                
+
+
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
@@ -329,6 +379,69 @@ angular.module('FieldDoc')
                 });
 
                 return arr;
+
+            },
+            measureGeometry: function(feature) {
+
+                console.log(
+                    'Utility.measureGeometry:feature',
+                    feature);
+
+                var dimension = {};
+
+                var measurement;
+
+                if (feature.geometry) {
+
+                    var type = feature.geometry.type;
+
+                    console.log(
+                        'Utility.measureGeometry:type',
+                        type);
+
+                    dimension.type = type.toLowerCase();
+
+                    if (type === 'LineString') {
+
+                        dimension.label = 'length';
+
+                        var line = turf.lineString(feature.geometry.coordinates);
+
+                        measurement = turf.length(line, {units: 'miles'});
+
+                        if (typeof measurement === 'number') {
+
+                            measurement = measurement * 5280;
+
+                        }
+
+                    }
+
+                    if (type === 'Polygon') {
+
+                        dimension.label = 'area';
+
+                        var polygon = turf.polygon(feature.geometry.coordinates);
+
+                        measurement = turf.area(polygon);
+
+                        if (typeof measurement === 'number') {
+
+                            measurement = measurement * 0.0002471052;
+
+                        }
+
+                    }
+
+                    console.log(
+                        'Utility.measureGeometry:measurement',
+                        measurement);
+
+                    dimension.measurement = measurement;
+
+                }
+
+                return dimension;
 
             }
         };
