@@ -580,7 +580,6 @@ angular.module('FieldDoc')
                 /*
                 see PracticeLocation controller switchMapStyle () method.
 should store site geo in controller var, then redraw on map after style change.
-
                  */
 
 
