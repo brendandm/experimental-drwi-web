@@ -380,6 +380,69 @@ angular.module('FieldDoc')
 
                 return arr;
 
+            },
+            measureGeometry: function(feature) {
+
+                console.log(
+                    'Utility.measureGeometry:feature',
+                    feature);
+
+                var dimension = {};
+
+                var measurement;
+
+                if (feature.geometry) {
+
+                    var type = feature.geometry.type;
+
+                    console.log(
+                        'Utility.measureGeometry:type',
+                        type);
+
+                    dimension.type = type.toLowerCase();
+
+                    if (type === 'LineString') {
+
+                        dimension.label = 'length';
+
+                        var line = turf.lineString(feature.geometry.coordinates);
+
+                        measurement = turf.length(line, {units: 'miles'});
+
+                        if (typeof measurement === 'number') {
+
+                            measurement = measurement * 5280;
+
+                        }
+
+                    }
+
+                    if (type === 'Polygon') {
+
+                        dimension.label = 'area';
+
+                        var polygon = turf.polygon(feature.geometry.coordinates);
+
+                        measurement = turf.area(polygon);
+
+                        if (typeof measurement === 'number') {
+
+                            measurement = measurement * 0.0002471052;
+
+                        }
+
+                    }
+
+                    console.log(
+                        'Utility.measureGeometry:measurement',
+                        measurement);
+
+                    dimension.measurement = measurement;
+
+                }
+
+                return dimension;
+
             }
         };
 
