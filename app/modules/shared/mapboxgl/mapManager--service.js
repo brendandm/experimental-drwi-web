@@ -62,7 +62,7 @@ angular.module('FieldDoc')
                 if (fitBounds === null ||
 
                     typeof fitBounds === 'undefined') {
-               //     console.log("B");
+
                     fitBounds = true;
 
                 }
