@@ -25,8 +25,7 @@ angular.module('FieldDoc')
             self.map = undefined;
 
             $rootScope.page = {};
-
-
+            
             self.showElements = function() {
 
                 $timeout(function() {
