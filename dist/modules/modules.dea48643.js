@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1596469587480})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596652153457})
 
 ;
 /**
@@ -17888,7 +17888,10 @@ angular.module('FieldDoc')
         function(Account, Image, $location, $log, mapbox, Media,
                  Site, Practice, practice, $q, $rootScope, $route,
                  $scope, $timeout, $interval, site, user, Shapefile,
-                 Utility, Task, LayerService, MapManager) {
+                 Utility, Task, LayerService, MapManager,
+                 Project
+
+        ) {
 
             var self = this;
 
@@ -17928,6 +17931,8 @@ angular.module('FieldDoc')
                         } else {
 
                             self.createMap(self.mapOptions);
+
+                            drawOtherPractices();
 
                         }
 
@@ -18040,6 +18045,8 @@ angular.module('FieldDoc')
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
+                    self.loadPractices();
+
                     self.showElements();
 
                 }, function(errorResponse) {
@@ -18049,6 +18056,82 @@ angular.module('FieldDoc')
                 });
 
             };
+
+
+            /* START PRACTICES PANEL */
+            self.loadPractices = function() {
+                Project.practices({
+                    id: self.practice.project.id,
+                    limit: 24,
+                    page: 1,
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log("PRACTICE RESPONSE");
+
+                    self.practices = successResponse.features;
+
+                    self.practicesSummary = successResponse.summary;
+
+                    console.log("SUMMARY", self.practicesSummary);
+
+                    console.log('self.practices', successResponse);
+
+
+
+          //          self.showElements(true);
+
+             //       self.practicesCalculateViewCount();
+
+                    //      self.loadMetrics();
+
+                    //       self.tags = Utility.processTags(self.site.tags);
+
+                }, function(errorResponse) {
+
+          //          self.showElements(false);
+
+                });
+
+            };
+
+            /*Not defining this as a scope method,
+            * because why? why are we doing that for almost all our
+            * methods. If doesn't need to be referenced outside the controller,
+            * might as well keep it simple*/
+            function drawOtherPractices(){
+
+                self.map.on('style.load', function () {
+                    self.practices.forEach(function(feature){
+                        if(feature.properties.id == self.practice.id){
+
+                            console.log("same as self");
+
+                        }else{
+                            MapManager.addFeature(
+                                self.map,
+                                feature,
+                                'geometry',
+                                true,
+                                false,
+                                'secondary_practice'
+                            );
+
+                        }
+
+
+                    });
+
+
+                });
+
+
+            };
+            /* END PRACTICES PANEL */
+
+
+
 
             /*START STATE CALC*/
 
@@ -34853,9 +34936,16 @@ angular.module('FieldDoc')
                         geometryFillColor = '#df063e';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
                         geometryLineColor = 'rgba(223, 6, 62, 0.8)';
+                    }else if(featureType == 'secondary_practice') {
+                        //                console.log("F");
+
+                        geometryFillColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.1)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.5)';
                     }
+
                 }else{
-                    //                console.log("F");
+
                 }
 
                 var geojson = attribute ? feature[attribute] : feature;
@@ -36350,11 +36440,13 @@ angular
                     'url': environment.apiUrl.concat('/v1/practice/:id/layers'),
                     'isArray': false
                 },
-                'metrics': {
+             /*  'metrics': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/metrics'),
                     'isArray': false
                 },
+
+              */
                 'outcomes': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
@@ -36779,11 +36871,13 @@ angular
                 update: {
                     method: 'PATCH'
                 },
-                sites: {
+               /* sites: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/sites')
                 },
+
+                */
                  practices: {
                     method: 'GET',
                     isArray: false,
