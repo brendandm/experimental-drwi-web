@@ -30,11 +30,13 @@
                     'url': environment.apiUrl.concat('/v1/practice/:id/layers'),
                     'isArray': false
                 },
-                'metrics': {
+             /*  'metrics': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/metrics'),
                     'isArray': false
                 },
+                
+              */
                 'outcomes': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
