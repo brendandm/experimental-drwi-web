@@ -10,7 +10,10 @@ angular.module('FieldDoc')
         function(Account, Image, $location, $log, mapbox, Media,
                  Site, Practice, practice, $q, $rootScope, $route,
                  $scope, $timeout, $interval, site, user, Shapefile,
-                 Utility, Task, LayerService, MapManager) {
+                 Utility, Task, LayerService, MapManager,
+                 Project
+
+        ) {
 
             var self = this;
 
@@ -50,6 +53,8 @@ angular.module('FieldDoc')
                         } else {
 
                             self.createMap(self.mapOptions);
+
+                            drawOtherPractices();
 
                         }
 
@@ -162,6 +167,8 @@ angular.module('FieldDoc')
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
+                    self.loadPractices();
+
                     self.showElements();
 
                 }, function(errorResponse) {
@@ -171,6 +178,82 @@ angular.module('FieldDoc')
                 });
 
             };
+
+
+            /* START PRACTICES PANEL */
+            self.loadPractices = function() {
+                Project.practices({
+                    id: self.practice.project.id,
+                    limit: 24,
+                    page: 1,
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log("PRACTICE RESPONSE");
+
+                    self.practices = successResponse.features;
+
+                    self.practicesSummary = successResponse.summary;
+
+                    console.log("SUMMARY", self.practicesSummary);
+
+                    console.log('self.practices', successResponse);
+
+
+
+          //          self.showElements(true);
+
+             //       self.practicesCalculateViewCount();
+
+                    //      self.loadMetrics();
+
+                    //       self.tags = Utility.processTags(self.site.tags);
+
+                }, function(errorResponse) {
+
+          //          self.showElements(false);
+
+                });
+
+            };
+
+            /*Not defining this as a scope method,
+            * because why? why are we doing that for almost all our
+            * methods. If doesn't need to be referenced outside the controller,
+            * might as well keep it simple*/
+            function drawOtherPractices(){
+
+                self.map.on('style.load', function () {
+                    self.practices.forEach(function(feature){
+                        if(feature.properties.id == self.practice.id){
+
+                            console.log("same as self");
+
+                        }else{
+                            MapManager.addFeature(
+                                self.map,
+                                feature,
+                                'geometry',
+                                true,
+                                false,
+                                'secondary_practice'
+                            );
+
+                        }
+
+
+                    });
+
+
+                });
+
+
+            };
+            /* END PRACTICES PANEL */
+
+
+
 
             /*START STATE CALC*/
 

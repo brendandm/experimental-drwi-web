@@ -82,9 +82,16 @@ angular.module('FieldDoc')
                         geometryFillColor = '#df063e';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
                         geometryLineColor = 'rgba(223, 6, 62, 0.8)';
+                    }else if(featureType == 'secondary_practice') {
+                        //                console.log("F");
+
+                        geometryFillColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.1)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.5)';
                     }
+
                 }else{
-                    //                console.log("F");
+
                 }
 
                 var geojson = attribute ? feature[attribute] : feature;

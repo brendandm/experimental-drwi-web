@@ -38,11 +38,13 @@
                 update: {
                     method: 'PATCH'
                 },
-                sites: {
+               /* sites: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/sites')
                 },
+
+                */
                  practices: {
                     method: 'GET',
                     isArray: false,

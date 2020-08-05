@@ -35,7 +35,7 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/metrics'),
                     'isArray': false
                 },
-                
+
               */
                 'outcomes': {
                     'method': 'GET',
