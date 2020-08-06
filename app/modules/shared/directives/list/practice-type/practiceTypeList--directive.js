@@ -71,6 +71,8 @@
 
                                         if (Array.isArray(group)) {
 
+                                            var hiddenItems = 0;
+
                                             group.forEach(function (item) {
 
                                                 var name = item.name;
@@ -87,9 +89,13 @@
 
                                                     }
 
+                                                    if (item.hide) hiddenItems++;
+
                                                 }
 
                                             });
+
+                                            scope.hiddenKeys[key] = (group.length === hiddenItems);
 
                                         }
 
