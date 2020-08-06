@@ -54,7 +54,8 @@ angular.module('FieldDoc')
 
                             self.createMap(self.mapOptions);
 
-                            drawOtherPractices();
+                            drawOtherGeometries('secondary_practices');
+                            drawOtherGeometries('secondary_sites');
 
                         }
 
@@ -167,7 +168,8 @@ angular.module('FieldDoc')
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-                    self.loadPractices();
+
+                    self.loadSites();
 
                     self.showElements();
 
@@ -222,37 +224,101 @@ angular.module('FieldDoc')
             * because why? why are we doing that for almost all our
             * methods. If doesn't need to be referenced outside the controller,
             * might as well keep it simple*/
-            function drawOtherPractices(){
+            function drawOtherGeometries(type){
 
                 self.map.on('style.load', function () {
-                    self.practices.forEach(function(feature){
-                        if(feature.properties.id == self.practice.id){
+                    if(type == 'secondary_practices') {
+                        self.practices.forEach(function (feature) {
+                            if (feature.properties.id == self.practice.id) {
 
-                            console.log("same as self");
+                                console.log("same as self");
+                                //    }else if(feature.properties.id == self.practice.site.id){
 
-                        }else{
-                            MapManager.addFeature(
-                                self.map,
-                                feature,
-                                'geometry',
-                                true,
-                                false,
-                                'secondary_practice'
-                            );
+                                //        console.log("same as self");
 
-                        }
+                            } else {
+                                MapManager.addFeature(
+                                    self.map,
+                                    feature,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type
+                                );
+
+                            }
 
 
-                    });
+                        });
+                    }else  if(type == 'secondary_sites') {
+                        self.sites.forEach(function (feature) {
+                            console.log('feature.properties.id',feature.properties.id);
+                            console.log('feature.properties.name',feature.properties.name);
+                       //     console.log('self.site.id',self.site.id);
+                            console.log('self.site.name',self.site.name);
+                            console.log('self.site.properties.id',self.site.id);
+                            if (feature.properties.id == self.site.id) {
+
+                                console.log("site same as self");
+                                //    }else if(feature.properties.id == self.practice.site.id){
+
+                                //        console.log("same as self");
+
+                            } else {
+                                MapManager.addFeature(
+                                    self.map,
+                                    feature,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type
+                                );
+
+                            }
+
+
+                        });
+                    }
 
 
                 });
-
 
             };
             /* END PRACTICES PANEL */
 
 
+            /* START SITES PANEL */
+
+            self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.practice.project.id,
+                    limit: 24,
+                    page: 1,
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+                    console.log("self.sites", self.sites);
+
+                    self.loadPractices();
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                });
+
+            };
+
+            /* END SITES PANEL */
 
 
             /*START STATE CALC*/
