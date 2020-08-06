@@ -4,7 +4,9 @@
         <strong>Go to:</strong>
     </div>
 
-    <div class="letter" data-ng-repeat="letter in letters" data-ng-click="scrollManager.scrollToAnchor(letter)">
+    <div class="letter" data-ng-repeat="letter in letters"
+         data-ng-click="scrollManager.scrollToAnchor(letter)"
+         data-ng-if="!hiddenKeys[letter]">
         <strong>{{ letter }}</strong>
     </div>
 

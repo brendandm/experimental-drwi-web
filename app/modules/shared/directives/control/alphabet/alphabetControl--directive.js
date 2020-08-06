@@ -12,6 +12,7 @@
                     restrict: 'EA',
                     scope: {
                         'forceTop': '@',
+                        'hiddenKeys': '=?',
                         'letters': '=?',
                         'orientation': '@orientation'
                     },
