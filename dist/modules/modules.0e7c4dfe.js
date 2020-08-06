@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596731165423})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1596738424578})
 
 ;
 /**
@@ -18689,11 +18689,11 @@ angular.module('FieldDoc')
                             var bounds = turf.bbox(self.site.geometry);
 
                             self.map.fitBounds(bounds, {
+                                duration: 0,
                                 padding: 40
                             });
                         }
-                        console.log("There is a site");
-                        console.log("site",self.site);
+
                         MapManager.addFeature(
 
                             self.map,
@@ -18706,9 +18706,21 @@ angular.module('FieldDoc')
                     }else if(self.practice.geometry == null
                         || self.practice.geometry == 'undefined'
                     ){
-                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
-                        var bbox = turf.bbox(line);
-                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+                        if(self.practice.project.extent != null){
+
+                        //    var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            let bbox = turf.bbox(self.practice.project.extent);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+                        }else{
+
+                            var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            var bbox = turf.bbox(line);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+
+                        }
+
 
                         MapManager.addFeature(
                             self.map,
@@ -35007,13 +35019,13 @@ angular.module('FieldDoc')
 
                         geometryFillColor = 'rgba(223, 6, 62, 0.5)';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.1)';
-                        geometryLineColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.25)';
                     }else if(featureType == 'secondary_sites') {
                         //                console.log("F");
 
                         geometryFillColor = 'rgba(6, 170, 223, 0.5)';
                         geometryCircleStrokeColor = 'rgba(6, 170, 223, 0.1)';
-                        geometryLineColor = 'rgba(6, 170, 223, 0.5)';
+                        geometryLineColor = 'rgba(6, 170, 223, 0.25)';
                     }
 
 
