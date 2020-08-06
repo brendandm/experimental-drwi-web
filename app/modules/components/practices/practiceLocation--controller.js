@@ -811,11 +811,11 @@ angular.module('FieldDoc')
                             var bounds = turf.bbox(self.site.geometry);
 
                             self.map.fitBounds(bounds, {
+                                duration: 0,
                                 padding: 40
                             });
                         }
-                        console.log("There is a site");
-                        console.log("site",self.site);
+
                         MapManager.addFeature(
 
                             self.map,
@@ -828,9 +828,21 @@ angular.module('FieldDoc')
                     }else if(self.practice.geometry == null
                         || self.practice.geometry == 'undefined'
                     ){
-                        var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
-                        var bbox = turf.bbox(line);
-                        self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+                        if(self.practice.project.extent != null){
+
+                        //    var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            let bbox = turf.bbox(self.practice.project.extent);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+                        }else{
+
+                            var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
+                            var bbox = turf.bbox(line);
+                            self.map.fitBounds(bbox, { duration: 0, padding: 40 });
+
+
+                        }
+
 
                         MapManager.addFeature(
                             self.map,
