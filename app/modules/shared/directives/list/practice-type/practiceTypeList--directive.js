@@ -9,9 +9,12 @@
                 return {
                     restrict: 'EA',
                     scope: {
-                        'list': '=?',
+                        'index': '=?',
+                        'letters': '=?',
+                        'link': '@',
+                        'program': '=?',
                         'summary': '=?',
-                        'link': '@'
+                        'visible': '=?'
                     },
                     templateUrl: function (elem, attrs) {
 

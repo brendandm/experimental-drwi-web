@@ -1,4 +1,4 @@
-<div class="group reveal fade-in t2" data-ng-if="list">
+<div class="main--ui reveal fade-in t1" data-ng-if="index && visible">
 
     <section class="pad">
 
@@ -7,31 +7,33 @@
         <p>
             This program contains <strong>{{ summary.matches }}</strong> practice
             <ng-pluralize count="summary.matches"
-                          when="{'one': 'type','other': 'types'}"></ng-pluralize>
-            .
+                          when="{'one': 'type','other': 'types'}"></ng-pluralize>.
         </p>
 
         <div class="collection-search reveal fade-in t0">
 
-            <input style="float:left; display:inline-block; clear:right;" type="text"
-                   class="search-bar list-filter" data-ng-if="!status.loading"
-                   data-ng-model="queryToken" placeholder="Find a practice type&hellip;">
+            <input style="float:left; display:inline-block; clear:right;"
+                   type="text"
+                   class="search-bar list-filter"
+                   data-ng-model="queryToken"
+                   placeholder="Find a practice type&hellip;">
 
         </div>
 
         <div alphabet-ctrl letters="letters" orientation="horizontal"></div>
 
-        <div data-ng-repeat="(key, group) in list">
+        <div data-ng-repeat="(key, group) in index">
 
-            <h2 class="index-group-heading" id="{{ key | lowercase }}">
+            <h2 class="index-group-heading" id="{{ key | lowercase }}" data-ng-if="group.length">
                 <a href="#{{ key }}"></a>
                 <span>{{ key }}</span>
             </h2>
 
-            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;"
+                data-ng-if="group.length">
 
                 <li class="card reveal fade-in"
-                    style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                    style="animation-delay: {{ $index * 20 }}ms; min-height: 0;"
                     data-ng-repeat="practice in group | orderBy:'name' | filter: queryToken">
 
                     <div class="card--content">

@@ -116,24 +116,53 @@ angular.module('FieldDoc')
                 // Load practice types
                 //
 
+                // Program.metrics({
+                //     id: self.program.id,
+                //     minimal: true,
+                //     program_only: true
+                // }).$promise.then(function(successResponse) {
+                //
+                //     console.log('Metric Types', successResponse);
+                //
+                //     self.metricsTypes = successResponse.features;
+                //
+                //     self.metricCount = self.metricsTypes.length;
+                //
+                //     console.log("self.metricCount", self.metricCount);
+                //
+                //     self.showElements();
+                //
+                // }, function(errorResponse) {
+                //
+                //     console.log('errorResponse', errorResponse);
+                //
+                //     self.showElements();
+                //
+                // });
+
                 PracticeType.collection({
                     program: self.practice.project.program_id,
                     limit: 500,
-                    simple_bool: 'true',
-                    minimal: 'true'
+                    group: 'alphabet',
+                    minimal: true,
+                    program_only: true
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
 
-                    successResponse.features.forEach(function(item) {
+                    // successResponse.features.forEach(function(item) {
+                    //
+                    //     item.category = item.group;
+                    //
+                    //     item.practice_type = item.group;
+                    //
+                    // });
 
-                        item.category = item.group;
+                    self.practiceTypes = successResponse.features.groups;
 
-                        item.practice_type = item.group;
+                    self.summary = successResponse.summary;
 
-                    });
-
-                    self.practiceTypes = successResponse.features;
+                    self.letters = successResponse.features.letters;
 
                     self.showElements();
 

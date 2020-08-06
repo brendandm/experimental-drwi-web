@@ -6,7 +6,6 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
                 <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
@@ -52,7 +51,8 @@
             </h1>
         </div>
 
-        <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
+        <div class="main--ui reveal fade-in t1"
+             data-ng-if="!page.status.loading && !page.makePrivate && !page.showPracticeIndex">
 
             <article class="feature-detail">
 
@@ -66,11 +66,6 @@
                             Use the below form to enter a name, description, practice type, and privacy status for your
                             practice.
                         </p>
-                        <p>
-                            <a href="/programs/{{ page.practice.project.program_id }}/practice-types"
-                               target="_blank">Click here to view the full list of practice types</a> available
-                            through this project's program.
-                        </p>
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
                             <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name"
@@ -79,20 +74,17 @@
                                  style="width:100%;
                                     color: #ff0000;
                                     margin-left: 10px;
-                                    "
-                            >
+                                    ">
                                 <i>A name is required.</i>
                             </div>
                             <div data-ng-if="!page.invalidName"
                                  style="width:100%;
                                     color: #cccccc;
                                     margin-left: 10px;
-                                    "
-                            >
+                                    ">
                                 <i>A name is required.</i>
                             </div>
                         </div>
-
 
                         <!-- Practice Description -->
 
@@ -108,9 +100,6 @@
 
                         <!-- Practice Type -->
 
-
-
-
                         <div class="form-element">
 
                             <span class="meta-label"><b>Practice type</b></span>
@@ -125,19 +114,17 @@
                                  style="width:100%;
                                     color: #ff0000;
                                     margin-left: 10px;
-                                    "
-                            >
-                                <i> A practice type is required. </i>
+                                    ">
+                                <i>A practice type is required.</i>
                             </div>
+
                             <div data-ng-if="!page.invalidType"
                                  style="width:100%;
                                     color: #cccccc;
                                     margin-left: 10px;
-                                    "
-                            >
-                                <i> A practice type is required. </i>
+                                    ">
+                                <i>A practice type is required.</i>
                             </div>
-
 
                             <p data-ng-if="page.practice.category.id"
                                style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
@@ -151,6 +138,14 @@
                                     href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}"
                                     title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a>
                                 to learn more about the model.
+                            </p>
+
+                            <p>
+                                <a href="#"
+                                   data-ng-click="page.showPracticeIndex = !page.showPracticeIndex">Click here to view
+                                    the full list of
+                                    practice types</a> available
+                                through this project's program.
                             </p>
 
                         </div>
@@ -219,6 +214,9 @@
             </article>
 
         </div>
+
+        <div practice-type-list index="page.practiceTypes" link="false" summary="page.summary"
+             visible="page.showPracticeIndex" data-ng-if="page.showPracticeIndex"></div>
 
     </div>
 
