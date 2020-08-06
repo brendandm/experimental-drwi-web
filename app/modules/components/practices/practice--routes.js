@@ -75,6 +75,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/practices/views/practiceEdit--view.html?t=' + environment.version,
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 

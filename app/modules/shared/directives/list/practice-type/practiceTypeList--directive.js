@@ -5,13 +5,17 @@
     angular.module('FieldDoc')
         .directive('practiceTypeList', [
             'environment',
-            function (environment) {
+            '$window',
+            'AnchorScroll',
+            function (environment, $window, AnchorScroll) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'index': '=?',
                         'letters': '=?',
                         'link': '@',
+                        'practice': '=?',
+                        'practiceType': '=?',
                         'program': '=?',
                         'summary': '=?',
                         'visible': '=?'
@@ -23,13 +27,35 @@
                     },
                     link: function (scope, element, attrs) {
 
+                        $window.scrollTo(0, 0);
+
                         //
                         // Additional scope vars.
                         //
 
+                        scope.scrollManager = AnchorScroll;
+
                         scope.queryToken = undefined;
 
                         scope.addLink = (scope.link === 'true');
+
+                        if (scope.practiceType) {
+
+                            scope.selectionId = 'type-' + scope.practiceType.id;
+
+                        }
+
+                        scope.closeView = function() {
+
+                            scope.visible = false;
+
+                        };
+
+                        scope.setPracticeType = function (feature) {
+
+                            scope.practiceType = feature;
+
+                        };
 
                     }
 

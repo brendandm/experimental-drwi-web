@@ -10,7 +10,16 @@
 
     <div class="power-jump-wrapper">
         <span>Back to top</span>
-        <button type="button" class="power-jump-btn" data-ng-click="scrollManager.scrollToAnchor('idx')">
+        <button type="button" class="power-jump-btn"
+                data-ng-click="resetScroll()"
+                data-ng-if="scrollTop">
+            <i class="material-icons">
+                keyboard_arrow_up
+            </i>
+        </button>
+        <button type="button" class="power-jump-btn"
+                data-ng-click="scrollManager.scrollToAnchor('idx')"
+                data-ng-if="!scrollTop">
             <i class="material-icons">
                 keyboard_arrow_up
             </i>
