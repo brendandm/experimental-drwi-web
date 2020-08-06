@@ -87,13 +87,13 @@ angular.module('FieldDoc')
 
                         geometryFillColor = 'rgba(223, 6, 62, 0.5)';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.1)';
-                        geometryLineColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.25)';
                     }else if(featureType == 'secondary_sites') {
                         //                console.log("F");
 
                         geometryFillColor = 'rgba(6, 170, 223, 0.5)';
                         geometryCircleStrokeColor = 'rgba(6, 170, 223, 0.1)';
-                        geometryLineColor = 'rgba(6, 170, 223, 0.5)';
+                        geometryLineColor = 'rgba(6, 170, 223, 0.25)';
                     }
 
 
