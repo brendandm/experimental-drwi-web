@@ -49,8 +49,7 @@
             <li class="card reveal fade-in"
                 style="animation-delay: {{ $index * 20 }}ms; min-height: 0;"
                 id="type-{{ practice.id }}"
-                data-ng-repeat="practice in group | orderBy:'name' | filter: queryToken"
-                data-ng-click="setPracticeType(practice)">
+                data-ng-repeat="practice in group | orderBy:'name' | filter: queryToken">
 
                 <div class="card--content" style="display: flex; flex-flow: row nowrap;"
                      data-ng-class="{selected: practice.selected}">

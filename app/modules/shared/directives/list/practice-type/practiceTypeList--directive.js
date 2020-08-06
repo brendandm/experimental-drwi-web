@@ -50,26 +50,40 @@
 
                         scope.processIndex = function () {
 
-                            if (Array.isArray(scope.index)) {
+                            console.log(
+                                'practiceTypeList:processIndex'
+                            );
 
-                                scope.index.forEach(function (item) {
+                            for (var key in scope.index) {
 
-                                    console.log(
-                                        'practiceTypeList:processIndex:item',
-                                        item
-                                    );
+                                if (scope.index.hasOwnProperty(key)) {
 
-                                    if (scope.practiceType && scope.practiceType.id) {
+                                    var group = scope.index[key];
 
-                                        item.selected = (item.id === scope.practiceType.id);
+                                    if (Array.isArray(group)) {
 
-                                    } else {
+                                        group.forEach(function (item) {
 
-                                        item.selected = false;
+                                            console.log(
+                                                'practiceTypeList:processIndex:item',
+                                                item
+                                            );
+
+                                            if (scope.practiceType && scope.practiceType.id) {
+
+                                                item.selected = (item.id === scope.practiceType.id);
+
+                                            } else {
+
+                                                item.selected = false;
+
+                                            }
+
+                                        });
 
                                     }
 
-                                });
+                                }
 
                             }
 
@@ -95,7 +109,7 @@
 
                         scope.$watch('index', function (newVal) {
 
-                            if (Array.isArray(newVal)) {
+                            if (newVal) {
 
                                 scope.processIndex();
 
