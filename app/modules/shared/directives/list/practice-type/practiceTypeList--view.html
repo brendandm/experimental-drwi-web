@@ -30,6 +30,7 @@
                type="text"
                class="search-bar list-filter"
                data-ng-model="queryToken"
+               data-ng-change="filterIndex(queryToken)"
                placeholder="Find a practice type&hellip;">
 
     </div>
@@ -38,7 +39,8 @@
 
     <div data-ng-repeat="(key, group) in index">
 
-        <h2 class="index-group-heading" id="{{ key | lowercase }}" data-ng-if="group.length">
+        <h2 class="index-group-heading" id="{{ key | lowercase }}"
+            data-ng-if="!hiddenKeys[key]">
             <a href="#{{ key }}"></a>
             <span>{{ key }}</span>
         </h2>
@@ -49,7 +51,8 @@
             <li class="card reveal fade-in"
                 style="animation-delay: {{ $index * 20 }}ms; min-height: 0;"
                 id="type-{{ practice.id }}"
-                data-ng-repeat="practice in group | orderBy:'name' | filter: queryToken">
+                data-ng-repeat="practice in group | orderBy:'name'"
+                data-ng-if="!practice.hide">
 
                 <div class="card--content" style="display: flex; flex-flow: row nowrap;"
                      data-ng-class="{selected: practice.selected}">
