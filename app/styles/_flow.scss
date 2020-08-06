@@ -4550,6 +4550,8 @@
     width: 100%;
 
     .card {
+        display: flex;
+        flex-flow: row nowrap;
         min-width: 100%;
         max-width: 100%;
     }
@@ -4557,6 +4559,46 @@
     .image-card {
         min-width: 100%;
         max-width: 100%;
+    }
+
+    .selection-input {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        color: #757575;
+
+        > * {
+            cursor: default;
+            user-select: none;
+        }
+
+        > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+    }
+
+    .selected {
+        box-shadow: none !important;
+        border: 2px solid #2196F3;
+
+        .name {
+            border-bottom: 2px solid #2196F3 !important;
+        }
+
+        .description {
+            border-right: 2px solid #2196F3 !important;
+        }
+
+        .selection-input {
+            color: #2196F3;
+        }
+
     }
 
     .card,

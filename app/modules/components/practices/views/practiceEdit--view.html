@@ -118,7 +118,8 @@
                             <i>A practice type is required.</i>
                         </div>
 
-                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;"
+                            data-ng-if="page.practiceType && page.practiceType.id">
 
                             <li class="card reveal fade-in">
 
@@ -158,10 +159,17 @@
                             to learn more about the model.
                         </p>
 
-                        <p style="margin: 0 0 2rem;">
+                        <p style="margin: 0 0 3rem;">
                             <a href="#"
-                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex">Click here to
-                                change this practice’s type assigment.</a>
+                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"
+                               data-ng-if="page.practiceType && page.practiceType.id">Click here to change this
+                                practice’s type assigment.
+                            </a>
+                            <a href="#"
+                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"
+                               data-ng-if="!page.practiceType || !page.practiceType.id">Click here to select a type
+                                for this practice.
+                            </a>
                         </p>
 
                         <!-- End Practice Type -->
@@ -282,7 +290,7 @@
         </div>
 
         <div practice-type-list index="page.practiceTypes" letters="page.letters" link="false"
-             practice="page.practice" practice-type="page.practiceType" summary="page.summary"
+             practice="page.practice" practice-type="page.practiceType" selectable="true" summary="page.summary"
              visible="page.showPracticeIndex" data-ng-if="page.showPracticeIndex"></div>
 
     </div>

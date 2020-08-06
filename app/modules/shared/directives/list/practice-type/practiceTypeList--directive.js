@@ -17,6 +17,7 @@
                         'practice': '=?',
                         'practiceType': '=?',
                         'program': '=?',
+                        'selectable': '@',
                         'summary': '=?',
                         'visible': '=?'
                     },
@@ -39,11 +40,40 @@
 
                         scope.addLink = (scope.link === 'true');
 
+                        scope.enableSelection = (scope.selectable === 'true');
+
                         if (scope.practiceType) {
 
                             scope.selectionId = 'type-' + scope.practiceType.id;
 
                         }
+
+                        scope.processIndex = function () {
+
+                            if (Array.isArray(scope.index)) {
+
+                                scope.index.forEach(function (item) {
+
+                                    console.log(
+                                        'practiceTypeList:processIndex:item',
+                                        item
+                                    );
+
+                                    if (scope.practiceType && scope.practiceType.id) {
+
+                                        item.selected = (item.id === scope.practiceType.id);
+
+                                    } else {
+
+                                        item.selected = false;
+
+                                    }
+
+                                });
+
+                            }
+
+                        };
 
                         scope.closeView = function() {
 
@@ -53,9 +83,25 @@
 
                         scope.setPracticeType = function (feature) {
 
+                            feature.selected = true;
+
                             scope.practiceType = feature;
 
+                            scope.selectionId = 'type-' + scope.practiceType.id;
+
+                            scope.processIndex();
+
                         };
+
+                        scope.$watch('index', function (newVal) {
+
+                            if (Array.isArray(newVal)) {
+
+                                scope.processIndex();
+
+                            }
+
+                        });
 
                     }
 
