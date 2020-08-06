@@ -1,0 +1,20 @@
+<div class="{{ orientation }}-alphabet-control">
+
+    <div id="idx">
+        <strong>Go to:</strong>
+    </div>
+
+    <div data-ng-repeat="letter in letters" data-ng-click="scrollManager.scrollToAnchor(letter)">
+        <strong>{{ letter }}</strong>
+    </div>
+
+    <div class="power-jump-wrapper">
+        <span>Back to top</span>
+        <button type="button" class="power-jump-btn" data-ng-click="scrollManager.scrollToAnchor('idx')">
+            <i class="material-icons">
+                keyboard_arrow_up
+            </i>
+        </button>
+    </div>
+
+</div>
