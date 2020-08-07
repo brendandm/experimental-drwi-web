@@ -494,7 +494,7 @@
                         id: self.site.id,
                         limit: self.limit,
                         page: self.page,
-                        currentTime: Date.UTC()
+                        currentTime: Date.now()
 
                     }).$promise.then(function(successResponse) {
 

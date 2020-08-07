@@ -177,12 +177,10 @@
                     console.log('self.loadSites --> Starting...');
 
                     Project.sites({
-
-                        id          : self.project.id,
-                        limit       : self.limit,
-                        page        : self.page,
-                        currentTime : Date.UTC()
-
+                        id: self.project.id,
+                        limit: self.limit,
+                        page: self.page,
+                        currentTime: Date.now()
                     }).$promise.then(function(successResponse) {
 
                         console.log('Project sites --> ', successResponse);

@@ -178,26 +178,35 @@
 
                         <h2 class="">Site</h2>
 
-                        <div class="form-element">
+                        <p style="font-style: normal; color: #616161; font-size: 0.9em; margin: 1rem 0;">
+                            Sites are an optional way to organize your practices. To use sites, first create one or
+                            more via the <a href="/projects/{{page.practice.project.id}}">project summary</a> page.
+                            Please note that un-named sites will not appear in the dropdown list. If you do not wish
+                            to use a site with this practice, leave this field blank.
+                        </p>
 
-                            <span class="meta-label"><b>Site</b></span>
+                        <div class="form-element" style="margin-bottom: 0;">
 
-                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites"
+                            <input id="site_id"
+                                   name="site_id"
+                                   type="text"
+                                   placeholder="Search project sites"
+                                   style="padding-top: 1em;"
                                    data-ng-model="page.site"
                                    uib-typeahead="site as site.name for site in page.sites | filter:{name: $viewValue} | limitTo:5"
                                    typeahead-on-select="page.setSite($item)"
                                    typeahead-min-length="0"
                                    typeahead-template-url="templates/search--tpl.html"/>
 
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                Sites are an optional way to organize your practices.
-                                To use sites you must first create your site(s) from
-                                <the></the>
-                                <a href="/projects/{{page.practice.project.id}}">Project Summary</a> page.
-                                If you do not wish to use a site with this practice, either leave this
-                                field blank or select 'None'.
-                            </p>
+                        </div>
 
+                        <div style="display: flex; flex-flow: row nowrap; align-items: center; justify-content:
+                                    flex-start; margin: 0 0 2rem 0;" data-ng-if="page.practice.site_id">
+                            <button type="button" data-ng-click="page.site = null; page.practice.site_id = null;"
+                                    style="background: #d70000; border-radius: 4px; border: 0 none; padding: 1rem
+                                    1.5rem; appearance: none; color: white; font-weight: normal; font-size: 1rem;">
+                                Remove site from practice
+                            </button>
                         </div>
 
                         <!-- End site assignment -->
