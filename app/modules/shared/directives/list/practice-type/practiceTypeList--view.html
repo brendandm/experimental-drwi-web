@@ -21,7 +21,7 @@
 
     <div data-ng-if="practiceType && selectionId" style="padding-bottom: 2rem;">
         <span>The current type assignment for this practice is <strong>{{ practiceType.name }}</strong>.</span>
-        <a href="#{{ selectionId }}">Jump to selection. &rarr;</a>
+        <a href="#{{ selectionId }}" data-ng-click="jumpToSelection()">Jump to selection. &rarr;</a>
     </div>
 
     <div class="collection-search reveal fade-in t0">

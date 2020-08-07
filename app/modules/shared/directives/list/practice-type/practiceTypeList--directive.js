@@ -6,8 +6,10 @@
         .directive('practiceTypeList', [
             'environment',
             '$window',
+            '$timeout',
+            '$location',
             'AnchorScroll',
-            function (environment, $window, AnchorScroll) {
+            function (environment, $window, $timeout, $location, AnchorScroll) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -49,6 +51,14 @@
                             scope.selectionId = 'type-' + scope.practiceType.id;
 
                         }
+
+                        scope.jumpToSelection = function () {
+
+                            $location.hash('');
+
+                            scope.scrollManager.scrollToAnchor(scope.selectionId);
+
+                        };
 
                         scope.filterIndex = function (queryToken) {
 
@@ -197,7 +207,15 @@
 
                             scope.selectionId = 'type-' + scope.practiceType.id;
 
+                            scope.filterIndex('');
+
                             scope.processIndex();
+
+                            $timeout(function () {
+
+                                scope.scrollManager.scrollToAnchor(scope.selectionId);
+
+                            }, 500);
 
                         };
 
