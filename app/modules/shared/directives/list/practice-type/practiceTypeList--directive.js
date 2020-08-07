@@ -52,6 +52,14 @@
 
                         }
 
+                        scope.clearSearchInput = function () {
+
+                            var input = document.getElementById('practice-type-search');
+
+                            if (input) input.value = '';
+
+                        };
+
                         scope.jumpToSelection = function () {
 
                             $location.hash('');
@@ -211,11 +219,15 @@
 
                             scope.processIndex();
 
+                            scope.clearSearchInput();
+
                             $timeout(function () {
 
-                                scope.scrollManager.scrollToAnchor(scope.selectionId);
+                                $window.scrollTo(0, 0);
 
-                            }, 500);
+                                // scope.scrollManager.scrollToAnchor(scope.selectionId);
+
+                            }, 0);
 
                         };
 
