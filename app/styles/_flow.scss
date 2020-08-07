@@ -4567,7 +4567,7 @@
         justify-content: center;
         align-items: center;
         padding: 2rem;
-        color: #757575;
+        color: #9E9E9E;
 
         > * {
             cursor: default;
@@ -4637,6 +4637,7 @@
             }
 
             .description {
+                flex-grow: 1;
                 border-right: 1px solid #e0e0e0;
             }
 

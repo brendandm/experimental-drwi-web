@@ -165,7 +165,7 @@
                                data-ng-if="page.practiceType && page.practiceType.id">Click here to change this
                                 practice’s type assigment.
                             </a>
-                            <a href="#"
+                            <a href="#" style="display: block; margin-top: 2rem;"
                                data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"
                                data-ng-if="!page.practiceType || !page.practiceType.id">Click here to select a type
                                 for this practice.
@@ -173,56 +173,6 @@
                         </p>
 
                         <!-- End Practice Type -->
-
-<!--                        <div class="form-element">-->
-
-<!--                            <span class="meta-label"><b>Practice type</b></span>-->
-
-<!--                            <input id="practice_type_id" name="practice_type_id" type="text"-->
-<!--                                   placeholder="Search categories" data-ng-model="page.practiceType"-->
-<!--                                   uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"-->
-<!--                                   typeahead-on-select="page.setPracticeType($item,$model,$label)"-->
-<!--                                   typeahead-min-length="0" typeahead-template-url="templates/search&#45;&#45;tpl.html"/>-->
-
-<!--                            <div data-ng-if="page.invalidType"-->
-<!--                                 style="width:100%;-->
-<!--                                    color: #ff0000;-->
-<!--                                    margin-left: 10px;-->
-<!--                                    ">-->
-<!--                                <i>A practice type is required.</i>-->
-<!--                            </div>-->
-
-<!--                            <div data-ng-if="!page.invalidType"-->
-<!--                                 style="width:100%;-->
-<!--                                    color: #cccccc;-->
-<!--                                    margin-left: 10px;-->
-<!--                                    ">-->
-<!--                                <i>A practice type is required.</i>-->
-<!--                            </div>-->
-
-<!--                            <p data-ng-if="page.practiceType.id"-->
-<!--                               style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">-->
-<!--                                {{ page.practiceType.description || 'No description provided.' }}-->
-<!--                            </p>-->
-
-<!--                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;"-->
-<!--                               data-ng-if="page.practiceType.model.id || page.practice.category.model.id">-->
-<!--                                This practice type is linked to an automated model that calculates estimated values for-->
-<!--                                various environmental metrics. Click <a-->
-<!--                                    href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}"-->
-<!--                                    title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a>-->
-<!--                                to learn more about the model.-->
-<!--                            </p>-->
-
-<!--                            <p>-->
-<!--                                <a href="#"-->
-<!--                                   data-ng-click="page.showPracticeIndex = !page.showPracticeIndex">Click here to view-->
-<!--                                    the full list of-->
-<!--                                    practice types</a> available-->
-<!--                                through this project's program.-->
-<!--                            </p>-->
-
-<!--                        </div>-->
 
                         <div class="form-element">
 
@@ -291,7 +241,7 @@
 
         <div practice-type-list index="page.practiceTypes" letters="page.letters" link="false"
              practice="page.practice" practice-type="page.practiceType" selectable="true" summary="page.summary"
-             visible="page.showPracticeIndex" data-ng-if="page.showPracticeIndex"></div>
+             visible="page.showPracticeIndex" data-ng-if="page.showPracticeIndex" style="width: 100%;"></div>
 
     </div>
 

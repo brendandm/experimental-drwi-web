@@ -14,7 +14,8 @@
                         'forceTop': '@',
                         'hiddenKeys': '=?',
                         'letters': '=?',
-                        'orientation': '@orientation'
+                        'orientation': '@orientation',
+                        'visible': '=?'
                     },
                     templateUrl: function(elem, attrs) {
 

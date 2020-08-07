@@ -35,7 +35,34 @@
 
     </div>
 
-    <div alphabet-ctrl force-top="true" hidden-keys="hiddenKeys" letters="letters" orientation="horizontal"></div>
+    <div alphabet-ctrl force-top="true" hidden-keys="hiddenKeys"
+         letters="letters" orientation="horizontal" visible="!zeroMatches"></div>
+
+    <div data-ng-if="zeroMatches" style="width: 100%; display: flex; flex-grow: 1; flex-shrink: 0;">
+
+        <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+
+            <li class="card reveal fade-in">
+
+                <div class="card--content" style="display: flex; flex-flow: row nowrap;">
+
+                    <div class="description" style="width: 100%;">
+
+                        <div class="body" style="padding: 4rem 0;">
+                            <p style="font-style: normal; font-size: 1em; padding: 0; margin: 0; text-align: center;">
+                                <em>No matches found.</em>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
 
     <div data-ng-repeat="(key, group) in index">
 
@@ -99,19 +126,6 @@
                     </div>
 
                 </div>
-
-<!--                <div class="selection-input" data-ng-if="enableSelection" data-ng-click="setPracticeType(practice)">-->
-<!--                    <div data-ng-if="!practice.selected">-->
-<!--                        <span class="material-icons">-->
-<!--                            radio_button_unchecked-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                    <div data-ng-if="practice.selected">-->
-<!--                        <span class="material-icons">-->
-<!--                            radio_button_checked-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                </div>-->
 
             </li>
 

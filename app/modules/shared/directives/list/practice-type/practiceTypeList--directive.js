@@ -13,11 +13,11 @@
                     scope: {
                         'index': '=?',
                         'letters': '=?',
-                        'link': '@',
+                        'link': '@link',
                         'practice': '=?',
                         'practiceType': '=?',
                         'program': '=?',
-                        'selectable': '@',
+                        'selectable': '@selectable',
                         'summary': '=?',
                         'visible': '=?'
                     },
@@ -42,6 +42,8 @@
 
                         scope.hiddenKeys = {};
 
+                        scope.zeroMatches = false;
+
                         if (scope.practiceType) {
 
                             scope.selectionId = 'type-' + scope.practiceType.id;
@@ -59,6 +61,10 @@
                                 queryToken
                             );
 
+                            var totalItems = 0;
+
+                            var totalHidden = 0;
+
                             if (typeof queryToken === 'string') {
 
                                 var token = queryToken.toLowerCase();
@@ -70,6 +76,8 @@
                                         var group = scope.index[key];
 
                                         if (Array.isArray(group)) {
+
+                                            totalItems += group.length;
 
                                             var hiddenItems = 0;
 
@@ -89,7 +97,13 @@
 
                                                     }
 
-                                                    if (item.hide) hiddenItems++;
+                                                    if (item.hide) {
+
+                                                        hiddenItems++;
+
+                                                        totalHidden++;
+
+                                                    }
 
                                                 }
 
@@ -104,6 +118,8 @@
                                 }
 
                             }
+
+                            scope.zeroMatches = (totalItems > 0 && totalHidden > 0 && (totalItems === totalHidden));
 
                         };
 
