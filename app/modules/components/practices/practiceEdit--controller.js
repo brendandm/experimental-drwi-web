@@ -11,413 +11,398 @@ angular.module('FieldDoc')
                  PracticeType, practice, Project, $q, $rootScope,
                  $route, $scope, $timeout, $interval, site, user, Utility) {
 
-        var self = this;
+            var self = this;
 
-        $rootScope.toolbarState = {
-            'edit': true
-        };
+            $rootScope.toolbarState = {
+                'edit': true
+            };
 
-        $rootScope.page = {};
+            $rootScope.page = {};
 
-        self.status = {
-            loading: true,
-            processing: true
-        };
-
-        self.alerts = [];
-
-        function closeAlerts() {
+            self.status = {
+                loading: true,
+                processing: true
+            };
 
             self.alerts = [];
 
-        }
+            function closeAlerts() {
 
-        function closeRoute() {
+                self.alerts = [];
 
-            if (self.practice.site !== null) {
-                $location.path(self.practice.links.site.html);
-            } else {
-                $location.path("/projects/" + self.practice.project.id);
             }
 
-        }
+            function closeRoute() {
 
-        function railsRedirection(){
-            window.location.replace("/practices/"+self.practice.id+"/location");
-        }
-
-        self.showElements = function() {
-
-            $timeout(function() {
-
-                self.status.loading = false;
-
-                self.status.processing = false;
-
-            }, 1000);
-
-        };
-
-        self.loadSite = function() {
-
-            site.$promise.then(function(successResponse) {
-
-                console.log('self.site', successResponse);
-
-                self.site = successResponse;
-
-                self.loadPractice();
-
-            }, function(errorResponse) {
-
-                //
-
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                console.log('self.practice', successResponse);
-
-                self.practice = successResponse;
-
-                if (!successResponse.permissions.read &&
-                    !successResponse.permissions.write) {
-
-                    self.makePrivate = true;
-
-                    return;
-
+                if (self.practice.site !== null) {
+                    $location.path(self.practice.links.site.html);
+                } else {
+                    $location.path("/projects/" + self.practice.project.id);
                 }
 
-                self.permissions.can_edit = successResponse.permissions.write;
-                self.permissions.can_delete = successResponse.permissions.write;
+            }
 
-                if (successResponse.practice_type) {
+            function railsRedirection(){
+                window.location.replace("/practices/"+self.practice.id+"/location");
+            }
 
-                    self.practiceType = successResponse.practice_type;
+            self.showElements = function() {
 
-                }
+                $timeout(function() {
 
-                if (successResponse.site_id){
-                    self.site = successResponse.site;
-                }
+                    self.status.loading = false;
 
-                $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
+                    self.status.processing = false;
 
-                self.loadSites();
+                }, 1000);
 
-                self.processSetup(self.practice.setup);
+            };
 
-                //
-                // Load practice types
-                //
+            self.loadSite = function() {
 
-                PracticeType.collection({
-                    program: self.practice.project.program_id,
-                    limit: 500,
-                    simple_bool: 'true',
-                    minimal: 'true'
-                }).$promise.then(function(successResponse) {
+                site.$promise.then(function(successResponse) {
 
-                    console.log('self.practiceTypes', successResponse);
+                    console.log('self.site', successResponse);
 
-                    successResponse.features.forEach(function(item) {
+                    self.site = successResponse;
 
-                        item.category = item.group;
-
-                        item.practice_type = item.group;
-
-                    });
-
-                    self.practiceTypes = successResponse.features;
-
-                    self.showElements();
+                    self.loadPractice();
 
                 }, function(errorResponse) {
 
                     //
 
-                    self.showElements();
-
                 });
 
-            }, function(errorResponse) {
+            };
 
-                //
+            self.loadPractice = function() {
 
-            });
+                practice.$promise.then(function(successResponse) {
 
-        };
+                    console.log('self.practice', successResponse);
 
-        /*START STATE CALC*/
+                    self.practice = successResponse;
 
-        self.processSetup = function(setup){
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
 
-            const next_action = setup.next_action;
+                        self.makePrivate = true;
 
-            self.states = setup.states;
+                        return;
 
-            self.next_action = next_action;
+                    }
 
-            console.log("self.states",self.states);
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
-            console.log("self.next_action",self.next_action);
+                    if (successResponse.practice_type) {
 
-            console.log("self.next_action_lable",self.next_action_lable);
+                        self.practiceType = successResponse.practice_type;
 
-        };
+                    }
 
-        /*END STATE CALC*/
+                    if (successResponse.site_id){
+                        self.site = successResponse.site;
+                    }
 
-        self.loadSites = function() {
+                    $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-            console.log('self.loadSites --> Starting...');
+                    self.loadSites();
 
-            Project.sites({
+                    self.processSetup(self.practice.setup);
 
-                id: self.practice.project.id,
+                    //
+                    // Load practice types
+                    //
 
-                currentTime: Date.UTC()
+                    PracticeType.collection({
+                        program: self.practice.project.program_id,
+                        limit: 500,
+                        group: 'alphabet',
+                        minimal: true,
+                        program_only: true
+                    }).$promise.then(function(successResponse) {
 
-            }).$promise.then(function(successResponse) {
+                        console.log('self.practiceTypes', successResponse);
 
-                console.log('Project sites --> ', successResponse);
+                        self.practiceTypes = successResponse.features.groups;
 
-                //   self.sites = successResponse.features;
+                        self.summary = successResponse.summary;
 
-                //self.sites = [];
+                        self.letters = successResponse.features.letters;
 
-                var sites = [];
-                successResponse.features.forEach(function(item){
-                    sites.push(item.properties);
-                });
-                sites.push(
-                    {
-                        "name"  :   "None - this Practice is not associated with a Site",
-                        "id"    :   null
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        //
+
+                        self.showElements();
+
                     });
-                self.sites = sites;
 
+                }, function(errorResponse) {
 
-                ///     self.showElements(true);
+                    //
 
+                });
 
-                // self.populateMap(self.map, siteCollection, null, true);
+            };
 
-                // self.addMapPreviews(self.sites);
+            /*START STATE CALC*/
 
-            }, function(errorResponse) {
+            self.processSetup = function(setup){
 
-                console.log('loadSites.errorResponse', errorResponse);
+                const next_action = setup.next_action;
 
-                //   self.showElements(false);
+                self.states = setup.states;
 
-            });
+                self.next_action = next_action;
 
-        };
+                console.log("self.states",self.states);
 
-        self.scrubFeature = function(feature) {
+                console.log("self.next_action",self.next_action);
 
-            var excludedKeys = [
-                'allocations',
-                'creator',
-                'dashboards',
-                'geographies',
-                'geometry',
-                'last_modified_by',
-                'members',
-                'metrics',
-                'metric_types',
-                'organization',
-                'partners',
-                'partnerships',
-                'practices',
-                'practice_types',
-                'program',
-                'project',
-                'reports',
-                'sites',
-                'status',
-                'tags',
-                'tasks',
-                'users'
-            ];
+                console.log("self.next_action_lable",self.next_action_lable);
 
-            var reservedProperties = [
-                'links',
-                'map_options',
-                'permissions',
-                '$promise',
-                '$resolved'
-            ];
+            };
 
-            excludedKeys.forEach(function(key) {
+            /*END STATE CALC*/
 
-                if (feature.properties) {
+            self.loadSites = function() {
 
-                    delete feature.properties[key];
+                console.log('self.loadSites --> Starting...');
 
-                } else {
+                Project.sites({
+                    id: self.practice.project.id,
+                    currentTime: Date.now()
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    var sites = [];
+
+                    successResponse.features.forEach(function(item) {
+
+                        var data = item.properties;
+
+                        if (typeof data.name === 'string' &&
+                            data.name.length) {
+
+                            sites.push(data);
+
+                        }
+
+                    });
+
+                    self.sites = sites;
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'allocations',
+                    'creator',
+                    'dashboards',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metrics',
+                    'metric_types',
+                    'organization',
+                    'partners',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'program',
+                    'project',
+                    'reports',
+                    'sites',
+                    'status',
+                    'tags',
+                    'tasks',
+                    'users'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'map_options',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
 
                     delete feature[key];
 
-                }
-
-            });
-
-            reservedProperties.forEach(function(key) {
-
-                delete feature[key];
-
-            });
-
-        };
-
-        self.savePractice = function() {
-
-            self.status.processing = true;
-
-            self.scrubFeature(self.practice);
-
-            if (self.practiceType) {
-
-                self.practice.category_id = self.practiceType.id;
-
-            }
-
-            var invalid = [];
-
-            self.invalidType = false;
-            self.invalidName = false;
-
-            if(self.practice.name == undefined){
-
-                console.log("self.practice.name", self.practice.name);
-
-                invalid.push("Name");
-
-                self.invalidName = true;
-
-            }
-            if(self.practice.category_id == undefined){
-
-                console.log("self.practiceType", self.practiceType);
-
-                invalid.push("Practice Type");
-
-                self.invalidType = true;
-
-            }
-
-
-            if(invalid.length > 0   ){
-                self.status.processing = false;
-
-                console.log("invalid",invalid);
-
-                self.alerts = [{
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'One or more required fields are missing!',
-                    'prompt': 'OK'
-                }];
-
-                $timeout(closeAlerts, 2000);
-            }else{
-
-                Practice.update({
-                    id: self.practice.id
-                }, self.practice).then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Practice changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    if(self.practice.geometry == null || self.practice.geometry == undefined){
-                        $timeout(railsRedirection,3000);
-                    }
-
-
-                    self.showElements();
-
-                }).catch(function(errorResponse) {
-
-                    // Error message
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Practice changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    self.showElements();
-
                 });
 
+            };
+
+            self.savePractice = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.practice);
+
+                if (self.practiceType) {
+
+                    self.practice.category_id = self.practiceType.id;
+
+                }
+
+                var invalid = [];
+
+                self.invalidType = false;
+                self.invalidName = false;
+
+                if (self.practice.name === undefined) {
+
+                    console.log("self.practice.name", self.practice.name);
+
+                    invalid.push("Name");
+
+                    self.invalidName = true;
+
+                }
+
+                if (self.practice.category_id === undefined) {
+
+                    console.log("self.practiceType", self.practiceType);
+
+                    invalid.push("Practice Type");
+
+                    self.invalidType = true;
+
+                }
+
+                if (invalid.length > 0) {
+
+                    self.status.processing = false;
+
+                    console.log("invalid",invalid);
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'One or more required fields are missing!',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                } else {
+
+                    Practice.update({
+                        id: self.practice.id
+                    }, self.practice).then(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Practice changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        if (self.practice.geometry === null) {
+                            $timeout(railsRedirection,3000);
+                        }
+
+                        self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        // Error message
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Practice changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
+
+                    });
+
+                }
+
+            };
+
+            /*END STATE CALC*/
+
+            self.setPracticeType = function($item, $model, $label) {
+
+                console.log('self.practiceType', $item);
+
+                self.practiceType = $item;
+
+                self.practice.practice_type_id = $item.id;
+
+            };
+
+            self.setSite = function($item) {
+
+                console.log('self.site', $item);
+
+                self.site = $item;
+
+                self.practice.site_id = $item.id;
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false
+                    };
+
+                    self.loadPractice();
+                });
+
+            } else {
+
+                $location.path('/logout');
 
             }
 
-
-        };
-
-        /*END STATE CALC*/
-
-        self.setPracticeType = function($item, $model, $label) {
-
-            console.log('self.practiceType', $item);
-
-            self.practiceType = $item;
-
-            self.practice.practice_type_id = $item.id;
-
-        };
-
-        self.setSite = function($item) {
-
-            console.log('self.site', $item);
-
-            self.site = $item;
-
-            self.practice.site_id = $item.id;
-
-        };
-
-        //
-        // Verify Account information for proper UI element display
-        //
-
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-
-                $rootScope.user = Account.userObject = userResponse;
-
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: false
-                };
-
-                self.loadPractice();
-            });
-
-        } else {
-
-            $location.path('/logout');
-
-        }
-
-    });
+        });

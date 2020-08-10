@@ -1,0 +1,31 @@
+<div class="{{ orientation }}-alphabet-control" data-ng-if="visible">
+
+    <div id="idx">
+        <strong>Go to:</strong>
+    </div>
+
+    <div class="letter" data-ng-repeat="letter in letters"
+         data-ng-click="scrollManager.scrollToAnchor(letter)"
+         data-ng-if="!hiddenKeys[letter]">
+        <strong>{{ letter }}</strong>
+    </div>
+
+    <div class="power-jump-wrapper">
+        <span>Back to top</span>
+        <button type="button" class="power-jump-btn"
+                data-ng-click="resetScroll()"
+                data-ng-if="scrollTop">
+            <i class="material-icons">
+                keyboard_arrow_up
+            </i>
+        </button>
+        <button type="button" class="power-jump-btn"
+                data-ng-click="scrollManager.scrollToAnchor('idx')"
+                data-ng-if="!scrollTop">
+            <i class="material-icons">
+                keyboard_arrow_up
+            </i>
+        </button>
+    </div>
+
+</div>

@@ -210,8 +210,7 @@ angular.module('FieldDoc')
                     id: self.project.id,
                     limit: self.practicesLimit,
                     page: self.practicesPage,
-                    currentTime: Date.UTC()
-
+                    currentTime: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log("PRACTICE RESPONSE");
@@ -663,12 +662,10 @@ angular.module('FieldDoc')
                 console.log('self.loadSites --> Starting...');
 
                 Project.sites({
-
                     id: self.project.id,
                     limit: self.limit,
                     page: self.page,
-                    currentTime: Date.UTC()
-
+                    currentTime: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);

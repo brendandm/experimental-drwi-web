@@ -186,10 +186,9 @@
                 self.loadPractices = function(){
                      Site.practices({
                             id: self.site.id,
-                            limit       : self.limit,
-                            page        : self.page,
-                            currentTime: Date.UTC()
-
+                            limit: self.limit,
+                            page: self.page,
+                            currentTime: Date.now()
                         }).$promise.then(function(successResponse) {
 
                             console.log("PRACTICE RESPONSE");
