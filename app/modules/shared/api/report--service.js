@@ -20,6 +20,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/metrics')
                 },
+                prepare: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/prepare')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',

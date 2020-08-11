@@ -22,26 +22,89 @@
     cursor: not-allowed;
 }
 
-.target-lst li {
+.target-lst li,
+.target-lst li > div:first-of-type {
+    display: flex;
     flex-flow: row nowrap;
     align-items: center;
     margin-bottom: 0.5em;
+    width: 100%;
 }
 
-.target-lst li > div:first-of-type {
+.target-lst li > div > div:first-of-type {
     display: flex;
     flex-flow: column;
     flex-grow: 1;
+}
+
+.target-lst li .measurement > div:first-of-type {
     padding-right: 1em;
 }
 
-.target-lst li input {
+.target-lst li .measurement input {
     width: 20%;
     max-width: 160px;
     margin-right: 1em;
 }
 
-.target-lst-inactive li > div:first-of-type {
+.target-lst li .report-tgt-meter {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin: 1rem 0;
+
+    .labels {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        font-size: 0.9rem;
+
+        div {
+            flex-grow: 1;
+            flex-shrink: 0;
+        }
+
+        div:first-of-type {
+            text-align: left;
+            padding-right: 1rem;
+        }
+
+        div:last-of-type {
+            text-align: right;
+            padding-left: 1rem;
+        }
+
+    }
+
+    .meter-bar {
+        width: 100%;
+        position: relative;
+        height: 8px;
+        margin: 1rem 0;
+        border-radius: 8px;
+        //background: #f5f5f5;
+        background: #c8e5fc;
+        overflow: hidden;
+
+        > div {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #2196F3;
+            transition: width 200ms ease 0s;
+        }
+
+    }
+
+}
+
+.target-lst-inactive li > div > div:first-of-type {
     color: #616161;
 }
 
@@ -76,6 +139,4 @@
     display:block;
     float: left;
     font-size: 1.5em;
-
-
 }

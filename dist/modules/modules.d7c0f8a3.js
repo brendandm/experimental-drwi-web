@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597072848388})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1597176130411})
 
 ;
 /**
@@ -21712,6 +21712,41 @@ angular.module('FieldDoc')
 
                 }
 
+                self.calculateMeterWidth = function(tgt) {
+
+                    if (typeof tgt.practice_target === 'number' &&
+                        typeof tgt.total_reported === 'number') {
+
+                        return (tgt.total_reported / tgt.practice_target) * 100;
+
+                    }
+
+                    return 0;
+
+                };
+
+                self.updateReportedTotal = function(target) {
+
+                    console.log(
+                        'self.updateReportedTotal:target',
+                        target
+                    );
+
+                    if (typeof target.value === 'number') {
+
+                        target.reported_value += target.value;
+
+                        target.width = self.calculateMeterWidth(target);
+
+                    }
+
+                    console.log(
+                        'self.updateReportedTotal:target[2]',
+                        target
+                    );
+
+                };
+
                 self.loadMatrix = function() {
 
                     //
@@ -21721,6 +21756,18 @@ angular.module('FieldDoc')
                         id: self.report.id,
                         simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
+
+                        var activeTargets = [];
+
+                        successResponse.active.forEach(function (tgt) {
+
+                            tgt.width = self.calculateMeterWidth(tgt);
+
+                            activeTargets.push(tgt);
+
+                        });
+
+                        successResponse.active = activeTargets;
 
                         self.targets = successResponse;
 
@@ -22071,6 +22118,8 @@ angular.module('FieldDoc')
                         $timeout(self.closeAlerts, 2000);
 
                         self.status.processing = false;
+
+                        self.loadMatrix();
 
                     }).catch(function(error) {
 
@@ -36705,6 +36754,11 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/metrics')
                 },
+                prepare: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/prepare')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -39255,7 +39309,32 @@ angular.module('FieldDoc')
                                     '/edit'
                                 ].join('');
 
-                                $location.path(nextPath);
+                                if (scope.type === 'report') {
+
+                                    Report.prepare({
+                                        id: +successResponse.id
+                                    }, {}).$promise.then(function(successResponse) {
+
+                                        $location.path(nextPath);
+
+                                    }).catch(function(error) {
+
+                                        scope.alerts = [{
+                                            'type': 'error',
+                                            'flag': 'Error!',
+                                            'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                            'prompt': 'OK'
+                                        }];
+
+                                        $timeout(closeAlerts, 2000);
+
+                                    });
+
+                                } else {
+
+                                    $location.path(nextPath);
+
+                                }
 
                             }, function(errorResponse) {
 
@@ -39743,6 +39822,8 @@ angular.module('FieldDoc')
 
                             feature.selected = true;
 
+                            feature.showConfirmation = true;
+
                             scope.practiceType = feature;
 
                             scope.selectionId = 'type-' + scope.practiceType.id;
@@ -39755,11 +39836,11 @@ angular.module('FieldDoc')
 
                             $timeout(function () {
 
-                                $window.scrollTo(0, 0);
+                                // $window.scrollTo(0, 0);
 
-                                // scope.scrollManager.scrollToAnchor(scope.selectionId);
+                                scope.scrollManager.scrollToAnchor(scope.selectionId);
 
-                            }, 0);
+                            }, 200);
 
                         };
 

@@ -237,6 +237,41 @@
 
                 }
 
+                self.calculateMeterWidth = function(tgt) {
+
+                    if (typeof tgt.practice_target === 'number' &&
+                        typeof tgt.total_reported === 'number') {
+
+                        return (tgt.total_reported / tgt.practice_target) * 100;
+
+                    }
+
+                    return 0;
+
+                };
+
+                self.updateReportedTotal = function(target) {
+
+                    console.log(
+                        'self.updateReportedTotal:target',
+                        target
+                    );
+
+                    if (typeof target.value === 'number') {
+
+                        target.reported_value += target.value;
+
+                        target.width = self.calculateMeterWidth(target);
+
+                    }
+
+                    console.log(
+                        'self.updateReportedTotal:target[2]',
+                        target
+                    );
+
+                };
+
                 self.loadMatrix = function() {
 
                     //
@@ -246,6 +281,18 @@
                         id: self.report.id,
                         simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
+
+                        var activeTargets = [];
+
+                        successResponse.active.forEach(function (tgt) {
+
+                            tgt.width = self.calculateMeterWidth(tgt);
+
+                            activeTargets.push(tgt);
+
+                        });
+
+                        successResponse.active = activeTargets;
 
                         self.targets = successResponse;
 
@@ -596,6 +643,8 @@
                         $timeout(self.closeAlerts, 2000);
 
                         self.status.processing = false;
+
+                        self.loadMatrix();
 
                     }).catch(function(error) {
 

@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <h2>Practice types</h2>
+    <h2>Select practice type</h2>
 
     <p>
         This program contains <strong>{{ summary.matches }}</strong> practice
@@ -77,13 +77,13 @@
         <ul class="selectable-group-items list-unstyled" data-ng-if="group.length">
 
             <li class="card reveal fade-in"
-                style="animation-delay: {{ $index * 20 }}ms; min-height: 0;"
+                style="animation-delay: {{ $index * 20 }}ms; min-height: 0; flex-flow: column; margin-bottom: 2rem;"
                 id="type-{{ practice.id }}"
                 data-ng-repeat="practice in group | orderBy:'name'"
                 data-ng-if="!practice.hide">
 
-                <div class="card--content" style="display: flex; flex-flow: row nowrap;"
-                     data-ng-class="{selected: practice.selected}">
+                <div class="card--content" style="display: flex; flex-flow: row nowrap; margin-bottom: 0;"
+                     data-ng-class="{selected: practice.selected, 'confirmation-pending': practice.showConfirmation}">
 
                     <div class="description">
 
@@ -127,6 +127,17 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div class="confirm-selection"
+                     data-ng-if="practice.id === practiceType.id && practice.showConfirmation"
+                     data-ng-click="closeView()">
+                    <span>
+                        Confirm selection
+                    </span>
+                    <span class="material-icons">
+                        check
+                    </span>
                 </div>
 
             </li>

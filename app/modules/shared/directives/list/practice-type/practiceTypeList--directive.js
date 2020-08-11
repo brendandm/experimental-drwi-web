@@ -211,6 +211,8 @@
 
                             feature.selected = true;
 
+                            feature.showConfirmation = true;
+
                             scope.practiceType = feature;
 
                             scope.selectionId = 'type-' + scope.practiceType.id;
@@ -223,11 +225,11 @@
 
                             $timeout(function () {
 
-                                $window.scrollTo(0, 0);
+                                // $window.scrollTo(0, 0);
 
-                                // scope.scrollManager.scrollToAnchor(scope.selectionId);
+                                scope.scrollManager.scrollToAnchor(scope.selectionId);
 
-                            }, 0);
+                            }, 200);
 
                         };
 

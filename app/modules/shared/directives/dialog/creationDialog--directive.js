@@ -110,7 +110,32 @@
                                     '/edit'
                                 ].join('');
 
-                                $location.path(nextPath);
+                                if (scope.type === 'report') {
+
+                                    Report.prepare({
+                                        id: +successResponse.id
+                                    }, {}).$promise.then(function(successResponse) {
+
+                                        $location.path(nextPath);
+
+                                    }).catch(function(error) {
+
+                                        scope.alerts = [{
+                                            'type': 'error',
+                                            'flag': 'Error!',
+                                            'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                            'prompt': 'OK'
+                                        }];
+
+                                        $timeout(closeAlerts, 2000);
+
+                                    });
+
+                                } else {
+
+                                    $location.path(nextPath);
+
+                                }
 
                             }, function(errorResponse) {
 
