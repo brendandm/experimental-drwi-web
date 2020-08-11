@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1597176130411})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1597182394555})
 
 ;
 /**
@@ -4974,9 +4974,9 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, mapbox, Site, user, $window, $timeout,
-            Practice, project, sites, Utility, $interval, LayerService,
-            MapManager, Shapefile, Task) {
+                 $scope, $location, mapbox, Site, user, $window, $timeout,
+                 Practice, project, sites, Utility, $interval, LayerService,
+                 MapManager, Shapefile, Task) {
 
             var self = this;
 
@@ -5309,10 +5309,6 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        //  self.loadPractices();
-
-                        //                        self.loadTags();
-
                         self.loadArea();
 
                         self.loadPartnerships();
@@ -5408,6 +5404,13 @@ angular.module('FieldDoc')
                         'msg': 'Successfully deleted this ' + featureType + '.',
                         'prompt': 'OK'
                     });
+
+                    if (featureType === 'practice' ||
+                        featureType === 'site') {
+
+                        self.refreshMetricProgress();
+
+                    }
 
                     if (index !== null &&
                         typeof index === 'number' &&
@@ -6003,6 +6006,22 @@ angular.module('FieldDoc')
 
             };
 
+            self.refreshMetricProgress = function () {
+
+                var progressPoll = $interval(function() {
+
+                    self.loadMetrics();
+
+                }, 4000);
+
+                $timeout(function () {
+
+                    $interval.cancel(progressPoll);
+
+                }, 20000);
+
+            };
+
             self.loadMetrics = function() {
 
                 Project.progress({
@@ -6517,8 +6536,6 @@ angular.module('FieldDoc')
 
                 var fileData = new FormData();
 
-
-
                 fileData.append('file', self.practiceFileImport[0]);
 
                 fileData.append('feature_type', 'practice');
@@ -6585,10 +6602,6 @@ angular.module('FieldDoc')
 
             };
 
-            //                self.reloadPage = function (){
-            //                    location.reload();
-            //                };
-
             self.hidePracticeTasks = function() {
 
                 self.pendingPracticeTasks = [];
@@ -6601,11 +6614,8 @@ angular.module('FieldDoc')
                 $timeout(function() {
 
                     self.loadPractices();
-                    //      self.reloadPage();
-                    //    self.loadSite();
 
                 }, 500);
-
 
             };
 
@@ -6643,12 +6653,9 @@ angular.module('FieldDoc')
 
                             console.log("FOUR FOUR");
 
-                            //self.loadSite();
-
                             $timeout(function() {
+
                                 self.loadPractices();
-                                //  self.reloadPage();
-                                //     self.loadSite();
 
                             }, 500);
 
