@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .controller('ReportEditController',
-            function(Account, $location, MetricType, monitoring_types,
+            function(Account, $location, MetricType,
                 Practice, Report, ReportMetric, ReportMonitoring, report,
                 $rootScope, $route, $scope, user, Utility,
                 $timeout, report_metrics, $filter, $interval, Program) {

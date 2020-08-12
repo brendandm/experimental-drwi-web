@@ -63,11 +63,6 @@ angular.module('FieldDoc')
                         return Report.metrics({
                             id: $route.current.params.reportId
                         });
-                    },
-                    monitoring_types: function(MonitoringType, $route) {
-                        return MonitoringType.query({
-                            results_per_page: 500
-                        });
                     }
                 }
             })
