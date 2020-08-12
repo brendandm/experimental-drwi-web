@@ -91,6 +91,7 @@
 
                                 data = {
                                     'measurement_period': name,
+                                    'name': name,
                                     'report_date': new Date(),
                                     'practice_id': scope.parent,
                                     'organization_id': scope.organization

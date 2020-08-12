@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597248903974})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597266752302})
 
 ;
 /**
@@ -39292,6 +39292,7 @@ angular.module('FieldDoc')
 
                                 data = {
                                     'measurement_period': name,
+                                    'name': name,
                                     'report_date': new Date(),
                                     'practice_id': scope.parent,
                                     'organization_id': scope.organization

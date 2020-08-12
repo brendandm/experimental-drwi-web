@@ -42,7 +42,9 @@
             </div>
             <div data-ng-if="page.report.report_date">
                 <span>Report:&nbsp;</span>
-                <a href="/reports/{{page.report.id}}/edit">{{page.report.report_date | date}}</a>
+                <a href="/reports/{{page.report.id}}/edit">
+                    {{ page.report.name || (page.report.report_date | date) }}
+                </a>
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div data-ng-if="!page.report.report_date">
@@ -87,6 +89,17 @@
                                 </a>
                             </div>
 
+                        </div>
+
+                        <h2>
+                            Title
+                        </h2>
+
+                        <div class="form-element">
+<!--                            <span class="meta-label"><b>Month</b></span>-->
+                            <input style="padding-top: 1em;" type="text" data-ng-model="page.report.name"
+                                   class="form-control animate" id="name"
+                                   name="name" placeholder="Report title"/>
                         </div>
 
                         <h2>
@@ -156,7 +169,10 @@
                                             <div style="width: {{ target.width }}%;"></div>
                                         </div>
                                         <div class="labels">
-                                            <div>
+                                            <div data-ng-if="target.width < 1">
+                                                {{ target.total_reported | number:2 }} (<1% of goal)
+                                            </div>
+                                            <div data-ng-if="target.width >= 1">
                                                 {{ target.total_reported | number:2 }} ({{ target.width | number:0
                                                 }}% of goal)
                                             </div>
