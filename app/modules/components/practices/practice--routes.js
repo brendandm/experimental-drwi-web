@@ -313,11 +313,6 @@ angular.module('FieldDoc')
 
                         return Account.userObject;
 
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            'id': $route.current.params.practiceId
-                        });
                     }
                 }
             });

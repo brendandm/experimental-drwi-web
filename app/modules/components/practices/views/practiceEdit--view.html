@@ -159,18 +159,38 @@
                             to learn more about the model.
                         </p>
 
-                        <p style="margin: 0 0 3rem;">
-                            <a href="#"
-                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"
-                               data-ng-if="page.practiceType && page.practiceType.id">Click here to change this
-                                practice’s type assigment.
+                        <div class="history-link-wrapper" style="margin: 2rem 0 3rem;"
+                             data-ng-if="!page.practiceType || !page.practiceType.id">
+                            <span class="material-icons">
+                                add_circle
+                            </span>
+                            <a href="#" data-ng-click="page.showPracticeIndex = !page.showPracticeIndex">
+                                Click here to select a type for this practice.
                             </a>
-                            <a href="#" style="display: block; margin-top: 2rem;"
-                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"
-                               data-ng-if="!page.practiceType || !page.practiceType.id">Click here to select a type
-                                for this practice.
+                        </div>
+
+                        <div class="history-link-wrapper" style="margin: 0 0 3rem;"
+                             data-ng-if="page.practiceType && page.practiceType.id">
+                            <span class="material-icons">
+                                swap_horizontal_circle
+                            </span>
+                            <a href="#" data-ng-click="page.showPracticeIndex = !page.showPracticeIndex">
+                                Click here to change this practice’s type assigment.
                             </a>
-                        </p>
+                        </div>
+
+<!--                        <p style="margin: 0 0 3rem;">-->
+<!--                            <a href="#"-->
+<!--                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"-->
+<!--                               data-ng-if="page.practiceType && page.practiceType.id">Click here to change this-->
+<!--                                practice’s type assigment.-->
+<!--                            </a>-->
+<!--                            <a href="#" style="display: block; margin-top: 2rem;"-->
+<!--                               data-ng-click="page.showPracticeIndex = !page.showPracticeIndex"-->
+<!--                               data-ng-if="!page.practiceType || !page.practiceType.id">Click here to select a type-->
+<!--                                for this practice.-->
+<!--                            </a>-->
+<!--                        </p>-->
 
                         <!-- End practice type selection -->
 

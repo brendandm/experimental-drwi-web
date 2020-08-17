@@ -7,26 +7,26 @@
 // @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 //
 
+.history-link-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding-bottom: 1em;
+    color: $color-blue-base;
+
+    span {
+        display: inline-flex;
+        margin-right: 0.25em;
+    }
+
+}
+
 .last-modified-summary {
 
     .modtime {
         font-size: 0.9em;
         font-weight: normal;
         margin-bottom: 0.75rem;
-    }
-
-    .history-link-wrapper {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        padding-bottom: 1em;
-        color: $color-blue-base;
-
-        span {
-            display: inline-flex;
-            margin-right: 0.25em;
-        }
-
     }
 
 }

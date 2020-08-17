@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeTargetController',
-        function($scope, Account, $location, $log, Practice, practice,
+        function($scope, Account, $location, $log, Practice,
                  $rootScope, $route, user, FilterStore, $timeout, SearchService,
                  MetricType, Model, $filter, $interval, Program) {
 
