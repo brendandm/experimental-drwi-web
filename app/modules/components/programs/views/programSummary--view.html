@@ -132,7 +132,11 @@
                                     <tr>
                                         <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header">Estimated value</th>
-                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">
+                                        <!--
+                                            Estimated progress
+                                            -->
+                                        </th>
                                         <th data-ng-if="model.datum.show_progress">&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -142,20 +146,30 @@
                                         <td class="table-column-wide">
                                             <p class="metric--title">
                                                 {{ metric.name }}
-                                            </p>
                                         </td>
                                         <td>
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
-                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                            <strong class="metrics--metric--rollup--small">
+                                                {{ metric.total_reported | number:2 }}
+                                            </strong>
+                                            <span class="metrics--metric--rollup--label">
+                                                {{ metric.unit.plural }}
+                                            </span>
+                                     <!--       <br />
+                                            <span class="metrics--metric--rollup--label"
+                                                  data-ng-if="model.datum.show_progress || metric.show_progress">
+                                                of {{(metric.target || 0) | number:2 }}
+                                            </span>
+                                            -->
                                         </td>
 
                                         <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                            <strong class="metrics--metric--percentage">
+                                          <!--  <strong class="metrics--metric--percentage">
                                                 {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
+                                            -->
                                         </td>
                                         <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                            <progress-arc
+                                      <!--      <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"
                                                 stroke-width="4"
@@ -163,6 +177,8 @@
                                                 counter-clockwise="false"
                                                 background="rgba(0,0,0,0.2)">
                                             </progress-arc>
+                                            -->
+                                        </td>
 
 
                                     </tr>
@@ -190,21 +206,26 @@
                                             {{ metric.name }}
                                         </p>
                                     </td>
-                                    <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            / {{ metric.self_target | number:2 }}</span>
+                                    <td style="width:200px; background-color: ;">
+                                        <strong class="metrics--metric--rollup--small">
+                                            {{ metric.total_reported | number:2 }}
+                                        </strong>
+                                        <span class="metrics--metric--rollup--label">
+                                            / {{ metric.target | number:2 }}
+                                             {{ metric.unit.plural }}
+                                        </span>
                                     </td>
-                                    <td data-ng-if="metric.self_target > 0">
+                                    <td data-ng-if="metric.target > 0 || metric.agg_target">
                                         <strong class="metrics--metric--percentage">
-                                            {{ metric.selfProgress.value * 100 | number:1 }}%
+                                            {{ metric.precentage * 100 | number:1 }}%
                                         </strong>
                                     </td>
-                                    <td data-ng-if="metric.self_target > 0">
+                                    <td data-ng-if="metric.target > 0 || metric.agg_target > 0">
                                         <progress-arc
                                             size="32"
                                             stroke="#2196F3"
                                             stroke-width="4"
-                                            complete="metric.selfProgress.arcValue"
+                                            complete="metric.precentage"
                                             counter-clockwise="false"
                                             background="rgba(0,0,0,0.2)">
                                         </progress-arc>
@@ -212,10 +233,16 @@
 
                                       <!-- Program Target NOT Set-->
 
-                                        <td data-ng-if="metric.self_target == 0">
-                                              No Target Set
+                                        <td data-ng-if="metric.target == 0 && metric.agg_target == 0">
+                                            <span style="
+                                                    font-weight: bold;
+                                                    font-size: 9px;
+                                                "
+                                            >
+                                                No Target Set
+                                             </span>
                                         </td>
-                                        <td data-ng-if="metric.self_target == 0">
+                                        <td data-ng-if="metric.target == 0 && metric.agg_target == 0">
 
                                         </td>
                                 </tr>

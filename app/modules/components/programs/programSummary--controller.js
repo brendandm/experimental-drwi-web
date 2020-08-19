@@ -315,21 +315,33 @@
 
                         console.log('Program metrics', successResponse);
 
-//                        successResponse.features.forEach(function(metric) {
-//
-//                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-//
-//                            metric.percentComplete = _percentComplete;
-//
-//                        });
-//
-//                        self.metrics = successResponse.features;
-
                         Utility.processMetrics(successResponse.features);
+
+                        self.metrics = successResponse.features;
+
+                        self.metrics.forEach(function(metric){
+
+                            if(metric.target > 0){
+
+                                metric.precentage = metric.total_reported / metric.target;
+
+                            }else if(metric.agg_target > 0){
+
+                                metric.precentage = metric.total_reported / metric.agg_target;
+
+                            }else{
+
+                                metric.precentage = 0;
+
+                            }
+
+                        });
 
                         self.metrics = Utility.groupByModel(successResponse.features);
 
                         console.log('self.metrics', self.metrics);
+
+
 
                     }, function(errorResponse) {
 
