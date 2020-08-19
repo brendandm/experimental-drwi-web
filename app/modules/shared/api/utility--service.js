@@ -137,8 +137,6 @@ angular.module('FieldDoc')
                 console.log("geometry -->", geometry)
                 console.log("simplified -->", simplified)
 
-
-
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": simplified,
@@ -153,10 +151,7 @@ angular.module('FieldDoc')
                     }
                 };
 
-
-
                 // Build static map URL for Mapbox API
-
 
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
@@ -166,6 +161,62 @@ angular.module('FieldDoc')
                     ')/auto/400x200@2x?access_token=',
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
+
+            },
+            getDenominator: function(metric, global) {
+
+                if (global) {
+
+                    if (typeof metric.target === 'number' &&
+                        metric.target > 0) {
+
+                        return metric.target;
+
+                    } else {
+
+                        return metric.agg_target;
+
+                    }
+
+                }
+
+                return metric.agg_target || metric.self_target;
+
+            },
+            getNumerator: function(metric, global) {
+
+                if (global) {
+
+                    return metric.total_reported;
+
+                }
+
+                return metric.current_value;
+
+            },
+            calcProgress: function(metric, global) {
+
+                var numerator = this.getNumerator(metric, global);
+
+                var denominator = this.getDenominator(metric, global);
+
+                if (numerator >= 0 && (typeof denominator === 'number' && denominator > 0)) {
+
+                    var progress = (numerator / denominator);
+
+                    metric.percentComplete = Math.round(progress * 100);
+
+                    metric.arcValue = (progress > 1) ? 1 : progress;
+
+                } else {
+
+                    metric.percentComplete = -1;
+
+                    metric.arcValue = 0;
+
+                }
+
+                return metric;
 
             },
             processMetrics: function(arr) {

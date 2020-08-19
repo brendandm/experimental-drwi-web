@@ -50,7 +50,7 @@
 
                         <p data-ng-if="page.program.website" style="display: flex; flex-flow: row nowrap; align-items: center;">
                             <i class="material-icons">
-                            open_in_new
+                                open_in_new
                             </i>
                             <a href="{{ page.program.website }}" target="_blank">&nbsp;View website</a>
                         </p>
@@ -71,7 +71,7 @@
                                         <span>{{ tag.name }}</span>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                         </div>
@@ -121,67 +121,53 @@
                             <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
 
                                 <thead>
-                                    <tr>
-                                        <th>
-                                            <strong>{{ model.datum.name }}</strong>
-                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
-                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
-                                            </p>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                        <th class="table-metrics-header">Estimated value</th>
-                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">
+                                <tr>
+                                    <th>
+                                        <strong>{{ model.datum.name }}</strong>
+                                        <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                            The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                        </p>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                    <th class="table-metrics-header">Estimated value</th>
+                                    <th class="table-metrics-header" data-ng-if="model.datum.show_progress">
                                         <!--
                                             Estimated progress
                                             -->
-                                        </th>
-                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
-                                    </tr>
+                                    </th>
+                                    <th data-ng-if="model.datum.show_progress">&nbsp;</th>
+                                </tr>
                                 </thead>
 
                                 <tbody class="metrics">
-                                    <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
-                                        <td class="table-column-wide">
-                                            <p class="metric--title">
-                                                {{ metric.name }}
-                                        </td>
-                                        <td>
-                                            <strong class="metrics--metric--rollup--small">
-                                                {{ metric.total_reported | number:2 }}
-                                            </strong>
-                                            <span class="metrics--metric--rollup--label">
+                                <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">
+                                            {{ metric.total_reported | number:2 }}
+                                        </strong>
+                                        <span class="metrics--metric--rollup--label">
                                                 {{ metric.unit.plural }}
                                             </span>
-                                     <!--       <br />
-                                            <span class="metrics--metric--rollup--label"
-                                                  data-ng-if="model.datum.show_progress || metric.show_progress">
-                                                of {{(metric.target || 0) | number:2 }}
-                                            </span>
-                                            -->
-                                        </td>
+                                    </td>
 
-                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                          <!--  <strong class="metrics--metric--percentage">
-                                                {{ metric.selfProgress.value * 100 | number:1 }}%
-                                            </strong>
-                                            -->
-                                        </td>
-                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
-                                      <!--      <progress-arc
-                                                size="32"
-                                                stroke="#2196F3"
-                                                stroke-width="4"
-                                                complete="metric.selfProgress.arcValue"
-                                                counter-clockwise="false"
-                                                background="rgba(0,0,0,0.2)">
-                                            </progress-arc>
-                                            -->
-                                        </td>
+                                    <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                        <!--  <strong class="metrics--metric--percentage">
+                                              {{ metric.selfProgress.value * 100 | number:1 }}%
+                                          </strong>
+                                          -->
+                                    </td>
+                                    <td data-ng-if="model.datum.show_progress || metric.show_progress">
 
+                                    </td>
 
-                                    </tr>
+                                </tr>
+
                                 </tbody>
 
                             </table>
@@ -200,52 +186,71 @@
                             </thead>
 
                             <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
+
+                                <tr class="metrics--metric"
+                                    data-ng-repeat="metric in page.metrics.generic | orderBy:'-percentComplete' track by $index"
+                                    data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
                                             {{ metric.name }}
                                         </p>
                                     </td>
-                                    <td style="width:200px; background-color: ;">
-                                        <strong class="metrics--metric--rollup--small">
+                                    <td style="width:200px;">
+                                        <strong class="metrics--metric--rollup--small"
+                                                data-ng-if="metric.total_reported > 0">
                                             {{ metric.total_reported | number:2 }}
                                         </strong>
-                                        <span class="metrics--metric--rollup--label">
+                                        <strong class="metrics--metric--rollup--small"
+                                                data-ng-if="metric.total_reported === 0">
+                                            0
+                                        </strong>
+                                        <span class="metrics--metric--rollup--label"
+                                              data-ng-if="metric.target > 0">
                                             / {{ metric.target | number:2 }}
-                                             {{ metric.unit.plural }}
+                                        </span>
+                                        <span class="metrics--metric--rollup--label"
+                                              data-ng-if="!metric.target && metric.agg_target > 0">
+                                            / {{ metric.agg_target | number:2 }}
+                                        </span>
+                                        <span class="metrics--metric--rollup--label">
+                                            {{ metric.unit.plural }}
                                         </span>
                                     </td>
-                                    <td data-ng-if="metric.target > 0 || metric.agg_target">
-                                        <strong class="metrics--metric--percentage">
-                                            {{ metric.precentage * 100 | number:1 }}%
+                                    <td data-ng-if="metric.target > 0 || metric.agg_target > 0">
+                                        <strong class="metrics--metric--percentage"
+                                                data-ng-if="metric.total_reported > 0 && metric.percentComplete < 1">
+                                            <1%
+                                        </strong>
+                                        <strong class="metrics--metric--percentage"
+                                                data-ng-if="metric.total_reported === 0 && metric.percentComplete < 1">
+                                            0%
+                                        </strong>
+                                        <strong class="metrics--metric--percentage"
+                                                data-ng-if="metric.percentComplete > 1">
+                                            {{ metric.percentComplete | number:0 }}%
                                         </strong>
                                     </td>
                                     <td data-ng-if="metric.target > 0 || metric.agg_target > 0">
                                         <progress-arc
-                                            size="32"
-                                            stroke="#2196F3"
-                                            stroke-width="4"
-                                            complete="metric.precentage"
-                                            counter-clockwise="false"
-                                            background="rgba(0,0,0,0.2)">
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="metric.arcValue"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
                                         </progress-arc>
                                     </td>
 
-                                      <!-- Program Target NOT Set-->
+                                    <!-- Program Target NOT Set-->
 
-                                        <td data-ng-if="metric.target == 0 && metric.agg_target == 0">
-                                            <span style="
-                                                    font-weight: bold;
-                                                    font-size: 9px;
-                                                "
-                                            >
-                                                No Target Set
-                                             </span>
-                                        </td>
-                                        <td data-ng-if="metric.target == 0 && metric.agg_target == 0">
+                                    <td data-ng-if="!metric.target && !metric.agg_target">
+                                        <span style="font-size: 0.9rem;">
+                                            No target set
+                                        </span>
+                                    </td>
 
-                                        </td>
                                 </tr>
+
                             </tbody>
 
                         </table>
@@ -258,30 +263,30 @@
 
                     <section class="pad shadow">
                         <a name="practiceTypes">
-                        <h2>Practices Types</h2>
+                            <h2>Practices Types</h2>
                         </a>
                         <p>
                             Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
                         </p>
 
-                           <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
+                        <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
                                                                         justify-content:left;
                                                                         align-items:left;
                                                                         overflow: auto;
                                                                         flex-wrap: wrap;
                                                                          "
-                             >
+                        >
 
-                                 <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search practices types">
+                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search practices types">
 
 
-                            </div>
+                        </div>
 
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
-                               >
+                            >
 
                                 <div class="card--content" >
 

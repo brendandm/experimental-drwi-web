@@ -319,21 +319,23 @@
 
                         self.metrics = successResponse.features;
 
-                        self.metrics.forEach(function(metric){
+                        self.metrics.forEach(function(metric) {
 
-                            if(metric.target > 0){
+                            Utility.calcProgress(metric, true);
 
-                                metric.precentage = metric.total_reported / metric.target;
-
-                            }else if(metric.agg_target > 0){
-
-                                metric.precentage = metric.total_reported / metric.agg_target;
-
-                            }else{
-
-                                metric.precentage = 0;
-
-                            }
+                            // if (metric.target && metric.target > 0) {
+                            //
+                            //     metric.percentComplete = Math.ceil((metric.total_reported / metric.target) * 100);
+                            //
+                            // } else if (metric.agg_target > 0) {
+                            //
+                            //     metric.percentComplete = Math.ceil(metric.total_reported / metric.agg_target);
+                            //
+                            // } else {
+                            //
+                            //     metric.percentComplete = 0;
+                            //
+                            // }
 
                         });
 
