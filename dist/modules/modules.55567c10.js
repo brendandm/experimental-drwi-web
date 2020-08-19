@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597266752302})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597866387871})
 
 ;
 /**
@@ -16779,11 +16779,6 @@ angular.module('FieldDoc')
 
                         return Account.userObject;
 
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            'id': $route.current.params.practiceId
-                        });
                     }
                 }
             });
@@ -20805,7 +20800,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('PracticeTargetController',
-        function($scope, Account, $location, $log, Practice, practice,
+        function($scope, Account, $location, $log, Practice,
                  $rootScope, $route, user, FilterStore, $timeout, SearchService,
                  MetricType, Model, $filter, $interval, Program) {
 
@@ -30065,21 +30060,33 @@ angular.module('FieldDoc')
 
                         console.log('Program metrics', successResponse);
 
-//                        successResponse.features.forEach(function(metric) {
-//
-//                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-//
-//                            metric.percentComplete = _percentComplete;
-//
-//                        });
-//
-//                        self.metrics = successResponse.features;
-
                         Utility.processMetrics(successResponse.features);
+
+                        self.metrics = successResponse.features;
+
+                        self.metrics.forEach(function(metric){
+
+                            if(metric.target > 0){
+
+                                metric.precentage = metric.total_reported / metric.target;
+
+                            }else if(metric.agg_target > 0){
+
+                                metric.precentage = metric.total_reported / metric.agg_target;
+
+                            }else{
+
+                                metric.precentage = 0;
+
+                            }
+
+                        });
 
                         self.metrics = Utility.groupByModel(successResponse.features);
 
                         console.log('self.metrics', self.metrics);
+
+
 
                     }, function(errorResponse) {
 
