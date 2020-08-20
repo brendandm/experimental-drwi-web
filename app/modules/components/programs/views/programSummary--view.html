@@ -31,8 +31,11 @@
 
                         <div class="last-modified-summary">
 
-                            <div data-ng-if="page.program.id && page.program.last_modified_by.first_name && page.program.last_modified_by.last_name" class="modtime">
-                                Last modified by {{ page.program.last_modified_by.first_name }} {{ page.program.last_modified_by.last_name }} on {{ page.program.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
+                            <div data-ng-if="page.program.id && page.program.last_modified_by.first_name && page.program.last_modified_by.last_name"
+                                 class="modtime">
+                                Last modified by {{ page.program.last_modified_by.first_name }} {{
+                                page.program.last_modified_by.last_name }} on {{ page.program.modified_on |
+                                date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
                             </div>
 
                             <div class="history-link-wrapper">
@@ -61,7 +64,9 @@
 
                             <div class="tag--group">
 
-                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                <div class="tag--pill"
+                                     data-ng-class="{'colorize': tag.color && tag.color.length === 7}"
+                                     data-ng-repeat="tag in page.tags">
                                     <div class="colorize" data-ng-if="tag.color">
                                         <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
                                         <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
@@ -83,22 +88,31 @@
                     <div style="position:relative;">
 
                         <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
-                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                            <div class="mapboxgl-layer-ctrl"
+                                 data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
                                 <i class="material-icons">
                                     layers
                                 </i>
                                 <div class="layer-group" data-ng-show="page.showLayerOptions">
                                     <form>
-                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
-                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        <label data-ng-repeat="style in page.mapStyles"
+                                               data-ng-class="{'active': page.activeStyle === $index}"
+                                               title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style"
+                                                   data-ng-model="page.activeStyle" data-ng-value="{{ $index }}"
+                                                   data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
                                         </label>
                                     </form>
                                     <form class="layers" data-ng-show="page.layers && page.layers.length">
-                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
-                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers"
+                                               data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}"
+                                                   data-ng-model="layer.selected" data-ng-value="{{ $index }}"
+                                                   data-ng-change="page.toggleLayer(layer)">
                                             <span> {{ layer.name }}</span>
                                             <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
-                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors"
+                                                     style="background: {{ color }};"></div>
                                             </div>
                                         </label>
                                     </form>
@@ -118,14 +132,17 @@
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
-                            <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
+                            <table class="table table-practices with-metrics"
+                                   data-ng-repeat="model in page.metrics.models">
 
                                 <thead>
                                 <tr>
                                     <th>
                                         <strong>{{ model.datum.name }}</strong>
                                         <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
-                                            The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                            The following metric values were generated using data and algorithms
+                                            supplied by the {{ model.datum.name }} model. You can find more information
+                                            about this model <a href="/models/{{ model.datum.id }}">here</a>.
                                         </p>
                                     </th>
                                 </tr>
@@ -142,7 +159,9 @@
                                 </thead>
 
                                 <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tr class="metrics--metric"
+                                    data-ng-repeat="metric in model.collection track by $index"
+                                    data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
                                             {{ metric.name }}
@@ -174,7 +193,8 @@
 
                         </div>
 
-                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;" data-ng-if="page.metrics && page.metrics.generic.length">
+                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;"
+                               data-ng-if="page.metrics && page.metrics.generic.length">
 
                             <thead>
                                 <tr>
@@ -196,26 +216,47 @@
                                         </p>
                                     </td>
                                     <td style="width:200px;">
+
+                                        <!-- Display `metric.total_reported` with two decimal
+                                        places when `metric.total_reported` is greater than 0. -->
+
                                         <strong class="metrics--metric--rollup--small"
                                                 data-ng-if="metric.total_reported > 0">
                                             {{ metric.total_reported | number:2 }}
                                         </strong>
+
+                                        <!-- Display `metric.total_reported` as `0` with no decimal
+                                        places when `metric.total_reported` is equal to 0. -->
+
                                         <strong class="metrics--metric--rollup--small"
                                                 data-ng-if="metric.total_reported === 0">
                                             0
                                         </strong>
+
+                                        <!-- Display absolute metric target with two decimal
+                                        places when absolute metric target is greater than 0. -->
+
                                         <span class="metrics--metric--rollup--label"
                                               data-ng-if="metric.target > 0">
                                             / {{ metric.target | number:2 }}
                                         </span>
+
+                                        <!-- Display aggregate metric target with two decimal
+                                        places when absolute target is null or equal to 0 and
+                                        the aggregate target is greater than 0. -->
+
                                         <span class="metrics--metric--rollup--label"
                                               data-ng-if="!metric.target && metric.agg_target > 0">
                                             / {{ metric.agg_target | number:2 }}
                                         </span>
                                         <span class="metrics--metric--rollup--label">
-                                            {{ metric.unit.plural }}
+                                            {{ metric.unit.plural || '' }}
                                         </span>
                                     </td>
+
+                                    <!-- Display percent complete when the absolute metric target OR
+                                    the aggregate metric target is greater than 0. -->
+
                                     <td data-ng-if="metric.target > 0 || metric.agg_target > 0">
                                         <strong class="metrics--metric--percentage"
                                                 data-ng-if="metric.total_reported > 0 && metric.percentComplete < 1">
@@ -230,6 +271,10 @@
                                             {{ metric.percentComplete | number:0 }}%
                                         </strong>
                                     </td>
+
+                                    <!-- Display progress arc when the absolute metric target OR
+                                    the aggregate metric target is greater than 0. -->
+
                                     <td data-ng-if="metric.target > 0 || metric.agg_target > 0">
                                         <progress-arc
                                                 size="32"
@@ -241,7 +286,8 @@
                                         </progress-arc>
                                     </td>
 
-                                    <!-- Program Target NOT Set-->
+                                    <!-- Display `no target set` text when the absolute metric target AND
+                                    the aggregate metric target are both null or less than 1. -->
 
                                     <td data-ng-if="!metric.target && !metric.agg_target">
                                         <span style="font-size: 0.9rem;">
@@ -263,30 +309,27 @@
 
                     <section class="pad shadow">
                         <a name="practiceTypes">
-                            <h2>Practices Types</h2>
+                            <h2>Practice types</h2>
                         </a>
                         <p>
-                            Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
+                            Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b>
+                            practice types in the <b>{{page.program.name}}</b> program.
                         </p>
 
-                        <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
-                                                                        justify-content:left;
-                                                                        align-items:left;
-                                                                        overflow: auto;
-                                                                        flex-wrap: wrap;
-                                                                         "
-                        >
+                        <div class="collection-search reveal fade-in t0" style="justify-content:left;
+                        align-items: center; overflow: auto; flex-wrap: wrap;">
 
-                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search practices types">
-
+                            <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter"
+                                   data-ng-if="!page.status.loading"
+                                   data-ng-model="page.queryToken"
+                                   placeholder="Search practice types">
 
                         </div>
 
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
-                            >
+                                data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)">
 
                                 <div class="card--content" >
 
@@ -296,11 +339,6 @@
                                         </label>
                                         <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
                                     </div>
-
-                                    <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
-                                        {{ practice.name }}
-                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                    </label> -->
 
                                     <div class="body">
                                         <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
@@ -316,7 +354,6 @@
                     </section>
 
                 </div>
-
 
             </div>
 
@@ -359,7 +396,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>

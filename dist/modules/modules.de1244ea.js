@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597869782994})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597949111701})
 
 ;
 /**
@@ -30064,21 +30064,23 @@ angular.module('FieldDoc')
 
                         self.metrics = successResponse.features;
 
-                        self.metrics.forEach(function(metric){
+                        self.metrics.forEach(function(metric) {
 
-                            if(metric.target > 0){
+                            Utility.calcProgress(metric, true);
 
-                                metric.precentage = metric.total_reported / metric.target;
-
-                            }else if(metric.agg_target > 0){
-
-                                metric.precentage = metric.total_reported / metric.agg_target;
-
-                            }else{
-
-                                metric.precentage = 0;
-
-                            }
+                            // if (metric.target && metric.target > 0) {
+                            //
+                            //     metric.percentComplete = Math.ceil((metric.total_reported / metric.target) * 100);
+                            //
+                            // } else if (metric.agg_target > 0) {
+                            //
+                            //     metric.percentComplete = Math.ceil(metric.total_reported / metric.agg_target);
+                            //
+                            // } else {
+                            //
+                            //     metric.percentComplete = 0;
+                            //
+                            // }
 
                         });
 
@@ -37536,8 +37538,6 @@ angular.module('FieldDoc')
                 console.log("geometry -->", geometry)
                 console.log("simplified -->", simplified)
 
-
-
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": simplified,
@@ -37552,10 +37552,7 @@ angular.module('FieldDoc')
                     }
                 };
 
-
-
                 // Build static map URL for Mapbox API
-
 
                 console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
@@ -37565,6 +37562,62 @@ angular.module('FieldDoc')
                     ')/auto/400x200@2x?access_token=',
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
+
+            },
+            getDenominator: function(metric, global) {
+
+                if (global) {
+
+                    if (typeof metric.target === 'number' &&
+                        metric.target > 0) {
+
+                        return metric.target;
+
+                    } else {
+
+                        return metric.agg_target;
+
+                    }
+
+                }
+
+                return metric.agg_target || metric.self_target;
+
+            },
+            getNumerator: function(metric, global) {
+
+                if (global) {
+
+                    return metric.total_reported;
+
+                }
+
+                return metric.current_value;
+
+            },
+            calcProgress: function(metric, global) {
+
+                var numerator = this.getNumerator(metric, global);
+
+                var denominator = this.getDenominator(metric, global);
+
+                if (numerator >= 0 && (typeof denominator === 'number' && denominator > 0)) {
+
+                    var progress = (numerator / denominator);
+
+                    metric.percentComplete = Math.round(progress * 100);
+
+                    metric.arcValue = (progress > 1) ? 1 : progress;
+
+                } else {
+
+                    metric.percentComplete = -1;
+
+                    metric.arcValue = 0;
+
+                }
+
+                return metric;
 
             },
             processMetrics: function(arr) {
