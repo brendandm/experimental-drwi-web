@@ -108,8 +108,6 @@
 
                     <!-- Map -->
 
-                    <!-- <div class="map--module shadow reveal fade-in t1" style="position:relative;" data-ng-include="'/templates/primaryMap--view.html'"></div> -->
-
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
                             <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
@@ -402,8 +400,7 @@
 
                                        "
                                class="add--new--wrapper"
-                               data-ng-if="page.permissions.can_edit"
-                          >
+                               data-ng-if="page.permissions.can_edit">
 
                             <a title="Create practice" class="add--new--btn" data-ng-click="page.presentChildModal('practice')" style="float:right; width:56px; height:56px;">
                                 <i class="material-icons" >
@@ -419,8 +416,8 @@
                                 height:56px;
                                 display:block;
                                 min-width:740px;
-                            "
-                >
+                            ">
+
                     <div style="
                                 margin-left:30px;
                                 margin-top:24px;
@@ -428,22 +425,20 @@
                                 float:right;
 
                                 "
-                         data-ng-if="page.permissions.can_edit"
-                    >
+                         data-ng-if="page.permissions.can_edit">
                         <a class="snapshot--title" title="Batch Delete"
-                           href="/sites/{{ page.site.id }}/batch-delete"
-                           >
+                           href="/sites/{{ page.site.id }}/batch-delete">
                                 <i class="material-icons" style="color:#666666;">
                                       delete_sweep
                                 </i>
                         </a>
-
 
                     </div>
 
                     <div  data-ng-include="'/templates/pagination-view.html'"></div>
 
                 </div>
+
                 <div style="padding-top:10px;">
                    <div style="border:0px solid blue; display:block;">
                      <ul class="snapshot--cards list-unstyled">
@@ -496,13 +491,6 @@
                                         </i>
                                     </a>
 
-
-                                   <!-- <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
-                                        <i class="material-icons">
-                                            insert_photo
-                                        </i>
-                                    </a>
-                                    -->
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
@@ -532,8 +520,7 @@
 
                     </li>
 
-
-                    <li data-ng-if="!page.practices.length" class="card" data-ng-if="page.permissions.can_edit">
+                    <li data-ng-if="!page.practices.length && page.permissions.can_edit" class="card">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.presentChildModal('practice')" title="Create practice">
@@ -545,15 +532,13 @@
                         </div>
                     </li>
 
-
                 </ul>
                     </div>
                 </div>
                  <div style="
                         margin-top  :-20px;
                         min-width   :740px;
-                    "
-                >
+                    ">
                     <div data-ng-include="'/templates/pagination-view.html'"></div>
                 </div>
             </section>
@@ -564,8 +549,6 @@
                     Active tasks
                     <a href="#" data-ng-click="page.hideTasks()" style="display: inline-block; font-size: 0.5em; margin-left: 1em;">Dismiss</a>
                 </h2>
-
-                <!-- <a href="#" data-ng-click="page.hideTasks()">Dismiss</a> -->
 
                 <div class="features--container" style="padding: 0;">
 
@@ -600,9 +583,6 @@
                                 <td style="color: #616161; vertical-align: middle;">
                                     <span>{{ task.status }}</span>
                                     <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
-                                    <!-- <i class="material-icons">
-                                    remove_circle
-                                    </i> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -612,79 +592,13 @@
 
             </section>
 
+            <!-- Begin practice batch import -->
 
-            <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
-                data-ng-if="page.permissions.can_edit"
-            >
+            <div batch-upload feature-type="practice" form-action="page.uploadShapefile()"
+                 model="page.fileImport" upload-error="page.uploadError"
+                 data-ng-if="page.permissions.can_edit"></div>
 
-                <form role="form" class="form" id="form--practice-collection" name="form--practice-collection"
-                      style="position: relative; display:block; border:0px solid purple;
-                             width:100%; min-width:300px; max-width:1200px; " data-ng-submit="page.uploadShapefile()" >
-
-                    <!-- Shapefile input -->
-                    <div class="form-field" style="border:0px solid blue; float:left; display:inline block; width:100%;">
-
-                        <p style="font-style: normal; font-size: 1em; margin-top: 1.5em; border:0px solid green;">
-                            <strong>Practice Batch Import</strong>
-                        </p>
-
-                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-
-                            Batch Uploads allow you to upload polygons for multiple practices simultaneously.
-                            After upload, each record will display as a separate practice tile.
-
-                        </p>
-                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-
-                            FieldDoc accepts .zip files that archive  ESRI .shp, .shx, .dbg and a .prj file. The project should be WGS1984.
-                            GeoJSON files must use the json or .geojson file extensions and follow the format described in this specification.
-
-                        </p>
-
-                          <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-
-                            Batch Uploads do not support Z-Dimensions.
-                              If your file contains a Z-Dimensions, please remove it prior to uploading to avoid potential errors.
-
-                        </p>
-
-                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-
-                           Batch importing is optimized for 500 practices or less. Refer to our help documentation for more guidance on batch imports and upload requirements.
-
-                        </p>
-
-                        <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" />
-                        <!--
-                         <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" file-on-change="page.uploadShapefile()" />
-                        -->
-
-                        <!--
-                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-                            Regardless of type, file uploads cannot exceed 100MB. For shapefile archives,
-                            this is the maximum total size of all <strong>un-compressed</strong> files.
-                            If your import exceeds the 100MB limit, <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a>
-                            and we’ll help you bring the data online.
-                        </p>
-                        -->
-                    </div>
-
-
-                    <div class="save--action--wrapper save--action--bottom">
-                        <button type="submit" data-ng-disabled="page.status.processing">
-                            <i class="material-icons" data-ng-if="page.status.processing">
-                                more_horiz
-                            </i>
-                            <i class="material-icons" data-ng-if="!page.status.processing" >
-                                done
-                            </i>
-                        </button>
-                    </div>
-
-                </form>
-
-            </section>
-
+            <!-- End practice batch import -->
 
         </div>
 

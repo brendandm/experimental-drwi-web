@@ -121,8 +121,6 @@
                 };
                 /*END Pagniation vars*/
 
-
-
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -1039,12 +1037,11 @@
 
                 };
 
+                //
+                // Begin batch import methods
+                //
 
-                /*
-                START BATCH UPLOAD METHODS
-                */
                 self.uploadShapefile = function() {
-
 
                     /*Cast the file into an array
                     could possibly remove this with reworks
@@ -1075,8 +1072,6 @@
 
                     var fileData = new FormData();
 
-
-
                     fileData.append('file', self.fileImport[0]);
 
                     fileData.append('feature_type', 'practice');
@@ -1104,8 +1099,6 @@
 
                             $timeout(closeAlerts, 2000);
 
-                            document.getElementById("shapefile").value = "";
-
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -1120,9 +1113,15 @@
 
                             }, 1000);
 
+                            self.fileImport = null;
+
                         }, function(errorResponse) {
 
                             console.log('Upload error', errorResponse);
+
+                            self.uploadError = errorResponse;
+
+                            self.fileImport = null;
 
                             self.alerts = [{
                                 'type': 'error',
@@ -1144,7 +1143,7 @@
                 };
 
                 self.reloadPage = function() {
-                    location.reload();
+                    $location.reload();
                 };
 
                 self.hideTasks = function() {
@@ -1156,14 +1155,12 @@
                         $interval.cancel(self.taskPoll);
 
                     }
+
                     $timeout(function() {
 
                         self.loadPractices();
-                        //      self.reloadPage();
-                        //    self.loadSite();
 
-                    }, 500);
-
+                    }, 100);
 
                 };
 
@@ -1178,10 +1175,21 @@
 
                             console.log('Task.get response', response);
 
-                            if (response.status &&
-                                response.status === 'complete') {
+                            if (response.status && response.status === 'complete') {
 
                                 self.hideTasks();
+
+                                self.fileImport = null;
+
+                            } else if (response.status && response.status === 'failed') {
+
+                                self.hideTasks();
+
+                                self.uploadError = {
+                                    message: response.error
+                                };
+
+                                self.fileImport = null;
 
                             }
 
@@ -1189,47 +1197,20 @@
 
                     } else {
 
-                        return Practice.tasks({
-                            id: $route.current.params.practiceId
-                        }).$promise.then(function(response) {
-
-                            console.log('Task.get response', response);
-
-                            self.pendingTasks = response.features;
-
-                            if (self.pendingTasks.length < 1) {
-
-                                console.log("FOUR FOUR");
-
-                                //self.loadSite();
-
-                                $timeout(function() {
-                                    self.loadPractices();
-                                    //  self.reloadPage();
-                                    //     self.loadSite();
-
-                                }, 500);
-
-                                $interval.cancel(self.taskPoll);
-
-                            }
-
-                        });
+                        //
 
                     }
 
                 };
 
-                /*
-                END BATCH UPLOAD METHODS
-                */
-
-
-
+                //
+                // End batch import methods
+                //
 
                 //
                 // Verify Account information for proper UI element display
                 //
+
                 if (Account.userObject && user) {
 
                     user.$promise.then(function(userResponse) {

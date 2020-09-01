@@ -1522,22 +1522,13 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        // if (response.status &&
-                        //     response.status === 'complete') {
-                        //
-                        //     self.hideTasks();
-                        //
-                        // }
-
                         if (response.status && response.status === 'complete') {
 
                             self.hideTasks(featureType);
 
                             self.fileImport = null;
 
-                        }
-
-                        if (response.status && response.status === 'failed') {
+                        } else if (response.status && response.status === 'failed') {
 
                             self.hideTasks(featureType);
 
