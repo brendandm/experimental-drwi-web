@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1597949860966})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1598998242347})
 
 ;
 /**
@@ -6330,18 +6330,31 @@ angular.module('FieldDoc')
 
             };
 
+            //
+            // Begin batch import methods
+            //
 
-            /*
-            START SITES BATCH UPLOAD
-                */
-            self.uploadShapefile = function() {
+            self.uploadShapefile = function(featureType) {
+
+                console.log(
+                    'self.uploadShapefile:featureType',
+                    featureType
+                );
+
+                console.log(
+                    'self.uploadShapefile:fileImport',
+                    self.fileImport
+                );
 
                 /*Cast the file into an array
                 could possibly remove this with reworks
                 to the Upload directive
                 */
+
                 var tempFileImport = [];
+
                 tempFileImport.push(self.fileImport);
+
                 self.fileImport = tempFileImport;
 
                 if (!self.fileImport ||
@@ -6366,9 +6379,7 @@ angular.module('FieldDoc')
 
                 fileData.append('file', self.fileImport[0]);
 
-                fileData.append('feature_type', 'site');
-
-                //fileData.append('site_id', self.site.id);
+                fileData.append('feature_type', featureType);
 
                 fileData.append('collection', true);
 
@@ -6391,8 +6402,6 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
-                        document.getElementById("shapefile").value = "";
-
                         if (successResponse.task) {
 
                             self.pendingTasks = [
@@ -6403,13 +6412,19 @@ angular.module('FieldDoc')
 
                         self.taskPoll = $interval(function() {
 
-                            self.fetchTasks(successResponse.task.id);
+                            self.fetchTasks(successResponse.task.id, featureType);
 
                         }, 1000);
+
+                        self.fileImport = null;
 
                     }, function(errorResponse) {
 
                         console.log('Upload error', errorResponse);
+
+                        self.uploadError = errorResponse;
+
+                        self.fileImport = null;
 
                         self.alerts = [{
                             'type': 'error',
@@ -6430,7 +6445,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.hideTasks = function() {
+            self.hideTasks = function(featureType) {
 
                 self.pendingTasks = [];
 
@@ -6440,15 +6455,27 @@ angular.module('FieldDoc')
 
                 }
 
-                $timeout(function() {
-                    // self.reloadPage();
-                    self.loadSites();
+                if (featureType === 'practice') {
 
-                }, 1000);
+                    $timeout(function() {
+
+                        self.loadPractices();
+
+                    }, 100);
+
+                } else {
+
+                    $timeout(function() {
+
+                        self.loadSites();
+
+                    }, 100);
+
+                }
 
             };
 
-            self.fetchTasks = function(taskId) {
+            self.fetchTasks = function(taskId, featureType) {
 
                 if (taskId &&
                     typeof taskId === 'number') {
@@ -6459,10 +6486,21 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        if (response.status &&
-                            response.status === 'complete') {
+                        if (response.status && response.status === 'complete') {
 
-                            self.hideTasks();
+                            self.hideTasks(featureType);
+
+                            self.fileImport = null;
+
+                        } else if (response.status && response.status === 'failed') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
 
                         }
 
@@ -6470,211 +6508,18 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    return Site.tasks({
-                        id: $route.current.params.practiceId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        self.pendingTasks = response.features;
-
-                        if (self.pendingTasks.length < 1) {
-
-
-                            $timeout(function() {
-                                // self.reloadPage();
-                                self.loadSites();
-
-                            }, 1000);
-
-                            $interval.cancel(self.taskPoll);
-
-                        }
-
-                    });
+                    //
 
                 }
 
             };
 
-            /*
-            END SITES BATCH UPLOAD
-            */
-
-            /*
-            START PRACTICE BATCH UPLOAD METHODS
-            */
-            self.uploadPracticeShapefile = function() {
-
-
-                /*Cast the file into an array
-                could possibly remove this with reworks
-                to the Upload directive
-                */
-                var tempFileImport = [];
-                tempFileImport.push(self.practiceFileImport);
-                self.practiceFileImport = tempFileImport;
-
-                if (!self.practiceFileImport ||
-                    !self.practiceFileImport.length
-                ) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Please select a file.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    return false;
-
-                }
-
-                self.progressMessage = 'Uploading your file...';
-
-                var fileData = new FormData();
-
-                fileData.append('file', self.practiceFileImport[0]);
-
-                fileData.append('feature_type', 'practice');
-
-                //   fileData.append('site_id', self.site.id);
-
-                fileData.append('collection', true);
-
-                fileData.append('project_id', self.project.id);
-
-                console.log('fileData', fileData);
-
-                try {
-
-                    Shapefile.upload({}, fileData, function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Upload complete. Processing data...',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                        document.getElementById("practiceShapefile").value = "";
-
-                        if (successResponse.task) {
-
-                            self.pendingTasks = [
-                                successResponse.task
-                            ];
-
-                        }
-
-                        self.taskPoll = $interval(function() {
-
-                            self.fetchTasks(successResponse.task.id);
-
-                        }, 1000);
-
-                    }, function(errorResponse) {
-
-                        console.log('Upload error', errorResponse);
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'The file could not be processed.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                } catch (error) {
-
-                    console.log('Shapefile upload error', error);
-
-                }
-
-            };
-
-            self.hidePracticeTasks = function() {
-
-                self.pendingPracticeTasks = [];
-
-                if (typeof self.taskPoll !== 'undefined') {
-
-                    $interval.cancel(self.taskPoll);
-
-                }
-                $timeout(function() {
-
-                    self.loadPractices();
-
-                }, 500);
-
-            };
-
-            self.fetchPracticeTasks = function(taskId) {
-
-                if (taskId &&
-                    typeof taskId === 'number') {
-
-                    return Task.get({
-                        id: taskId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        if (response.status &&
-                            response.status === 'complete') {
-
-                            self.hidePracticeTasks();
-
-                        }
-
-                    });
-
-                } else {
-
-                    return Practice.tasks({
-                        id: $route.current.params.practiceId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        self.pendingTasks = response.features;
-
-                        if (self.pendingTasks.length < 1) {
-
-                            console.log("FOUR FOUR");
-
-                            $timeout(function() {
-
-                                self.loadPractices();
-
-                            }, 500);
-
-                            $interval.cancel(self.taskPoll);
-
-                        }
-
-                    });
-
-                }
-
-            };
-
-            /*
-            END PRACTICE BATCH UPLOAD METHODS
-            */
+            //
+            // End batch import methods
+            //
 
             self.reloadPage = function() {
-                location.reload();
+                $location.reload();
             };
 
             //
@@ -12824,8 +12669,6 @@ angular.module('FieldDoc')
                 };
                 /*END Pagniation vars*/
 
-
-
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -13742,12 +13585,11 @@ angular.module('FieldDoc')
 
                 };
 
+                //
+                // Begin batch import methods
+                //
 
-                /*
-                START BATCH UPLOAD METHODS
-                */
                 self.uploadShapefile = function() {
-
 
                     /*Cast the file into an array
                     could possibly remove this with reworks
@@ -13778,8 +13620,6 @@ angular.module('FieldDoc')
 
                     var fileData = new FormData();
 
-
-
                     fileData.append('file', self.fileImport[0]);
 
                     fileData.append('feature_type', 'practice');
@@ -13807,8 +13647,6 @@ angular.module('FieldDoc')
 
                             $timeout(closeAlerts, 2000);
 
-                            document.getElementById("shapefile").value = "";
-
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -13823,9 +13661,15 @@ angular.module('FieldDoc')
 
                             }, 1000);
 
+                            self.fileImport = null;
+
                         }, function(errorResponse) {
 
                             console.log('Upload error', errorResponse);
+
+                            self.uploadError = errorResponse;
+
+                            self.fileImport = null;
 
                             self.alerts = [{
                                 'type': 'error',
@@ -13847,7 +13691,7 @@ angular.module('FieldDoc')
                 };
 
                 self.reloadPage = function() {
-                    location.reload();
+                    $location.reload();
                 };
 
                 self.hideTasks = function() {
@@ -13859,14 +13703,12 @@ angular.module('FieldDoc')
                         $interval.cancel(self.taskPoll);
 
                     }
+
                     $timeout(function() {
 
                         self.loadPractices();
-                        //      self.reloadPage();
-                        //    self.loadSite();
 
-                    }, 500);
-
+                    }, 100);
 
                 };
 
@@ -13881,10 +13723,21 @@ angular.module('FieldDoc')
 
                             console.log('Task.get response', response);
 
-                            if (response.status &&
-                                response.status === 'complete') {
+                            if (response.status && response.status === 'complete') {
 
                                 self.hideTasks();
+
+                                self.fileImport = null;
+
+                            } else if (response.status && response.status === 'failed') {
+
+                                self.hideTasks();
+
+                                self.uploadError = {
+                                    message: response.error
+                                };
+
+                                self.fileImport = null;
 
                             }
 
@@ -13892,47 +13745,20 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        return Practice.tasks({
-                            id: $route.current.params.practiceId
-                        }).$promise.then(function(response) {
-
-                            console.log('Task.get response', response);
-
-                            self.pendingTasks = response.features;
-
-                            if (self.pendingTasks.length < 1) {
-
-                                console.log("FOUR FOUR");
-
-                                //self.loadSite();
-
-                                $timeout(function() {
-                                    self.loadPractices();
-                                    //  self.reloadPage();
-                                    //     self.loadSite();
-
-                                }, 500);
-
-                                $interval.cancel(self.taskPoll);
-
-                            }
-
-                        });
+                        //
 
                     }
 
                 };
 
-                /*
-                END BATCH UPLOAD METHODS
-                */
-
-
-
+                //
+                // End batch import methods
+                //
 
                 //
                 // Verify Account information for proper UI element display
                 //
+
                 if (Account.userObject && user) {
 
                     user.$promise.then(function(userResponse) {
@@ -14248,7 +14074,7 @@ angular.module('FieldDoc')
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Site, site, $rootScope, $route,
                 $scope, $timeout, $interval, user, Shapefile,
-                Utility, Task) {
+                Utility, Task, $window) {
 
                 var self = this;
 
@@ -14308,10 +14134,36 @@ angular.module('FieldDoc')
 
                             console.log('Task.get response', response);
 
-                            if (response.status &&
-                                response.status === 'complete') {
+                            // if (response.status &&
+                            //     response.status === 'complete') {
+                            //
+                            //     self.hideTasks();
+                            //
+                            // }
+
+                            if (response.status && response.status === 'complete') {
+
+                                $window.scrollTo(0, 0);
+
+                                self.map = undefined;
 
                                 self.hideTasks();
+
+                                self.fileImport = null;
+
+                                self.loadPractice();
+
+                            }
+
+                            if (response.status && response.status === 'failed') {
+
+                                self.hideTasks();
+
+                                self.uploadError = {
+                                    message: response.error
+                                };
+
+                                self.fileImport = null;
 
                             }
 
@@ -14391,6 +14243,10 @@ angular.module('FieldDoc')
 
                             console.log('successResponse', successResponse);
 
+                            self.uploadError = undefined;
+
+                            self.fileImport = null;
+
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
@@ -14417,6 +14273,10 @@ angular.module('FieldDoc')
                         }, function(errorResponse) {
 
                             console.log('Upload error', errorResponse);
+
+                            self.uploadError = errorResponse;
+
+                            self.fileImport = null;
 
                             self.alerts = [{
                                 'type': 'error',
@@ -14629,6 +14489,8 @@ angular.module('FieldDoc')
                         console.log('self.site', successResponse);
 
                         self.site = successResponse;
+
+                        self.featureType = 'site';
 
                         self.dimension = Utility.measureGeometry(self.site);
 
@@ -16689,33 +16551,33 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    practice: function(Practice, $route) {
-
-                        var exclude = [
-                            'centroid',
-                            'creator',
-                            'dashboards',
-                            'extent',
-                            'geometry',
-                            'last_modified_by',
-                            'members',
-                            'metric_types',
-                            'partnerships',
-                            'practices',
-                            'practice_types',
-                            'properties',
-                            'targets',
-                            'tasks',
-                            'type',
-                            'sites'
-                        ].join(',');
-
-                        return Practice.get({
-                            id: $route.current.params.practiceId,
-                            exclude: exclude
-                        });
-
-                    }
+                    // practice: function(Practice, $route) {
+                    //
+                    //     var exclude = [
+                    //         'centroid',
+                    //         'creator',
+                    //         'dashboards',
+                    //         'extent',
+                    //         'geometry',
+                    //         'last_modified_by',
+                    //         'members',
+                    //         'metric_types',
+                    //         'partnerships',
+                    //         'practices',
+                    //         'practice_types',
+                    //         'properties',
+                    //         'targets',
+                    //         'tasks',
+                    //         'type',
+                    //         'sites'
+                    //     ].join(',');
+                    //
+                    //     return Practice.get({
+                    //         id: $route.current.params.practiceId,
+                    //         exclude: exclude
+                    //     });
+                    //
+                    // }
                 }
             })
             .when('/practices/:practiceId/model-data', {
@@ -17931,9 +17793,7 @@ angular.module('FieldDoc')
                  Site, Practice, practice, $q, $rootScope, $route,
                  $scope, $timeout, $interval, site, user, Shapefile,
                  Utility, Task, LayerService, MapManager,
-                 Project
-
-        ) {
+                 Project, $window) {
 
             var self = this;
 
@@ -17948,7 +17808,6 @@ angular.module('FieldDoc')
             self.map = undefined;
 
             $rootScope.page = {};
-
 
             self.showElements = function() {
 
@@ -18060,11 +17919,35 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                practice.$promise.then(function(successResponse) {
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    // 'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metric_types',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Practice.get({
+                    id: $route.current.params.practiceId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
                     self.practice = successResponse;
+
+                    self.featureType = 'practice';
 
                     self.dimension = Utility.measureGeometry(self.practice);
 
@@ -18088,7 +17971,6 @@ angular.module('FieldDoc')
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-
                     self.loadSites();
 
                     self.showElements();
@@ -18101,15 +17983,13 @@ angular.module('FieldDoc')
 
             };
 
-
             /* START PRACTICES PANEL */
             self.loadPractices = function() {
                 Project.practices({
                     id: self.practice.project.id,
                     limit: 24,
                     page: 1,
-                    currentTime: Date.UTC()
-
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log("PRACTICE RESPONSE");
@@ -18214,12 +18094,10 @@ angular.module('FieldDoc')
                 console.log('self.loadSites --> Starting...');
 
                 Project.sites({
-
                     id: self.practice.project.id,
                     limit: 24,
                     page: 1,
-                    currentTime: Date.UTC()
-
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
@@ -18268,10 +18146,29 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        if (response.status &&
-                            response.status === 'complete') {
+                        if (response.status && response.status === 'complete') {
+
+                            $window.scrollTo(0, 0);
+
+                            self.map = undefined;
 
                             self.hideTasks();
+
+                            self.fileImport = null;
+
+                            self.loadPractice();
+
+                        }
+
+                        if (response.status && response.status === 'failed') {
+
+                            self.hideTasks();
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
 
                         }
 
@@ -18290,8 +18187,6 @@ angular.module('FieldDoc')
                         if (self.pendingTasks.length < 1) {
 
                             self.loadSite();
-
-                            //   self.loadSiteDirect();
 
                             $interval.cancel(self.taskPoll);
 
@@ -18377,9 +18272,15 @@ angular.module('FieldDoc')
 
                         }, 1000);
 
+                        self.fileImport = null;
+
                     }, function(errorResponse) {
 
                         console.log('Upload error', errorResponse);
+
+                        self.uploadError = errorResponse;
+
+                        self.fileImport = null;
 
                         self.alerts = [{
                             'type': 'error',
@@ -18395,6 +18296,8 @@ angular.module('FieldDoc')
                 } catch (error) {
 
                     console.log('Shapefile upload error', error);
+
+                    self.fileImport = null;
 
                 }
 
@@ -18465,7 +18368,7 @@ angular.module('FieldDoc')
 
                 console.log("Save Geometry", self.practice);
 
-                if(self.practice.geometry != null && self.practice.geometry != undefined) {
+                if(self.practice.geometry !== null) {
 
                     self.practice.$update().then(function (successResponse) {
 
@@ -18482,8 +18385,10 @@ angular.module('FieldDoc')
 
                         self.practiceType = successResponse.practice_type;
 
-                        if(self.states.has_targets == false){
+                        if(!self.states.has_targets){
+
                             $timeout(railsRedirection,3000);
+
                         }
 
                         self.showElements();
@@ -18619,23 +18524,6 @@ angular.module('FieldDoc')
 
                 }
 
-                /*      if(self.site.geometry !== null &&
-                          self.site.geometry !== 'undefined'){
-
-                          console.log("ADDING SITE TO MAP");
-
-                          MapManager.addFeature(
-                                      self.map,
-                                      self.site,
-                                      'geometry',
-                                      true,
-                                      false,
-                                      "site");
-
-                      }else{
-                          console.log("No Site can be added to Map");
-                      }
-                  */
             };
 
             self.switchMapStyle = function(styleId, index) {
@@ -18669,7 +18557,6 @@ angular.module('FieldDoc')
                 }
 
                 self.map.setStyle(self.mapStyles[index].url);
-
 
             };
 
@@ -18726,7 +18613,7 @@ angular.module('FieldDoc')
                     if(self.site != null && self.site.geometry != null){
 
                         if(self.practice.geometry == null
-                            || self.practice.geometry == 'undefined'
+                            || self.practice.geometry === 'undefined'
                         ){
                             var bounds = turf.bbox(self.site.geometry);
 
@@ -18746,7 +18633,7 @@ angular.module('FieldDoc')
                             'site'
                         );
                     }else if(self.practice.geometry == null
-                        || self.practice.geometry == 'undefined'
+                        || self.practice.geometry === 'undefined'
                     ){
                         if(self.practice.project.extent != null){
 
@@ -18762,7 +18649,6 @@ angular.module('FieldDoc')
 
 
                         }
-
 
                         MapManager.addFeature(
                             self.map,
@@ -35092,17 +34978,30 @@ angular.module('FieldDoc')
                 return arr;
 
             },
-            addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
+            clearLayers: function(map) {
 
-                //  console.log("A");
+                var layers = map.getStyle().layers;
 
-                if (fitBounds === null ||
+                layers.forEach(function (layer) {
 
-                    typeof fitBounds === 'undefined') {
-                    //     console.log("B");
+                    if (layer.id.indexOf('feature') >= 0) {
+
+                        map.removeLayer(layer.id);
+
+                    }
+
+                });
+
+            },
+            addFeature: function(map, feature, attribute, addToMap,
+                                 fitBounds, featureType = null) {
+
+                if (fitBounds === null || typeof fitBounds === 'undefined') {
+
                     fitBounds = true;
 
                 }
+
                 /*Check feature type to set color*/
 
                 var geometryFillColor           = '#06aadf';
@@ -39916,6 +39815,59 @@ angular.module('FieldDoc')
                             }
 
                         });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function () {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('batchUpload', [
+            'environment',
+            '$window',
+            '$rootScope',
+            '$routeParams',
+            '$filter',
+            '$parse',
+            '$location',
+            'Practice',
+            '$timeout',
+            function (environment, $window, $rootScope, $routeParams, $filter,
+                      $parse, $location, Practice, $timeout) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'featureType': '@',
+                        'model': '=?',
+                        'formAction': '&',
+                        'uploadError': '=?'
+                    },
+                    templateUrl: function (elem, attrs) {
+
+                        return 'modules/shared/directives/batch-upload/batchUpload--view.html?t=' + environment.version;
+
+                    },
+                    link: function (scope, element, attrs) {
+
+                        //
+                        // Additional scope vars.
+                        //
+
+                        scope.uploadFile = function() {
+
+                            scope.formAction({
+                                _page: scope.page
+                            });
+
+                        };
 
                     }
 

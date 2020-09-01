@@ -12,8 +12,8 @@
         <span style="display: block; font-size: 0.9rem; margin-top: 1rem;">The estimated {{ options.label ||
             'extent' }} was calculated using the geometry displayed on the map above. It may differ from the actual
             {{ featureType }} {{ options.label || 'extent' }} stored in FieldDoc and/or the {{ options.label ||
-            'extent' }} of this {{ featureType }} as determined by
-            other systems that process geospatial data.</span>
+            'extent' }} of this {{ featureType }} as determined by other systems that process geospatial data. Note
+            that FieldDoc uses the World Geodetic System (WGS84, EPSG:4326) as its reference coordinate system.</span>
     </div>
     <div data-ng-if="!options.measurement">
         <em>Unable to calculate estimated extent.</em>
