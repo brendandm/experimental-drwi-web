@@ -11,9 +11,7 @@ angular.module('FieldDoc')
                  Site, Practice, practice, $q, $rootScope, $route,
                  $scope, $timeout, $interval, site, user, Shapefile,
                  Utility, Task, LayerService, MapManager,
-                 Project
-
-        ) {
+                 Project, $window) {
 
             var self = this;
 
@@ -28,7 +26,6 @@ angular.module('FieldDoc')
             self.map = undefined;
 
             $rootScope.page = {};
-
 
             self.showElements = function() {
 
@@ -140,11 +137,35 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                practice.$promise.then(function(successResponse) {
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    // 'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metric_types',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Practice.get({
+                    id: $route.current.params.practiceId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
                     self.practice = successResponse;
+
+                    self.featureType = 'practice';
 
                     self.dimension = Utility.measureGeometry(self.practice);
 
@@ -168,7 +189,6 @@ angular.module('FieldDoc')
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-
                     self.loadSites();
 
                     self.showElements();
@@ -181,15 +201,13 @@ angular.module('FieldDoc')
 
             };
 
-
             /* START PRACTICES PANEL */
             self.loadPractices = function() {
                 Project.practices({
                     id: self.practice.project.id,
                     limit: 24,
                     page: 1,
-                    currentTime: Date.UTC()
-
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log("PRACTICE RESPONSE");
@@ -294,12 +312,10 @@ angular.module('FieldDoc')
                 console.log('self.loadSites --> Starting...');
 
                 Project.sites({
-
                     id: self.practice.project.id,
                     limit: 24,
                     page: 1,
-                    currentTime: Date.UTC()
-
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
@@ -348,10 +364,29 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        if (response.status &&
-                            response.status === 'complete') {
+                        if (response.status && response.status === 'complete') {
+
+                            $window.scrollTo(0, 0);
+
+                            self.map = undefined;
 
                             self.hideTasks();
+
+                            self.fileImport = null;
+
+                            self.loadPractice();
+
+                        }
+
+                        if (response.status && response.status === 'failed') {
+
+                            self.hideTasks();
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
 
                         }
 
@@ -370,8 +405,6 @@ angular.module('FieldDoc')
                         if (self.pendingTasks.length < 1) {
 
                             self.loadSite();
-
-                            //   self.loadSiteDirect();
 
                             $interval.cancel(self.taskPoll);
 
@@ -457,9 +490,15 @@ angular.module('FieldDoc')
 
                         }, 1000);
 
+                        self.fileImport = null;
+
                     }, function(errorResponse) {
 
                         console.log('Upload error', errorResponse);
+
+                        self.uploadError = errorResponse;
+
+                        self.fileImport = null;
 
                         self.alerts = [{
                             'type': 'error',
@@ -475,6 +514,8 @@ angular.module('FieldDoc')
                 } catch (error) {
 
                     console.log('Shapefile upload error', error);
+
+                    self.fileImport = null;
 
                 }
 
@@ -545,7 +586,7 @@ angular.module('FieldDoc')
 
                 console.log("Save Geometry", self.practice);
 
-                if(self.practice.geometry != null && self.practice.geometry != undefined) {
+                if(self.practice.geometry !== null) {
 
                     self.practice.$update().then(function (successResponse) {
 
@@ -562,8 +603,10 @@ angular.module('FieldDoc')
 
                         self.practiceType = successResponse.practice_type;
 
-                        if(self.states.has_targets == false){
+                        if(!self.states.has_targets){
+
                             $timeout(railsRedirection,3000);
+
                         }
 
                         self.showElements();
@@ -699,23 +742,6 @@ angular.module('FieldDoc')
 
                 }
 
-                /*      if(self.site.geometry !== null &&
-                          self.site.geometry !== 'undefined'){
-
-                          console.log("ADDING SITE TO MAP");
-
-                          MapManager.addFeature(
-                                      self.map,
-                                      self.site,
-                                      'geometry',
-                                      true,
-                                      false,
-                                      "site");
-
-                      }else{
-                          console.log("No Site can be added to Map");
-                      }
-                  */
             };
 
             self.switchMapStyle = function(styleId, index) {
@@ -749,7 +775,6 @@ angular.module('FieldDoc')
                 }
 
                 self.map.setStyle(self.mapStyles[index].url);
-
 
             };
 
@@ -806,7 +831,7 @@ angular.module('FieldDoc')
                     if(self.site != null && self.site.geometry != null){
 
                         if(self.practice.geometry == null
-                            || self.practice.geometry == 'undefined'
+                            || self.practice.geometry === 'undefined'
                         ){
                             var bounds = turf.bbox(self.site.geometry);
 
@@ -826,7 +851,7 @@ angular.module('FieldDoc')
                             'site'
                         );
                     }else if(self.practice.geometry == null
-                        || self.practice.geometry == 'undefined'
+                        || self.practice.geometry === 'undefined'
                     ){
                         if(self.practice.project.extent != null){
 
@@ -842,7 +867,6 @@ angular.module('FieldDoc')
 
 
                         }
-
 
                         MapManager.addFeature(
                             self.map,

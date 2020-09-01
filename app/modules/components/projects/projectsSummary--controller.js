@@ -1366,18 +1366,31 @@ angular.module('FieldDoc')
 
             };
 
+            //
+            // Begin batch import methods
+            //
 
-            /*
-            START SITES BATCH UPLOAD
-                */
-            self.uploadShapefile = function() {
+            self.uploadShapefile = function(featureType) {
+
+                console.log(
+                    'self.uploadShapefile:featureType',
+                    featureType
+                );
+
+                console.log(
+                    'self.uploadShapefile:fileImport',
+                    self.fileImport
+                );
 
                 /*Cast the file into an array
                 could possibly remove this with reworks
                 to the Upload directive
                 */
+
                 var tempFileImport = [];
+
                 tempFileImport.push(self.fileImport);
+
                 self.fileImport = tempFileImport;
 
                 if (!self.fileImport ||
@@ -1402,9 +1415,7 @@ angular.module('FieldDoc')
 
                 fileData.append('file', self.fileImport[0]);
 
-                fileData.append('feature_type', 'site');
-
-                //fileData.append('site_id', self.site.id);
+                fileData.append('feature_type', featureType);
 
                 fileData.append('collection', true);
 
@@ -1427,8 +1438,6 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
-                        document.getElementById("shapefile").value = "";
-
                         if (successResponse.task) {
 
                             self.pendingTasks = [
@@ -1439,13 +1448,19 @@ angular.module('FieldDoc')
 
                         self.taskPoll = $interval(function() {
 
-                            self.fetchTasks(successResponse.task.id);
+                            self.fetchTasks(successResponse.task.id, featureType);
 
                         }, 1000);
+
+                        self.fileImport = null;
 
                     }, function(errorResponse) {
 
                         console.log('Upload error', errorResponse);
+
+                        self.uploadError = errorResponse;
+
+                        self.fileImport = null;
 
                         self.alerts = [{
                             'type': 'error',
@@ -1466,7 +1481,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.hideTasks = function() {
+            self.hideTasks = function(featureType) {
 
                 self.pendingTasks = [];
 
@@ -1476,15 +1491,27 @@ angular.module('FieldDoc')
 
                 }
 
-                $timeout(function() {
-                    // self.reloadPage();
-                    self.loadSites();
+                if (featureType === 'practice') {
 
-                }, 1000);
+                    $timeout(function() {
+
+                        self.loadPractices();
+
+                    }, 100);
+
+                } else {
+
+                    $timeout(function() {
+
+                        self.loadSites();
+
+                    }, 100);
+
+                }
 
             };
 
-            self.fetchTasks = function(taskId) {
+            self.fetchTasks = function(taskId, featureType) {
 
                 if (taskId &&
                     typeof taskId === 'number') {
@@ -1495,10 +1522,30 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        if (response.status &&
-                            response.status === 'complete') {
+                        // if (response.status &&
+                        //     response.status === 'complete') {
+                        //
+                        //     self.hideTasks();
+                        //
+                        // }
 
-                            self.hideTasks();
+                        if (response.status && response.status === 'complete') {
+
+                            self.hideTasks(featureType);
+
+                            self.fileImport = null;
+
+                        }
+
+                        if (response.status && response.status === 'failed') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
 
                         }
 
@@ -1506,211 +1553,18 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    return Site.tasks({
-                        id: $route.current.params.practiceId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        self.pendingTasks = response.features;
-
-                        if (self.pendingTasks.length < 1) {
-
-
-                            $timeout(function() {
-                                // self.reloadPage();
-                                self.loadSites();
-
-                            }, 1000);
-
-                            $interval.cancel(self.taskPoll);
-
-                        }
-
-                    });
+                    //
 
                 }
 
             };
 
-            /*
-            END SITES BATCH UPLOAD
-            */
-
-            /*
-            START PRACTICE BATCH UPLOAD METHODS
-            */
-            self.uploadPracticeShapefile = function() {
-
-
-                /*Cast the file into an array
-                could possibly remove this with reworks
-                to the Upload directive
-                */
-                var tempFileImport = [];
-                tempFileImport.push(self.practiceFileImport);
-                self.practiceFileImport = tempFileImport;
-
-                if (!self.practiceFileImport ||
-                    !self.practiceFileImport.length
-                ) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Please select a file.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    return false;
-
-                }
-
-                self.progressMessage = 'Uploading your file...';
-
-                var fileData = new FormData();
-
-                fileData.append('file', self.practiceFileImport[0]);
-
-                fileData.append('feature_type', 'practice');
-
-                //   fileData.append('site_id', self.site.id);
-
-                fileData.append('collection', true);
-
-                fileData.append('project_id', self.project.id);
-
-                console.log('fileData', fileData);
-
-                try {
-
-                    Shapefile.upload({}, fileData, function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Upload complete. Processing data...',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                        document.getElementById("practiceShapefile").value = "";
-
-                        if (successResponse.task) {
-
-                            self.pendingTasks = [
-                                successResponse.task
-                            ];
-
-                        }
-
-                        self.taskPoll = $interval(function() {
-
-                            self.fetchTasks(successResponse.task.id);
-
-                        }, 1000);
-
-                    }, function(errorResponse) {
-
-                        console.log('Upload error', errorResponse);
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'The file could not be processed.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                } catch (error) {
-
-                    console.log('Shapefile upload error', error);
-
-                }
-
-            };
-
-            self.hidePracticeTasks = function() {
-
-                self.pendingPracticeTasks = [];
-
-                if (typeof self.taskPoll !== 'undefined') {
-
-                    $interval.cancel(self.taskPoll);
-
-                }
-                $timeout(function() {
-
-                    self.loadPractices();
-
-                }, 500);
-
-            };
-
-            self.fetchPracticeTasks = function(taskId) {
-
-                if (taskId &&
-                    typeof taskId === 'number') {
-
-                    return Task.get({
-                        id: taskId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        if (response.status &&
-                            response.status === 'complete') {
-
-                            self.hidePracticeTasks();
-
-                        }
-
-                    });
-
-                } else {
-
-                    return Practice.tasks({
-                        id: $route.current.params.practiceId
-                    }).$promise.then(function(response) {
-
-                        console.log('Task.get response', response);
-
-                        self.pendingTasks = response.features;
-
-                        if (self.pendingTasks.length < 1) {
-
-                            console.log("FOUR FOUR");
-
-                            $timeout(function() {
-
-                                self.loadPractices();
-
-                            }, 500);
-
-                            $interval.cancel(self.taskPoll);
-
-                        }
-
-                    });
-
-                }
-
-            };
-
-            /*
-            END PRACTICE BATCH UPLOAD METHODS
-            */
+            //
+            // End batch import methods
+            //
 
             self.reloadPage = function() {
-                location.reload();
+                $location.reload();
             };
 
             //

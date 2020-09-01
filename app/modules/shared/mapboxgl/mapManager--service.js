@@ -55,17 +55,30 @@ angular.module('FieldDoc')
                 return arr;
 
             },
-            addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
+            clearLayers: function(map) {
 
-                //  console.log("A");
+                var layers = map.getStyle().layers;
 
-                if (fitBounds === null ||
+                layers.forEach(function (layer) {
 
-                    typeof fitBounds === 'undefined') {
-                    //     console.log("B");
+                    if (layer.id.indexOf('feature') >= 0) {
+
+                        map.removeLayer(layer.id);
+
+                    }
+
+                });
+
+            },
+            addFeature: function(map, feature, attribute, addToMap,
+                                 fitBounds, featureType = null) {
+
+                if (fitBounds === null || typeof fitBounds === 'undefined') {
+
                     fitBounds = true;
 
                 }
+
                 /*Check feature type to set color*/
 
                 var geometryFillColor           = '#06aadf';

@@ -14,7 +14,7 @@
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Site, site, $rootScope, $route,
                 $scope, $timeout, $interval, user, Shapefile,
-                Utility, Task) {
+                Utility, Task, $window) {
 
                 var self = this;
 
@@ -74,10 +74,36 @@
 
                             console.log('Task.get response', response);
 
-                            if (response.status &&
-                                response.status === 'complete') {
+                            // if (response.status &&
+                            //     response.status === 'complete') {
+                            //
+                            //     self.hideTasks();
+                            //
+                            // }
+
+                            if (response.status && response.status === 'complete') {
+
+                                $window.scrollTo(0, 0);
+
+                                self.map = undefined;
 
                                 self.hideTasks();
+
+                                self.fileImport = null;
+
+                                self.loadPractice();
+
+                            }
+
+                            if (response.status && response.status === 'failed') {
+
+                                self.hideTasks();
+
+                                self.uploadError = {
+                                    message: response.error
+                                };
+
+                                self.fileImport = null;
 
                             }
 
@@ -157,6 +183,10 @@
 
                             console.log('successResponse', successResponse);
 
+                            self.uploadError = undefined;
+
+                            self.fileImport = null;
+
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
@@ -183,6 +213,10 @@
                         }, function(errorResponse) {
 
                             console.log('Upload error', errorResponse);
+
+                            self.uploadError = errorResponse;
+
+                            self.fileImport = null;
 
                             self.alerts = [{
                                 'type': 'error',
@@ -395,6 +429,8 @@
                         console.log('self.site', successResponse);
 
                         self.site = successResponse;
+
+                        self.featureType = 'site';
 
                         self.dimension = Utility.measureGeometry(self.site);
 
