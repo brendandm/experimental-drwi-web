@@ -1429,6 +1429,10 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
+                        self.uploadError = null;
+
+                        self.fileImport = null;
+
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
@@ -1451,8 +1455,6 @@ angular.module('FieldDoc')
                             self.fetchTasks(successResponse.task.id, featureType);
 
                         }, 1000);
-
-                        self.fileImport = null;
 
                     }, function(errorResponse) {
 
@@ -1525,6 +1527,8 @@ angular.module('FieldDoc')
                         if (response.status && response.status === 'complete') {
 
                             self.hideTasks(featureType);
+
+                            self.uploadError = null;
 
                             self.fileImport = null;
 

@@ -25,6 +25,8 @@ angular.module('FieldDoc')
 
             self.map = undefined;
 
+            self.setFileInput = true;
+
             $rootScope.page = {};
 
             self.showElements = function() {
@@ -372,6 +374,10 @@ angular.module('FieldDoc')
 
                             self.hideTasks();
 
+                            self.resetFileInput();
+
+                            self.uploadError = null;
+
                             self.fileImport = null;
 
                             self.loadPractice();
@@ -416,6 +422,18 @@ angular.module('FieldDoc')
 
             };
 
+            self.resetFileInput = function() {
+
+                self.setFileInput = false;
+
+                $timeout(function () {
+
+                    self.setFileInput = true;
+
+                }, 10);
+
+            };
+
             self.hideTasks = function() {
 
                 self.pendingTasks = [];
@@ -426,7 +444,6 @@ angular.module('FieldDoc')
 
                 }
 
-                // self.loadSiteDirect();
                 self.loadSite();
 
             };
@@ -467,6 +484,10 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
+                        self.uploadError = null;
+
+                        self.fileImport = null;
+
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
@@ -489,8 +510,6 @@ angular.module('FieldDoc')
                             self.fetchTasks(successResponse.task.id);
 
                         }, 1000);
-
-                        self.fileImport = null;
 
                     }, function(errorResponse) {
 

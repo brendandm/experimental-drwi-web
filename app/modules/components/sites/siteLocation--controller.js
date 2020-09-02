@@ -26,6 +26,8 @@
 
                 self.map = undefined;
 
+                self.setFileInput = true;
+
                 self.status = {
                     loading: true,
                     processing: false
@@ -89,6 +91,10 @@
 
                                 self.hideTasks();
 
+                                self.resetFileInput();
+
+                                self.uploadError = null;
+
                                 self.fileImport = null;
 
                                 self.loadPractice();
@@ -128,6 +134,18 @@
                         });
 
                     }
+
+                };
+
+                self.resetFileInput = function() {
+
+                    self.setFileInput = false;
+
+                    $timeout(function () {
+
+                        self.setFileInput = true;
+
+                    }, 10);
 
                 };
 
@@ -183,7 +201,7 @@
 
                             console.log('successResponse', successResponse);
 
-                            self.uploadError = undefined;
+                            self.uploadError = null;
 
                             self.fileImport = null;
 

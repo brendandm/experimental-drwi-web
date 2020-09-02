@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1598998242347})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1599063315062})
 
 ;
 /**
@@ -6393,6 +6393,10 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
+                        self.uploadError = null;
+
+                        self.fileImport = null;
+
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
@@ -6415,8 +6419,6 @@ angular.module('FieldDoc')
                             self.fetchTasks(successResponse.task.id, featureType);
 
                         }, 1000);
-
-                        self.fileImport = null;
 
                     }, function(errorResponse) {
 
@@ -6489,6 +6491,8 @@ angular.module('FieldDoc')
                         if (response.status && response.status === 'complete') {
 
                             self.hideTasks(featureType);
+
+                            self.uploadError = null;
 
                             self.fileImport = null;
 
@@ -13638,6 +13642,10 @@ angular.module('FieldDoc')
 
                             console.log('successResponse', successResponse);
 
+                            self.uploadError = null;
+
+                            self.fileImport = null;
+
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
@@ -13660,8 +13668,6 @@ angular.module('FieldDoc')
                                 self.fetchTasks(successResponse.task.id);
 
                             }, 1000);
-
-                            self.fileImport = null;
 
                         }, function(errorResponse) {
 
@@ -13726,6 +13732,8 @@ angular.module('FieldDoc')
                             if (response.status && response.status === 'complete') {
 
                                 self.hideTasks();
+
+                                self.uploadError = null;
 
                                 self.fileImport = null;
 
@@ -14086,6 +14094,8 @@ angular.module('FieldDoc')
 
                 self.map = undefined;
 
+                self.setFileInput = true;
+
                 self.status = {
                     loading: true,
                     processing: false
@@ -14149,6 +14159,10 @@ angular.module('FieldDoc')
 
                                 self.hideTasks();
 
+                                self.resetFileInput();
+
+                                self.uploadError = null;
+
                                 self.fileImport = null;
 
                                 self.loadPractice();
@@ -14188,6 +14202,18 @@ angular.module('FieldDoc')
                         });
 
                     }
+
+                };
+
+                self.resetFileInput = function() {
+
+                    self.setFileInput = false;
+
+                    $timeout(function () {
+
+                        self.setFileInput = true;
+
+                    }, 10);
 
                 };
 
@@ -14243,7 +14269,7 @@ angular.module('FieldDoc')
 
                             console.log('successResponse', successResponse);
 
-                            self.uploadError = undefined;
+                            self.uploadError = null;
 
                             self.fileImport = null;
 
@@ -17807,6 +17833,8 @@ angular.module('FieldDoc')
 
             self.map = undefined;
 
+            self.setFileInput = true;
+
             $rootScope.page = {};
 
             self.showElements = function() {
@@ -18154,6 +18182,10 @@ angular.module('FieldDoc')
 
                             self.hideTasks();
 
+                            self.resetFileInput();
+
+                            self.uploadError = null;
+
                             self.fileImport = null;
 
                             self.loadPractice();
@@ -18198,6 +18230,18 @@ angular.module('FieldDoc')
 
             };
 
+            self.resetFileInput = function() {
+
+                self.setFileInput = false;
+
+                $timeout(function () {
+
+                    self.setFileInput = true;
+
+                }, 10);
+
+            };
+
             self.hideTasks = function() {
 
                 self.pendingTasks = [];
@@ -18208,7 +18252,6 @@ angular.module('FieldDoc')
 
                 }
 
-                // self.loadSiteDirect();
                 self.loadSite();
 
             };
@@ -18249,6 +18292,10 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
+                        self.uploadError = null;
+
+                        self.fileImport = null;
+
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
@@ -18271,8 +18318,6 @@ angular.module('FieldDoc')
                             self.fetchTasks(successResponse.task.id);
 
                         }, 1000);
-
-                        self.fileImport = null;
 
                     }, function(errorResponse) {
 

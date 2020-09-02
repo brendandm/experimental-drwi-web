@@ -73,7 +73,7 @@
     </p>
 
     <input type="file" class="form-control" id="file-input" name="file-input"
-           accept=".json,.geojson,.zip" file-upload
+           accept=".json,.geojson,.zip" data-ng-if="page.setFileInput" file-upload
            file-model="page.fileImport" file-on-change="page.uploadShapefile()" />
 
     <div class="upload-error" style="margin: 1rem 0; padding: 1rem; border: 1px solid #d70000; border-radius: 4px;

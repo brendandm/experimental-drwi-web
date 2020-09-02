@@ -1090,6 +1090,10 @@
 
                             console.log('successResponse', successResponse);
 
+                            self.uploadError = null;
+
+                            self.fileImport = null;
+
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
@@ -1112,8 +1116,6 @@
                                 self.fetchTasks(successResponse.task.id);
 
                             }, 1000);
-
-                            self.fileImport = null;
 
                         }, function(errorResponse) {
 
@@ -1178,6 +1180,8 @@
                             if (response.status && response.status === 'complete') {
 
                                 self.hideTasks();
+
+                                self.uploadError = null;
 
                                 self.fileImport = null;
 
