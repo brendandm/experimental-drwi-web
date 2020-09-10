@@ -53,8 +53,23 @@ angular.module('FieldDoc')
 
                             self.createMap(self.mapOptions);
 
-                            drawOtherGeometries('secondary_practices');
-                            drawOtherGeometries('secondary_sites');
+                       //     drawOtherGeometries('secondary_practices');
+
+                            MapManager.drawOtherGeometries(
+                                'secondary_practices',
+                                self.map,self.practices,
+                                self.practice,
+                                MapManager.addFeature
+                            );
+
+                            MapManager.drawOtherGeometries(
+                                'secondary_sites',
+                                self.map,self.practices,
+                                self.practice,
+                                MapManager.addFeature
+                            );
+
+                        //    drawOtherGeometries('secondary_sites');
 
                         }
 
@@ -86,8 +101,6 @@ angular.module('FieldDoc')
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
-                    console.log("THIS IS A CONSOLE LOG");
-
                     console.log('self.site', successResponse);
 
                     self.site = successResponse;
@@ -96,7 +109,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    //
+                    console.log('errorResponse', errorResponse);
 
                 });
 

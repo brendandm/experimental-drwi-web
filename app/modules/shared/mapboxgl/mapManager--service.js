@@ -9,7 +9,7 @@
  */
 angular.module('FieldDoc')
     .service('MapManager', function() {
-
+        
         return {
             addLayers: function(map, arr) {
 
@@ -56,6 +56,8 @@ angular.module('FieldDoc')
 
             },
             clearLayers: function(map) {
+
+                console.log("CLEARING LAYERS");
 
                 var layers = map.getStyle().layers;
 
@@ -381,6 +383,55 @@ angular.module('FieldDoc')
                     }
 
                 }
+
+            },
+            drawOtherGeometries: function(type,map,collection,feature,callback){
+
+
+                map.on('style.load', function () {
+
+                    if(type === 'secondary_practices') {
+                        collection.forEach(function (item) {
+                            if (item.properties.id === feature.id) {
+
+                            } else {
+                                callback(
+                                    map,
+                                    item,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type);
+
+                            }
+
+
+                        });
+                    }else  if(type === 'secondary_sites') {
+                        collection.forEach(function (item) {
+
+                            if (item.properties.id === feature.id) {
+
+
+                            } else {
+                                callback(
+                                    map,
+                                    item,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type
+                                );
+
+                            }
+
+
+                        });
+                    }
+
+
+                });
+
 
             }
         };
