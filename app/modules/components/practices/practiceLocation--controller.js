@@ -57,15 +57,17 @@ angular.module('FieldDoc')
 
                             MapManager.drawOtherGeometries(
                                 'secondary_practices',
-                                self.map,self.practices,
+                                self.map,
+                                self.practices,
                                 self.practice,
                                 MapManager.addFeature
                             );
 
                             MapManager.drawOtherGeometries(
                                 'secondary_sites',
-                                self.map,self.practices,
-                                self.practice,
+                                self.map,
+                                self.sites,
+                                self.site,
                                 MapManager.addFeature
                             );
 

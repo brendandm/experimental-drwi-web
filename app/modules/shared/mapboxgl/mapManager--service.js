@@ -9,7 +9,7 @@
  */
 angular.module('FieldDoc')
     .service('MapManager', function() {
-        
+
         return {
             addLayers: function(map, arr) {
 
