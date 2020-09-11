@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1599135058836})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1599843261332})
 
 ;
 /**
@@ -39213,11 +39213,14 @@ angular.module('FieldDoc')
             '$filter',
             '$parse',
             '$location',
+            'Project',
             'Site',
             'Practice',
             'Report',
+            'SearchService',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Site, Practice, Report, $timeout) {
+            function($routeParams, $filter, $parse, $location, Project,
+                     Site, Practice, Report, SearchService, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -39260,7 +39263,8 @@ angular.module('FieldDoc')
 
                             if (scope.type !== 'report' &&
                                 scope.type !== 'practice' &&
-                                scope.type !== 'site') return;
+                                scope.type !== 'site' &&
+                                scope.type !== 'project') return;
 
                             if (!name || typeof name === 'undefined') return;
 
@@ -39291,6 +39295,16 @@ angular.module('FieldDoc')
                                     newFeature = new Practice(data);
 
                                 }
+
+                            } else if (scope.type === 'project') {
+
+                                data = {
+                                    'name': name,
+                                    'program_id': scope.program_id,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new Project(data);
 
                             } else {
 
@@ -39355,6 +39369,32 @@ angular.module('FieldDoc')
                                 $timeout(closeAlerts, 2000);
 
                             });
+
+                        };
+
+                        scope.searchPrograms = function(value) {
+
+                            return SearchService.program({
+                                q: value
+                            }).$promise.then(function(response) {
+
+                                console.log('SearchService.program response', response);
+
+                                response.results.forEach(function(result) {
+
+                                    result.category = null;
+
+                                });
+
+                                return response.results.slice(0, 3);
+
+                            });
+
+                        };
+
+                        scope.setProgram = function(item, model, label) {
+
+                            scope.program_id = item.id;
 
                         };
 
