@@ -15,13 +15,10 @@
                 <span class="prompt">
                     Enter a name for this {{ type }}.
                 </span>
-                <input type="text" data-ng-model="name" class="form-control animate"
+                <input type="text" style="margin: 1rem 0;" data-ng-model="name" class="form-control animate"
                        id="name" name="name" placeholder="&hellip;" />
             </div>
             <div data-ng-if="type === 'project'">
-                <span style="display: flex; margin: 1.5rem 0 0.5rem;">
-                    <strong>Grant program</strong>
-                </span>
                 <span class="prompt">
                     Select a program supported by FieldDoc (<strong>required for project setup</strong>).
                 </span>
