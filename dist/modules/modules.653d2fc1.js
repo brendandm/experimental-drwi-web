@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600102382940})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600115092425})
 
 ;
 /**
@@ -39215,11 +39215,14 @@ angular.module('FieldDoc')
             '$filter',
             '$parse',
             '$location',
+            'Project',
             'Site',
             'Practice',
             'Report',
+            'SearchService',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Site, Practice, Report, $timeout) {
+            function($routeParams, $filter, $parse, $location, Project,
+                     Site, Practice, Report, SearchService, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -39262,7 +39265,8 @@ angular.module('FieldDoc')
 
                             if (scope.type !== 'report' &&
                                 scope.type !== 'practice' &&
-                                scope.type !== 'site') return;
+                                scope.type !== 'site' &&
+                                scope.type !== 'project') return;
 
                             if (!name || typeof name === 'undefined') return;
 
@@ -39293,6 +39297,16 @@ angular.module('FieldDoc')
                                     newFeature = new Practice(data);
 
                                 }
+
+                            } else if (scope.type === 'project') {
+
+                                data = {
+                                    'name': name,
+                                    'program_id': scope.program_id,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new Project(data);
 
                             } else {
 
@@ -39357,6 +39371,32 @@ angular.module('FieldDoc')
                                 $timeout(closeAlerts, 2000);
 
                             });
+
+                        };
+
+                        scope.searchPrograms = function(value) {
+
+                            return SearchService.program({
+                                q: value
+                            }).$promise.then(function(response) {
+
+                                console.log('SearchService.program response', response);
+
+                                response.results.forEach(function(result) {
+
+                                    result.category = null;
+
+                                });
+
+                                return response.results.slice(0, 3);
+
+                            });
+
+                        };
+
+                        scope.setProgram = function(item, model, label) {
+
+                            scope.program_id = item.id;
 
                         };
 

@@ -18,7 +18,8 @@
 
             <div class="add--new--wrapper">
                 <span>Create project</span>
-                <a class="add--new--btn" href="projects/collection/new">
+                <a class="add--new--btn"
+                   data-ng-click="page.showChildModal = !page.showChildModal">
                     <i class="material-icons">
                     add
                     </i>
@@ -198,10 +199,11 @@
                         
                     </li>
 
-                    <li data-ng-if="!page.projects.length" class="card" data-ng-if="page.permissions.can_edit">
+                    <li class="card" data-ng-if="!page.projects.length && page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
-                                <a href="projects/collection/new" title="Create practice">
+                                <a title="Create practice"
+                                   data-ng-click="page.showChildModal = !page.showChildModal">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -232,6 +234,9 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" organization="$root.user.properties.organization_id"
+         type="'project'" visible="page.showChildModal"></div>
 
 </main>
 

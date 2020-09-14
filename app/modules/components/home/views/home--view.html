@@ -80,7 +80,7 @@
 
             <div class="add--new--wrapper" data-ng-if="page.projects && page.projects.length">
                 <span>Create project</span>
-                <a class="add--new--btn" href="projects/collection/new">
+                <a class="add--new--btn" data-ng-click="page.showChildModal = !page.showChildModal">
                     <i class="material-icons">
                     add
                     </i>
@@ -161,6 +161,9 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" organization="$root.user.properties.organization_id"
+         type="'project'" visible="page.showChildModal"></div>
 
 </main>
 

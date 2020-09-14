@@ -15,15 +15,34 @@
                 <span class="prompt">
                     Enter a name for this {{ type }}.
                 </span>
-                <input type="text" data-ng-model="name" class="form-control animate"
+                <input type="text" style="margin: 1rem 0;" data-ng-model="name" class="form-control animate"
                        id="name" name="name" placeholder="&hellip;" />
+            </div>
+            <div data-ng-if="type === 'project'">
+                <span class="prompt">
+                    Select a program supported by FieldDoc (<strong>required for project setup</strong>).
+                </span>
+                <div class="classification--search" style="position: relative;">
+                    <input type="search" style="padding: 1rem; font-size: 1rem;" class="search" value=""
+                           placeholder="Search programs"
+                           data-ng-model="program"
+                           uib-typeahead="suggestion as suggestion.name for suggestion in searchPrograms($viewValue)"
+                           typeahead-on-select="setProgram($item, $model, $label)"
+                           typeahead-wait-ms="100"
+                           typeahead-template-url="templates/search--tpl.html">
+                </div>
             </div>
         </div>
         <div class="dialog-actions">
             <button type="button" class="cancel" data-ng-click="closeChildModal()">
                 Cancel
             </button>
-            <button type="button" class="confirm" data-ng-click="createChild(name)" data-ng-disabled="!name">
+            <button type="button" class="confirm" data-ng-if="type !== 'project'" data-ng-click="createChild(name)"
+                    data-ng-disabled="!name">
+                OK
+            </button>
+            <button type="button" class="confirm" data-ng-if="type === 'project'" data-ng-click="createChild(name)"
+                    data-ng-disabled="!name || !program_id">
                 OK
             </button>
         </div>
