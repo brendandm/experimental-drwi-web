@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1599135058836})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600102382940})
 
 ;
 /**
@@ -17861,8 +17861,25 @@ angular.module('FieldDoc')
 
                             self.createMap(self.mapOptions);
 
-                            drawOtherGeometries('secondary_practices');
-                            drawOtherGeometries('secondary_sites');
+                       //     drawOtherGeometries('secondary_practices');
+
+                            MapManager.drawOtherGeometries(
+                                'secondary_practices',
+                                self.map,
+                                self.practices,
+                                self.practice,
+                                MapManager.addFeature
+                            );
+
+                            MapManager.drawOtherGeometries(
+                                'secondary_sites',
+                                self.map,
+                                self.sites,
+                                self.site,
+                                MapManager.addFeature
+                            );
+
+                        //    drawOtherGeometries('secondary_sites');
 
                         }
 
@@ -17894,8 +17911,6 @@ angular.module('FieldDoc')
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
-                    console.log("THIS IS A CONSOLE LOG");
-
                     console.log('self.site', successResponse);
 
                     self.site = successResponse;
@@ -17904,7 +17919,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    //
+                    console.log('errorResponse', errorResponse);
 
                 });
 
@@ -18048,70 +18063,6 @@ angular.module('FieldDoc')
 
             };
 
-            /*Not defining this as a scope method,
-            * because why? why are we doing that for almost all our
-            * methods. If doesn't need to be referenced outside the controller,
-            * might as well keep it simple*/
-            function drawOtherGeometries(type){
-
-                self.map.on('style.load', function () {
-                    if(type == 'secondary_practices') {
-                        self.practices.forEach(function (feature) {
-                            if (feature.properties.id == self.practice.id) {
-
-                                console.log("same as self");
-                                //    }else if(feature.properties.id == self.practice.site.id){
-
-                                //        console.log("same as self");
-
-                            } else {
-                                MapManager.addFeature(
-                                    self.map,
-                                    feature,
-                                    'geometry',
-                                    true,
-                                    false,
-                                    type
-                                );
-
-                            }
-
-
-                        });
-                    }else  if(type == 'secondary_sites') {
-                        self.sites.forEach(function (feature) {
-                            console.log('feature.properties.id',feature.properties.id);
-                            console.log('feature.properties.name',feature.properties.name);
-                       //     console.log('self.site.id',self.site.id);
-                            console.log('self.site.name',self.site.name);
-                            console.log('self.site.properties.id',self.site.id);
-                            if (feature.properties.id == self.site.id) {
-
-                                console.log("site same as self");
-                                //    }else if(feature.properties.id == self.practice.site.id){
-
-                                //        console.log("same as self");
-
-                            } else {
-                                MapManager.addFeature(
-                                    self.map,
-                                    feature,
-                                    'geometry',
-                                    true,
-                                    false,
-                                    type
-                                );
-
-                            }
-
-
-                        });
-                    }
-
-
-                });
-
-            };
             /* END PRACTICES PANEL */
 
 
@@ -35025,6 +34976,8 @@ angular.module('FieldDoc')
             },
             clearLayers: function(map) {
 
+                console.log("CLEARING LAYERS");
+
                 var layers = map.getStyle().layers;
 
                 layers.forEach(function (layer) {
@@ -35349,6 +35302,55 @@ angular.module('FieldDoc')
                     }
 
                 }
+
+            },
+            drawOtherGeometries: function(type,map,collection,feature,callback){
+
+
+                map.on('style.load', function () {
+
+                    if(type === 'secondary_practices') {
+                        collection.forEach(function (item) {
+                            if (item.properties.id === feature.id) {
+
+                            } else {
+                                callback(
+                                    map,
+                                    item,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type);
+
+                            }
+
+
+                        });
+                    }else  if(type === 'secondary_sites') {
+                        collection.forEach(function (item) {
+
+                            if (item.properties.id === feature.id) {
+
+
+                            } else {
+                                callback(
+                                    map,
+                                    item,
+                                    'geometry',
+                                    true,
+                                    false,
+                                    type
+                                );
+
+                            }
+
+
+                        });
+                    }
+
+
+                });
+
 
             }
         };
