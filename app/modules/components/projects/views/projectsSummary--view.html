@@ -69,6 +69,17 @@
                             page.project.program.name }}</a>
                         </p>
 
+                        <div class="summary-warning-link-wrapper"
+                             data-ng-if="!page.project.program.id">
+                                <span class="material-icons">
+                                    error
+                                </span>
+                            <a href="/projects/{{ page.project.id }}/grant" >
+                                Please add a funding program to this project.
+                            </a>
+                        </div>
+
+
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">

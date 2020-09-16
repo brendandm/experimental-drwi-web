@@ -4821,3 +4821,22 @@
     }
 
 }
+
+.summary-warning-link-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding-bottom: 1em;
+    color: $color-red-base;
+
+    span {
+        display: inline-flex;
+        margin-right: 0.25em;
+    }
+    a {
+        color: $color-red-base;
+
+
+    }
+
+}
