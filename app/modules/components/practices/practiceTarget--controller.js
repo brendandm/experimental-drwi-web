@@ -391,8 +391,67 @@ angular.module('FieldDoc')
 
                     self.assignedMetrics = self.info.targets;
 
-                    console.log("self.assignedMetrics",self.assignedMetrics);
-                    console.log("self.programMetrics",self.programMetrics);
+                    /*Check if secondary metrics are automated and have caputred extent
+                    * if so so, remove from programMetrics arr (ie Secondary Metrics
+                    * */
+
+
+                    let i = 0;
+
+                    self.programMetrics.forEach(function(metric){
+                        console.log("1");
+                        if(metric.automated === true && metric.capture_extent === true){
+                            console.log("2");
+
+                            self.programMetrics.splice(i,1);
+
+                            i = i+1;
+
+
+                        }
+
+                    });
+
+                    /*Check if primary metrics are also assign metrics,
+                    if not, add them to the programMetrics (secondary) arr
+                    * */
+
+                    let unassignedPrimaryMetrics = [];
+
+                    self.info.metrics.primary.forEach(function(pMetric) {
+
+                        let metricAssigned = false;
+
+                        self.assignedMetrics.forEach(function(aMetric){
+
+                            if(pMetric.id == aMetric.id){
+                                metricAssigned = true;
+                            }
+
+                        });
+
+                        if(metricAssigned === false){
+
+                            unassignedPrimaryMetrics.push(pMetric);
+
+                        }
+
+                    });
+
+                    /* loop over our unassigned primary metrics
+                    and add them to program/secondary metrics array
+                    * */
+
+                    unassignedPrimaryMetrics.forEach(function(uMetric){
+
+                        self.programMetrics.splice(0,0,uMetric);
+
+                    });
+
+
+
+                 //   console.log("self.assignedMetrics",self.assignedMetrics);
+                 //   console.log("self.programMetrics",self.programMetrics);
                     self.assignedMetrics.forEach(function(am){
 
                         self.activeDomain.push(am.id);
@@ -448,17 +507,22 @@ angular.module('FieldDoc')
 
                 var tempProgramMetrics = [];
 
+
                 self.programMetrics.forEach(function(newItem){
 
-                    if (!$item.id !== newItem.id){
-
+                    if ($item.id !== newItem.id){
+                      //  console.log("newItem",newItem);
                         tempProgramMetrics.push(newItem);
 
                         self.activeDomain.push(newItem.id);
 
                     }
 
+
+
                 });
+
+
 
                 self.programMetrics = tempProgramMetrics;
 
