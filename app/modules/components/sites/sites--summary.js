@@ -68,7 +68,7 @@
                     if (self.page > 1) {
                         console.log("B");
 
-                        if (self.page == 1) {
+                        if (self.page === 1) {
                             console.log("C");
                             self.viewCountHigh = self.limit;
                             self.viewCountLow = ((self.page - 1) * self.limit);
