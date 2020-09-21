@@ -10,7 +10,6 @@
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-        /*
         $routeProvider
             .when('/metric-types', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
@@ -52,17 +51,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(MetricType, $route) {
-                        return MetricType.metrics({
-                            id: $route.current.params.metricId
-                        });
-                    },
-                    outcomes: function(MetricType, $route) {
-                        return MetricType.outcomes({
-                            id: $route.current.params.metricId
-                        });
-                    },
-                    metricType: function(MetricType, $route) {
+                    metric: function(MetricType, $route) {
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
@@ -90,7 +79,7 @@ angular.module('FieldDoc')
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
-                        
+
                     },
                     unitTypes: function(UnitType, $route) {
                         return UnitType.query({
@@ -99,5 +88,4 @@ angular.module('FieldDoc')
                     }
                 }
             });
-        */
     });

@@ -48,7 +48,6 @@
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in"
-                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="metric in page.metricsTypes | orderBy:'name' | filter: page.queryToken">
 
                                 <div class="card--content">
@@ -60,8 +59,26 @@
                                     </div>
 
                                     <div class="body">
+
                                         <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
                                             {{ (practice.description || 'No description') }}</p>
+
+                                        <div class="actions">
+                                            <a class="snapshot--title" href="/metric-types/{{ metric.id }}"
+                                               title="Metric summary">
+                                                <i class="material-icons">
+                                                    dashboard
+                                                </i>
+                                            </a>
+                                            <a class="snapshot--title"
+                                               href="/metric-types/{{ metric.id }}/edit" title="Edit metric"
+                                               data-ng-if="page.permissions.can_edit">
+                                                <i class="material-icons">
+                                                    edit
+                                                </i>
+                                            </a>
+                                        </div>
+
                                     </div>
 
                                 </div>

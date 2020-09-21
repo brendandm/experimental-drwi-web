@@ -248,6 +248,9 @@
 
                         $rootScope.program = successResponse;
 
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
                         $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
                         self.status.loading = false;
@@ -305,7 +308,7 @@
                             isLoggedIn: Account.hasToken(),
                             role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: true
+                            can_edit: false
                         };
 
                         self.loadProgram();
