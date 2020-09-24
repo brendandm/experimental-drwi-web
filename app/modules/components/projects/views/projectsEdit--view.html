@@ -62,7 +62,7 @@
                                  data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)"
                                  style="border: 0px solid blue;
                                         display:block;
-                                        min-width: 200px;
+                                        min-width: 400px;
                                         min-height: 50px;
                                         margin-bottom:30px;
                                 "
@@ -72,7 +72,8 @@
                                     float:left;
                                     display: block;
                                     width: 40%;
-                                    min-width: 525px;
+                                    max-width: 400px;
+                                    min-width: 180px;
                                     margin-bottom: 0px;
                                    "
                                             >
@@ -119,7 +120,25 @@
                                     </nobr>
                                 </div>
 
+                                <div class="scope--control"
+                                     style=" border:0px solid red;
+                                        margin-top: 10px;
+                                        float: right;
+                                        width:150px;
+                                    "
+                                >
+                                    <span></span>
+                                    <label class="switch">
+                                        <input class="inputdemo" type="checkbox" data-ng-model="page.project.archived" data-ng-checked="page.project.archived">
+                                        <div class="slider round"></div>
+                                    </label>
+                                    <span data-ng-class="{on: page.site.archived}">Archived</span>
+                                </div>
+
                             </div>
+
+
+
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Description</b></span>

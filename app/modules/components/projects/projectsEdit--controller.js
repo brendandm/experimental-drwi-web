@@ -281,6 +281,8 @@ angular.module('FieldDoc')
                     'sites'
                 ].join(',');
 
+                console.log("self.project --> submit", self.project);
+
                 Project.update({
                     id: $route.current.params.projectId,
                     exclude: exclude
