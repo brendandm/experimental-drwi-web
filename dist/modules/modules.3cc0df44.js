@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600284254606})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600963156199})
 
 ;
 /**
@@ -16577,33 +16577,33 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    // practice: function(Practice, $route) {
-                    //
-                    //     var exclude = [
-                    //         'centroid',
-                    //         'creator',
-                    //         'dashboards',
-                    //         'extent',
-                    //         'geometry',
-                    //         'last_modified_by',
-                    //         'members',
-                    //         'metric_types',
-                    //         'partnerships',
-                    //         'practices',
-                    //         'practice_types',
-                    //         'properties',
-                    //         'targets',
-                    //         'tasks',
-                    //         'type',
-                    //         'sites'
-                    //     ].join(',');
-                    //
-                    //     return Practice.get({
-                    //         id: $route.current.params.practiceId,
-                    //         exclude: exclude
-                    //     });
-                    //
-                    // }
+                    practice: function(Practice, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'last_modified_by',
+                            'members',
+                            'metric_types',
+                            'partnerships',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Practice.get({
+                            id: $route.current.params.practiceId,
+                            exclude: exclude
+                        });
+
+                    }
                 }
             })
             .when('/practices/:practiceId/model-data', {
