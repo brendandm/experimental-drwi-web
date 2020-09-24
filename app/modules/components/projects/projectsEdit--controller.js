@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('ProjectEditController',
         function(Account, $location, $log, Project, project,
-            $rootScope, $route, user, SearchService, $timeout,
+            $rootScope, FilterStore, $route, user, SearchService, $timeout,
             Utility, $interval) {
 
             var self = this;
@@ -26,6 +26,17 @@ angular.module('FieldDoc')
             self.status = {
                 loading: true,
                 processing: true
+            };
+
+            self.project_status = [
+                'draft',
+                'active',
+                'complete'
+
+            ];
+
+            self.showModal = {
+                status: false
             };
 
             self.showElements = function() {
@@ -180,6 +191,8 @@ angular.module('FieldDoc')
                 self.tempPartners = self.project.partners;
 
                 self.status.processing = false;
+
+                console.log("self.project", self.project);
 
             };
 

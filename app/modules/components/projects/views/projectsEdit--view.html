@@ -58,6 +58,69 @@
                                 <input type="text" data-ng-model="page.project.name" class="form-control animate" id="name" name="name" placeholder="Project name" />
                             </div>
 
+                            <div class="collection-filter-group"
+                                 data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)"
+                                 style="border: 0px solid blue;
+                                        display:block;
+                                        min-width: 200px;
+                                        min-height: 50px;
+                                        margin-bottom:30px;
+                                "
+                            >
+                                <div style="
+                                    border: 0px solid purple;
+                                    float:left;
+                                    display: block;
+                                    width: 40%;
+                                    min-width: 525px;
+                                    margin-bottom: 0px;
+                                   "
+                                            >
+                                    <nobr>
+                                    <div class="collection-filter drop-down program"
+                                         style="float:left; display:inline-block;">
+                                        <button type="button"
+                                                data-ng-class="{'open-btn': page.showModal.status }"
+                                                data-ng-click="page.showModal.status = !page.showModal.status">
+                                            <b>Project Status&nbsp;</b>
+                                            <i class="material-icons">
+                                                arrow_drop_down
+                                            </i>
+                                        </button>
+                                        <div name="collection-filter-form" class="collection-filter-modal" style="width: auto;"
+                                              data-ng-if="page.showModal.status">
+
+                                            <label data-ng-repeat="status in page.project_status"
+                                                 data-ng-class="{'active': page.project_status == status}"
+                                                   title="{{ status }}">
+                                                <span class="input-mask"
+                                                      data-ng-if="page.project.status == status">
+                                                    <i class="material-icons">
+                                                    radio_button_checked
+                                                    </i>
+                                                </span>
+                                                <span class="input-mask"
+                                                      data-ng-if="page.project.status != status">
+                                                    <i class="material-icons">
+                                                    radio_button_unchecked
+                                                    </i>
+                                                </span>
+                                                <input type="radio"
+                                                       id="status-option-{{ status }}"
+                                                       name="active-program" data-ng-model="page.project.status"
+                                                       data-ng-value="status"
+                                                        />
+                                                <span>
+                                                    {{ status }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    </nobr>
+                                </div>
+
+                            </div>
+
                             <div class="form-element">
                                 <span class="meta-label"><b>Description</b></span>
                                 <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="10" maxlength="1500">{{ page.project.description }}</textarea>
