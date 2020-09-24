@@ -428,23 +428,23 @@ angular.module('FieldDoc')
 
                 var params = $location.search();
 
-                console.log(
-                    'self.inspectSearchParams --> params',
-                    params);
+                // console.log(
+                //     'self.inspectSearchParams --> params',
+                //     params);
 
                 var keys = Object.keys(params);
 
-                console.log(
-                    'self.inspectSearchParams --> keys',
-                    keys);
+                // console.log(
+                //     'self.inspectSearchParams --> keys',
+                //     keys);
 
                 if (!keys.length || forceFilter) {
 
                     params = self.buildFilter();
 
-                    console.log(
-                        'self.inspectSearchParams --> params(2)',
-                        params);
+                    // console.log(
+                    //     'self.inspectSearchParams --> params(2)',
+                    //     params);
 
                 }
 
@@ -456,9 +456,9 @@ angular.module('FieldDoc')
 
                             var filterVal = +params[key];
 
-                            console.log(
-                                'self.inspectSearchParams --> filterVal',
-                                filterVal);
+                            // console.log(
+                            //     'self.inspectSearchParams --> filterVal',
+                            //     filterVal);
 
                             if (Number.isInteger(filterVal)) {
 
