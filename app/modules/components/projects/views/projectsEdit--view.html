@@ -54,46 +54,20 @@
                             <h2>Profile</h2>
 
 
-                            <div class="collection-filter-group"
+                            <div class="collection-filter-group status_group"
                                  data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)"
-                                 style="border: 0px solid blue;
-                                        display:block;
-                                        min-width: 400px;
-                                        min-height: 50px;
-                                        margin-bottom:30px;
-                                "
+
                             >
-                                <div  class="scope--control"
-                                      style="
-                                    border:0px solid green;
-                                    float: left;
-                                    display: block;
-                                    margin-top: 16px;
-                                    margin-left: 00px;
-                                    font-weight: bold;
-                                    color: rgb(121,122,124);
-                                    font-style: normal;
-                                    "
-                                >
+                                <div class="scope--control status_dropdown_label" >
 
                                     <span>
                                         Project Status :
                                     </span>
                                 </div>
 
-                                <div style="
-                                    border: 0px solid purple;
-                                    float:left;
-                                    display: block;
-                                    width: 40%;
-                                    max-width: 400px;
-                                    width: 190px;
-                                    margin-bottom: 0px;
-                                   "
-                                >
-                                    <nobr>
-                                        <div class="collection-filter drop-down program"
-                                             style="float:left; display:inline-block; min">
+                                <div class="status_dropdown " >
+                                        <div class="collection-filter drop-down"
+                                             style="float:left; display:inline-block;">
                                             <button type="button"
                                                     data-ng-class="{'open-btn': page.showModal.status }"
                                                     data-ng-click="page.showModal.status = !page.showModal.status">
@@ -132,10 +106,7 @@
                                                 </span>
                                                 </label>
                                             </div>
-
                                         </div>
-
-                                    </nobr>
                                 </div>
 
                                 <div class="scope--control"

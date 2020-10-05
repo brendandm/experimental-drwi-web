@@ -258,9 +258,11 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
+                console.log("self.project.status",self.project.status);
+
                 self.project.partners = self.processRelations(self.tempPartners);
 
-                self.project.workflow_state = "Draft";
+           //     self.project.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',
