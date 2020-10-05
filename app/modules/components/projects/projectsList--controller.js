@@ -35,16 +35,41 @@ angular.module('FieldDoc')
                 actions: []
             };
 
+            self.project_statuses = [
+                'draft',
+                'active',
+                'complete'
+
+            ];
+
+
+            self.projects_status = '';
+
+            self.change_status = function(status){
+
+                console.log("CHANGE STATUS");
+
+
+
+                self.projects_status = status;
+                self.showModal.status = !self.showModal.status
+                self.loadProjects();
+            };
+
+
             self.showModal = {
                 organization: false,
                 program: false,
-                tag: false
+                tag: false,
+                status: false
             };
 
             self.filters = {
                 organization: undefined,
                 program: undefined,
-                tag: undefined
+                tag: undefined,
+                status: undefined
+
             };
 
             self.numericFilters = [
@@ -52,6 +77,8 @@ angular.module('FieldDoc')
                 'program',
                 'tag'
             ];
+
+
 
             self.status = {
                 loading: true
@@ -221,11 +248,15 @@ angular.module('FieldDoc')
                 console.log(
                     'self.buildFilter --> Starting...');
 
+
                 var data = {
                     combine: 'true',
                     limit:  self.limit,
-                    page:   self.page
+                    page:   self.page,
+                    status: self.projects_status
                 };
+
+                console.log("data",data);
 
                 for (var key in self.filters) {
 
@@ -252,6 +283,10 @@ angular.module('FieldDoc')
 
                 }
 
+                data.status = self.projects_status;
+
+                console.log("buildFilter --> data",data);``
+
                 $location.search(data);
 
                 return data;
@@ -261,6 +296,8 @@ angular.module('FieldDoc')
             self.loadProjects = function() {
 
                 var params = self.buildFilter();
+
+                console.log("params",params);
 
                 Project.collection(params).$promise.then(function(successResponse) {
 
@@ -428,23 +465,23 @@ angular.module('FieldDoc')
 
                 var params = $location.search();
 
-                // console.log(
-                //     'self.inspectSearchParams --> params',
-                //     params);
+                 console.log(
+                     'self.inspectSearchParams --> params',
+                     params);
 
                 var keys = Object.keys(params);
 
-                // console.log(
-                //     'self.inspectSearchParams --> keys',
-                //     keys);
+                 console.log(
+                     'self.inspectSearchParams --> keys',
+                     keys);
 
                 if (!keys.length || forceFilter) {
 
                     params = self.buildFilter();
 
-                    // console.log(
-                    //     'self.inspectSearchParams --> params(2)',
-                    //     params);
+                    console.log(
+                         'self.inspectSearchParams --> params(2)',
+                         params);
 
                 }
 
@@ -456,9 +493,9 @@ angular.module('FieldDoc')
 
                             var filterVal = +params[key];
 
-                            // console.log(
-                            //     'self.inspectSearchParams --> filterVal',
-                            //     filterVal);
+                             console.log(
+                                 'self.inspectSearchParams --> filterVal',
+                                 filterVal);
 
                             if (Number.isInteger(filterVal)) {
 
@@ -475,6 +512,10 @@ angular.module('FieldDoc')
                     }
 
                 }
+
+                console.log("self.filters -->",self.filters);
+                console.log("self.params -->",self.params);
+
 
                 self.loadProjects(params);
 
