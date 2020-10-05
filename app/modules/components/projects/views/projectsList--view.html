@@ -54,7 +54,7 @@
                         margin-bottom: 0px;
                        "
                 >
-                    <nobr>
+
                         <div class="collection-filter drop-down program"
                              style="float:left; display:inline-block;">
                             <button type="button" data-ng-class="{'open-btn': (page.showModal.program || (page.filters.program > 0))}" data-ng-click="page.showModal.program = !page.showModal.program">
@@ -202,8 +202,24 @@
                         </div>
 
 
+                </div>
 
-                    </nobr>
+                <div class="scope--control"
+                     style=" border:0px solid red;
+                                        margin-top: 10px;
+                                        float: right;
+                                        width:150px;
+                                    "
+                >
+                    <span></span>
+                    <label class="switch">
+                        <input class="inputdemo"
+                               type="checkbox"
+                               data-ng-model="page.archived"
+                               data-ng-click="page.changeArchivedDisplay(!page.projects_archived)">
+                        <div class="slider round"></div>
+                    </label>
+                    <span data-ng-class="{on: page.archived}">Archived</span>
                 </div>
 
                 <div data-ng-include="'/templates/pagination-view.html'"></div>
@@ -216,7 +232,9 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in"
+                        style="animation-delay: {{ $index * 150 }}ms;"
+                        data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 
@@ -235,6 +253,7 @@
                                             "
                                 >
                                    <span>{{project.status | capitalAttribute}}</span>
+                                    - 
                                     <span ng-if="project.archived">Archived</span>
                                 </div>
 
