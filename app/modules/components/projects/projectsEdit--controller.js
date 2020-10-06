@@ -23,6 +23,8 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+            /* START Status Vars*/
+
             self.status = {
                 loading: true,
                 processing: true
@@ -34,6 +36,98 @@ angular.module('FieldDoc')
                 'complete'
 
             ];
+
+            /* END Status Vars*/
+
+
+            /*START Date Vars*/
+
+            //
+            // Setup all of our basic date information so that we can use it
+            // throughout the page
+            //
+            self.today = new Date();
+
+            self.days = [
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ];
+
+            self.months = [{
+                'shortName': 'Jan',
+                'name': 'January',
+                'numeric': '01'
+            },
+                {
+                    'shortName': 'Feb',
+                    'name': 'February',
+                    'numeric': '02'
+                },
+                {
+                    'shortName': 'Mar',
+                    'name': 'March',
+                    'numeric': '03'
+                },
+                {
+                    'shortName': 'Apr',
+                    'name': 'April',
+                    'numeric': '04'
+                },
+                {
+                    'shortName': 'May',
+                    'name': 'May',
+                    'numeric': '05'
+                },
+                {
+                    'shortName': 'Jun',
+                    'name': 'June',
+                    'numeric': '06'
+                },
+                {
+                    'shortName': 'Jul',
+                    'name': 'July',
+                    'numeric': '07'
+                },
+                {
+                    'shortName': 'Aug',
+                    'name': 'August',
+                    'numeric': '08'
+                },
+                {
+                    'shortName': 'Sep',
+                    'name': 'September',
+                    'numeric': '09'
+                },
+                {
+                    'shortName': 'Oct',
+                    'name': 'October',
+                    'numeric': '10'
+                },
+                {
+                    'shortName': 'Nov',
+                    'name': 'November',
+                    'numeric': '11'
+                },
+                {
+                    'shortName': 'Dec',
+                    'name': 'December',
+                    'numeric': '12'
+                }
+            ];
+
+
+
+            function parseISOLike(s) {
+                var b = s.split(/\D/);
+                return new Date(b[0], b[1] - 1, b[2]);
+            }
+
+            /*END Date Vars*/
 
             self.showModal = {
                 status: false
@@ -260,6 +354,21 @@ angular.module('FieldDoc')
 
                 console.log("self.project.status",self.project.status);
 
+                console.log("self.project.completed_on",self.project.completed_on);
+
+                if (self.date.month.numeric !== null &&
+                    typeof self.date.month.numeric === 'string') {
+
+                    self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+                } else {
+
+                    self.project.completed_on = self.date.year + '-' + self.date.month + '-' + self.date.date;
+
+                }
+
+                console.log("self.project.completed_on",self.project.completed_on);
+
                 self.project.partners = self.processRelations(self.tempPartners);
 
            //     self.project.workflow_state = "Draft";
@@ -403,6 +512,7 @@ angular.module('FieldDoc')
                         can_delete: false
                     };
 
+
                     //
                     // Assign project to a scoped variable
                     //
@@ -420,8 +530,31 @@ angular.module('FieldDoc')
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
+                            if (self.project.completed_on) {
+                                console.log("AA self.project.completed_on",self.project.completed_on);
+                                console.log("BB self.project.completed_on.date",self.project.completed_on.date);
+
+                                self.project.completed_on = parseISOLike(self.project.completed_on);
+                                console.log("CC self.project.completed_on",self.project.completed_on);
+                            }
+                            console.log("DD self.project.completed_on.date",self.project.completed_on.date);
+                            console.log("self.project.completed_on",self.project.completed_on);
+                            console.log("self.today",self.date);
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.project.completed_on.getMonth()],
+                                date: self.project.completed_on.getDate(),
+                                day: self.days[self.project.completed_on.getDay()],
+                                year: self.project.completed_on.getFullYear()
+                            };
+
                             $rootScope.page.title = 'Edit Project';
 
+                            console.log("self.user",self.user);
+                            console.log("$rootScope.user",$rootScope.user);
                         }
 
                         self.showElements();
