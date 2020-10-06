@@ -17,7 +17,7 @@
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        Metric Types
+                        Metrics
                     </div>
                 </div>
 
@@ -25,12 +25,12 @@
 
                     <section class="pad shadow">
 
-                        <h2>Metric Types</h2>
+                        <h2>Metrics</h2>
 
                         <p>
                             This program contains <strong>{{ page.metricCount
-                            }}</strong> metric <ng-pluralize count="page.metricCount"
-                                                             when="{'one': 'type','other': 'types'}"></ng-pluralize>.
+                            }}</strong> <ng-pluralize count="page.metricCount"
+                                                      when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.
                         </p>
 
                         <div class="collection-search reveal fade-in t0"
@@ -61,17 +61,18 @@
                                     <div class="body">
 
                                         <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                            {{ (practice.description || 'No description') }}</p>
+                                            {{ (metric.description || 'No description') }}
+                                        </p>
 
                                         <div class="actions">
-                                            <a class="snapshot--title" href="/metric-types/{{ metric.id }}"
+                                            <a class="snapshot--title" href="/metrics/{{ metric.id }}"
                                                title="Metric summary">
                                                 <i class="material-icons">
                                                     dashboard
                                                 </i>
                                             </a>
                                             <a class="snapshot--title"
-                                               href="/metric-types/{{ metric.id }}/edit" title="Edit metric"
+                                               href="/metrics/{{ metric.id }}/edit" title="Edit metric"
                                                data-ng-if="page.permissions.can_edit">
                                                 <i class="material-icons">
                                                     edit
@@ -99,6 +100,24 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
+<!--            <li data-ng-if="page.permissions.can_edit">-->
+<!--                <div class="add&#45;&#45;new&#45;&#45;wrapper">-->
+<!--                    <span>Create metric</span>-->
+<!--                    <a class="add&#45;&#45;new&#45;&#45;btn"-->
+<!--                       data-ng-click="page.showChildModal = !page.showChildModal">-->
+<!--                        <i class="material-icons">-->
+<!--                            add-->
+<!--                        </i>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </li>-->
+            <li data-ng-if="page.permissions.can_edit">
+                <a data-ng-click="page.showChildModal = !page.showChildModal" title="Create metric">
+                    <i class="material-icons">
+                        add
+                    </i>
+                </a>
+            </li>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/programs/{{ page.program.id }}" title="Summary">
                     <i class="material-icons">
@@ -138,6 +157,9 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" parent="page.program.id" organization="page.program.organization_id"
+         type="'metric'" visible="page.showChildModal"></div>
 
 </main>
 

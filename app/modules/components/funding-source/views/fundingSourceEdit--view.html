@@ -83,14 +83,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
 <!--             <li>
-                <a href="/metric-types/{{ page.fundingSource.id }}">
+                <a href="/metrics/{{ page.fundingSource.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.fundingSource.id }}/edit">
+                <a href="/metrics/{{ page.fundingSource.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>

@@ -37,7 +37,7 @@ angular.module('FieldDoc')
 
         function closeRoute() {
 
-            $location.path('/programs/' + self.programId + '/metric-types');
+            $location.path('/programs/' + self.programId + '/metrics');
 
         }
 
@@ -114,7 +114,7 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named Metric Type';
+                $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named Metric';
 
                 self.scrubFeature(self.metricType);
 
@@ -212,7 +212,7 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Metric type changes saved.',
+                    'msg': 'Metric changes saved.',
                     'prompt': 'OK'
                 }];
 
@@ -227,7 +227,7 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Metric type changes could not be saved.',
+                    'msg': 'Metric changes could not be saved.',
                     'prompt': 'OK'
                 }];
 
@@ -248,7 +248,7 @@ angular.module('FieldDoc')
                 self.alerts.push({
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this metric type.',
+                    'msg': 'Successfully deleted this metric.',
                     'prompt': 'OK'
                 });
 
@@ -263,7 +263,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this metric type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this metric.',
                         'prompt': 'OK'
                     }];
 
@@ -272,7 +272,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'You don’t have permission to delete this metric type.',
+                        'msg': 'You don’t have permission to delete this metric.',
                         'prompt': 'OK'
                     }];
 
@@ -281,7 +281,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Something went wrong while attempting to delete this metric type.',
+                        'msg': 'Something went wrong while attempting to delete this metric.',
                         'prompt': 'OK'
                     }];
 

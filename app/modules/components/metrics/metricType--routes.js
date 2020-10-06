@@ -11,7 +11,7 @@
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
         $routeProvider
-            .when('/metric-types', {
+            .when('/metrics', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
@@ -35,7 +35,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/metric-types/:metricId', {
+            .when('/metrics/:metricId', {
                 templateUrl: '/modules/components/metrics/views/metricTypeSummary--view.html?t=' + environment.version,
                 controller: 'MetricSummaryController',
                 controllerAs: 'page',
@@ -52,13 +52,13 @@ angular.module('FieldDoc')
 
                     },
                     metric: function(MetricType, $route) {
-                        return MetricType.get({
+                        return MetricType.single({
                             id: $route.current.params.metricId
                         });
                     }
                 }
             })
-            .when('/metric-types/:metricId/edit', {
+            .when('/metrics/:metricId/edit', {
                 templateUrl: '/modules/components/metrics/views/metricTypeEdit--view.html?t=' + environment.version,
                 controller: 'MetricTypeEditController',
                 controllerAs: 'page',

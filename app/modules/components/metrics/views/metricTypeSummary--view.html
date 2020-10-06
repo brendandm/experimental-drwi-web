@@ -21,7 +21,7 @@
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        <a href="/metric-types/{{ page.metricType.id }}">{{ page.metricType.name }}</a>
+                        <a href="/metrics/{{ page.metricType.id }}">{{ page.metricType.name }}</a>
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
@@ -33,21 +33,77 @@
                     {{ page.metricType.name }}
                 </h1>
 
-                <div class="group" style="max-height: none;">
+                <div style="display: flex; flex-flow: row wrap; width: 100%; justify-content: center;">
 
-                    <!-- Descriptors -->
+                    <div class="group" style="flex-basis: 50%; max-height: none;">
 
-                    <p>{{ page.metricType.description || 'No description provided.' }}</p>
+                        <p>{{ page.metricType.description || 'No description provided.' }}</p>
+
+                    </div>
+
+                    <div style="flex-basis: 50%; padding-left: 2rem;">
+
+                        <h2 style="margin: 0 0 1rem 0; width: 100%; text-align: left;">
+                            Goal
+                        </h2>
+
+                        <div class="group" style="max-height: none;">
+
+                            <h1>{{ page.metricType.target || 0 | number:2 }} {{ page.metricType.unit.plural }}</h1>
+
+                        </div>
+
+                        <div class="metric-summary-meter" data-ng-if="page.metricType.target">
+                            <div class="labels">
+                                <div>
+                                    <strong>Total implemented</strong>
+                                </div>
+                                <div>
+<!--                                    <strong>Metric target</strong>-->
+                                </div>
+                            </div>
+                            <div class="meter-bar">
+                                <div style="width: {{ page.metricType.percent_implemented }}%;"></div>
+                            </div>
+                            <div class="labels">
+                                <div data-ng-if="page.metricType.percent_implemented < 1">
+                                    {{ page.metricType.total_progress | number:2 }} (<1% of goal)
+                                </div>
+                                <div data-ng-if="page.metricType.percent_implemented >= 1">
+                                    {{ page.metricType.total_progress | number:2 }} ({{ page.metricType.percent_implemented | number:0
+                                    }}% of goal)
+                                </div>
+                                <div>
+                                    {{ page.metricType.target | number:2 }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <h2 style="margin: 2rem 0; width: 100%; text-align: left;">
-                    Goal
-                </h2>
+                <div style="width: 100%; margin: 2rem 0;">
 
-                <div class="group" style="max-height: none;">
+                    <h2 style="margin: 0 0 2rem; width: 100%; text-align: left;">
+                        Usage
+                    </h2>
 
-                    <h1>{{ page.metricType.target || 0 | number:2 }} {{ page.metricType.unit.plural }}</h1>
+                    <p style="margin: 0;">
+                        <span>There</span>
+                        <span>
+                            <ng-pluralize count="page.metricType.total_practices"
+                                          when="{'one': 'is','other': 'are'}"></ng-pluralize>
+                        </span>
+                        <span>
+                            <strong>{{ page.metricType.total_practices | number }}</strong>
+                        </span>
+                        <span>
+                            <ng-pluralize count="page.metricType.total_practices"
+                                          when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
+                        </span>
+                        <span>tracking this metric.</span>
+                    </p>
 
                 </div>
 
@@ -72,14 +128,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/metric-types/{{ page.metricType.id }}">
+                <a href="/metrics/{{ page.metricType.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.metricType.id }}/edit" title="Edit">
+                <a href="/metrics/{{ page.metricType.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>

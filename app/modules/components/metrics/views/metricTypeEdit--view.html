@@ -23,7 +23,7 @@
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div>
-                <a href="/metric-types/{{ page.metricType.id }}">{{ page.metricType.name }}</a>
+                <a href="/metrics/{{ page.metricType.id }}">{{ page.metricType.name }}</a>
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div>
@@ -135,14 +135,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/metric-types/{{ page.metricType.id }}">
+                <a href="/metrics/{{ page.metricType.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.metricType.id }}/edit" title="Edit">
+                <a href="/metrics/{{ page.metricType.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>

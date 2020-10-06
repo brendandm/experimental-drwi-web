@@ -41,8 +41,6 @@
 
                 $rootScope.page = {};
 
-                self.map = undefined;
-
                 self.status = {
                     loading: true
                 };
@@ -188,51 +186,6 @@
                         }
 
                         $timeout(closeAlerts, 2000);
-
-                    });
-
-                };
-
-                self.popupTemplate = function(feature) {
-
-                    return '<div class=\"project--popup\">' +
-                        '<div class=\"title--group\">' +
-                        '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
-                        '<a href=\"projects/' + feature.properties.id + '\">' +
-                        '<i class=\"material-icons\">keyboard_arrow_right</i>' +
-                        '</a>' +
-                        '</div>' +
-                        '</div>';
-
-                };
-
-                self.processLocations = function(map, features) {
-
-                    console.log(
-                        'self.processLocations --> features',
-                        features);
-
-                    features.forEach(function(feature, index) {
-
-                        if (feature.geometry &&
-                            feature.geometry.coordinates) {
-
-                            var tpl = self.popupTemplate(feature);
-
-                            var popup = new mapboxgl.Popup()
-                                .setLngLat(feature.geometry.coordinates)
-                                .setHTML(tpl);
-
-                            var markerEl = document.createElement('div');
-
-                            markerEl.className = 'project--marker';
-
-                            new mapboxgl.Marker(markerEl)
-                                .setLngLat(feature.geometry.coordinates)
-                                .setPopup(popup)
-                                .addTo(map);
-
-                        }
 
                     });
 

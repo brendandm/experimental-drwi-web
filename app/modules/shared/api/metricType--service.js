@@ -20,6 +20,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/metric-type')
                 },
+                single: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/metric-type/:id')
+                },
                 update: {
                     'method': 'PATCH'
                 }
