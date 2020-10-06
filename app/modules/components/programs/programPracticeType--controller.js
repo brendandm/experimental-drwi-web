@@ -8,7 +8,7 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('ProgramMetricsController', [
+        .controller('ProgramPracticeTypeController', [
             'Account',
             '$location',
             '$timeout',
@@ -19,37 +19,42 @@
             'user',
             '$window',
             'Program',
+            'Project',
             'program',
+            'PracticeType',
+            '$anchorScroll',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Program, program) {
+                $route, Utility, user, $window, Program,
+                Project, program, PracticeType, $anchorScroll) {
 
                 var self = this;
 
                 self.programId = $route.current.params.programId;
+
+                self.practiceTypeId = $route.current.params.practiceTypeId;
 
                 $rootScope.viewState = {
                     'program': true
                 };
 
                 $rootScope.toolbarState = {
-                    'viewMetricTypes': true
+                    'viewPracticeTypes': true
                 };
 
                 $rootScope.page = {};
 
-                self.map = undefined;
-
                 self.status = {
-                    loading: true
+                    loading: true,
+                    processing: true
                 };
 
                 self.alerts = [];
 
-                function closeAlerts() {
+                self.closeAlerts = function() {
 
                     self.alerts = [];
 
-                }
+                };
 
                 function closeRoute() {
 
@@ -136,7 +141,7 @@
 
                             self.cancelDelete();
 
-                            $timeout(closeAlerts, 2000);
+                            $timeout(self.closeAlerts, 2000);
 
                             if (index === 0) {
 
@@ -183,7 +188,7 @@
 
                         }
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -205,7 +210,7 @@
 
                         self.status.loading = false;
 
-                        self.loadMetricTypes();
+                        self.loadPracticeType();
 
                     }, function(errorResponse) {
 
@@ -217,11 +222,43 @@
 
                 };
 
-                self.loadMetricTypes = function() {
+                self.loadPracticeType = function() {
+
+                    PracticeType.getSingle({
+                        id: self.practiceTypeId,
+                        program: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('practiceType', successResponse);
+
+                        self.practiceType = successResponse;
+
+                        self.linkedMetrics = successResponse.metrics;
+
+                        self.loadProgramMetrics();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+                };
+
+                /*START LOAD PROGRAM METRICS
+                    this is for search. We want a list of all metrics to add
+                    to th practice type. This makes a list object that we need
+                    to maintain (ie remove add list items from
+                */
+
+                self.loadProgramMetrics = function() {
 
                     Program.metrics({
                         id: self.program.id,
                         group: 'alphabet',
+                        mapping: 'ptype:' + self.practiceType.id,
                         program_only: 'true',
                         sort: 'name'
                     }).$promise.then(function(successResponse) {
@@ -249,6 +286,119 @@
                         self.showElements();
 
                     });
+
+                };
+
+                self.syncMetricArrays = function(metricType, action) {
+
+                    if (action === 'add') {
+
+                        self.linkedMetrics.push(metricType);
+
+                    } else {
+
+                        self.linkedMetrics = self.linkedMetrics.filter(function (feature) {
+
+                            return feature.id !== metricType.id;
+
+                        });
+
+                    }
+
+                };
+
+                self.filterBaseMetrics = function(sourceArray) {
+
+                    let linkedIndex = [];
+
+                    self.linkedMetrics.forEach(function (feature) {
+
+                        linkedIndex.push(feature.id);
+
+                    });
+
+                    return sourceArray.filter(function (feature) {
+
+                        return linkedIndex.indexOf(feature.id) < 0;
+
+                    });
+
+                };
+
+                self.jumpToMetricManager = function() {
+
+                    $anchorScroll('idx');
+
+                };
+
+                self.manageMetric = function(metricType, action) {
+
+                    if ((action !== 'add' && action !== 'remove') ||
+                        self.status.processing) return;
+
+                    PracticeType.manageMetric({
+                        id: self.practiceType.id,
+                        metricId: metricType.id,
+                        action: action,
+                        program: self.program.id
+                    }, {}).$promise.then(function(successResponse) {
+
+                        console.log(
+                            'self.manageMetric.successResponse',
+                            successResponse
+                        );
+
+                        metricType.linked = !metricType.linked;
+
+                        if (action === 'add') {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Metric type linked to practice type.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Metric type un-linked from practice type.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                        self.syncMetricArrays(metricType, action);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log(
+                            'self.manageMetric.errorResponse',
+                            errorResponse
+                        );
+
+                        // Do something with the error
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the changes were not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    });
+
+                    self.metricType = undefined;
 
                 };
 

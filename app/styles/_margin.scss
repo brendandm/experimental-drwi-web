@@ -1,0 +1,445 @@
+//
+// _margin.scss
+//
+// This stylesheet is written in SASS(1) and contains variables that apply to
+// the site as a whole. This makes us more effective in retaining a consistency
+// throughout the entire site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Margin Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/margin
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated margin rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply margin rules to surrounding elements to achieve the
+// desired result.
+//
+
+//
+// Remove all margin.
+//
+
+.margin-0 {
+    margin: $rem-0;
+}
+
+//
+// Set biaxial margin.
+//
+
+.margin-25p {
+    margin: $rem-25p;
+}
+
+.margin-50p {
+    margin: $rem-50p;
+}
+
+.margin-75p {
+    margin: $rem-75p;
+}
+
+.margin-1 {
+    margin: $rem-1;
+}
+
+.margin-2 {
+    margin: $rem-2;
+}
+
+.margin-3 {
+    margin: $rem-3;
+}
+
+.margin-4 {
+    margin: $rem-4;
+}
+
+.margin-5 {
+    margin: $rem-5;
+}
+
+.margin-6 {
+    margin: $rem-6;
+}
+
+.margin-7 {
+    margin: $rem-7;
+}
+
+.margin-8 {
+    margin: $rem-8;
+}
+
+.margin-9 {
+    margin: $rem-9;
+}
+
+.margin-10 {
+    margin: $rem-10;
+}
+
+//
+// Set margin on a single axis.
+//
+
+$margin-y-25p: 0.25rem 0 !important;
+$margin-x-25p: 0 0.25rem !important;
+$margin-y-50p: 0.50rem 0 !important;
+$margin-x-50p: 0 0.50rem !important;
+$margin-y-75p: 0.75rem 0 !important;
+$margin-x-75p: 0 0.75rem !important;
+$margin-y-1: 1rem 0 !important;
+$margin-x-1: 0 1rem !important;
+$margin-y-2: 2rem 0 !important;
+$margin-x-2: 0 2rem !important;
+$margin-y-3: 3rem 0 !important;
+$margin-x-3: 0 3rem !important;
+$margin-y-4: 4rem 0 !important;
+$margin-x-4: 0 4rem !important;
+$margin-y-5: 5rem 0 !important;
+$margin-x-5: 0 5rem !important;
+$margin-y-6: 4rem 0 !important;
+$margin-x-6: 0 6rem !important;
+$margin-y-7: 7rem 0 !important;
+$margin-x-7: 0 7rem !important;
+$margin-y-8: 8rem 0 !important;
+$margin-x-8: 0 8rem !important;
+$margin-y-9: 9rem 0 !important;
+$margin-x-9: 0 9rem !important;
+$margin-y-10: 10rem 0 !important;
+$margin-x-10: 0 10rem !important;
+
+.margin-y-25p {
+    margin: $margin-y-25p;
+}
+
+.margin-x-25p {
+    margin: $margin-x-25p;
+}
+
+.margin-y-50p {
+    margin: $margin-y-50p;
+}
+
+.margin-x-50p {
+    margin: $margin-x-50p;
+}
+
+.margin-y-75p {
+    margin: $margin-y-75p;
+}
+
+.margin-x-75p {
+    margin: $margin-x-75p;
+}
+
+.margin-y-1 {
+    margin: $margin-y-1;
+}
+
+.margin-x-1 {
+    margin: $margin-x-1;
+}
+
+.margin-y-2 {
+    margin: $margin-y-2;
+}
+
+.margin-x-2 {
+    margin: $margin-x-2;
+}
+
+.margin-y-3 {
+    margin: $margin-y-3;
+}
+
+.margin-x-3 {
+    margin: $margin-x-3;
+}
+
+.margin-y-4 {
+    margin: $margin-y-4;
+}
+
+.margin-x-4 {
+    margin: $margin-x-4;
+}
+
+.margin-y-5 {
+    margin: $margin-y-5;
+}
+
+.margin-x-5 {
+    margin: $margin-x-5;
+}
+
+.margin-y-6 {
+    margin: $margin-y-6;
+}
+
+.margin-x-6 {
+    margin: $margin-x-6;
+}
+
+.margin-y-7 {
+    margin: $margin-y-7;
+}
+
+.margin-x-7 {
+    margin: $margin-x-7;
+}
+
+.margin-y-8 {
+    margin: $margin-y-8;
+}
+
+.margin-x-8 {
+    margin: $margin-x-8;
+}
+
+.margin-y-9 {
+    margin: $margin-y-9;
+}
+
+.margin-x-9 {
+    margin: $margin-x-9;
+}
+
+.margin-y-10 {
+    margin: $margin-y-10;
+}
+
+.margin-x-10 {
+    margin: $margin-x-10;
+}
+
+//
+// Set top margin only.
+//
+
+.margin-t-25p {
+    margin-top: $rem-25p;
+}
+
+.margin-t-50p {
+    margin-top: $rem-50p;
+}
+
+.margin-t-75p {
+    margin-top: $rem-75p;
+}
+
+.margin-t-1 {
+    margin-top: $rem-1;
+}
+
+.margin-t-2 {
+    margin-top: $rem-2;
+}
+
+.margin-t-3 {
+    margin-top: $rem-3;
+}
+
+.margin-t-4 {
+    margin-top: $rem-4;
+}
+
+.margin-t-5 {
+    margin-top: $rem-5;
+}
+
+.margin-t-6 {
+    margin-top: $rem-6;
+}
+
+.margin-t-7 {
+    margin-top: $rem-7;
+}
+
+.margin-t-8 {
+    margin-top: $rem-8;
+}
+
+.margin-t-9 {
+    margin-top: $rem-9;
+}
+
+.margin-t-10 {
+    margin-top: $rem-10;
+}
+
+//
+// Set right margin only.
+//
+
+.margin-r-25p {
+    margin-right: $rem-25p;
+}
+
+.margin-r-50p {
+    margin-right: $rem-50p;
+}
+
+.margin-r-75p {
+    margin-right: $rem-75p;
+}
+
+.margin-r-1 {
+    margin-right: $rem-1;
+}
+
+.margin-r-2 {
+    margin-right: $rem-2;
+}
+
+.margin-r-3 {
+    margin-right: $rem-3;
+}
+
+.margin-r-4 {
+    margin-right: $rem-4;
+}
+
+.margin-r-5 {
+    margin-right: $rem-5;
+}
+
+.margin-r-6 {
+    margin-right: $rem-6;
+}
+
+.margin-r-7 {
+    margin-right: $rem-7;
+}
+
+.margin-r-8 {
+    margin-right: $rem-8;
+}
+
+.margin-r-9 {
+    margin-right: $rem-9;
+}
+
+.margin-r-10 {
+    margin-right: $rem-10;
+}
+
+//
+// Set bottom margin only.
+//
+
+.margin-b-25p {
+    margin-bottom: $rem-25p;
+}
+
+.margin-b-50p {
+    margin-bottom: $rem-50p;
+}
+
+.margin-b-75p {
+    margin-bottom: $rem-75p;
+}
+
+.margin-b-1 {
+    margin-bottom: $rem-1;
+}
+
+.margin-b-2 {
+    margin-bottom: $rem-2;
+}
+
+.margin-b-3 {
+    margin-bottom: $rem-3;
+}
+
+.margin-b-4 {
+    margin-bottom: $rem-4;
+}
+
+.margin-b-5 {
+    margin-bottom: $rem-5;
+}
+
+.margin-b-6 {
+    margin-bottom: $rem-6;
+}
+
+.margin-b-7 {
+    margin-bottom: $rem-7;
+}
+
+.margin-b-8 {
+    margin-bottom: $rem-8;
+}
+
+.margin-b-9 {
+    margin-bottom: $rem-9;
+}
+
+.margin-b-10 {
+    margin-bottom: $rem-10;
+}
+
+//
+// Set left margin only.
+//
+
+.margin-l-25p {
+    margin-left: $rem-25p;
+}
+
+.margin-l-50p {
+    margin-left: $rem-50p;
+}
+
+.margin-l-75p {
+    margin-left: $rem-75p;
+}
+
+.margin-l-1 {
+    margin-left: $rem-1;
+}
+
+.margin-l-2 {
+    margin-left: $rem-2;
+}
+
+.margin-l-3 {
+    margin-left: $rem-3;
+}
+
+.margin-l-4 {
+    margin-left: $rem-4;
+}
+
+.margin-l-5 {
+    margin-left: $rem-5;
+}
+
+.margin-l-6 {
+    margin-left: $rem-6;
+}
+
+.margin-l-7 {
+    margin-left: $rem-7;
+}
+
+.margin-l-8 {
+    margin-left: $rem-8;
+}
+
+.margin-l-9 {
+    margin-left: $rem-9;
+}
+
+.margin-l-10 {
+    margin-left: $rem-10;
+}

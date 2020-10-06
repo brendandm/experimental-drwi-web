@@ -1,0 +1,445 @@
+//
+// _padding.scss
+//
+// This stylesheet is written in SASS(1) and contains variables that apply to
+// the site as a whole. This makes us more effective in retaining a consistency
+// throughout the entire site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Padding Variables
+//
+// Remember that the shorthand pattern is top/right/bottom/left.
+// See: https://developer.mozilla.org/en-US/docs/Web/CSS/padding
+//
+// These combinations should cover most scenarios in the application.
+// If you find yourself needing to introduce complicated padding rules,
+// first consider adjusting your HTML layout. Always remember that you
+// can also apply padding rules to surrounding elements to achieve the
+// desired result.
+//
+
+//
+// Remove all padding.
+//
+
+.pad-0 {
+    padding: $rem-0;
+}
+
+//
+// Set biaxial padding.
+//
+
+.pad-25p {
+    padding: $rem-25p;
+}
+
+.pad-50p {
+    padding: $rem-50p;
+}
+
+.pad-75p {
+    padding: $rem-75p;
+}
+
+.pad-1 {
+    padding: $rem-1;
+}
+
+.pad-2 {
+    padding: $rem-2;
+}
+
+.pad-3 {
+    padding: $rem-3;
+}
+
+.pad-4 {
+    padding: $rem-4;
+}
+
+.pad-5 {
+    padding: $rem-5;
+}
+
+.pad-6 {
+    padding: $rem-6;
+}
+
+.pad-7 {
+    padding: $rem-7;
+}
+
+.pad-8 {
+    padding: $rem-8;
+}
+
+.pad-9 {
+    padding: $rem-9;
+}
+
+.pad-10 {
+    padding: $rem-10;
+}
+
+//
+// Set padding on a single axis.
+//
+
+$pad-y-25p: 0.25rem 0 !important;
+$pad-x-25p: 0 0.25rem !important;
+$pad-y-50p: 0.50rem 0 !important;
+$pad-x-50p: 0 0.50rem !important;
+$pad-y-75p: 0.75rem 0 !important;
+$pad-x-75p: 0 0.75rem !important;
+$pad-y-1: 1rem 0 !important;
+$pad-x-1: 0 1rem !important;
+$pad-y-2: 2rem 0 !important;
+$pad-x-2: 0 2rem !important;
+$pad-y-3: 3rem 0 !important;
+$pad-x-3: 0 3rem !important;
+$pad-y-4: 4rem 0 !important;
+$pad-x-4: 0 4rem !important;
+$pad-y-5: 5rem 0 !important;
+$pad-x-5: 0 5rem !important;
+$pad-y-6: 6rem 0 !important;
+$pad-x-6: 0 6rem !important;
+$pad-y-7: 7rem 0 !important;
+$pad-x-7: 0 7rem !important;
+$pad-y-8: 8rem 0 !important;
+$pad-x-8: 0 8rem !important;
+$pad-y-9: 9rem 0 !important;
+$pad-x-9: 0 9rem !important;
+$pad-y-10: 10rem 0 !important;
+$pad-x-10: 0 10rem !important;
+
+.pad-y-25p {
+    padding: $pad-y-25p;
+}
+
+.pad-x-25p {
+    padding: $pad-x-25p;
+}
+
+.pad-y-50p {
+    padding: $pad-y-50p;
+}
+
+.pad-x-50p {
+    padding: $pad-x-50p;
+}
+
+.pad-y-75p {
+    padding: $pad-y-75p;
+}
+
+.pad-x-75p {
+    padding: $pad-x-75p;
+}
+
+.pad-y-1 {
+    padding: $pad-y-1;
+}
+
+.pad-x-1 {
+    padding: $pad-x-1;
+}
+
+.pad-y-2 {
+    padding: $pad-y-2;
+}
+
+.pad-x-2 {
+    padding: $pad-x-2;
+}
+
+.pad-y-3 {
+    padding: $pad-y-3;
+}
+
+.pad-x-3 {
+    padding: $pad-x-3;
+}
+
+.pad-y-4 {
+    padding: $pad-y-4;
+}
+
+.pad-x-4 {
+    padding: $pad-x-4;
+}
+
+.pad-y-5 {
+    padding: $pad-y-5;
+}
+
+.pad-x-5 {
+    padding: $pad-x-5;
+}
+
+.pad-y-6 {
+    padding: $pad-y-6;
+}
+
+.pad-x-6 {
+    padding: $pad-x-6;
+}
+
+.pad-y-7 {
+    padding: $pad-y-7;
+}
+
+.pad-x-7 {
+    padding: $pad-x-7;
+}
+
+.pad-y-8 {
+    padding: $pad-y-8;
+}
+
+.pad-x-8 {
+    padding: $pad-x-8;
+}
+
+.pad-y-9 {
+    padding: $pad-y-9;
+}
+
+.pad-x-9 {
+    padding: $pad-x-9;
+}
+
+.pad-y-10 {
+    padding: $pad-y-10;
+}
+
+.pad-x-10 {
+    padding: $pad-x-10;
+}
+
+//
+// Set top padding only.
+//
+
+.pad-t-25p {
+    padding-top: $rem-25p;
+}
+
+.pad-t-50p {
+    padding-top: $rem-50p;
+}
+
+.pad-t-75p {
+    padding-top: $rem-75p;
+}
+
+.pad-t-1 {
+    padding-top: $rem-1;
+}
+
+.pad-t-2 {
+    padding-top: $rem-2;
+}
+
+.pad-t-3 {
+    padding-top: $rem-3;
+}
+
+.pad-t-4 {
+    padding-top: $rem-4;
+}
+
+.pad-t-5 {
+    padding-top: $rem-5;
+}
+
+.pad-t-6 {
+    padding-top: $rem-6;
+}
+
+.pad-t-7 {
+    padding-top: $rem-7;
+}
+
+.pad-t-8 {
+    padding-top: $rem-8;
+}
+
+.pad-t-9 {
+    padding-top: $rem-9;
+}
+
+.pad-t-10 {
+    padding-top: $rem-10;
+}
+
+//
+// Set right padding only.
+//
+
+.pad-r-25p {
+    padding-right: $rem-25p;
+}
+
+.pad-r-50p {
+    padding-right: $rem-50p;
+}
+
+.pad-r-75p {
+    padding-right: $rem-75p;
+}
+
+.pad-r-1 {
+    padding-right: $rem-1;
+}
+
+.pad-r-2 {
+    padding-right: $rem-2;
+}
+
+.pad-r-3 {
+    padding-right: $rem-3;
+}
+
+.pad-r-4 {
+    padding-right: $rem-4;
+}
+
+.pad-r-5 {
+    padding-right: $rem-5;
+}
+
+.pad-r-6 {
+    padding-right: $rem-6;
+}
+
+.pad-r-7 {
+    padding-right: $rem-7;
+}
+
+.pad-r-8 {
+    padding-right: $rem-8;
+}
+
+.pad-r-9 {
+    padding-right: $rem-9;
+}
+
+.pad-r-10 {
+    padding-right: $rem-10;
+}
+
+//
+// Set bottom padding only.
+//
+
+.pad-b-25p {
+    padding-bottom: $rem-25p;
+}
+
+.pad-b-50p {
+    padding-bottom: $rem-50p;
+}
+
+.pad-b-75p {
+    padding-bottom: $rem-75p;
+}
+
+.pad-b-1 {
+    padding-bottom: $rem-1;
+}
+
+.pad-b-2 {
+    padding-bottom: $rem-2;
+}
+
+.pad-b-3 {
+    padding-bottom: $rem-3;
+}
+
+.pad-b-4 {
+    padding-bottom: $rem-4;
+}
+
+.pad-b-5 {
+    padding-bottom: $rem-5;
+}
+
+.pad-b-6 {
+    padding-bottom: $rem-6;
+}
+
+.pad-b-7 {
+    padding-bottom: $rem-7;
+}
+
+.pad-b-8 {
+    padding-bottom: $rem-8;
+}
+
+.pad-b-9 {
+    padding-bottom: $rem-9;
+}
+
+.pad-b-10 {
+    padding-bottom: $rem-10;
+}
+
+//
+// Set left padding only.
+//
+
+.pad-l-25p {
+    padding-left: $rem-25p;
+}
+
+.pad-l-50p {
+    padding-left: $rem-50p;
+}
+
+.pad-l-75p {
+    padding-left: $rem-75p;
+}
+
+.pad-l-1 {
+    padding-left: $rem-1;
+}
+
+.pad-l-2 {
+    padding-left: $rem-2;
+}
+
+.pad-l-3 {
+    padding-left: $rem-3;
+}
+
+.pad-l-4 {
+    padding-left: $rem-4;
+}
+
+.pad-l-5 {
+    padding-left: $rem-5;
+}
+
+.pad-l-6 {
+    padding-left: $rem-6;
+}
+
+.pad-l-7 {
+    padding-left: $rem-7;
+}
+
+.pad-l-8 {
+    padding-left: $rem-8;
+}
+
+.pad-l-9 {
+    padding-left: $rem-9;
+}
+
+.pad-l-10 {
+    padding-left: $rem-10;
+}

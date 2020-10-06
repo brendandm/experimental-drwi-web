@@ -70,9 +70,6 @@ angular.module('FieldDoc')
                     }
                 }
             })
-
-
-
             .when('/programs/:programId/edit', {
                 templateUrl: '/modules/components/programs/views/programEdit--view.html?t=' + environment.version,
                 controller: 'ProgramEditController',
@@ -127,6 +124,55 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/programs/views/programMetrics--view.html?t=' + environment.version,
                 controller: 'ProgramMetricsController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
+            .when('/programs/:programId/practice-types', {
+                templateUrl: '/modules/components/programs/views/programPracticeTypeList--view.html?t=' + environment.version,
+                controller: 'ProgramPracticeTypeListController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
+            .when('/programs/:programId/practice-type/:practiceTypeId', {
+                templateUrl: '/modules/components/programs/views/programPracticeType--view.html?t=' + environment.version,
+                controller: 'ProgramPracticeTypeController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 

@@ -1,0 +1,102 @@
+//
+// _list.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide typographic
+// specifications.
+//
+
+.index {
+    width: 100%;
+    padding: 2rem;
+
+    //h2 {
+    //    margin: 2rem 0;
+    //}
+
+}
+
+.selection-group {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+
+    .selection-item {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1em;
+
+        > span {
+            display: flex;
+            flex-grow: 0;
+            flex-shrink: 1;
+            margin-right: 2rem;
+        }
+
+        .link-action {
+            display: flex;
+            flex-flow: row nowrap;
+            flex-grow: 1;
+            flex-shrink: 0;
+            justify-content: flex-end;
+            align-items: center;
+
+            span {
+                display: flex;
+                flex-grow: 0;
+                flex-shrink: 1;
+                margin-right: 1rem;
+            }
+
+            button {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: none;
+                border-radius: 4px;
+                outline: 0;
+                font-size: 1rem;
+                padding: .5rem 1rem;
+                min-width: 4rem;
+                transition: all .2s cubic-bezier(.4,0,.2,1);
+                cursor: pointer;
+            }
+
+            .unlink {
+                background: transparent;
+                color: #2196f3;
+                border: 1px solid #e0e0e0;
+            }
+
+            .unlink:hover {
+                background: #eef7fe;
+                border: 1px solid #2196F3;
+            }
+
+            .link {
+                background: #2196F3;
+                color: #fff;
+                border: 1px solid #2196F3;
+            }
+
+            .link:hover {
+                background: #0c83e1;
+            }
+
+        }
+
+    }
+
+    .selection-item:last-of-type {
+        border-bottom: none;
+    }
+
+}
+
