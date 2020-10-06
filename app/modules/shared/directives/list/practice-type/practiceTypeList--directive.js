@@ -13,6 +13,7 @@
                 return {
                     restrict: 'EA',
                     scope: {
+                        'dismissable': '=?',
                         'index': '=?',
                         'letters': '=?',
                         'link': '@link',

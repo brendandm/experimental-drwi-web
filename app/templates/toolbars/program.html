@@ -1,39 +1,39 @@
- <nav id="toolbar" class="toolbar">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/programs/{{ page.program.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write">
-                <a href="/programs/{{ page.program.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.viewPracticeTypes}">
-                <a href="/programs/{{ page.program.id  }}/practice-types" title="Practice types">
-                    <i class="material-icons">
-                        category
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.viewMetricTypes}">
-                <a href="/programs/{{ page.program.id  }}/metrics" title="Metric types">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/programs/{{ page.program.id }}/tags" title="Tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+<nav id="toolbar" class="toolbar">
+    <ul>
+        <li data-ng-class="{active: $root.toolbarState.dashboard}">
+            <a href="/programs/{{ page.program.id }}" title="Summary">
+                <i class="material-icons">
+                    dashboard
+                </i>
+            </a>
+        </li>
+        <li data-ng-if="page.permissions.write">
+            <a href="/programs/{{ page.program.id }}/edit" title="Edit">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        </li>
+        <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.viewPracticeTypes}">
+            <a href="/programs/{{ page.program.id  }}/practice-types" title="Practice types">
+                <i class="material-icons">
+                    category
+                </i>
+            </a>
+        </li>
+        <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.viewMetricTypes}">
+            <a href="/programs/{{ page.program.id  }}/metrics" title="Metric types">
+                <i class="material-icons">
+                    multiline_chart
+                </i>
+            </a>
+        </li>
+        <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.editTags}">
+            <a href="/programs/{{ page.program.id }}/tags" title="Tags">
+                <i class="material-icons">
+                    local_offer
+                </i>
+            </a>
+        </li>
+    </ul>
+</nav>

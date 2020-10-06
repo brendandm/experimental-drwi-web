@@ -17,7 +17,7 @@
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        Practice Types
+                        Practice types
                     </div>
                 </div>
 
@@ -25,56 +25,9 @@
 
                     <!-- Descriptors -->
 
-                    <article class="pad">
+                    <article class="pad margin-0">
 
-                        <h1>{{ page.program.name || 'Un-named' }}</h1>
-
-                        <div class="last-modified-summary">
-
-                            <div data-ng-if="page.program.id && page.program.last_modified_by.first_name && page.program.last_modified_by.last_name" class="modtime">
-                                Last modified by {{ page.program.last_modified_by.first_name }} {{ page.program.last_modified_by.last_name }} on {{ page.program.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
-                            </div>
-
-                            <div class="history-link-wrapper">
-                                <span class="material-icons">
-                                    history
-                                </span>
-                                <a href="/programs/{{ page.program.id }}/history">
-                                    View change log
-                                </a>
-                            </div>
-
-                        </div>
-
-                        <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
-
-                        <p data-ng-if="page.program.website" style="display: flex; flex-flow: row nowrap; align-items: center;">
-                            <i class="material-icons">
-                                open_in_new
-                            </i>
-                            <a href="{{ page.program.website }}" target="_blank">&nbsp;View website</a>
-                        </p>
-
-                        <div data-ng-if="page.tags && page.tags.length">
-
-                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
-
-                            <div class="tag--group">
-
-                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
-                                    <div class="colorize" data-ng-if="tag.color">
-                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
-                                        <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
-                                    </div>
-                                    <div data-ng-if="!tag.color || tag.color.length < 7">
-                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
-                                        <span>{{ tag.name }}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
+                        <h1 class="margin-0">{{ page.program.name || 'Un-named' }}</h1>
 
                     </article>
 
@@ -86,64 +39,73 @@
 
                         <h2>Practice types</h2>
 
-                        <p>
-                            This program contains <strong>{{ page.summary.matches }}</strong> practice
-                            <ng-pluralize count="page.summary.matches"
-                                          when="{'one': 'type','other': 'types'}"></ng-pluralize>
-                            .
-                        </p>
+                        <div practice-type-list
+                             index="page.practiceTypes"
+                             letters="page.letters"
+                             link="true"
+                             selectable="false"
+                             summary="page.summary"
+                             visible="true"
+                             dismissable="false"
+                             style="width: 100%;"></div>
 
-                        <div class="collection-search reveal fade-in t0">
+<!--                        <p>-->
+<!--                            This program contains <strong>{{ page.summary.matches }}</strong> practice-->
+<!--                            <ng-pluralize count="page.summary.matches"-->
+<!--                                          when="{'one': 'type','other': 'types'}"></ng-pluralize>.-->
+<!--                        </p>-->
 
-                            <input style="float:left; display:inline-block; clear:right;" type="text"
-                                   class="search-bar list-filter" data-ng-if="!page.status.loading"
-                                   data-ng-model="page.queryToken" placeholder="Find a practice type&hellip;">
+<!--                        <div class="collection-search reveal fade-in t0">-->
 
-                        </div>
+<!--                            <input style="float:left; display:inline-block; clear:right;" type="text"-->
+<!--                                   class="search-bar list-filter" data-ng-if="!page.status.loading"-->
+<!--                                   data-ng-model="page.queryToken" placeholder="Find a practice type&hellip;">-->
 
-                        <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>
+<!--                        </div>-->
 
-                        <div data-ng-repeat="(key, group) in page.practiceTypes">
+<!--                        <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>-->
 
-                            <h2 class="index-group-heading" id="{{ key | lowercase }}">
-                                <a href="#{{ key }}"></a>
-                                <span>{{ key }}</span>
-                            </h2>
+<!--                        <div data-ng-repeat="(key, group) in page.practiceTypes">-->
 
-                            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+<!--                            <h2 class="index-group-heading" id="{{ key | lowercase }}">-->
+<!--                                <a href="#{{ key }}"></a>-->
+<!--                                <span>{{ key }}</span>-->
+<!--                            </h2>-->
 
-                                <li class="card reveal fade-in"
-                                    style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                    data-ng-repeat="practice in group | orderBy:'name' | filter: page.queryToken">
+<!--                            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">-->
 
-                                    <div class="card--content">
+<!--                                <li class="card reveal fade-in"-->
+<!--                                    style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"-->
+<!--                                    data-ng-repeat="practice in group | orderBy:'name' | filter: page.queryToken">-->
 
-                                        <div class="name" style="flex-flow: column; align-items: flex-start;">
+<!--                                    <div class="card&#45;&#45;content">-->
 
-                                            <a href="/programs/{{ page.program.id }}/practice-type/{{ practice.id }}"
-                                               style="text-decoration: none;">
-                                                {{ practice.name }}
-                                            </a>
+<!--                                        <div class="name" style="flex-flow: column; align-items: flex-start;">-->
 
-                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;"
-                                                  data-ng-if="practice.group">{{ practice.group }}
-                                            </span>
+<!--                                            <a href="/programs/{{ page.program.id }}/practice-type/{{ practice.id }}"-->
+<!--                                               style="text-decoration: none;">-->
+<!--                                                {{ practice.name }}-->
+<!--                                            </a>-->
 
-                                        </div>
+<!--                                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;"-->
+<!--                                                  data-ng-if="practice.group">{{ practice.group }}-->
+<!--                                            </span>-->
 
-                                        <div class="body">
-                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                                {{ practice.description || 'No description provided.' }}
-                                            </p>
-                                        </div>
+<!--                                        </div>-->
 
-                                    </div>
+<!--                                        <div class="body">-->
+<!--                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">-->
+<!--                                                {{ practice.description || 'No description provided.' }}-->
+<!--                                            </p>-->
+<!--                                        </div>-->
 
-                                </li>
+<!--                                    </div>-->
 
-                            </ul>
+<!--                                </li>-->
 
-                        </div>
+<!--                            </ul>-->
+
+<!--                        </div>-->
 
                     </section>
 
