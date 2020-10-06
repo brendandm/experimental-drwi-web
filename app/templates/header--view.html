@@ -11,19 +11,31 @@
             </section>
 
             <div global-search class="global--search" data-ng-if="$root.user.id">
-                <input type="search" class="search" value="" placeholder="Search your workspace" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue, 'workspace')" typeahead-on-select="routeTo($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                <input type="search"
+                       class="search"
+                       value=""
+                       style="width:70%;"
+                       placeholder="Search your workspace" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue, 'workspace')" typeahead-on-select="routeTo($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
             </div>
 
             <nav class="site-navigation-utility align-right">
 
                 <ul class="utility-navigation">
+                    <li>
+                        <a href="/account">
+                            {{page.user.properties.first_name}}&nbsp;{{page.user.properties.last_name}}
+                        </a>
+
+                    </li>
                     <li data-ng-if="$root.user.id">
                         <a href="/account">
                             <i class="material-icons">
                             account_circle
                             </i>
                         </a>
+
                     </li>
+
                     <li data-ng-if="$root.user.id">
                         <a href="/logout" class="logout">
                             Logout
