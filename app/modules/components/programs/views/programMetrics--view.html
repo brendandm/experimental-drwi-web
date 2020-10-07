@@ -25,7 +25,19 @@
 
                     <section class="pad">
 
-                        <h2>Metrics</h2>
+                        <div class="create-heading">
+                            <h2 class="margin-0">
+                                Metrics ({{ page.summary.matches }})
+                            </h2>
+                            <div class="create-new" data-ng-click="page.showChildModal = !page.showChildModal">
+                                <span class="material-icons">
+                                    add
+                                </span>
+                                <button type="button" class="pad-l-50p">
+                                    Create
+                                </button>
+                            </div>
+                        </div>
 
                         <div feature-idx
                              feature-type="metric"
@@ -59,6 +71,9 @@
             </div>
         </div>
     </div>
+
+    <div creation-dialog alerts="page.alerts" parent="page.program.id" organization="page.program.organization_id"
+         type="'metric'" visible="page.showChildModal"></div>
 
 </main>
 

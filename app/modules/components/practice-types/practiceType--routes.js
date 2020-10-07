@@ -39,6 +39,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/practice-types/views/practiceTypeSummary--view.html?t=' + environment.version,
                 controller: 'PracticeTypeSummaryController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 

@@ -14,10 +14,8 @@
     <h2 data-ng-if="enableSelection">Select {{ featureType }}</h2>
 
     <p>
-        This program contains <strong>{{ summary.matches }}</strong> practice
-        <ng-pluralize count="summary.matches"
-                      when="{'one': 'type','other': 'types'}"></ng-pluralize>. Type in the box below to search
-        {{ featureType }}s by name or use the letters to browse the list alphabetically.
+        Type in the box below to search {{ featureType }}s by name or use the letters to browse the list
+        alphabetically.
     </p>
 
     <div data-ng-if="practiceType && selectionId" style="padding-bottom: 2rem;">

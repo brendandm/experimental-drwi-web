@@ -37,6 +37,8 @@
                     },
                     link: function(scope, element, attrs) {
 
+                        scope.label = scope.type.replace(/_/g, ' ');
+
                         if (scope.resetType === 'undefined') {
 
                             scope.resetType = true;

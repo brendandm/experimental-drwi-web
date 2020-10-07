@@ -24,6 +24,12 @@ angular.module('FieldDoc')
 
             var self = this;
 
+            console.log(
+                $location.path()
+            );
+
+            $location.url($location.path());
+
             self.programId = $route.current.params.programId;
 
             $rootScope.toolbarState = {
@@ -175,13 +181,9 @@ angular.module('FieldDoc')
 
                     self.metricTypes = successResponse.features.groups;
 
-                    self.metricCount = self.metricTypes.length;
-
                     self.letters = successResponse.features.letters;
 
                     self.summary = successResponse.summary;
-
-                    console.log("self.metricCount", self.metricCount);
 
                     self.showElements();
 
@@ -262,7 +264,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Metric type linked to practice type.',
+                            'msg': 'Metric linked to practice type.',
                             'prompt': 'OK'
                         }];
 
@@ -271,7 +273,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Metric type un-linked from practice type.',
+                            'msg': 'Metric un-linked from practice type.',
                             'prompt': 'OK'
                         }];
 

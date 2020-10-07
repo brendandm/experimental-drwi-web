@@ -191,7 +191,8 @@
 
                 </div>
 
-                <div class="index reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
+                <div id="idx" class="index reveal fade-in t2"
+                     data-ng-if="page.permissions.write && page.metricTypes">
 
                     <h2 class="margin-b-2">Manage linked metrics</h2>
 
@@ -253,7 +254,7 @@
                                         <span class="material-icons">
                                             link
                                         </span>
-                                        Link metric type
+                                        Link metric
                                     </button>
 
                                     <button class="unlink" data-ng-if="feature.linked"
@@ -261,7 +262,7 @@
                                         <span class="material-icons">
                                             link_off
                                         </span>
-                                        Unlink metric type
+                                        Unlink metric
                                     </button>
 
                                 </div>
