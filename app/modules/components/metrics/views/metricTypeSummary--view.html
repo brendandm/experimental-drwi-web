@@ -134,14 +134,14 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
+            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/metrics/{{ page.metricType.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && !page.metricType.locked">
+            <li data-ng-if="page.permissions.write && !page.metricType.locked">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
                     <p>Do you want to delete this metric type?</p>
                     <div class="actions">

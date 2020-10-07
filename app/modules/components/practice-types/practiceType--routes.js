@@ -52,7 +52,7 @@ angular.module('FieldDoc')
 
                     },
                     practiceType: function(PracticeType, $route) {
-                        return PracticeType.get({
+                        return PracticeType.getSingle({
                             id: $route.current.params.practiceTypeId
                         });
                     }

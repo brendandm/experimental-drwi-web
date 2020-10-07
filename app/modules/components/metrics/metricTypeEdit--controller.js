@@ -104,6 +104,8 @@ angular.module('FieldDoc')
 
                 self.parseFeature(successResponse);
 
+                self.permissions = successResponse.permissions;
+
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -111,12 +113,7 @@ angular.module('FieldDoc')
 
                 }
 
-                self.permissions.can_edit = successResponse.permissions.write;
-                self.permissions.can_delete = successResponse.permissions.write;
-
                 $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named Metric';
-
-                self.scrubFeature(self.metricType);
 
                 self.showElements();
 
@@ -155,7 +152,9 @@ angular.module('FieldDoc')
                 'extent',
                 'geometry',
                 'last_modified_by',
+                'model',
                 'organization',
+                'program',
                 'tags',
                 'tasks',
                 'unit'
@@ -329,8 +328,7 @@ angular.module('FieldDoc')
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: false
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
                 self.programs = self.extractPrograms($rootScope.user);

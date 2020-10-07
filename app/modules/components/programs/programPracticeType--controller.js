@@ -24,8 +24,8 @@
             'PracticeType',
             '$anchorScroll',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Program,
-                Project, program, PracticeType, $anchorScroll) {
+                     $route, Utility, user, $window, Program,
+                     Project, program, PracticeType, $anchorScroll) {
 
                 var self = this;
 

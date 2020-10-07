@@ -6,14 +6,23 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeTypeEditController', function(Account, $location, $log,
-        PracticeType, practiceType, $q, $rootScope, $route, $timeout, $interval, user, Utility) {
+    .controller('PracticeTypeEditController', [
+        'Account',
+        '$location',
+        '$log',
+        'PracticeType',
+        'practiceType',
+        '$q',
+        '$rootScope',
+        '$route',
+        '$timeout',
+        '$interval',
+        'user',
+        'Utility',
+        function(Account, $location, $log, PracticeType, practiceType,
+                 $q, $rootScope, $route, $timeout, $interval, user, Utility) {
 
         var self = this;
-
-        $rootScope.viewState = {
-            'practiceType': true
-        };
 
         $rootScope.toolbarState = {
             'edit': true
@@ -87,6 +96,8 @@ angular.module('FieldDoc')
 
                 self.practiceType = self.parseFeature(successResponse);
 
+                self.permissions = successResponse.permissions;
+
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -96,12 +107,7 @@ angular.module('FieldDoc')
 
                 }
 
-                self.permissions.can_edit = successResponse.permissions.write;
-                self.permissions.can_delete = successResponse.permissions.write;
-
                 $rootScope.page.title = self.practiceType.name ? self.practiceType.name : 'Un-named Practice Type';
-
-                self.scrubFeature(self.practiceType);
 
                 self.showElements();
 
@@ -120,9 +126,13 @@ angular.module('FieldDoc')
                 'extent',
                 'geometry',
                 'last_modified_by',
+                'model',
                 'organization',
+                'program',
+                'projects',
                 'tags',
-                'tasks'
+                'tasks',
+                'unit'
             ];
 
             var reservedProperties = [
@@ -292,4 +302,4 @@ angular.module('FieldDoc')
 
         }
 
-    });
+    }]);
