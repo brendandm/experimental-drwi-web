@@ -1,0 +1,168 @@
+<div class="main--ui reveal fade-in t1" style="padding: 2rem 3rem 2rem 4rem;" data-ng-if="index && visible">
+
+    <div class="dismiss-container" data-ng-if="dismissable">
+        <div class="dismiss"
+             style="display: flex; height: 56px; width: 56px; border-radius: 50%; background: #f5f5f5;
+             justify-content: center; align-items: center;cursor: pointer;"
+             data-ng-click="closeView()">
+            <span class="material-icons" style="font-size: 2rem;">
+                arrow_back
+            </span>
+        </div>
+    </div>
+
+    <h2 data-ng-if="enableSelection">Select {{ featureType }}</h2>
+
+    <p>
+        This program contains <strong>{{ summary.matches }}</strong> practice
+        <ng-pluralize count="summary.matches"
+                      when="{'one': 'type','other': 'types'}"></ng-pluralize>. Type in the box below to search
+        {{ featureType }}s by name or use the letters to browse the list alphabetically.
+    </p>
+
+    <div data-ng-if="practiceType && selectionId" style="padding-bottom: 2rem;">
+        <span>The current type assignment for this practice is <strong>{{ practiceType.name }}</strong>.</span>
+        <a href="#{{ selectionId }}" data-ng-click="jumpToSelection()">Jump to selection. &rarr;</a>
+    </div>
+
+    <div class="collection-search reveal fade-in t0" style="margin-top: 1rem;">
+
+        <input id="practice-type-search"
+               style="float:left; display:inline-block; clear:right;"
+               type="text"
+               class="search-bar list-filter"
+               data-ng-model="queryToken"
+               data-ng-change="filterIndex(queryToken)"
+               placeholder="Find a {{ featureType }}&hellip;">
+
+    </div>
+
+    <div alphabet-ctrl force-top="true" hidden-keys="hiddenKeys"
+         letters="letters" orientation="horizontal" visible="!zeroMatches"></div>
+
+    <div data-ng-if="zeroMatches" style="width: 100%; display: flex; flex-grow: 1; flex-shrink: 0;">
+
+        <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+
+            <li class="card reveal fade-in">
+
+                <div class="card--content" style="display: flex; flex-flow: row nowrap;">
+
+                    <div class="description" style="width: 100%;">
+
+                        <div class="body" style="padding: 4rem 0;">
+                            <p style="font-style: normal; font-size: 1em; padding: 0; margin: 0; text-align: center;">
+                                <em>No matches found.</em>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div data-ng-repeat="(key, group) in index">
+
+        <h2 class="index-group-heading" id="{{ key | lowercase }}"
+            data-ng-if="!hiddenKeys[key]">
+            <a href="#{{ key }}"></a>
+            <span>{{ key }}</span>
+        </h2>
+
+        <ul class="selectable-group-items list-unstyled" data-ng-if="group.length">
+
+            <li class="card reveal fade-in"
+                style="flex-flow: column; margin-bottom: 2rem;"
+                id="type-{{ feature.id }}"
+                data-ng-repeat="feature in group | orderBy:'name'"
+                data-ng-if="!feature.hide">
+
+                <div class="card--content" style="display: flex; flex-flow: row nowrap; margin-bottom: 0;"
+                     data-ng-class="{selected: feature.selected, 'confirmation-pending': feature.showConfirmation}">
+
+                    <div class="description">
+
+                        <div class="name" style="flex-flow: column; align-items: flex-start;">
+
+                            <span data-ng-if="!program || !addLink">
+                                {{ feature.name }}
+                            </span>
+
+                            <a href="/programs/{{ program.id }}/practice-type/{{ feature.id }}"
+                               style="text-decoration: none;"
+                               data-ng-if="program && addLink">
+                                {{ feature.name }}
+                            </a>
+
+                            <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;"
+                                  data-ng-if="feature.group">
+                                {{ feature.group }}
+                            </span>
+
+                        </div>
+
+                        <div class="body">
+
+                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
+                                {{ feature.description || 'No description provided.' }}
+                            </p>
+
+                            <div class="actions" style="flex: none; flex-grow: 0; flex-shrink: 0;"
+                                 data-ng-if="includeActions">
+                                <a class="snapshot--title" href="/{{ pathPrefix }}/{{ feature.id }}"
+                                   title="Metric summary">
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
+                                </a>
+                                <a class="snapshot--title"
+                                   href="/{{ pathPrefix }}/{{ feature.id }}/edit" title="Edit metric"
+                                   data-ng-if="enableEditing">
+                                    <i class="material-icons">
+                                        edit
+                                    </i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="selection-input" data-ng-if="enableSelection" data-ng-click="setPracticeType(feature)">
+                        <div data-ng-if="!feature.selected">
+                            <span class="material-icons">
+                                radio_button_unchecked
+                            </span>
+                        </div>
+                        <div data-ng-if="feature.selected">
+                            <span class="material-icons">
+                                radio_button_checked
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="confirm-selection"
+                     data-ng-if="feature.id === practiceType.id && feature.showConfirmation"
+                     data-ng-click="closeView()">
+                    <span>
+                        Confirm selection
+                    </span>
+                    <span class="material-icons">
+                        check
+                    </span>
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>

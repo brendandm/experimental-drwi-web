@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeTypeSummaryController',
-        function(Account, $location, $log, PracticeType, practice,
+        function(Account, $location, $log, PracticeType, practiceType,
             $rootScope, $route, $scope, $timeout, user) {
 
             var self = this;
@@ -61,7 +61,7 @@ angular.module('FieldDoc')
                     self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
+                        'msg': 'Successfully deleted this practice type.',
                         'prompt': 'OK'
                     });
 
@@ -76,7 +76,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice type.',
                             'prompt': 'OK'
                         }];
 
@@ -85,7 +85,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
+                            'msg': 'You don’t have permission to delete this practice type.',
                             'prompt': 'OK'
                         }];
 
@@ -94,7 +94,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'msg': 'Something went wrong while attempting to delete this practice type.',
                             'prompt': 'OK'
                         }];
 
@@ -108,13 +108,15 @@ angular.module('FieldDoc')
 
             self.loadPracticeType = function() {
 
-                practice.$promise.then(function(successResponse) {
+                practiceType.$promise.then(function(successResponse) {
 
-                    console.log('self.practice', successResponse);
+                    console.log('self.practiceType', successResponse);
 
-                    self.practice = successResponse;
+                    self.practiceType = successResponse;
 
-                    $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named PracticeType';
+                    self.permissions = successResponse.permissions;
+
+                    $rootScope.page.title = self.practiceType.name ? self.practiceType.name : 'Un-named Practice Type';
 
                 }, function(errorResponse) {
 

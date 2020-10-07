@@ -17,7 +17,7 @@
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        Metric Types
+                        Metrics
                     </div>
                 </div>
 
@@ -25,57 +25,20 @@
 
                     <section class="pad">
 
-                        <h2>Metric types</h2>
+                        <h2>Metrics</h2>
 
-                        <p>
-                            This program contains <strong>{{ page.summary.matches }}</strong> metric <ng-pluralize
-                                count="page.summary.matches" when="{'one': 'type','other': 'types'}"></ng-pluralize>.
-                        </p>
-
-                        <div class="collection-search reveal fade-in t0">
-
-                            <input style="float:left; display:inline-block; clear:right;" type="text"
-                                   class="search-bar list-filter" data-ng-if="!page.status.loading"
-                                   data-ng-model="page.queryToken" placeholder="Find a metric type&hellip;">
-
-                        </div>
-
-                        <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>
-
-                        <div data-ng-repeat="(key, group) in page.metricTypes">
-
-                            <h2 class="index-group-heading" id="{{ key | lowercase }}">
-                                <a href="#{{ key }}"></a>
-                                <span>{{ key }}</span>
-                            </h2>
-
-                            <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
-
-                                <li class="card reveal fade-in"
-                                    style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                    data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
-
-                                    <div class="card--content">
-
-                                        <div class="name" style="flex-flow: column; align-items: flex-start;">
-
-                                            {{ feature.name }}
-
-                                        </div>
-
-                                        <div class="body">
-                                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                                {{ feature.description || 'No description provided.' }}
-                                            </p>
-                                        </div>
-
-                                    </div>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
+                        <div feature-idx
+                             feature-type="metric"
+                             include-actions="true"
+                             index="page.metricTypes"
+                             letters="page.letters"
+                             link="false"
+                             permissions="page.permissions"
+                             selectable="false"
+                             summary="page.summary"
+                             visible="true"
+                             dismissable="false"
+                             style="width: 100%;"></div>
 
                     </section>
 
