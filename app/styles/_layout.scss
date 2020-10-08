@@ -803,12 +803,16 @@ header .header {
         border-radius: 4px;
         padding: .5rem .75rem;
         color: #FFFFFF;
-        background: #2196F3;
+        //background: #2196F3;
+        background: #313131;
         cursor: pointer;
         transition: all .2s cubic-bezier(.4,0,.2,1);
 
         &:hover {
-            background: #0c83e1;
+            //background: #0c83e1;
+            background: #212121;
+            border: none;
+            outline: none;
         }
 
     }
