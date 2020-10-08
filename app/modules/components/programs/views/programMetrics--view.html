@@ -32,24 +32,20 @@
                                     {{ page.summary.matches }}
                                 </span>
                             </h2>
-                            <div class="create-new margin-r-1"
-                                 data-ng-click="page.showChildModal = !page.showChildModal">
-                                <span class="material-icons">
+                            <button type="button" class="margin-r-1" style="padding: .5rem 1rem .5rem .7rem;"
+                                    data-ng-click="page.showChildModal = !page.showChildModal">
+                                <span class="material-icons margin-r-50p">
                                     add
                                 </span>
-                                <button type="button">
-                                    Create
-                                </button>
-                            </div>
-                            <div class="create-new pad-t-50p pad-b-50p pad-l-1 pad-r-1"
-                                 data-ng-click="page.showChildModal = !page.showChildModal">
-                                <span class="material-icons">
+                                Create
+                            </button>
+                            <button type="button" class="margin-r-1"
+                                    data-ng-click="page.showImportModal = !page.showImportModal">
+                                <span class="material-icons margin-r-50p">
                                     cloud_upload
                                 </span>
-                                <button type="button">
-                                    Upload file
-                                </button>
-                            </div>
+                                Upload file
+                            </button>
                         </div>
 
                         <div feature-idx
@@ -79,7 +75,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
@@ -87,6 +84,9 @@
 
     <div creation-dialog alerts="page.alerts" parent="page.program.id" organization="page.program.organization_id"
          type="'metric'" visible="page.showChildModal"></div>
+
+    <div import-dialog alerts="page.alerts" program="page.program"
+         type="'metric'" visible="page.showImportModal"></div>
 
 </main>
 

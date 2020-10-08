@@ -44,24 +44,20 @@
                                     {{ page.summary.matches }}
                                 </span>
                             </h2>
-                            <div class="create-new margin-r-1"
-                                 data-ng-click="page.showChildModal = !page.showChildModal">
-                                <span class="material-icons">
+                            <button type="button" class="margin-r-1"
+                                    data-ng-click="page.showChildModal = !page.showChildModal">
+                                <span class="material-icons margin-r-50p">
                                     add
                                 </span>
-                                <button type="button">
-                                    Create
-                                </button>
-                            </div>
-                            <div class="create-new pad-t-50p pad-b-50p pad-l-1 pad-r-1"
-                                 data-ng-click="page.showChildModal = !page.showChildModal">
-                                <span class="material-icons">
+                                Create
+                            </button>
+                            <button type="button" class="margin-r-1"
+                                    data-ng-click="page.showImportModal = !page.showImportModal">
+                                <span class="material-icons margin-r-50p">
                                     cloud_upload
                                 </span>
-                                <button type="button">
-                                    Upload file
-                                </button>
-                            </div>
+                                Upload file
+                            </button>
                         </div>
 
                         <div feature-idx
@@ -99,6 +95,9 @@
 
     <div creation-dialog alerts="page.alerts" parent="page.program.id" organization="page.program.organization_id"
          type="'practice_type'" visible="page.showChildModal"></div>
+
+    <div import-dialog alerts="page.alerts" program="page.program"
+         type="'practice_type'" visible="page.showImportModal"></div>
 
 </main>
 
