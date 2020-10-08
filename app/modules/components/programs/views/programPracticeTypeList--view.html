@@ -39,14 +39,27 @@
 
                         <div class="create-heading">
                             <h2 class="margin-0">
-                                Practice types ({{ page.summary.matches }})
+                                Practice types
+                                <span class="tally">
+                                    {{ page.summary.matches }}
+                                </span>
                             </h2>
-                            <div class="create-new" data-ng-click="page.showChildModal = !page.showChildModal">
+                            <div class="create-new margin-r-1"
+                                 data-ng-click="page.showChildModal = !page.showChildModal">
                                 <span class="material-icons">
                                     add
                                 </span>
-                                <button type="button" class="pad-l-50p">
+                                <button type="button">
                                     Create
+                                </button>
+                            </div>
+                            <div class="create-new pad-t-50p pad-b-50p pad-l-1 pad-r-1"
+                                 data-ng-click="page.showChildModal = !page.showChildModal">
+                                <span class="material-icons">
+                                    cloud_upload
+                                </span>
+                                <button type="button">
+                                    Upload file
                                 </button>
                             </div>
                         </div>
