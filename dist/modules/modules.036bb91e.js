@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1600284254606})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602165053333})
 
 ;
 /**
@@ -4469,16 +4469,55 @@ angular.module('FieldDoc')
                 actions: []
             };
 
+
+           self.projects_archived = false;
+
+            self.changeArchivedDisplay = function(archived){
+
+                self.archived = archived;
+                self.projects_archived = archived;
+          //      console.log("self.projects_archived",self.projects_archived)
+          //      console.log("archived",archived);
+          //      console.log("self.archived",self.archived);
+
+                self.loadProjects();
+
+            };
+
+            self.project_statuses = [
+                'draft',
+                'active',
+                'complete'
+
+            ];
+
+
+            self.projects_status = '';
+
+            self.change_status = function(status){
+
+        //        console.log("CHANGE STATUS");
+
+                self.projects_status = status;
+                self.showModal.status = !self.showModal.status
+                self.loadProjects();
+            };
+
+
             self.showModal = {
                 organization: false,
                 program: false,
-                tag: false
+                tag: false,
+                status: false
             };
 
             self.filters = {
                 organization: undefined,
                 program: undefined,
-                tag: undefined
+                tag: undefined,
+                status: undefined,
+                archived: undefined
+
             };
 
             self.numericFilters = [
@@ -4486,6 +4525,8 @@ angular.module('FieldDoc')
                 'program',
                 'tag'
             ];
+
+
 
             self.status = {
                 loading: true
@@ -4533,7 +4574,7 @@ angular.module('FieldDoc')
             }
 
              self.getPage = function(page){
-                console.log("PAGE",page);
+         //       console.log("PAGE",page);
 
                 if(page < 1){
                     self.page = 1;
@@ -4655,11 +4696,16 @@ angular.module('FieldDoc')
                 console.log(
                     'self.buildFilter --> Starting...');
 
+
                 var data = {
                     combine: 'true',
                     limit:  self.limit,
-                    page:   self.page
+                    page:   self.page,
+                    status: self.projects_status,
+                    archived: self.archived
                 };
+
+           //     console.log("data",data);
 
                 for (var key in self.filters) {
 
@@ -4686,6 +4732,11 @@ angular.module('FieldDoc')
 
                 }
 
+                data.status = self.projects_status;
+                data.archived = self.archived;
+
+        //        console.log("buildFilter --> data",data);``
+
                 $location.search(data);
 
                 return data;
@@ -4696,9 +4747,11 @@ angular.module('FieldDoc')
 
                 var params = self.buildFilter();
 
+           //     console.log("params",params);
+
                 Project.collection(params).$promise.then(function(successResponse) {
 
-                    console.log('successResponse', successResponse);
+            //        console.log('successResponse', successResponse);
 
                     successResponse.features.forEach(function(feature) {
 
@@ -4747,7 +4800,7 @@ angular.module('FieldDoc')
 
                 Tag.collection({}).$promise.then(function(successResponse) {
 
-                    console.log('successResponse', successResponse);
+         //           console.log('successResponse', successResponse);
 
                     self.tags = successResponse.features;
 
@@ -4759,7 +4812,7 @@ angular.module('FieldDoc')
                     self.filters.tag = self.tags[0].id;
 
                     console.log("self.filters.tag", self.filters.tag);
-
+//
                     self.inspectSearchParams();
 
                 }, function(errorResponse) {
@@ -4810,7 +4863,7 @@ angular.module('FieldDoc')
 
             self.populateMap = function(map, feature, attribute) {
 
-                console.log('self.populateMap --> feature', feature);
+    //            console.log('self.populateMap --> feature', feature);
 
                 if (feature[attribute] !== null &&
                     typeof feature[attribute] !== 'undefined') {
@@ -4829,17 +4882,17 @@ angular.module('FieldDoc')
 
                 self.mapStyles = mapbox.baseStyles;
 
-                console.log(
-                    'self.createMap --> mapStyles',
-                    self.mapStyles);
+   //             console.log(
+   //                 'self.createMap --> mapStyles',
+   //                 self.mapStyles);
 
                 self.activeStyle = 0;
 
                 mapboxgl.accessToken = mapbox.accessToken;
 
-                console.log(
-                    'self.createMap --> accessToken',
-                    mapboxgl.accessToken);
+    //            console.log(
+    //                'self.createMap --> accessToken',
+    //                mapboxgl.accessToken);
 
                 self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
@@ -4862,23 +4915,11 @@ angular.module('FieldDoc')
 
                 var params = $location.search();
 
-                console.log(
-                    'self.inspectSearchParams --> params',
-                    params);
-
                 var keys = Object.keys(params);
-
-                console.log(
-                    'self.inspectSearchParams --> keys',
-                    keys);
 
                 if (!keys.length || forceFilter) {
 
                     params = self.buildFilter();
-
-                    console.log(
-                        'self.inspectSearchParams --> params(2)',
-                        params);
 
                 }
 
@@ -4889,10 +4930,6 @@ angular.module('FieldDoc')
                         if (self.numericFilters.indexOf(key) >= 0) {
 
                             var filterVal = +params[key];
-
-                            console.log(
-                                'self.inspectSearchParams --> filterVal',
-                                filterVal);
 
                             if (Number.isInteger(filterVal)) {
 
@@ -4910,6 +4947,13 @@ angular.module('FieldDoc')
 
                 }
 
+           //     console.log("self.filters -->",self.filters);
+            //    console.log("self.params -->",self.params);
+
+                self.projects_status = self.filters['status'];
+                self.archived = self.filters['archived'];
+
+
                 self.loadProjects(params);
 
             };
@@ -4919,8 +4963,8 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
-                console.log("Account.userObject",Account.userObject);
-                console.log("user",user);
+          //      console.log("Account.userObject",Account.userObject);
+          //      console.log("user",user);
 
                 user.$promise.then(function(userResponse) {
 
@@ -6746,7 +6790,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ProjectEditController',
         function(Account, $location, $log, Project, project,
-            $rootScope, $route, user, SearchService, $timeout,
+            $rootScope, FilterStore, $route, user, SearchService, $timeout,
             Utility, $interval) {
 
             var self = this;
@@ -6761,9 +6805,115 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+            /* START Status Vars*/
+
             self.status = {
                 loading: true,
                 processing: true
+            };
+
+            self.project_status = [
+                'draft',
+                'active',
+                'complete'
+
+            ];
+
+            /* END Status Vars*/
+
+
+            /*START Date Vars*/
+
+            //
+            // Setup all of our basic date information so that we can use it
+            // throughout the page
+            //
+            self.today = new Date();
+            self.date = new Date();
+
+            self.days = [
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ];
+
+            self.months = [{
+                    'shortName': 'Jan',
+                    'name': 'January',
+                    'numeric': '01'
+                 },
+                {
+                    'shortName': 'Feb',
+                    'name': 'February',
+                    'numeric': '02'
+                },
+                {
+                    'shortName': 'Mar',
+                    'name': 'March',
+                    'numeric': '03'
+                },
+                {
+                    'shortName': 'Apr',
+                    'name': 'April',
+                    'numeric': '04'
+                },
+                {
+                    'shortName': 'May',
+                    'name': 'May',
+                    'numeric': '05'
+                },
+                {
+                    'shortName': 'Jun',
+                    'name': 'June',
+                    'numeric': '06'
+                },
+                {
+                    'shortName': 'Jul',
+                    'name': 'July',
+                    'numeric': '07'
+                },
+                {
+                    'shortName': 'Aug',
+                    'name': 'August',
+                    'numeric': '08'
+                },
+                {
+                    'shortName': 'Sep',
+                    'name': 'September',
+                    'numeric': '09'
+                },
+                {
+                    'shortName': 'Oct',
+                    'name': 'October',
+                    'numeric': '10'
+                },
+                {
+                    'shortName': 'Nov',
+                    'name': 'November',
+                    'numeric': '11'
+                },
+                {
+                    'shortName': 'Dec',
+                    'name': 'December',
+                    'numeric': '12'
+                }
+            ];
+
+
+
+            function parseISOLike(s) {
+                var b = s.split(/\D/);
+                return new Date(b[0], b[1] - 1, b[2]);
+            }
+
+            /*END Date Vars*/
+
+            self.showModal = {
+                status: false
             };
 
             self.showElements = function() {
@@ -6919,6 +7069,8 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
+                console.log("self.project", self.project);
+
             };
 
             self.setProgram = function(item, model, label) {
@@ -6983,9 +7135,37 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
+
+                if(self.date != undefined) {
+                    if (self.date.month !== null &&
+                        typeof self.date.date !== null &&
+                        self.date.year !== null
+                    ) {
+
+                        self.months.forEach(function(m){
+
+                           if(m.name === self.date.month){
+                               self.date.month = m;
+                           }
+
+                        });
+                        console.log("CCC",self.date.month);
+
+
+                            self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+
+                    } else {
+                        self.project.completed_on = null;
+
+                    }
+                }
+
+
+
                 self.project.partners = self.processRelations(self.tempPartners);
 
-                self.project.workflow_state = "Draft";
+           //     self.project.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',
@@ -7005,6 +7185,8 @@ angular.module('FieldDoc')
                     'type',
                     'sites'
                 ].join(',');
+
+                console.log("self.project --> submit", self.project);
 
                 Project.update({
                     id: $route.current.params.projectId,
@@ -7123,7 +7305,8 @@ angular.module('FieldDoc')
                         can_edit: false,
                         can_delete: false
                     };
-
+                    self.user = $rootScope.user;
+                    console.log("self.user =",self.user);
                     //
                     // Assign project to a scoped variable
                     //
@@ -7140,6 +7323,24 @@ angular.module('FieldDoc')
 
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
+
+                            if (self.project.completed_on) {
+
+                                self.project.completed_on = parseISOLike(self.project.completed_on);
+
+
+                                self.date = {
+                                    month: self.months[self.project.completed_on.getMonth()],
+                                    date: self.project.completed_on.getDate(),
+                                    day: self.days[self.project.completed_on.getDay()],
+                                    year: self.project.completed_on.getFullYear()
+                                };
+                            }
+
+
+
+
+                            console.log("!!!!!! self.date",self.date);
 
                             $rootScope.page.title = 'Edit Project';
 
@@ -11795,7 +11996,7 @@ angular.module('FieldDoc')
                         'https://api.mapbox.com/styles/v1',
                         '/mapbox/streets-v10/static/geojson(',
                         encodeURIComponent(JSON.stringify(styledFeature)),
-                        ')/auto/400x200@2x?access_token=',
+                        ')/auto/400x130@2x?access_token=',
                         'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                     ].join('');
 
@@ -37487,7 +37688,7 @@ angular.module('FieldDoc')
                 return [];
 
             },
-            buildStaticMapURL: function(geometry, colorScheme = null) {
+            buildStaticMapURL: function(geometry, colorScheme = null, width = 400, height = 130) {
 
                 var color = "#06aadf";
 
@@ -37501,8 +37702,6 @@ angular.module('FieldDoc')
 
                     }
                 }else{
-
-                     console.log('COLOR 3');
 
                 }
 
@@ -37545,12 +37744,11 @@ angular.module('FieldDoc')
                 }
 
                 //compose feature
-                console.log("geometry -->", geometry)
-                console.log("simplified -->", simplified)
 
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": simplified,
+                    "zoom" : 10,
                     "properties": {
                         "marker-size": "small",
                         "marker-color": color,
@@ -37558,18 +37756,17 @@ angular.module('FieldDoc')
                         "stroke-opacity": 1.0,
                         "stroke-width": 2,
                         "fill": color,
-                        "fill-opacity": 0.5
+                        "fill-opacity": 0.5,
                     }
                 };
 
                 // Build static map URL for Mapbox API
 
-                console.log('buildStaticMapURL->styledFeature',styledFeature);
-                return [
+               return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
                     encodeURIComponent(JSON.stringify(styledFeature)),
-                    ')/auto/400x200@2x?access_token=',
+                    ')/auto/'+width+'x'+height+'@2x?access_token=',
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
 

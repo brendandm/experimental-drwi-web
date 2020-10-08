@@ -41,6 +41,7 @@
 
                 <div class="group">
 
+
                     <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.project.name }}</h1>
@@ -53,7 +54,24 @@
                                 page.project.last_modified_by.last_name }} on {{ page.project.modified_on | date:'longDate' }}
                             </div>
 
-                            <div class="history-link-wrapper">
+                            <div class="status-history-link-wrapper" style="border:0px solid red;">
+
+                                <div class="status_wrapper"  >
+                                    <div class="status status_{{page.project.status}}"
+                                         style="
+
+                                "
+                                    >
+                                        {{page.project.status | capitalAttribute}}
+                                    </div>
+                                </div>
+                                <span ng-if="page.project.archived"
+                                    style=" margin-right:10px;
+                                            color: rgb(71,72,74);
+                                            "
+                                >
+                                    <i>Archived</i>
+                                </span>
                                 <span class="material-icons">
                                     history
                                 </span>
@@ -74,7 +92,7 @@
                                 <span class="material-icons">
                                     error
                                 </span>
-                            <a href="/projects/{{ page.project.id }}/grant" >
+                            <a href="/projects/{{ page.project.id }}/grant  " >
                                 Please add a funding program to this project.
                             </a>
                         </div>
