@@ -47,6 +47,7 @@ angular.module('FieldDoc')
             // throughout the page
             //
             self.today = new Date();
+            self.date = new Date();
 
             self.days = [
                 'Sunday',
@@ -59,10 +60,10 @@ angular.module('FieldDoc')
             ];
 
             self.months = [{
-                'shortName': 'Jan',
-                'name': 'January',
-                'numeric': '01'
-            },
+                    'shortName': 'Jan',
+                    'name': 'January',
+                    'numeric': '01'
+                 },
                 {
                     'shortName': 'Feb',
                     'name': 'February',
@@ -352,22 +353,33 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
-                console.log("self.project.status",self.project.status);
 
-                console.log("self.project.completed_on",self.project.completed_on);
+                if(self.date != undefined) {
+                    if (self.date.month !== null &&
+                        typeof self.date.date !== null &&
+                        self.date.year !== null
+                    ) {
 
-                if (self.date.month.numeric !== null &&
-                    typeof self.date.month.numeric === 'string') {
+                        self.months.forEach(function(m){
 
-                    self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+                           if(m.name === self.date.month){
+                               self.date.month = m;
+                           }
 
-                } else {
+                        });
+                        console.log("CCC",self.date.month);
 
-                    self.project.completed_on = self.date.year + '-' + self.date.month + '-' + self.date.date;
 
+                            self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+
+                    } else {
+                        self.project.completed_on = null;
+
+                    }
                 }
 
-                console.log("self.project.completed_on",self.project.completed_on);
+
 
                 self.project.partners = self.processRelations(self.tempPartners);
 
@@ -511,8 +523,8 @@ angular.module('FieldDoc')
                         can_edit: false,
                         can_delete: false
                     };
-
-
+                    self.user = $rootScope.user;
+                    console.log("self.user =",self.user);
                     //
                     // Assign project to a scoped variable
                     //
@@ -531,30 +543,25 @@ angular.module('FieldDoc')
                             self.permissions.can_delete = successResponse.permissions.write;
 
                             if (self.project.completed_on) {
-                                console.log("AA self.project.completed_on",self.project.completed_on);
-                                console.log("BB self.project.completed_on.date",self.project.completed_on.date);
 
                                 self.project.completed_on = parseISOLike(self.project.completed_on);
-                                console.log("CC self.project.completed_on",self.project.completed_on);
-                            }
-                            console.log("DD self.project.completed_on.date",self.project.completed_on.date);
-                            console.log("self.project.completed_on",self.project.completed_on);
-                            console.log("self.today",self.date);
 
-                            //
-                            // Check to see if there is a valid date
-                            //
-                            self.date = {
-                                month: self.months[self.project.completed_on.getMonth()],
-                                date: self.project.completed_on.getDate(),
-                                day: self.days[self.project.completed_on.getDay()],
-                                year: self.project.completed_on.getFullYear()
-                            };
+
+                                self.date = {
+                                    month: self.months[self.project.completed_on.getMonth()],
+                                    date: self.project.completed_on.getDate(),
+                                    day: self.days[self.project.completed_on.getDay()],
+                                    year: self.project.completed_on.getFullYear()
+                                };
+                            }
+
+
+
+
+                            console.log("!!!!!! self.date",self.date);
 
                             $rootScope.page.title = 'Edit Project';
 
-                            console.log("self.user",self.user);
-                            console.log("$rootScope.user",$rootScope.user);
                         }
 
                         self.showElements();
