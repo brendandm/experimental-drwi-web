@@ -76,7 +76,7 @@ angular.module('FieldDoc')
                 return [];
 
             },
-            buildStaticMapURL: function(geometry, colorScheme = null) {
+            buildStaticMapURL: function(geometry, colorScheme = null, width = 400, height = 130) {
 
                 var color = "#06aadf";
 
@@ -90,8 +90,6 @@ angular.module('FieldDoc')
 
                     }
                 }else{
-
-                     console.log('COLOR 3');
 
                 }
 
@@ -134,12 +132,11 @@ angular.module('FieldDoc')
                 }
 
                 //compose feature
-                console.log("geometry -->", geometry)
-                console.log("simplified -->", simplified)
 
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": simplified,
+                    "zoom" : 10,
                     "properties": {
                         "marker-size": "small",
                         "marker-color": color,
@@ -147,18 +144,17 @@ angular.module('FieldDoc')
                         "stroke-opacity": 1.0,
                         "stroke-width": 2,
                         "fill": color,
-                        "fill-opacity": 0.5
+                        "fill-opacity": 0.5,
                     }
                 };
 
                 // Build static map URL for Mapbox API
 
-                console.log('buildStaticMapURL->styledFeature',styledFeature);
-                return [
+               return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
                     encodeURIComponent(JSON.stringify(styledFeature)),
-                    ')/auto/400x200@2x?access_token=',
+                    ')/auto/'+width+'x'+height+'@2x?access_token=',
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
 

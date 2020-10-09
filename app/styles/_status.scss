@@ -1,0 +1,94 @@
+//
+// _status.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide typographic
+// specifications.
+//
+
+.status_dropdown {
+  border: 0px solid purple;
+  float:left;
+  display: block;
+  width: 40%;
+  max-width: 400px;
+  width: 190px;
+  margin-bottom: 0px;
+
+}
+.status_dropdown_label{
+  border: 0px solid green;
+  float: left;
+  display: block;
+  margin-top: 16px;
+  margin-left: 00px;
+  font-weight: bold;
+  color: rgb(121,122,124);
+  font-style: normal;
+}
+
+.status_group {
+  border: 0px solid blue;
+  display:block;
+  min-width: 400px;
+  min-height: 50px;
+  margin-bottom:30px;
+
+}
+.status_wrapper {
+  border: 0px solid red;
+  margin: 0px 0px 0px 0px;
+
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 20px 5px 20px;
+  margin-right: 10px;
+
+}
+  .status_draft{
+
+    background-color: $color-status-draft;
+    border: 0px solid #999966;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+
+  }
+  .status_active{
+
+    background-color: $color-status-active;
+    border:1px solid green;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+  }
+
+  .status_complete{
+
+    background-color: $color-status-complete;
+    border:1px solid #999999;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+
+  }
+
+
+.status-history-link-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding-bottom: 1em;
+  color: $color-blue-base;
+  margin-bottom: 5px;
+
+  span {
+    display: inline-flex;
+    margin-right: 0.25em;
+  }
+
+}
