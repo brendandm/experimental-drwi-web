@@ -10,7 +10,9 @@
             '$location',
             'ImportTpl',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, ImportTpl, $timeout) {
+            'Program',
+            function($routeParams, $filter, $parse, $location,
+                     ImportTpl, $timeout, Program) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -111,15 +113,14 @@
 
                             fileData.append('file', scope.fileImport[0]);
 
-                            fileData.append('feature_type', 'practice');
-
-                            fileData.append('feature_id', scope.practice.id);
-
                             console.log('fileData', fileData);
 
                             try {
 
-                                Shapefile.upload({}, fileData, function(successResponse) {
+                                Program.importCollection({
+                                    id: scope.program.id,
+                                    collection: scope.type.replace(/_/g, '-')
+                                }, fileData, function(successResponse) {
 
                                     console.log('successResponse', successResponse);
 
@@ -171,7 +172,7 @@
 
                             } catch (error) {
 
-                                console.log('Shapefile upload error', error);
+                                console.log('File upload error', error);
 
                                 scope.fileImport = null;
 

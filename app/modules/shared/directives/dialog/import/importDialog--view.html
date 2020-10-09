@@ -4,6 +4,7 @@
             <span class="title-text">Upload file</span>
             <div class="dismiss-container">
                 <div class="dismiss" data-ng-click="closeChildModal()">
+                    <div class="halo"></div>
                     <span class="material-icons">
                         close
                     </span>
@@ -17,7 +18,7 @@
                 <span class="prompt">
                     Select a CSV file containing new {{ label }}s for the {{ program.name }} program. Remember — {{
                     label }} names <strong>must</strong> be unique. Any duplicates found in the uploaded file will be
-                    discarded.
+                    discarded, including names that conflict with existing {{ label }}s.
                 </span>
 
                 <input type="file"

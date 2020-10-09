@@ -73,6 +73,14 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice-type/:id')
 
+                },
+                importCollection: {
+                    method: 'POST',
+                    url: environment.apiUrl.concat('/v1/practice-type/:id/:collection/import'),
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
+                    }
                 }
             });
         });
