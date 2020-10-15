@@ -820,19 +820,23 @@ header .header {
         border-radius: 4px;
         padding: .5rem .75rem;
         color: #FFFFFF;
+        border: 1px solid #313131;
         background: #313131;
         cursor: pointer;
         transition: all .2s cubic-bezier(.4,0,.2,1);
 
         &:hover {
             background: #212121;
-            border: none;
+            border: 1px solid #212121;
             outline: none;
         }
 
     }
 
     button {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
@@ -842,13 +846,9 @@ header .header {
         padding: .5rem 1rem;
         color: #FFFFFF;
         background: #313131;
-        -moz-appearance: none;
-        -ms-appearance: none;
-        -webkit-appearance: none;
-        appearance: none;
+        border: 1px solid #313131;
         outline: 0 none;
         margin: 0;
-        border: none;
         font-size: 1rem;
         cursor: pointer;
         user-select: none;
@@ -858,8 +858,8 @@ header .header {
 
     button:hover {
         background: #212121;
+        border: 1px solid #212121;
         font-size: 1rem;
-        border: none;
         outline: none;
         box-shadow: none;
     }

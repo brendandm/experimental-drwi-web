@@ -45,7 +45,7 @@ angular.module('FieldDoc')
 
         function closeRoute() {
 
-            $location.path('/practice-types');
+            $location.path('/programs/' + self.programId + '/practice-types');
 
         }
 

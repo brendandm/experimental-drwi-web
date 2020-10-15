@@ -181,6 +181,13 @@
 
             .confirm:hover {
                 background: #0c83e1;
+                border: 1px solid #0c83e1;
+            }
+
+            .complete,
+            .complete:hover {
+                background: #33992E !important;
+                border: 1px solid #33992E !important;
             }
 
         }

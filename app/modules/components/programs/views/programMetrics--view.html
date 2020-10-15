@@ -85,8 +85,13 @@
     <div creation-dialog alerts="page.alerts" parent="page.program.id" organization="page.program.organization_id"
          type="'metric'" visible="page.showChildModal"></div>
 
-    <div import-dialog alerts="page.alerts" program="page.program"
-         type="'metric'" visible="page.showImportModal"></div>
+    <div import-dialog
+         alerts="page.alerts"
+         program="page.program"
+         file-input="metric-file-input"
+         callback="page.loadMetricTypes()"
+         type="'metric'"
+         visible="page.showImportModal"></div>
 
 </main>
 

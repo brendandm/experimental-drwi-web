@@ -232,13 +232,9 @@
 
                         self.metricTypes = successResponse.features.groups;
 
-                        self.metricCount = self.metricTypes.length;
-
                         self.letters = successResponse.features.letters;
 
                         self.summary = successResponse.summary;
-
-                        console.log("self.metricCount", self.metricCount);
 
                         self.showElements();
 

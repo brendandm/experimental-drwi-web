@@ -17,6 +17,8 @@
                     restrict: 'EA',
                     scope: {
                         'alerts': '=?',
+                        'callback': '&',
+                        'fileInput': '@fileInput',
                         'program': '=?',
                         'type': '=?',
                         'visible': '=?'
@@ -42,11 +44,19 @@
 
                         }
 
-                        scope.closeChildModal = function() {
+                        scope.closeChildModal = function(refresh) {
+
+                            scope.processing = false;
+
+                            scope.uploadComplete = false;
+
+                            scope.uploadError = null;
 
                             scope.visible = false;
 
                             if (scope.resetType) scope.type = undefined;
+
+                            if (refresh) scope.callback();
 
                         };
 
@@ -65,15 +75,13 @@
 
                         };
 
-                        scope.resetFileInput = function() {
+                        scope.resetFileInput = function(element) {
 
-                            scope.setFileInput = false;
+                            element.value = null;
 
-                            $timeout(function () {
+                            scope.processing = false;
 
-                                scope.setFileInput = true;
-
-                            }, 10);
+                            scope.uploadComplete = false;
 
                         };
 
@@ -91,8 +99,21 @@
 
                         scope.uploadFile = function() {
 
-                            if (!scope.fileImport ||
-                                !scope.fileImport.length) {
+                            var input = document.getElementById(scope.fileInput);
+
+                            console.log(
+                                'scope.uploadFile:input',
+                                input
+                            );
+
+                            var selectedFile = input.files[0];
+
+                            console.log(
+                                'scope.uploadFile:selectedFile',
+                                selectedFile
+                            );
+
+                            if (!selectedFile) {
 
                                 scope.alerts = [{
                                     'type': 'error',
@@ -107,11 +128,13 @@
 
                             }
 
-                            scope.progressMessage = 'Uploading your file...';
+                            scope.processing = true;
+
+                            scope.progressMessage = 'Processing…';
 
                             var fileData = new FormData();
 
-                            fileData.append('file', scope.fileImport[0]);
+                            fileData.append('file', selectedFile);
 
                             console.log('fileData', fileData);
 
@@ -124,49 +147,41 @@
 
                                     console.log('successResponse', successResponse);
 
+                                    scope.progressMessage = 'Complete';
+
+                                    scope.uploadComplete = true;
+
                                     scope.uploadError = null;
 
-                                    scope.fileImport = null;
+                                    $timeout(function () {
 
-                                    scope.alerts = [{
-                                        'type': 'success',
-                                        'flag': 'Success!',
-                                        'msg': 'Upload complete. Processing data...',
-                                        'prompt': 'OK'
-                                    }];
+                                        scope.closeChildModal(true);
 
-                                    $timeout(closeAlerts, 2000);
+                                    }, 1500);
 
-                                    if (successResponse.task) {
-
-                                        scope.pendingTasks = [
-                                            successResponse.task
-                                        ];
-
-                                    }
-
-                                    scope.taskPoll = $interval(function() {
-
-                                        scope.fetchTasks(successResponse.task.id);
-
-                                    }, 1000);
+                                    // scope.resetFileInput(input);
+                                    //
+                                    // if (successResponse.task) {
+                                    //
+                                    //     scope.pendingTasks = [
+                                    //         successResponse.task
+                                    //     ];
+                                    //
+                                    // }
+                                    //
+                                    // scope.taskPoll = $interval(function() {
+                                    //
+                                    //     scope.fetchTasks(successResponse.task.id);
+                                    //
+                                    // }, 1000);
 
                                 }, function(errorResponse) {
 
                                     console.log('Upload error', errorResponse);
 
-                                    scope.uploadError = errorResponse;
+                                    scope.uploadError = errorResponse.data;
 
-                                    scope.fileImport = null;
-
-                                    scope.alerts = [{
-                                        'type': 'error',
-                                        'flag': 'Error!',
-                                        'msg': 'The file could not be processed.',
-                                        'prompt': 'OK'
-                                    }];
-
-                                    $timeout(closeAlerts, 2000);
+                                    scope.resetFileInput(input);
 
                                 });
 
@@ -174,7 +189,7 @@
 
                                 console.log('File upload error', error);
 
-                                scope.fileImport = null;
+                                scope.resetFileInput(input);
 
                             }
 

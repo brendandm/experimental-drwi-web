@@ -18,18 +18,18 @@
                 <span class="prompt">
                     Select a CSV file containing new {{ label }}s for the {{ program.name }} program. Remember — {{
                     label }} names <strong>must</strong> be unique. Any duplicates found in the uploaded file will be
-                    discarded, including names that conflict with existing {{ label }}s.
+                    discarded, including names that conflict with existing {{ label }}s. Punctuation, letter case, and
+                    special characters (e.g. (), [], /, -) are ignored when checking for duplicate {{ label }} names.
                 </span>
 
                 <input type="file"
                        class="form-control"
-                       id="file-input"
+                       id="{{ fileInput }}"
                        name="file-input"
-                       accept=".csv"
-                       file-upload
-                       file-model="fileImport" />
+                       accept=".csv" />
 
-                <div class="upload-error" data-ng-if="uploadError">
+                <div class="upload-error" style="margin: 1rem 0 0;"
+                     data-ng-if="uploadError">
                     <div style="display: flex; flex-flow: row nowrap; align-items: center;">
                         <span class="material-icons" style="color: #d70000;">
                             error
@@ -38,9 +38,12 @@
                             <strong>&nbsp;Upload error</strong>
                         </span>
                     </div>
-                    <p style="margin: 1rem 0;">{{ uploadError.message || 'Unable to read file.'}}</p>
-                    <p style="margin: 0; font-size: 0.9rem;">Please double check that your file is supported and
-                        that it contains correctly-formatted data (see instructions above).
+                    <p style="margin: 1rem 0; font-size: 0.9rem;">
+                        {{ uploadError.message || 'Unable to read file.'}}
+                    </p>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        Please double check that your file is supported and that it contains correctly-formatted
+                        data (download a sample template to see the accepted columns).
                     </p>
                 </div>
 
@@ -58,12 +61,20 @@
                 </button>
             </div>
             <div class="dialog-actions">
-                <button type="button" class="confirm" data-ng-click="uploadShapefile()"
-                        data-ng-disabled="!fileImport">
-                    <span class="material-icons margin-r-50p">
+                <button type="button" class="confirm" data-ng-class="{complete: uploadComplete}"
+                        data-ng-click="uploadFile()">
+                    <span class="material-icons margin-r-50p" data-ng-if="!uploadComplete">
                         cloud_upload
                     </span>
-                    Upload
+                    <span class="material-icons margin-r-50p" data-ng-if="uploadComplete">
+                        done
+                    </span>
+                    <span data-ng-if="!processing">
+                        Upload
+                    </span>
+                    <span data-ng-if="processing">
+                        {{ progressMessage }}
+                    </span>
                 </button>
             </div>
         </div>
