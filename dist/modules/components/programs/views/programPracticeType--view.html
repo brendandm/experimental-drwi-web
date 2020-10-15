@@ -10,28 +10,21 @@
 
             <div class="module--grid">
 
-                <div class="breadcrumb pad-crumb" data-ng-if="!page.status.loading">
+                <div class="breadcrumb">
                     <div>
                         <span>Program:&nbsp;</span>
-                        <a href="/programs/{{ page.practiceType.program.id }}">{{ page.practiceType.program.name }}</a>
+                        <a href="/programs/{{ page.program.id }}">{{ page.program.name }}</a>
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        <a href="/programs/{{ page.practiceType.program.id }}/practice-types">Practice types</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-                    <div>
-                        <a href="/practice-types/{{ page.practiceType.id }}">{{ page.practiceType.name }}</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-                    <div>
-                        Summary
+                        <span>Practice Type:&nbsp;</span>
+                        <a href="/programs/{{ page.program.id }}/practice-types/{{ page.practiceType.id }}">
+                            {{ page.practiceType.name }}
+                        </a>
                     </div>
                 </div>
 
-                <h1 class="pad-2" style="margin: 0; width: 100%;">
-                    {{ page.practiceType.name }}
-                </h1>
+                <h1 class="pad-2" style="margin: 0;">{{ page.practiceType.name }}</h1>
 
                 <div class="group reveal fade-in t2">
 
@@ -103,6 +96,7 @@
                         <ul class="selectable-group-items list-unstyled margin-t-2">
 
                             <li class="card reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="feature in page.linkedMetrics | orderBy: 'name'">
 
                                 <div class="card--content">
@@ -143,8 +137,8 @@
                                 page.practiceType.models.length }}</strong> mathematical <ng-pluralize
                                     count="page.practiceType.models.length"
                                     when="{'one': 'model','other': 'models'}"></ng-pluralize> that <ng-pluralize
-                                    count="page.practiceType.models.length"
-                                    when="{'one': 'provides','other': 'provide'}"></ng-pluralize> estimated
+                                        count="page.practiceType.models.length"
+                                        when="{'one': 'provides','other': 'provide'}"></ng-pluralize> estimated
                                 values for environmental parameters associated with the {{
                                 page.practiceType.name }} practice type.
                             </p>
@@ -153,6 +147,7 @@
                         <ul class="selectable-group-items list-unstyled margin-t-2">
 
                             <li class="card reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="feature in page.practiceType.models | orderBy: 'name'">
 
                                 <div class="card--content">
@@ -191,8 +186,7 @@
 
                 </div>
 
-                <div id="idx" class="index reveal fade-in t2"
-                     data-ng-if="page.permissions.write && page.metricTypes">
+                <div class="index reveal fade-in t2" data-ng-if="page.permissions.write && page.metricTypes">
 
                     <h2 class="margin-b-2">Manage linked metrics</h2>
 
@@ -205,7 +199,7 @@
                                 program's metric data in FieldDoc. Making clear associations between metrics
                                 and practice types helps your users report on practice implementation without
                                 unnecessary guesswork.<br/><br/>
-                                <strong>Important:&nbsp;</strong>Linking or un-linking metrics will not affect new
+                                <strong>Important:&nbsp;</strong>Linking or un-linking metric types will not affect new
                                 or existing targets or target data.
                             </p>
 
@@ -227,7 +221,7 @@
 
                         <input style="float:left; display:inline-block; clear:right;" type="text"
                                class="search-bar list-filter" data-ng-if="!page.status.loading"
-                               data-ng-model="page.queryToken" placeholder="Find a metric&hellip;">
+                               data-ng-model="page.queryToken" placeholder="Find a metric type&hellip;">
 
                     </div>
 
@@ -243,6 +237,7 @@
                         <ul class="selection-group list-unstyled margin-t-2">
 
                             <li class="selection-item reveal fade-in"
+                                style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
                                 data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
 
                                 <span>{{ feature.name }}</span>
@@ -254,7 +249,7 @@
                                         <span class="material-icons">
                                             link
                                         </span>
-                                        Link metric
+                                        Link metric type
                                     </button>
 
                                     <button class="unlink" data-ng-if="feature.linked"
@@ -262,7 +257,7 @@
                                         <span class="material-icons">
                                             link_off
                                         </span>
-                                        Unlink metric
+                                        Unlink metric type
                                     </button>
 
                                 </div>
@@ -281,42 +276,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.summary}">
-                <a href="/practice-types/{{ page.practiceType.id }}">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practice-types/{{ page.practiceType.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.write">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this practice type?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practiceType)">
-                    <i class="material-icons">
-                        delete
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div data-ng-include="'/templates/toolbars/program.html'"></div>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">

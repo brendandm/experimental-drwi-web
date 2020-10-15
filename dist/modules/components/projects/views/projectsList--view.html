@@ -52,9 +52,8 @@
                         width: 40%;
                         min-width: 600px;
                         margin-bottom: 0px;
-                       "
-                >
-
+                       ">
+                    <nobr>
                         <div class="collection-filter drop-down program"
                              style="float:left; display:inline-block;">
                             <button type="button" data-ng-class="{'open-btn': (page.showModal.program || (page.filters.program > 0))}" data-ng-click="page.showModal.program = !page.showModal.program">
@@ -205,12 +204,10 @@
                 </div>
 
                 <div class="scope--control"
-                     style=" border:0px solid red;
-                                        margin-top: 10px;
-                                        float: right;
-                                        width:150px;
-                                    "
-                >
+                     style="border:0px solid red;
+                            margin-top: 10px;
+                            float: right;
+                            width:150px;">
                     <span></span>
                     <label class="switch">
                         <input class="inputdemo"
@@ -224,9 +221,7 @@
 
                 <div data-ng-include="'/templates/pagination-view.html'"></div>
 
-
             </div>
-
 
             <div class="features--container" data-ng-if="!page.status.loading">
 
