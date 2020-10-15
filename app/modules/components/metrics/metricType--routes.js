@@ -10,9 +10,8 @@
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-        /*
         $routeProvider
-            .when('/metric-types', {
+            .when('/metrics', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
@@ -36,7 +35,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/metric-types/:metricId', {
+            .when('/metrics/:metricId', {
                 templateUrl: '/modules/components/metrics/views/metricTypeSummary--view.html?t=' + environment.version,
                 controller: 'MetricSummaryController',
                 controllerAs: 'page',
@@ -52,24 +51,14 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(MetricType, $route) {
-                        return MetricType.metrics({
-                            id: $route.current.params.metricId
-                        });
-                    },
-                    outcomes: function(MetricType, $route) {
-                        return MetricType.outcomes({
-                            id: $route.current.params.metricId
-                        });
-                    },
-                    metricType: function(MetricType, $route) {
-                        return MetricType.get({
+                    metric: function(MetricType, $route) {
+                        return MetricType.single({
                             id: $route.current.params.metricId
                         });
                     }
                 }
             })
-            .when('/metric-types/:metricId/edit', {
+            .when('/metrics/:metricId/edit', {
                 templateUrl: '/modules/components/metrics/views/metricTypeEdit--view.html?t=' + environment.version,
                 controller: 'MetricTypeEditController',
                 controllerAs: 'page',
@@ -90,7 +79,7 @@ angular.module('FieldDoc')
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
-                        
+
                     },
                     unitTypes: function(UnitType, $route) {
                         return UnitType.query({
@@ -99,5 +88,4 @@ angular.module('FieldDoc')
                     }
                 }
             });
-        */
     });

@@ -258,6 +258,8 @@
 
                         self.program = successResponse;
 
+                        self.permissions = successResponse.permissions;
+
                         $rootScope.program = successResponse;
 
                         $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';

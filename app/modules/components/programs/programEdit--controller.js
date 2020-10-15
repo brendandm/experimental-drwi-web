@@ -77,6 +77,8 @@ angular.module('FieldDoc')
 
                     self.program = successResponse;
 
+                    self.permissions = successResponse.permissions;
+
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
 

@@ -1,4 +1,4 @@
-<div class="main--ui reveal fade-in t1" style="padding: 2rem 3rem 2rem 4rem;" data-ng-if="index && visible">
+<div class="main--ui reveal fade-in t1" style="padding: 2rem 0;" data-ng-if="index && visible">
 
     <div class="dismiss-container" data-ng-if="dismissable">
         <div class="dismiss"
@@ -11,13 +11,11 @@
         </div>
     </div>
 
-    <h2 data-ng-if="enableSelection">Select practice type</h2>
+    <h2 data-ng-if="enableSelection">Select {{ featureType }}</h2>
 
     <p>
-        This program contains <strong>{{ summary.matches }}</strong> practice
-        <ng-pluralize count="summary.matches"
-                      when="{'one': 'type','other': 'types'}"></ng-pluralize>. Type in the box below to search
-        practice types by name or use the letters to browse the list alphabetically.
+        Type in the box below to search {{ featureType }}s by name or use the letters to browse the list
+        alphabetically.
     </p>
 
     <div data-ng-if="practiceType && selectionId" style="padding-bottom: 2rem;">
@@ -25,7 +23,7 @@
         <a href="#{{ selectionId }}" data-ng-click="jumpToSelection()">Jump to selection. &rarr;</a>
     </div>
 
-    <div class="collection-search reveal fade-in t0" style="margin-top: 1rem;">
+    <div class="collection-search reveal fade-in t0" style="margin-top: 1rem; justify-content: flex-start;">
 
         <input id="practice-type-search"
                style="float:left; display:inline-block; clear:right;"
@@ -33,7 +31,7 @@
                class="search-bar list-filter"
                data-ng-model="queryToken"
                data-ng-change="filterIndex(queryToken)"
-               placeholder="Find a practice type&hellip;">
+               placeholder="Find a {{ featureType }}&hellip;">
 
     </div>
 
@@ -77,50 +75,69 @@
         <ul class="selectable-group-items list-unstyled" data-ng-if="group.length">
 
             <li class="card reveal fade-in"
-                style="animation-delay: {{ $index * 20 }}ms; min-height: 0; flex-flow: column; margin-bottom: 2rem;"
-                id="type-{{ practice.id }}"
-                data-ng-repeat="practice in group | orderBy:'name'"
-                data-ng-if="!practice.hide">
+                style="flex-flow: column; margin-bottom: 2rem;"
+                id="type-{{ feature.id }}"
+                data-ng-repeat="feature in group | orderBy:'name'"
+                data-ng-if="!feature.hide">
 
                 <div class="card--content" style="display: flex; flex-flow: row nowrap; margin-bottom: 0;"
-                     data-ng-class="{selected: practice.selected, 'confirmation-pending': practice.showConfirmation}">
+                     data-ng-class="{selected: feature.selected, 'confirmation-pending': feature.showConfirmation}">
 
                     <div class="description">
 
                         <div class="name" style="flex-flow: column; align-items: flex-start;">
 
-                                <span data-ng-if="!program || !addLink">
-                                    {{ practice.name }}
-                                </span>
+                            <span data-ng-if="!program || !addLink">
+                                {{ feature.name }}
+                            </span>
 
-                            <a href="/programs/{{ program.id }}/practice-type/{{ practice.id }}"
+                            <a href="/programs/{{ program.id }}/practice-type/{{ feature.id }}"
                                style="text-decoration: none;"
                                data-ng-if="program && addLink">
-                                {{ practice.name }}
+                                {{ feature.name }}
                             </a>
 
                             <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;"
-                                  data-ng-if="practice.group">
-                                    {{ practice.group }}
-                                </span>
+                                  data-ng-if="feature.group">
+                                {{ feature.group }}
+                            </span>
 
                         </div>
 
                         <div class="body">
+
                             <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                {{ practice.description || 'No description provided.' }}
+                                {{ feature.description || 'No description provided.' }}
                             </p>
+
+                            <div class="actions" style="flex: none; flex-grow: 0; flex-shrink: 0;"
+                                 data-ng-if="includeActions">
+                                <a class="snapshot--title" href="/{{ pathPrefix }}/{{ feature.id }}"
+                                   title="Metric summary">
+                                    <i class="material-icons">
+                                        dashboard
+                                    </i>
+                                </a>
+                                <a class="snapshot--title"
+                                   href="/{{ pathPrefix }}/{{ feature.id }}/edit" title="Edit metric"
+                                   data-ng-if="enableEditing">
+                                    <i class="material-icons">
+                                        edit
+                                    </i>
+                                </a>
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <div class="selection-input" data-ng-if="enableSelection" data-ng-click="setPracticeType(practice)">
-                        <div data-ng-if="!practice.selected">
+                    <div class="selection-input" data-ng-if="enableSelection" data-ng-click="setPracticeType(feature)">
+                        <div data-ng-if="!feature.selected">
                             <span class="material-icons">
                                 radio_button_unchecked
                             </span>
                         </div>
-                        <div data-ng-if="practice.selected">
+                        <div data-ng-if="feature.selected">
                             <span class="material-icons">
                                 radio_button_checked
                             </span>
@@ -130,7 +147,7 @@
                 </div>
 
                 <div class="confirm-selection"
-                     data-ng-if="practice.id === practiceType.id && practice.showConfirmation"
+                     data-ng-if="feature.id === practiceType.id && feature.showConfirmation"
                      data-ng-click="closeView()">
                     <span>
                         Confirm selection

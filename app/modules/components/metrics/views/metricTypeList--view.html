@@ -99,12 +99,12 @@
                                 </div>
                                 <p>{{ (metric.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <!-- <a class="snapshot--title" href="/metric-types/{{ metric.id }}" title="View metric">
+                                    <!-- <a class="snapshot--title" href="/metrics/{{ metric.id }}" title="View metric">
                                         <i class="material-icons">
                                         metric
                                         </i>
                                     </a> -->
-                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin || $root.user.properties.is_manager">
+                                    <a class="snapshot--title" href="/metrics/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin || $root.user.properties.is_manager">
                                         <i class="material-icons">
                                         edit
                                         </i>

@@ -12,10 +12,13 @@
             'Site',
             'Practice',
             'Report',
+            'MetricType',
+            'PracticeType',
             'SearchService',
             '$timeout',
             function($routeParams, $filter, $parse, $location, Project,
-                     Site, Practice, Report, SearchService, $timeout) {
+                     Site, Practice, Report, MetricType, PracticeType,
+                     SearchService, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
@@ -33,6 +36,8 @@
 
                     },
                     link: function(scope, element, attrs) {
+
+                        scope.label = scope.type.replace(/_/g, ' ');
 
                         if (scope.resetType === 'undefined') {
 
@@ -56,8 +61,10 @@
 
                         scope.createChild = function(name) {
 
-                            if (scope.type !== 'report' &&
+                            if (scope.type !== 'metric' &&
+                                scope.type !== 'report' &&
                                 scope.type !== 'practice' &&
+                                scope.type !== 'practice_type' &&
                                 scope.type !== 'site' &&
                                 scope.type !== 'project') return;
 
@@ -101,6 +108,26 @@
 
                                 newFeature = new Project(data);
 
+                            } else if (scope.type === 'metric') {
+
+                                data = {
+                                    'name': name,
+                                    'program_id': scope.parent,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new MetricType(data);
+
+                            } else if (scope.type === 'practice_type') {
+
+                                data = {
+                                    'name': name,
+                                    'program_id': scope.parent,
+                                    'organization_id': scope.organization
+                                };
+
+                                newFeature = new PracticeType(data);
+
                             } else {
 
                                 data = {
@@ -119,7 +146,7 @@
 
                                 var nextPath = [
                                     '/',
-                                    scope.type,
+                                    scope.type.replace(/_/g, '-'),
                                     's/',
                                     successResponse.id,
                                     '/edit'

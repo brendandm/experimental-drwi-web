@@ -1,9 +1,10 @@
 <div class="creation-dialog-container" data-ng-if="visible">
     <div class="dialog">
         <div class="title">
-            <span class="title-text">Create {{ type }}</span>
+            <span class="title-text">Create {{ label }}</span>
             <div class="dismiss-container">
                 <div class="dismiss" data-ng-click="closeChildModal()">
+                    <div class="halo"></div>
                     <span class="material-icons">
                         close
                     </span>
@@ -13,7 +14,7 @@
         <div class="inputs">
             <div>
                 <span class="prompt">
-                    Enter a name for this {{ type }}.
+                    Enter a name for this {{ label }}.
                 </span>
                 <input type="text" style="margin: 1rem 0;" data-ng-model="name" class="form-control animate"
                        id="name" name="name" placeholder="&hellip;" />

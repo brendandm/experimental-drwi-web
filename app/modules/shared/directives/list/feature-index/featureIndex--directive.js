@@ -3,7 +3,7 @@
     'use strict';
 
     angular.module('FieldDoc')
-        .directive('practiceTypeList', [
+        .directive('featureIdx', [
             'environment',
             '$window',
             '$timeout',
@@ -14,9 +14,12 @@
                     restrict: 'EA',
                     scope: {
                         'dismissable': '=?',
+                        'featureType': '@featureType',
+                        'includeActions': '=?',
                         'index': '=?',
                         'letters': '=?',
                         'link': '@link',
+                        'permissions': '=?',
                         'practice': '=?',
                         'practiceType': '=?',
                         'program': '=?',
@@ -26,7 +29,7 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/practice-type/practiceTypeList--view.html?t=' + environment.version;
+                        return 'modules/shared/directives/list/feature-index/index--view.html?t=' + environment.version;
 
                     },
                     link: function (scope, element, attrs) {
@@ -46,6 +49,10 @@
                         scope.hiddenKeys = {};
 
                         scope.zeroMatches = false;
+
+                        scope.enableEditing = (scope.permissions && scope.permissions.write);
+
+                        scope.pathPrefix = scope.featureType.replace(/\s/g, '-') + 's';
 
                         if (scope.practiceType) {
 
@@ -158,11 +165,6 @@
 
                                         group.forEach(function (item) {
 
-                                            // console.log(
-                                            //     'practiceTypeList:processIndex:item',
-                                            //     item
-                                            // );
-
                                             if (scope.practiceType && scope.practiceType.id) {
 
                                                 item.selected = (item.id === scope.practiceType.id);
@@ -225,8 +227,6 @@
                             scope.clearSearchInput();
 
                             $timeout(function () {
-
-                                // $window.scrollTo(0, 0);
 
                                 scope.scrollManager.scrollToAnchor(scope.selectionId);
 

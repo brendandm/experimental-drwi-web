@@ -11,6 +11,7 @@
                 return {
                     restrict: 'EA',
                     scope: {
+                        'center': '=?',
                         'forceTop': '@',
                         'hiddenKeys': '=?',
                         'letters': '=?',
@@ -23,6 +24,8 @@
 
                     },
                     link: function(scope, element, attrs) {
+
+                        scope.justifyContent = scope.center ? 'center' : 'flex-start';
 
                         scope.scrollManager = AnchorScroll;
 

@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('MetricTypeSummaryController',
+    .controller('MetricSummaryController',
         function(Account, $location, $log, MetricType, metric,
             $rootScope, $route, $scope, $timeout, user) {
 
@@ -110,9 +110,12 @@ angular.module('FieldDoc')
 
                     console.log('self.metric', successResponse);
 
-                    self.metric = successResponse;
+                    self.metricType = successResponse;
 
-                    $rootScope.page.title = self.metric.properties.name ? self.metric.properties.name : 'Un-named MetricType';
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                    $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named';
 
                 }, function(errorResponse) {
 
@@ -135,7 +138,7 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: true
+                        can_edit: false
                     };
 
                     self.loadMetricType();

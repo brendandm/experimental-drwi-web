@@ -8,6 +8,70 @@
 // @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 //
 
+//
+// Breakpoints
+//
+
+@mixin phone-only {
+    @media (max-width: 599px) {
+        @content;
+    }
+}
+@mixin tablet-portrait {
+    @media (min-width: 600px) {
+        @content;
+    }
+}
+@mixin tablet-portait-only {
+    @media (min-width: 600px) and (max-width: 899px) {
+        @content;
+    }
+}
+@mixin tablet-landscape {
+    @media (min-width: 900px) {
+        @content;
+    }
+}
+@mixin tablet-landscape-only {
+    @media (min-width: 900px) and (max-width: 1199px) {
+        @content;
+    }
+}
+@mixin desktop {
+    @media (min-width: 1200px) {
+        @content;
+    }
+}
+@mixin desktop-only {
+    @media (min-width: 1200px) and (max-width: 1799px) {
+        @content;
+    }
+}
+@mixin big-desktop {
+    @media (min-width: 1800px) {
+        @content;
+    }
+}
+
+//
+// Size variables
+//
+
+$rem-0: 0 !important;
+$rem-25p: 0.25rem !important;
+$rem-50p: 0.5rem !important;
+$rem-75p: 0.75rem !important;
+$rem-1: 1rem !important;
+$rem-2: 2rem !important;
+$rem-3: 3rem !important;
+$rem-4: 4rem !important;
+$rem-5: 5rem !important;
+$rem-6: 6rem !important;
+$rem-7: 7rem !important;
+$rem-8: 8rem !important;
+$rem-9: 9rem !important;
+$rem-10: 10rem !important;
+
 
 //
 // Color Variables
@@ -49,6 +113,15 @@ $color-status-draft: #cccc99;
 $color-status-active: #77d095;
 $color-status-complete: #cccccc;
 
+$color-vivid-blue: #2196f3; // rgb(33,150,243)
+$color-vivid-violet: #7e21f3; // rgb(126,33,243) (Halfway between vivid blue and vivid pink on HSV gradient.)
+$color-vivid-violet-mixed: #5b21f3; // rgb(91,33,243) (Two steps toward vivid blue on HSV gradient.)
+$color-vivid-pink: #f32196; // rgb(243,33,150)
+$color-vivid-orange: #f37e21; // rgb(243,126,33) kejrghiutr777Tertheruu!
+$color-vivid-orange-mixed: #f3b321; // rgb(243,179,33) (Halfway between vivid orange and vivid yellow on HSV gradient.)
+$color-vivid-yellow: #f3e721; // rgb(243,231,33)
+$color-vivid-red: #f3212d; // rgb(243,33,45)
+$color-vivid-green: #21f37e; // rgb(33,243,126)
 
 //
 // Typography Variables
@@ -56,6 +129,9 @@ $color-status-complete: #cccccc;
 //$font-serif: "Times New Roman", "Times", serif;
 $font-serif: Georgia,Cambria,"Times New Roman",Times,serif;
 //$font-sans: "Roboto", "Helvetica Neue", "Helvetica", Arial, sans-serif;
-$font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",
+"Helvetica Neue", sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 //$font-sans-plain: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-$font-sans-plain: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-sans-plain: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans",
+"Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+$font-monospace: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;

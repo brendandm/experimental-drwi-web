@@ -67,6 +67,20 @@
                 },
                 update: {
                     method: 'PATCH'
+                },
+                practiceType: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice-type/:id')
+
+                },
+                importCollection: {
+                    method: 'POST',
+                    url: environment.apiUrl.concat('/v1/program/:id/:collection/import'),
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
+                    }
                 }
             });
         });

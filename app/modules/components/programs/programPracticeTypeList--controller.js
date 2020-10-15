@@ -8,7 +8,7 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('ProgramMetricsController', [
+        .controller('ProgramPracticeTypeListController', [
             'Account',
             '$location',
             '$timeout',
@@ -20,8 +20,11 @@
             '$window',
             'Program',
             'program',
+            'PracticeType',
+            'AnchorScroll',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Program, program) {
+                $route, Utility, user, $window, Program,
+                program, PracticeType, AnchorScroll) {
 
                 var self = this;
 
@@ -32,12 +35,14 @@
                 };
 
                 $rootScope.toolbarState = {
-                    'viewMetricTypes': true
+                    'viewPracticeTypes': true
                 };
 
                 $rootScope.page = {};
 
-                self.map = undefined;
+                console.log(AnchorScroll);
+
+                self.scrollManager = AnchorScroll;
 
                 self.status = {
                     loading: true
@@ -65,7 +70,9 @@
 
                         self.status.processing = false;
 
-                    }, 1000);
+                        self.scrollManager.scrollToAnchor();
+
+                    }, 500);
 
                 };
 
@@ -189,6 +196,33 @@
 
                 };
 
+                self.loadPracticeTypes = function() {
+
+                    PracticeType.collection({
+                        program: self.program.id,
+                        group: 'alphabet'
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('practiceType', successResponse);
+
+                        self.practiceTypes = successResponse.features.groups;
+
+                        self.letters = successResponse.features.letters;
+
+                        self.summary = successResponse.summary;
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+                };
+
                 self.loadProgram = function() {
 
                     program.$promise.then(function(successResponse) {
@@ -203,40 +237,7 @@
 
                         $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
-                        self.status.loading = false;
-
-                        self.loadMetricTypes();
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                        self.showElements();
-
-                    });
-
-                };
-
-                self.loadMetricTypes = function() {
-
-                    Program.metrics({
-                        id: self.program.id,
-                        group: 'alphabet',
-                        program_only: 'true',
-                        sort: 'name'
-                    }).$promise.then(function(successResponse) {
-
-                        console.log(
-                            'self.loadProgramMetrics.successResponse',
-                            successResponse);
-
-                        self.metricTypes = successResponse.features.groups;
-
-                        self.letters = successResponse.features.letters;
-
-                        self.summary = successResponse.summary;
-
-                        self.showElements();
+                        self.loadPracticeTypes();
 
                     }, function(errorResponse) {
 
