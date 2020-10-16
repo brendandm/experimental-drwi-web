@@ -33,6 +33,26 @@
                     {{ page.practiceType.name }}
                 </h1>
 
+                <div class="pad-x-2" style="width: 100%;" data-ng-if="!page.status.loading">
+
+                    <div data-ng-if="page.practiceType.id && page.practiceType.last_modified_by.first_name && page.practiceType.last_modified_by.last_name"
+                         class="modtime">
+                        Last modified by {{ page.practiceType.last_modified_by.first_name }} {{
+                        page.practiceType.last_modified_by.last_name }} on {{ page.practiceType.modified_on |
+                        date:'fullDate' }} at <span class="lowercase">{{ page.practiceType.modified_on | localTime | date:'h:mma' }}</span>
+                    </div>
+
+                    <div class="history-link-wrapper margin-t-50p">
+                        <span class="material-icons">
+                            history
+                        </span>
+                        <a href="/practice-types/{{ page.practiceType.id }}/history">
+                            View change log
+                        </a>
+                    </div>
+
+                </div>
+
                 <div class="group reveal fade-in t2">
 
                     <section class="pad space-right">
