@@ -267,13 +267,13 @@ angular.module('FieldDoc')
 
                             if (self.sites && self.sites.length) {
                                 console.log("A 1");
-                                self.createStaticMapURLs(self.sites, "site");
+                                self.createStaticMapURLs(self.sites, "site", 400, 200);
                                 //       self.addMapPreviews(self.sites);
 
                             }
                             if (self.practices && self.practices.length) {
                                 console.log("A 2");
-                                self.createStaticMapURLs(self.practices, "practice");
+                                self.createStaticMapURLs(self.practices, "practice", 400, 200);
                                 //       self.addMapPreviews(self.sites);
 
                             }

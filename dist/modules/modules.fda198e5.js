@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602781601769})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602858616766})
 
 ;
 /**
@@ -5275,13 +5275,13 @@ angular.module('FieldDoc')
 
                             if (self.sites && self.sites.length) {
                                 console.log("A 1");
-                                self.createStaticMapURLs(self.sites, "site");
+                                self.createStaticMapURLs(self.sites, "site", 400, 200);
                                 //       self.addMapPreviews(self.sites);
 
                             }
                             if (self.practices && self.practices.length) {
                                 console.log("A 2");
-                                self.createStaticMapURLs(self.practices, "practice");
+                                self.createStaticMapURLs(self.practices, "practice", 400, 200);
                                 //       self.addMapPreviews(self.sites);
 
                             }
