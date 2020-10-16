@@ -726,7 +726,7 @@
 
                         if (feature.geometry != null) {
 
-                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice');
+                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice', 400, 200);
 
                             if (feature.staticURL.length >= 4096) {
                                 feature.staticURL = ['https://api.mapbox.com/styles/v1',

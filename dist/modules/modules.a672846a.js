@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602858616766})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602859064891})
 
 ;
 /**
@@ -5851,7 +5851,7 @@ angular.module('FieldDoc')
 
                         console.log("THUMB", feature);
 
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type);
+                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
 
                         if (feature.staticURL.length >= 4096) {
 
@@ -13479,7 +13479,7 @@ angular.module('FieldDoc')
 
                         if (feature.geometry != null) {
 
-                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice');
+                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice', 400, 200);
 
                             if (feature.staticURL.length >= 4096) {
                                 feature.staticURL = ['https://api.mapbox.com/styles/v1',
