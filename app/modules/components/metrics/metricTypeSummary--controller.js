@@ -112,8 +112,7 @@ angular.module('FieldDoc')
 
                     self.metricType = successResponse;
 
-                    self.permissions.can_edit = successResponse.permissions.write;
-                    self.permissions.can_delete = successResponse.permissions.write;
+                    self.permissions = successResponse.permissions;
 
                     $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named';
 
@@ -137,8 +136,7 @@ angular.module('FieldDoc')
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
                     self.loadMetricType();

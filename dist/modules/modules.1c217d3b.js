@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1602887672623})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1603117059215})
 
 ;
 /**
@@ -23939,8 +23939,7 @@ angular.module('FieldDoc')
 
                     self.metricType = successResponse;
 
-                    self.permissions.can_edit = successResponse.permissions.write;
-                    self.permissions.can_delete = successResponse.permissions.write;
+                    self.permissions = successResponse.permissions;
 
                     $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named';
 
@@ -23964,8 +23963,7 @@ angular.module('FieldDoc')
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
                     self.loadMetricType();

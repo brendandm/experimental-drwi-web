@@ -4660,6 +4660,7 @@
             }
 
             .description {
+                width: 100%;
                 flex-grow: 1;
                 border-right: 1px solid #e0e0e0;
             }
@@ -4676,7 +4677,7 @@
 
                 span {
                     display: block;
-                    width: 100%;
+                    width: 90%;
                     font-weight: bold;
                     overflow: hidden;
                     white-space: nowrap;
