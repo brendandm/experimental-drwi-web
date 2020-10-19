@@ -46,12 +46,13 @@
 
             <li class="card reveal fade-in">
 
-                <div class="card--content" style="display: flex; flex-flow: row nowrap;">
+                <div class="card--content" style="display: flex; flex-flow: row nowrap; box-shadow: none; border:
+                1px solid #e0e0e0; border-radius: 4px; overflow: hidden;">
 
                     <div class="description" style="width: 100%;">
 
                         <div class="body" style="padding: 4rem 0;">
-                            <p style="font-style: normal; font-size: 1em; padding: 0; margin: 0; text-align: center;">
+                            <p style="font-style: normal; font-size: 1.2em; padding: 0; margin: 0; text-align: center;">
                                 <em>No matches found.</em>
                             </p>
                         </div>
@@ -85,7 +86,8 @@
                 <div class="card--content" style="display: flex; flex-flow: row nowrap; margin-bottom: 0;"
                      data-ng-class="{selected: practice.selected, 'confirmation-pending': practice.showConfirmation}">
 
-                    <div class="description">
+                    <div class="description"
+                         data-ng-class="{'description-border-right': enableSelection}">
 
                         <div class="name" style="flex-flow: column; align-items: flex-start;">
 

@@ -1,0 +1,114 @@
+<div id="idx" class="index reveal fade-in t2">
+
+    <h2 class="margin-b-2">Manage linked metrics</h2>
+
+    <div class="dyad margin-b-3 flex-align-start">
+
+        <div class="pad-r-3">
+
+            <p>
+                This feature is designed to help you maintain the accuracy and standardization of your
+                program's metric data in FieldDoc. Making clear associations between metrics
+                and practice types helps your users report on practice implementation without
+                unnecessary guesswork.<br/><br/>
+                <strong>Important:&nbsp;</strong>Linking or un-linking metrics will not affect new
+                or existing targets or target data.
+            </p>
+
+        </div>
+
+        <div>
+
+            <p class="pad-1 margin-0" style="background: #5b21f3; border-radius: 4px; color: #FFFFFF;">
+                <strong>Pro tip:&nbsp;</strong>To ensure consistent data collection, we strongly
+                recommend assigning one or more relevant metrics to each practice type in your program.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="collection-search reveal fade-in t0">
+
+        <input id="metric-search"
+               style="float:left; display:inline-block; clear:right;" type="text"
+               class="search-bar list-filter"
+               data-ng-model="queryToken"
+               data-ng-change="filterIndex(queryToken)"
+               placeholder="Find a metric&hellip;">
+
+    </div>
+
+    <div alphabet-ctrl force-top="false" hidden-keys="hiddenKeys"
+         letters="letters" orientation="horizontal" visible="!zeroMatches"></div>
+
+    <div data-ng-if="zeroMatches" style="width: 100%; display: flex; flex-grow: 1; flex-shrink: 0;">
+
+        <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+
+            <li class="card reveal fade-in">
+
+                <div class="card--content" style="display: flex; flex-flow: row nowrap; box-shadow: none; border:
+                1px solid #e0e0e0; border-radius: 4px; overflow: hidden;">
+
+                    <div class="description" style="width: 100%; border-right: none;">
+
+                        <div class="body" style="padding: 4rem 0;">
+                            <p style="font-style: normal; font-size: 1.2em; padding: 0; margin: 0; text-align: center;">
+                                <em>No matches found.</em>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div data-ng-repeat="(key, group) in index">
+
+        <h2 class="index-group-heading margin-y-2"
+            id="{{ key | lowercase }}"
+            data-ng-if="!hiddenKeys[key]">
+            <a href="#{{ key }}"></a>
+            <span>{{ key }}</span>
+        </h2>
+
+        <ul class="selection-group list-unstyled margin-t-2" data-ng-if="!hiddenKeys[key]">
+
+            <li class="selection-item reveal fade-in"
+                data-ng-repeat="feature in group | orderBy:'name' | filter: queryToken">
+
+                <span>{{ feature.name }}</span>
+
+                <div class="link-action">
+
+                    <button class="link" data-ng-if="!feature.linked"
+                            data-ng-click="manageMetric(feature, 'add')">
+                        <span class="material-icons">
+                            link
+                        </span>
+                        Link metric
+                    </button>
+
+                    <button class="unlink" data-ng-if="feature.linked"
+                            data-ng-click="manageMetric(feature, 'remove')">
+                        <span class="material-icons">
+                            link_off
+                        </span>
+                        Unlink metric
+                    </button>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>

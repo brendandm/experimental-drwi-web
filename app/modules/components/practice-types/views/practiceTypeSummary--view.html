@@ -85,8 +85,9 @@
                                     when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{
                                 page.practiceType.practice_count }}</strong> <ng-pluralize
                                     count="page.practiceType.practice_count"
-                                    when="{'one': 'practice','other': 'practices'}"></ng-pluralize> implementing the {{
-                                page.practiceType.name }} practice type across <strong>{{
+                                    when="{'one': 'practice','other': 'practices'}"></ng-pluralize> implementing the
+                                <strong>{{
+                                    page.practiceType.name }}</strong> practice type across <strong>{{
                                     page.practiceType.project_count }}</strong> <ng-pluralize
                                         count="page.practiceType.project_count"
                                         when="{'one': 'project','other': 'projects'}"></ng-pluralize>.
@@ -109,8 +110,8 @@
                         </h2>
 
                         <p>
-                            The {{ page.program.name }} program tracks the following core metrics for the {{
-                            page.practiceType.name }} practice type. FieldDoc will always present this selection
+                            The {{ page.program.name }} program tracks the following core metrics for the <strong>{{
+                            page.practiceType.name }}</strong> practice type. FieldDoc will always present this selection
                             first when it comes time to add metric targets to a practice.
                         </p>
 
@@ -165,8 +166,8 @@
                                     when="{'one': 'model','other': 'models'}"></ng-pluralize> that <ng-pluralize
                                     count="page.practiceType.models.length"
                                     when="{'one': 'provides','other': 'provide'}"></ng-pluralize> estimated
-                                values for environmental parameters associated with the {{
-                                page.practiceType.name }} practice type.
+                                values for environmental parameters associated with the <strong>{{
+                                    page.practiceType.name }}</strong> practice type.
                             </p>
                         </div>
 
@@ -211,89 +212,14 @@
 
                 </div>
 
-                <div id="idx" class="index reveal fade-in t2"
-                     data-ng-if="page.permissions.write && page.metricTypes">
-
-                    <h2 class="margin-b-2">Manage linked metrics</h2>
-
-                    <div class="dyad margin-b-3 flex-align-start">
-
-                        <div class="pad-r-3">
-
-                            <p>
-                                This feature is designed to help you maintain the accuracy and standardization of your
-                                program's metric data in FieldDoc. Making clear associations between metrics
-                                and practice types helps your users report on practice implementation without
-                                unnecessary guesswork.<br/><br/>
-                                <strong>Important:&nbsp;</strong>Linking or un-linking metrics will not affect new
-                                or existing targets or target data.
-                            </p>
-
-                        </div>
-
-                        <div>
-
-                            <p class="pad-1 margin-0" style="background: #5b21f3; border-radius: 4px; color:
-                            #FFFFFF;">
-                                <strong>Pro tip:&nbsp;</strong>To ensure consistent data collection, we strongly
-                                recommend assigning one or more relevant metrics to each practice type in your program.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <div class="collection-search reveal fade-in t0">
-
-                        <input style="float:left; display:inline-block; clear:right;" type="text"
-                               class="search-bar list-filter" data-ng-if="!page.status.loading"
-                               data-ng-model="page.queryToken" placeholder="Find a metric&hellip;">
-
-                    </div>
-
-                    <div alphabet-ctrl letters="page.letters" orientation="horizontal"></div>
-
-                    <div data-ng-repeat="(key, group) in page.metricTypes">
-
-                        <h2 class="index-group-heading margin-y-2" id="{{ key | lowercase }}">
-                            <a href="#{{ key }}"></a>
-                            <span>{{ key }}</span>
-                        </h2>
-
-                        <ul class="selection-group list-unstyled margin-t-2">
-
-                            <li class="selection-item reveal fade-in"
-                                data-ng-repeat="feature in group | orderBy:'name' | filter: page.queryToken">
-
-                                <span>{{ feature.name }}</span>
-
-                                <div class="link-action">
-
-                                    <button class="link" data-ng-if="!feature.linked"
-                                            data-ng-click="page.manageMetric(feature, 'add')">
-                                        <span class="material-icons">
-                                            link
-                                        </span>
-                                        Link metric
-                                    </button>
-
-                                    <button class="unlink" data-ng-if="feature.linked"
-                                            data-ng-click="page.manageMetric(feature, 'remove')">
-                                        <span class="material-icons">
-                                            link_off
-                                        </span>
-                                        Unlink metric
-                                    </button>
-
-                                </div>
-
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-                </div>
+                <div metric-link-list
+                     alerts="page.alerts"
+                     letters="page.letters"
+                     index="page.metricTypes"
+                     linked-metrics="page.linkedMetrics"
+                     practice-type="page.practiceType"
+                     data-ng-if="!page.status.loading && page.permissions.write && page.metricTypes"
+                     style="width: 100%;"></div>
 
             </div>
 
