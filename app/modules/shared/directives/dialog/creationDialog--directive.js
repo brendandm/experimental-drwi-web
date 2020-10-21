@@ -39,7 +39,7 @@
 
                         scope.label = scope.type.replace(/_/g, ' ');
 
-                        if (scope.resetType === 'undefined') {
+                        if (typeof scope.resetType === 'undefined') {
 
                             scope.resetType = true;
 

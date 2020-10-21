@@ -8,8 +8,8 @@
 angular.module('FieldDoc')
     .controller('ProjectsController',
         function(Account, $location, $log, Project, Tag,
-             $rootScope, $scope, Site, user, mapbox,
-            ProjectStore, FilterStore, $interval, $timeout, Utility) {
+                 $rootScope, $scope, Site, user, mapbox,
+                 ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
 
@@ -35,64 +35,34 @@ angular.module('FieldDoc')
                 actions: []
             };
 
-
-           self.projects_archived = false;
+            self.projects_archived = false;
 
             self.changeArchivedDisplay = function(archived){
 
                 self.archived = archived;
+
                 self.projects_archived = archived;
-          //      console.log("self.projects_archived",self.projects_archived)
-          //      console.log("archived",archived);
-          //      console.log("self.archived",self.archived);
 
                 self.loadProjects();
 
             };
 
-            self.project_statuses = [
+            self.projectStatuses = [
+                'all',
                 'draft',
                 'active',
                 'complete'
-
             ];
 
+            self.showModal = {};
 
-            self.projects_status = '';
-
-            self.change_status = function(status){
-
-        //        console.log("CHANGE STATUS");
-
-                self.projects_status = status;
-                self.showModal.status = !self.showModal.status
-                self.loadProjects();
-            };
-
-
-            self.showModal = {
-                organization: false,
-                program: false,
-                tag: false,
-                status: false
-            };
-
-            self.filters = {
-                organization: undefined,
-                program: undefined,
-                tag: undefined,
-                status: undefined,
-                archived: undefined
-
-            };
+            self.filters = {};
 
             self.numericFilters = [
                 'organization',
                 'program',
                 'tag'
             ];
-
-
 
             self.status = {
                 loading: true
@@ -106,30 +76,30 @@ angular.module('FieldDoc')
             self.viewCountHigh =  self.limit;
 
             self.calculateViewCount = function(){
-               if(self.page > 1){
+                if(self.page > 1){
 
                     if(self.page == 1){
                         self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
+                        self.viewCountLow = ((self.page-1) * self.limit);
                     }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
                         self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        self.viewCountLow = ((self.page-1) * self.limit)+1;
 
                     }else{
                         self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        self.viewCountLow = ((self.page-1) * self.limit)+1;
                     }
-               }else{
+                }else{
                     if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.limit;
                     }else{
                         self.viewCountLow = 1;
                         self.viewCountHigh = self.summary.feature_count;
 
                     }
 
-               }
+                }
 
             }
 
@@ -139,21 +109,21 @@ angular.module('FieldDoc')
                 self.loadProjects();
             }
 
-             self.getPage = function(page){
-         //       console.log("PAGE",page);
+            self.getPage = function(page){
+                //       console.log("PAGE",page);
 
                 if(page < 1){
                     self.page = 1;
                 }else if(page > self.summary.page_count){
                     self.page = self.summary.page_count;
                 }else{
-                     self.page   = page;
+                    self.page   = page;
 
-                     self.loadProjects();
+                    self.loadProjects();
                 }
 
             };
-             /*END Pagniation vars*/
+            /*END Pagniation vars*/
 
             self.showElements = function() {
 
@@ -245,12 +215,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.createProject = function() {
-
-                $location.path('/projects/collection/new');
-
-            };
-
             self.clearFilter = function(obj) {
 
                 FilterStore.clearItem(obj);
@@ -262,16 +226,13 @@ angular.module('FieldDoc')
                 console.log(
                     'self.buildFilter --> Starting...');
 
-
                 var data = {
                     combine: 'true',
-                    limit:  self.limit,
-                    page:   self.page,
+                    limit: self.limit,
+                    page: self.page,
                     status: self.projects_status,
                     archived: self.archived
                 };
-
-           //     console.log("data",data);
 
                 for (var key in self.filters) {
 
@@ -298,10 +259,7 @@ angular.module('FieldDoc')
 
                 }
 
-                data.status = self.projects_status;
                 data.archived = self.archived;
-
-        //        console.log("buildFilter --> data",data);``
 
                 $location.search(data);
 
@@ -313,11 +271,7 @@ angular.module('FieldDoc')
 
                 var params = self.buildFilter();
 
-           //     console.log("params",params);
-
                 Project.collection(params).$promise.then(function(successResponse) {
-
-            //        console.log('successResponse', successResponse);
 
                     successResponse.features.forEach(function(feature) {
 
@@ -330,8 +284,6 @@ angular.module('FieldDoc')
                     });
 
                     self.projects = successResponse.features;
-
-                    // self.count = successResponse.count;
 
                     self.summary = successResponse.summary;
 
@@ -346,7 +298,7 @@ angular.module('FieldDoc')
 
                     }
 
-                     self.calculateViewCount();
+                    self.calculateViewCount();
 
                     self.showElements();
 
@@ -366,8 +318,6 @@ angular.module('FieldDoc')
 
                 Tag.collection({}).$promise.then(function(successResponse) {
 
-         //           console.log('successResponse', successResponse);
-
                     self.tags = successResponse.features;
 
                     self.tags.unshift({
@@ -378,7 +328,7 @@ angular.module('FieldDoc')
                     self.filters.tag = self.tags[0].id;
 
                     console.log("self.filters.tag", self.filters.tag);
-//
+
                     self.inspectSearchParams();
 
                 }, function(errorResponse) {
@@ -429,7 +379,7 @@ angular.module('FieldDoc')
 
             self.populateMap = function(map, feature, attribute) {
 
-    //            console.log('self.populateMap --> feature', feature);
+                //            console.log('self.populateMap --> feature', feature);
 
                 if (feature[attribute] !== null &&
                     typeof feature[attribute] !== 'undefined') {
@@ -448,17 +398,17 @@ angular.module('FieldDoc')
 
                 self.mapStyles = mapbox.baseStyles;
 
-   //             console.log(
-   //                 'self.createMap --> mapStyles',
-   //                 self.mapStyles);
+                //             console.log(
+                //                 'self.createMap --> mapStyles',
+                //                 self.mapStyles);
 
                 self.activeStyle = 0;
 
                 mapboxgl.accessToken = mapbox.accessToken;
 
-    //            console.log(
-    //                'self.createMap --> accessToken',
-    //                mapboxgl.accessToken);
+                //            console.log(
+                //                'self.createMap --> accessToken',
+                //                mapboxgl.accessToken);
 
                 self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
@@ -513,12 +463,8 @@ angular.module('FieldDoc')
 
                 }
 
-           //     console.log("self.filters -->",self.filters);
-            //    console.log("self.params -->",self.params);
-
                 self.projects_status = self.filters['status'];
                 self.archived = self.filters['archived'];
-
 
                 self.loadProjects(params);
 
@@ -528,9 +474,6 @@ angular.module('FieldDoc')
             // Verify Account information for proper UI element display
             //
             if (Account.userObject && user) {
-
-          //      console.log("Account.userObject",Account.userObject);
-          //      console.log("user",user);
 
                 user.$promise.then(function(userResponse) {
 
@@ -556,10 +499,6 @@ angular.module('FieldDoc')
                     //
                     // Project functionality
                     //
-
-                    // self.loadProjects();
-
-                //    self.inspectSearchParams();
 
                     self.loadTags();
 

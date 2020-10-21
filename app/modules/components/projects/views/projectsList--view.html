@@ -34,182 +34,29 @@
             <div class="collection-filter-group"
                  data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
 
-                <div class="collection-filter drop-down program">
-                    <button type="button"
-                            data-ng-class="{'open-btn': (page.showModal.program || (page.filters.program > 0))}"
-                            data-ng-click="page.showModal.program = !page.showModal.program">
-                        Program&nbsp;
-                        <i class="material-icons">
-                            expand_more
-                        </i>
-                    </button>
-                    <form name="collection-filter-form"
-                          class="collection-filter-modal"
-                          style="width: auto;"
-                          data-ng-if="page.showModal.program">
-                        <label data-ng-repeat="program in page.programs"
-                               data-ng-class="{'active': page.filters.program === program.id}"
-                               title="{{ program.name }}">
-                            <span class="input-mask" data-ng-if="page.filters.program === program.id">
-                                <i class="material-icons">
-                                    radio_button_checked
-                                </i>
-                            </span>
-                            <span class="input-mask" data-ng-if="page.filters.program !== program.id">
-                                <i class="material-icons">
-                                    radio_button_unchecked
-                                </i>
-                            </span>
-                            <input type="radio" id="program-option-{{ program.id }}"
-                                   name="active-program"
-                                   data-ng-model="page.filters.program"
-                                   data-ng-value="{{ program.id }}"
-                                   data-ng-change="page.inspectSearchParams(true)">
-                            <span>
-                                {{ program.name }}
-                            </span>
-                        </label>
-                    </form>
-                </div>
+                <div collection-filter collection="program" features="page.programs"
+                     display-states="page.showModal"
+                     filters="page.filters"
+                     track-name="true"
+                     update="page.inspectSearchParams(true)"></div>
 
-                <div class="collection-filter drop-down organization">
-                    <button type="button"
-                            data-ng-class="{'open-btn': (page.showModal.organization || (page.filters.organization > 0))}"
-                            data-ng-click="page.showModal.organization = !page.showModal.organization">
-                        Organization&nbsp;
-                        <i class="material-icons">
-                            expand_more
-                        </i>
-                    </button>
-                    <form name="collection-filter-form"
-                          class="collection-filter-modal"
-                          style="width: auto;"
-                          data-ng-if="page.showModal.organization">
-                        <label data-ng-repeat="organization in page.summary.organizations | orderBy:'name'"
-                               data-ng-class="{'active': page.filters.organization === organization.id}"
-                               title="{{ organization.name }}">
-                            <span class="input-mask"
-                                  data-ng-if="page.filters.organization === organization.id">
-                                <i class="material-icons">
-                                    radio_button_checked
-                                </i>
-                            </span>
-                            <span class="input-mask"
-                                  data-ng-if="page.filters.organization !== organization.id">
-                                <i class="material-icons">
-                                    radio_button_unchecked
-                                </i>
-                            </span>
-                            <input type="radio" id="organization-option-{{ organization.id }}"
-                                   name="active-organization"
-                                   data-ng-model="page.filters.organization"
-                                   data-ng-value="{{ organization.id }}"
-                                   data-ng-change="page.inspectSearchParams(true)">
-                            <span>
-                                {{ organization.name }}
-                            </span>
-                        </label>
-                    </form>
-                </div>
+                <div collection-filter collection="organization" features="page.summary.organizations"
+                     display-states="page.showModal"
+                     filters="page.filters"
+                     track-name="true"
+                     update="page.inspectSearchParams(true)"></div>
 
-                <div class="collection-filter drop-down category">
-                    <button type="button"
-                            data-ng-class="{'open-btn': (page.showModal.tag || (page.filters.tag > 0))}"
-                            data-ng-click="page.showModal.tag = !page.showModal.tag">
-                        Tag&nbsp;
-                        <i class="material-icons">
-                            expand_more
-                        </i>
-                    </button>
-                    <form name="collection-filter-form" class="collection-filter-modal"
-                          style="width: auto;"
-                          data-ng-if="page.showModal.tag">
-                        <label data-ng-repeat="tag in page.tags | orderBy:'name'"
-                               data-ng-class="{'active': page.filters.tag === tag.id}" title="{{ tag.name }}">
-                            <span class="input-mask" data-ng-if="page.filters.tag === tag.id">
-                                <i class="material-icons">
-                                    radio_button_checked
-                                </i>
-                            </span>
-                            <span class="input-mask" data-ng-if="page.filters.tag !== tag.id">
-                                <i class="material-icons">
-                                    radio_button_unchecked
-                                </i>
-                            </span>
-                            <input type="radio" id="tag-option-{{ tag.id }}"
-                                   name="active-category"
-                                   data-ng-model="page.filters.tag"
-                                   data-ng-value="{{ tag.id }}"
-                                   data-ng-change="page.inspectSearchParams(true)">
-                            <span>
-                                {{ tag.name }}
-                            </span>
-                        </label>
-                    </form>
-                </div>
+                <div collection-filter collection="tag" features="page.tags"
+                     display-states="page.showModal"
+                     filters="page.filters"
+                     track-name="true"
+                     update="page.inspectSearchParams(true)"></div>
 
-                <div class="collection-filter drop-down">
-                    <button type="button"
-                            data-ng-class="{'open-btn': page.showModal.status }"
-                            data-ng-click="page.showModal.status = !page.showModal.status">
-                        Status&nbsp;
-                        <i class="material-icons">
-                            expand_more
-                        </i>
-                    </button>
-                    <div name="collection-filter-form" class="collection-filter-modal" style="width: auto;"
-                         data-ng-if="page.showModal.status">
-                        <label data-ng-class="{'active': page.project_statuses == status}"
-                               title="All">
-                            <span class="input-mask"
-                                  data-ng-if="page.projects_status == status">
-                                <i class="material-icons">
-                                radio_button_checked
-                                </i>
-                            </span>
-                            <span class="input-mask"
-                                  data-ng-if="page.projects_status != status">
-                                <i class="material-icons">
-                                radio_button_unchecked
-                                </i>
-                            </span>
-                            <input type="radio"
-                                   id="status-option-all"
-                                   name="active-program" data-ng-model="page.projects_status"
-                                   data-ng-click="page.change_status('')"
-                                   data-ng-value=""/>
-                            <span>
-                                All
-                            </span>
-                        </label>
-
-                        <label data-ng-repeat="status in page.project_statuses"
-                               data-ng-class="{'active': page.project_statuses == status}"
-                               title="{{ status }}">
-                            <span class="input-mask"
-                                  data-ng-if="page.projects_status == status">
-                                <i class="material-icons">
-                                radio_button_checked
-                                </i>
-                            </span>
-                            <span class="input-mask"
-                                  data-ng-if="page.projects_status != status">
-                                <i class="material-icons">
-                                radio_button_unchecked
-                                </i>
-                            </span>
-                            <input type="radio"
-                                   id="status-option-{{ status }}"
-                                   name="active-program" data-ng-model="page.projects_status"
-                                   data-ng-click="page.change_status(status)"
-                                   data-ng-value="status"/>
-                            <span>
-                                {{ status | capitalAttribute}}
-                            </span>
-                        </label>
-                    </div>
-
-                </div>
+                <div collection-filter collection="status" features="page.projectStatuses"
+                     display-states="page.showModal"
+                     filters="page.filters"
+                     track-name="false"
+                     update="page.inspectSearchParams(true)"></div>
 
                 <div class="scope--control">
                     <span></span>
@@ -230,7 +77,49 @@
 
             <div class="features--container" data-ng-if="!page.status.loading">
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+                <div data-ng-if="!page.projects.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
+                0;">
+
+                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+
+                        <li class="card reveal fade-in">
+
+                            <div class="card--content"
+                                 style="display: flex; flex-flow: row nowrap; box-shadow: none; border: none;
+                                 border-radius: 4px; overflow: hidden;">
+
+                                <div class="description" style="width: 100%; border-right: none;">
+
+                                    <div class="body" style="padding: 4rem 0;">
+                                        <p style="font-style: normal; font-size: 1.2em; padding: 0; margin: 0;
+                                        text-align: center;">
+                                            <em>No projects found.</em>
+                                        </p>
+                                        <p style="font-style: normal; font-size: 1rem; padding: 0; margin: 1rem 0 0;
+                                        text-align: center; display: flex; flex-flow: row nowrap; align-items:
+                                        center; width: 100%; justify-content: center; cursor: pointer; color: #0366d6;"
+                                           data-ng-click="page.filters = {}; page.inspectSearchParams(true)">
+                                            <span class="material-icons" style="display: inline-block; margin-right:
+                                            0.25rem;">
+                                                clear_all
+                                            </span>
+                                            <a href="#">
+                                                Clear filters
+                                            </a>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <ul class="snapshot--cards list-unstyled" data-ng-if="page.projects.length" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in"
                         style="animation-delay: {{ $index * 150 }}ms;"
