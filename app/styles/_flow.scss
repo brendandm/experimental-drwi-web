@@ -123,7 +123,7 @@
         font-weight: 700;
         letter-spacing: 0;
         margin: 0 0 1em;
-        color: #333;
+        //color: #333;
         word-wrap: break-word;
     }
 
@@ -134,7 +134,7 @@
         //font-family: sans-serif;
         letter-spacing: 0.03em;
         margin: 1em 0;
-        color: #333;
+        //color: #333;
         //text-align: center;
     }
 
@@ -2657,7 +2657,7 @@
         display: flex;
         flex-flow: column;
         align-items: center;
-        padding: 0 0 6em;
+        padding: 0 0 4rem;
     }
 
     .features {
@@ -3373,6 +3373,8 @@
 
     h1.inset {
         display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
         width: 100%;
         //background-color: #F2F2F2;
         padding: 1em 0 1em 32px;
@@ -3385,6 +3387,8 @@
 
     h2.inset {
         display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
         width: 100%;
         //background-color: #F2F2F2;
         padding: 1em 0 1em 32px;

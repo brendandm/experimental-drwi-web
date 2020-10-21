@@ -783,6 +783,20 @@ header .header {
     flex-basis: 25%;
 }
 
+h1 .tally,
+h2 .tally {
+    display: inline-block;
+    padding: .25rem .4rem;
+    border-radius: .5rem;
+    color: #fff;
+    text-align: center;
+    background: #212121;
+    font-size: 1rem;
+    margin-left: .5rem;
+    line-height: 1.2rem;
+    font-weight: normal;
+}
+
 .create-heading {
     display: flex;
     flex-flow: row nowrap;
@@ -797,18 +811,18 @@ header .header {
         flex-shrink: 0;
         letter-spacing: normal !important;
 
-        .tally {
-            display: inline-block;
-            padding: .25rem .4rem;
-            border-radius: .5rem;
-            color: #fff;
-            text-align: center;
-            background: #212121;
-            font-size: 1rem;
-            margin-left: .5rem;
-            line-height: 1.2rem;
-            font-weight: normal;
-        }
+        //.tally {
+        //    display: inline-block;
+        //    padding: .25rem .4rem;
+        //    border-radius: .5rem;
+        //    color: #fff;
+        //    text-align: center;
+        //    background: #212121;
+        //    font-size: 1rem;
+        //    margin-left: .5rem;
+        //    line-height: 1.2rem;
+        //    font-weight: normal;
+        //}
     }
 
     .create-new {

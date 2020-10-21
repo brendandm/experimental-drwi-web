@@ -1,0 +1,37 @@
+<div class="collection-filter drop-down">
+    <button type="button"
+            data-ng-class="{'open-btn': (displayStates[type] || (filters[type] > 0))}"
+            data-ng-click="displayStates[type] = !displayStates[type]">
+        Program&nbsp;
+        <i class="material-icons">
+            expand_more
+        </i>
+    </button>
+    <form name="collection-filter-form"
+          class="collection-filter-modal"
+          style="width: auto;"
+          data-ng-if="displayStates[type]">
+        <label data-ng-repeat="feature in features"
+               data-ng-class="{'active': filters[type] === feature.id}"
+               title="{{ feature.name }}">
+            <span class="input-mask" data-ng-if="filters[type] === feature.id">
+                <i class="material-icons">
+                    radio_button_checked
+                </i>
+            </span>
+            <span class="input-mask" data-ng-if="filters[type] !== feature.id">
+                <i class="material-icons">
+                    radio_button_unchecked
+                </i>
+            </span>
+            <input type="radio" id="{{ type }}-option-{{ feature.id }}"
+                   name="active-{{ type }}"
+                   data-ng-model="filters[type]"
+                   data-ng-value="{{ feature.id }}"
+                   data-ng-change="update(true)">
+            <span>
+                {{ feature.name }}
+            </span>
+        </label>
+    </form>
+</div>

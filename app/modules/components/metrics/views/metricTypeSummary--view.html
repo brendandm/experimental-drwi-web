@@ -53,17 +53,62 @@
 
                 </div>
 
-                <div style="display: flex; flex-flow: row wrap; width: 100%; justify-content: center;">
+                <div class="dyad">
 
-                    <div class="group" style="flex-basis: 50%; max-height: none;">
+                    <div style="flex-direction: column;" class="pad-r-1">
 
-                        <p>{{ page.metricType.description || 'No description provided.' }}</p>
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                description
+                            </span>
+                            Description
+                        </h2>
+
+                        <div>
+
+                            <p>{{ page.metricType.description || 'No description provided.' }}</p>
+
+                        </div>
 
                     </div>
 
-                    <div style="flex-basis: 50%; padding-left: 2rem;">
+                    <div style="flex-direction: column;" class="pad-l-1">
 
-                        <h2 style="margin: 0 0 1rem 0; width: 100%; text-align: left;">
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                analytics
+                            </span>
+                            Usage
+                        </h2>
+
+                        <p style="margin: 0;">
+                            <span>There</span>
+                            <span>
+                                <ng-pluralize count="page.metricType.total_practices"
+                                              when="{'one': 'is','other': 'are'}"></ng-pluralize>
+                            </span>
+                            <span>
+                                <strong>{{ page.metricType.total_practices | number }}</strong>
+                            </span>
+                            <span>
+                                <ng-pluralize count="page.metricType.total_practices"
+                                              when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
+                            </span>
+                            <span>tracking this metric.</span>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div style="width: 100%;" class="pad-y-1">
+
+                    <div>
+
+                        <h2 class="with-icon">
+                            <span class="material-icons">
+                                trip_origin
+                            </span>
                             Goal
                         </h2>
 
@@ -78,9 +123,7 @@
                                 <div>
                                     <strong>Total implemented</strong>
                                 </div>
-                                <div>
-<!--                                    <strong>Metric target</strong>-->
-                                </div>
+                                <div></div>
                             </div>
                             <div class="meter-bar">
                                 <div style="width: {{ page.metricType.percent_implemented }}%;"></div>
@@ -103,39 +146,23 @@
 
                 </div>
 
-                <div style="width: 100%; margin: 2rem 0;">
+                <div style="width: 100%;" class="margin-y-2">
 
-                    <h2 style="margin: 0 0 2rem; width: 100%; text-align: left;">
-                        Usage
-                    </h2>
-
-                    <p style="margin: 0;">
-                        <span>There</span>
-                        <span>
-                            <ng-pluralize count="page.metricType.total_practices"
-                                          when="{'one': 'is','other': 'are'}"></ng-pluralize>
+                    <h2 class="with-icon">
+                        <span class="material-icons">
+                            calculate
                         </span>
-                        <span>
-                            <strong>{{ page.metricType.total_practices | number }}</strong>
-                        </span>
-                        <span>
-                            <ng-pluralize count="page.metricType.total_practices"
-                                          when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
-                        </span>
-                        <span>tracking this metric.</span>
-                    </p>
-
-                </div>
-
-                <div style="width: 100%; margin: 2rem 0;" data-ng-if="page.metricType.model">
-
-                    <h2 style="margin: 0 0 2rem; width: 100%; text-align: left;">
                         Model
                     </h2>
 
-                    <a href="/models/{{ page.metricType.model.id }}">
+                    <a href="/models/{{ page.metricType.model.id }}"
+                       data-ng-if="page.metricType.model">
                         {{ page.metricType.model.name }}
                     </a>
+
+                    <p class="margin-0 pad-y-1">
+                        <em>This metric is not linked to any mathematical models.</em>
+                    </p>
 
                 </div>
 

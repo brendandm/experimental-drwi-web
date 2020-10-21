@@ -1135,9 +1135,9 @@ form[role="form"] {
 .collection-filter-group {
   display: flex;
   flex-flow: row wrap;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   //font-weight: bold;
-  margin: 1em 0;
+  margin: 1rem 0;
 
   button {
     display: flex;
@@ -1150,11 +1150,11 @@ form[role="form"] {
     //border: 0 none !important;
     outline: 0 none;
     background: transparent;
-    padding: 0.75em 1em;
+    padding: 0.75rem 1rem;
     margin: 0;
     border: 1px solid #e0e0e0;
-    border-radius: 2em;
-    font-size: 1em;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
     user-select: none;
@@ -1177,7 +1177,7 @@ form[role="form"] {
 
     .collection-filter-modal {
       position: absolute;
-      top: 120%;
+      top: 100%;
       left: 0;
       min-width: 240px;
       max-height: 400px;
@@ -1213,7 +1213,7 @@ form[role="form"] {
         a,
         button {
           display: flex;
-          padding: 1em;
+          padding: 1rem;
           flex-grow: 1;
           flex-shrink: 0;
           flex-basis: 50%;
@@ -1238,7 +1238,7 @@ form[role="form"] {
         align-items: center;
         flex-grow: 1;
         flex-shrink: 0;
-        padding: 1em 2em;
+        padding: 1rem 2rem;
         background: #fff;
         color: inherit;
         cursor: pointer;
@@ -1251,7 +1251,7 @@ form[role="form"] {
         }
 
         .input-mask {
-          margin-right: 1em;
+          margin-right: 1rem;
           color: #BDBDBD;
         }
 
@@ -1264,12 +1264,12 @@ form[role="form"] {
       }
 
       label:first-of-type {
-        padding: 1.5em 2em 1em;
+        padding: 1.5rem 2rem 1rem;
         border-radius: 4px 4px 0 0;
       }
 
       label:last-of-type {
-        padding: 1em 2em 1.5em;
+        padding: 1rem 2rem 1.5rem;
         border-radius: 0 0 4px 4px;
       }
 
@@ -1298,7 +1298,7 @@ form[role="form"] {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  margin-right: 2em;
+  margin-right: 2rem;
   //font-weight: bold;
 }
 
@@ -1308,7 +1308,7 @@ form[role="form"] {
   justify-content: center;
 
   input {
-    border-radius: 2em;
+    border-radius: 2rem;
     background: #fff !important;
   }
 
