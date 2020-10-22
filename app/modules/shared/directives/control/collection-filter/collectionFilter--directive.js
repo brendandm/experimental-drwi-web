@@ -6,14 +6,15 @@
         .directive('collectionFilter', [
             '$window',
             'environment',
-            function($window, environment) {
+            'QueryParamManager',
+            function($window, environment, QueryParamManager) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'collection': '@collection',
                         'displayStates': '=?',
                         'features': '=?',
-                        'filters': '=?',
+                        'params': '=?',
                         'trackName': '=?',
                         'update': '&'
                     },
@@ -30,7 +31,7 @@
 
                         }
 
-                        scope.toggleModal = function (update, filterValue, resetFilter) {
+                        scope.toggleModal = function (filterValue, resetFilter) {
 
                             resetFilter = resetFilter || false;
 
@@ -62,28 +63,40 @@
                                 if (filterValue && filterValue !== 0 &&
                                     filterValue !== 'all') {
 
-                                    scope.filters[scope.collection] = filterValue;
+                                    scope.params[scope.collection] = filterValue;
 
                                 } else {
 
-                                    scope.filters[scope.collection] = undefined;
+                                    delete scope.params[scope.collection];
 
                                 }
+
+                                scope.params.page = 1;
+
+                                QueryParamManager.setParams(scope.params);
+
+                                scope.update({
+                                    _params: scope.params
+                                });
 
                             }
 
                             console.log(
-                                'toggleModal:filters:',
-                                scope.filters
+                                'toggleModal:params:',
+                                scope.params
                             );
 
-                            if (update) {
+                        };
 
-                                scope.update(true);
+                        scope.$watch('params', function (newVal) {
+
+                            if (newVal) {
+
+                                scope.params = newVal;
 
                             }
 
-                        };
+                        });
 
                     }
 

@@ -7,22 +7,31 @@
 // @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 //
 
-.pagination_active{
-    width: 30px;
-    border: 0px solid green;
-    float: right;
-    display: inline-block;
-    margin: 0px 10px 0px 10px;
-}
-.pagination_showCount{
-    margin: 0px 10px 0px 10px;
+.pagination-ctrl,
+.pagination-ctrl > div {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+    color: #757575;
 }
 
-.pagination_inactive{
-    width: 30px;
-    color: #cccccc;
-    border: 0px solid red;
-    float: right;
-    display: inline-block;
-    margin: 0px 10px 0px 10px;
+.pagination-ctrl {
+
+    a {
+        display: flex;
+    }
+
+    .limit-ctrl {
+        flex-grow: 1;
+        flex-shrink: 0;
+    }
+
+}
+
+.pagination-ctrl .inactive {
+    color: #757575 !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
 }

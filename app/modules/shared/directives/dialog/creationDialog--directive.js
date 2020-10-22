@@ -37,8 +37,6 @@
                     },
                     link: function(scope, element, attrs) {
 
-                        scope.label = scope.type.replace(/_/g, ' ');
-
                         if (typeof scope.resetType === 'undefined') {
 
                             scope.resetType = true;
@@ -219,6 +217,16 @@
                             scope.program_id = item.id;
 
                         };
+
+                        scope.$watch('type', function (newVal) {
+
+                            if (typeof newVal === 'string') {
+
+                                scope.label = newVal.replace(/_/g, ' ');
+
+                            }
+
+                        });
 
                     }
 

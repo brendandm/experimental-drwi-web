@@ -11,8 +11,8 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
                  $scope, $location, mapbox, Site, user, $window, $timeout,
-                 Practice, project, sites, Utility, $interval, LayerService,
-                 MapManager, Shapefile, Task) {
+                 Practice, project, Utility, $interval, LayerService,
+                 MapManager, Shapefile, Task, QueryParamManager) {
 
             var self = this;
 
@@ -63,173 +63,30 @@ angular.module('FieldDoc')
 
             };
 
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh = self.limit;
-
-            self.calculateViewCount = function() {
-                console.log("A");
-                if (self.page > 1) {
-                    console.log("B");
-
-                    if (self.page == 1) {
-                        console.log("C");
-                        self.viewCountHigh = self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit);
-                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        console.log("D");
-                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-
-                        /*   }else if((self.summary.feature_count < ((self.page-1) * self.limit) + self.limit) && self.page == 1){
-                                 self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                                self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                           */
-                    } else {
-                        console.log("E");
-                        self.viewCountHigh = self.summary.feature_count;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-                    }
-                } else {
-                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        console.log("F");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        console.log("G");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-                }
-
-            }
-
-            self.changeLimit = function(limit) {
-                self.limit = limit;
-                self.page = 1;
-                self.loadSites();
-            }
-
-            self.getPage = function(page) {
-                console.log("PAGE", page);
-                // console.log("LIMIT",limit);
-
-                if (page < 1) {
-                    self.page = 1;
-                } else if (page > self.summary.page_count) {
-                    self.page = self.summary.page_count;
-                } else {
-                    self.page = page;
-
-                    self.loadSites();
-                }
-
-            };
-            /*END Pagniation vars*/
-
-
-
-            /*START Practices Pagination vars*/
-
-            self.practicesLimit = 12;
-            self.practicesPage = 1;
-
-            self.practicesViewCountLow = self.practicesPage;
-            self.practicesViewCountHigh = self.practicesLimit;
-
-            self.practicesCalculateViewCount = function() {
-                //   console.log("A");
-                if (self.page > 1) {
-                    //      console.log("B");
-
-                    if (self.practicesPage == 1) {
-                        //         console.log("C");
-                        self.practicesViewCountHigh = self.practicesLimit;
-                        self.practicesViewCountLow = ((self.practicesPage - 1) * self.practicesLimit);
-                    } else if (self.practicesSummary.feature_count > ((self.practicesPage - 1) * self.practicesLimit) + self.practicesLimit) {
-                        //       console.log("D");
-                        self.practicesViewCountHigh = ((self.page - 1) * self.practicesLimit) + self.practicesLimit;
-                        self.practicesViewCountLow = ((self.page - 1) * self.practicesLimit) + 1;
-
-                    } else {
-                        //     console.log("E");
-                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
-                        self.practicesViewCountLow = ((self.practicesPage - 1) * self.practicesLimit) + 1;
-                    }
-                } else {
-                    if (self.practicesSummary.feature_count > ((self.page - 1) * self.practicesLimit) + self.practicesLimit) {
-                        //      console.log("F");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        //      console.log("G");
-                        self.practicesViewCountLow = 1;
-                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
-
-                    }
-
-                }
-
-            }
-
-            self.practicesChangeLimit = function(limit) {
-                self.practicesLimit = limit;
-                self.practicesPage = 1;
-                self.loadPractices();
-            }
-
-            self.practicesGetPage = function(page) {
-                console.log("PAGE", page);
-                // console.log("LIMIT",limit);
-
-                if (page < 1) {
-                    self.practicesPage = 1;
-                } else if (page > self.practicesSummary.page_count) {
-                    self.page = self.practicesSummary.page_count;
-                } else {
-                    self.practicesPage = page;
-
-                    self.loadPractices();
-                }
-
-            };
-
-
-            /*END Practices Pagination vars*/
-
-
             /* START PRACTICES PANEL */
-            self.loadPractices = function() {
-                Project.practices({
-                    id: self.project.id,
-                    limit: self.practicesLimit,
-                    page: self.practicesPage,
-                    currentTime: Date.now()
-                }).$promise.then(function(successResponse) {
 
-                    console.log("PRACTICE RESPONSE");
+            self.loadPractices = function(params) {
+
+                console.log(
+                    'loadPractices:params:',
+                    params
+                );
+
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        t: Date.now()
+                    },
+                    false);
+
+                Project.practices(params).$promise.then(function(successResponse) {
 
                     self.practices = successResponse.features;
 
                     self.practicesSummary = successResponse.summary;
 
-                    console.log("SUMMARY", self.practicesSummary);
-
-                    console.log('self.practices', successResponse);
-
                     self.showElements(true);
-
-                    self.practicesCalculateViewCount();
-
-                    //      self.loadMetrics();
-
-                    //       self.tags = Utility.processTags(self.site.tags);
 
                 }, function(errorResponse) {
 
@@ -238,8 +95,8 @@ angular.module('FieldDoc')
                 });
 
             };
-            /* END PRACTICES PANEL */
 
+            /* END PRACTICES PANEL */
 
             self.showElements = function(createMap) {
 
@@ -311,6 +168,7 @@ angular.module('FieldDoc')
             //
             // Assign project to a scoped variable
             //
+
             self.loadProject = function() {
 
                 project.$promise.then(function(successResponse) {
@@ -352,8 +210,6 @@ angular.module('FieldDoc')
                     }
 
                     self.tags = Utility.processTags(self.project.tags);
-
-                    // self.showElements();
 
                 }).catch(function(errorResponse) {
 
@@ -660,20 +516,24 @@ angular.module('FieldDoc')
 
             /* START SITES PANEL */
 
-            self.loadSites = function() {
+            self.loadSites = function(params) {
 
-                console.log('self.loadSites --> Starting...');
+                console.log(
+                    'loadSites:params:',
+                    params
+                );
 
-                Project.sites({
-                    id: self.project.id,
-                    limit: self.limit,
-                    page: self.page,
-                    currentTime: Date.now()
-                }).$promise.then(function(successResponse) {
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        t: Date.now()
+                    },
+                    false);
+
+                Project.sites(params).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
-
-                    // console.log();
 
                     self.sites = successResponse.features;
 
@@ -688,25 +548,11 @@ angular.module('FieldDoc')
 
                     self.loadPractices();
 
-                    // var siteCollection = {
-                    //     'type': 'FeatureCollection',
-                    //     'features': self.sites
-                    // };
-
-                    // self.showElements(true);
-
-
-                    // self.populateMap(self.map, siteCollection, null, true);
-
-                    // self.addMapPreviews(self.sites);
-
                 }, function(errorResponse) {
 
                     console.log('loadSites.errorResponse', errorResponse);
 
                     self.loadPractices();
-
-                    //     self.showElements(false);
 
                 });
 

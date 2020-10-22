@@ -34,37 +34,41 @@
             <div class="collection-filter-group"
                  data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
 
-                <div collection-filter collection="program" features="page.programs"
+                <div collection-filter collection="program"
+                     features="page.programs"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="organization" features="page.summary.organizations"
+                <div collection-filter collection="organization"
+                     features="page.summary.organizations"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="tag" features="page.tags"
+                <div collection-filter collection="tag"
+                     features="page.tags"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="status" features="page.projectStatuses"
+                <div collection-filter collection="status"
+                     features="page.projectStatuses"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="false"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
                 <div class="scope--control">
                     <span></span>
                     <label class="switch">
                         <input class="inputdemo"
                                type="checkbox"
-                               data-ng-model="page.archived"
-                               data-ng-click="page.changeArchivedDisplay(!page.projects_archived)">
+                               data-ng-model="page.queryParams.archived"
+                               data-ng-change="page.loadProjects(page.queryParams)">
                         <div class="slider round"></div>
                     </label>
                     <span data-ng-class="{on: page.archived}" style="color:#616161;">Archived</span>
@@ -73,7 +77,11 @@
             </div>
 
             <div data-ng-if="!page.status.loading"
-                 data-ng-include="'/templates/pagination-view.html'"></div>
+                 pagination
+                 summary="page.summary"
+                 rotate="page.loadProjects(page.queryParams)"
+                 params="page.queryParams"
+                 update-params="true"></div>
 
             <div class="features--container" data-ng-if="!page.status.loading">
 
@@ -98,7 +106,7 @@
                                         <p style="font-style: normal; font-size: 1rem; padding: 0; margin: 1rem 0 0;
                                         text-align: center; display: flex; flex-flow: row nowrap; align-items:
                                         center; width: 100%; justify-content: center; cursor: pointer; color: #0366d6;"
-                                           data-ng-click="page.filters = {}; page.inspectSearchParams(true)">
+                                           data-ng-click="page.loadProjects()">
                                             <span class="material-icons" style="display: inline-block; margin-right:
                                             0.25rem;">
                                                 clear_all
@@ -122,8 +130,8 @@
                 <ul class="snapshot--cards list-unstyled" data-ng-if="page.projects.length" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in"
-                        style="animation-delay: {{ $index * 150 }}ms;"
-                        data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
+                        style="animation-delay: {{ $index * 50 }}ms;"
+                        data-ng-repeat="project in page.projects | filter: page.q">
 
                         <div class="card--content">
 
@@ -220,8 +228,14 @@
                 </ul>
 
             </div>
+
             <div data-ng-if="!page.status.loading"
-                 data-ng-include="'/templates/pagination-view.html'"></div>
+                 pagination
+                 summary="page.summary"
+                 rotate="page.loadProjects(page.queryParams)"
+                 params="page.queryParams"
+                 update-params="true"></div>
+
         </div>
 
     </div>

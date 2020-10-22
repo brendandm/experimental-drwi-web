@@ -18,12 +18,6 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                /*    projects: function($location, Project, $rootScope) {
-
-                        return Project.collection({});
-
-                    },
-                    */
                     user: function(Account, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
@@ -59,14 +53,12 @@ angular.module('FieldDoc')
                             'centroid',
                             'creator',
                             'dashboards',
-                            // 'extent',
                             'geometry',
                             'members',
                             'metric_types',
                             'practices',
                             'practice_types',
                             'properties',
-//                            'tags',
                             'targets',
                             'tasks',
                             'type',
@@ -78,11 +70,6 @@ angular.module('FieldDoc')
                             exclude: exclude
                         });
 
-                    },
-                    sites: function(Project, $route) {
-                        return Project.sites({
-                            id: $route.current.params.projectId
-                        });
                     }
                 }
             })

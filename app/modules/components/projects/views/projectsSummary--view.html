@@ -317,24 +317,17 @@
 
             <!-- START PRACTICES PANEL-->
 
-            <section class="reveal fade-in t3"
-                     style="    padding         :   0       ;
-                                overflow        :   hidden  ;
-                                margin-bottom   :   50px    ;
-                            ">
+            <section class="reveal fade-in t3 pad-0 margin-b-3">
 
-                <div style="border:0px solid red;">
-                    <div style="border:0px solid red; float:left; display:inline-block">
-                        <span style="display:block;float:left;"><h2>Practices</h2></span>
-                        <span style="
-                                    display:block;
-                                    float:left;
-                                    color:#cccccc;
-                                    border:0px solid red;
-                                    margin-top:30px;
-                                    margin-left:15px;
-                                    ">
-                            ( <i>required</i> )</span>
+                <div>
+
+                    <div>
+                        <h2>
+                            Practices
+                            <span style="color:#cccccc; display: inline-block; font-size: 1rem;" class="margin-l-1">
+                                (optional)
+                            </span>
+                        </h2>
                     </div>
 
                     <div style="  border:0px solid purple;
@@ -349,10 +342,9 @@
                                        "
                          class="add--new--wrapper"
                          data-ng-if="page.permissions.can_edit">
-                        <!--<span style="">Create site</span>-->
                         <a title="Create practice" class="add--new--btn"
                            data-ng-click="page.presentChildModal('practice')"
-                           style="float:right; width:56px; height:56px;">
+                           style="width:56px; height:56px;">
                             <i class="material-icons">
                                 add
                             </i>
@@ -384,11 +376,16 @@
                         </a>
                     </div>
 
-                    <div data-ng-include="'/templates/practicesPagination-view.html'"></div>
-
                 </div>
 
-                <div style="padding-top:10px;">
+                <div data-ng-if="!page.status.loading"
+                     class="margin-y-1"
+                     pagination
+                     summary="page.practicesSummary"
+                     rotate="page.loadPractices()"
+                     update-params="false"></div>
+
+                <div class="pad-x-25p">
 
                     <div style="border:0px solid blue; display:block;">
 
@@ -510,12 +507,12 @@
 
                 </div>
 
-                <div style="
-                        margin-top  :-20px;
-                        min-width   :740px;
-                    ">
-                    <div data-ng-include="'/templates/practicesPagination-view.html'"></div>
-                </div>
+                <div data-ng-if="!page.status.loading"
+                     class="margin-y-1"
+                     pagination
+                     summary="page.practicesSummary"
+                     rotate="page.loadPractices()"
+                     update-params="false"></div>
 
             </section>
 
@@ -588,16 +585,12 @@
 
                 <div style="border:0px solid red;">
                     <div style="border:0px solid red; float:left; display:inline-block">
-                        <span style="display:block;float:left;"><h2>Sites</h2></span>
-                        <span style="
-                                    display:block;
-                                    float:left;
-                                    color:#cccccc;
-                                    border:0px solid red;
-                                    margin-top:30px;
-                                    margin-left:15px;
-                                    ">
-                            ( <i>optional</i> )</span>
+                        <h2>
+                            Sites
+                            <span style="color:#cccccc; display: inline-block; font-size: 1rem;" class="margin-l-1">
+                                (optional)
+                            </span>
+                        </h2>
                     </div>
 
                     <div style="  border:0px solid purple;
@@ -645,11 +638,16 @@
                         </a>
                     </div>
 
-                    <div data-ng-include="'/templates/pagination-view.html'"></div>
-
                 </div>
 
-                <div>
+                <div data-ng-if="!page.status.loading"
+                     class="margin-y-1"
+                     pagination
+                     summary="page.summary"
+                     rotate="page.loadSites()"
+                     update-params="false"></div>
+
+                <div class="pad-x-25p">
 
                     <div style="border:0px solid red; display:  block; margin-top:10px;">
 
@@ -746,12 +744,12 @@
 
                 </div>
 
-                <div style="
-                        margin-top  :-20px;
-                        min-width   :740px;
-                    ">
-                    <div data-ng-include="'/templates/pagination-view.html'"></div>
-                </div>
+                <div data-ng-if="!page.status.loading"
+                     class="margin-y-1"
+                     pagination
+                     summary="page.summary"
+                     rotate="page.loadSites()"
+                     update-params="false"></div>
 
             </section>
 
