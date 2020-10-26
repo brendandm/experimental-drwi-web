@@ -21,7 +21,8 @@
                         'featureType': '@',
                         'model': '=?',
                         'formAction': '&',
-                        'uploadError': '=?'
+                        'uploadError': '=?',
+                        'visible': '=?'
                     },
                     templateUrl: function (elem, attrs) {
 
@@ -33,6 +34,24 @@
                         //
                         // Additional scope vars.
                         //
+
+                        scope.showTips = false;
+
+                        scope.closeChildModal = function(refresh) {
+
+                            scope.processing = false;
+
+                            scope.uploadComplete = false;
+
+                            scope.uploadError = null;
+
+                            scope.visible = false;
+
+                            if (scope.resetType) scope.type = undefined;
+
+                            // if (refresh) scope.callback();
+
+                        };
 
                         scope.uploadFile = function() {
 

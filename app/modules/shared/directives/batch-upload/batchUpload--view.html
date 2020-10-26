@@ -1,76 +1,114 @@
-<section class="reveal fade-in t0" style="padding: 1em 0 0;">
+<div class="creation-dialog-container import-dialog-container" data-ng-if="visible">
 
-    <form role="form" class="form" id="form-{{ featureType }}-collection"
-          style="position: relative; display:block; width:100%; max-width:1200px;"
-          data-ng-submit="uploadFile()">
+    <div class="dialog">
 
-        <!-- File input -->
+        <div class="title">
+            <span class="title-text">Batch import {{ featureType }}s</span>
+            <div class="dismiss-container">
+                <div class="dismiss" data-ng-click="closeChildModal()">
+                    <div class="halo"></div>
+                    <span class="material-icons">
+                        close
+                    </span>
+                </div>
+            </div>
+        </div>
 
-        <div class="form-field" style="width:100%;">
+        <p style="font-style: normal; font-size: 1em;" class="margin-0 pad-1">
+            The batch import feature allows you to upload geometries for multiple {{ featureType }}s
+            simultaneously. After upload, each new record will appear as a separate {{ featureType }} tile.
+            FieldDoc accepts spatial data in the <strong>GeoJSON</strong> and <strong>ESRI Shapefile</strong>
+            formats.
+        </p>
 
-            <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                <strong>Batch import {{ featureType }}s</strong>
+        <div data-ng-if="!uploadError" style="width: 100%;" class="margin-0 pad-x-1">
+
+            <p style="font-style: normal; font-size: 1em;">
+                <strong>Tips</strong>
             </p>
 
             <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
-                The batch import feature allows you to upload geometries for multiple {{ featureType }}s
-                simultaneously. After upload, each new record will appear as a separate {{ featureType }} tile.
+                In addition to the mandatory <span class="monospace-highlight">.shp</span>, <span class="monospace-highlight">.shx
+            </span>, and <span class="monospace-highlight">.dbf</span> files, shapefile archives must include a
+                <span class="monospace-highlight">.prj</span> file that describes the coordinate system and
+                projection. All files must be compressed into a <span class="monospace-highlight">.zip</span>
+                file before uploading.
             </p>
 
-            <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                <strong>Upload GeoJSON or an ESRI Shapefile</strong>
-            </p>
-
-            <p style="font-style: normal; font-size: 1em; margin-top: 1em;">In addition to the mandatory <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.shp</span>, <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.shx</span>, and <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.dbf</span> files, shapefile archives must include a <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.prj</span> file that describes the coordinate system and projection.
-                All files must be compressed into a .zip file before uploading.
-            </p>
-
-            <p style="font-style: normal; font-size: 1em; margin-top: 1em;">GeoJSON files must use the <span
-                    style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.json</span> or <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.geojson</span> file extensions and follow the format described in <a href="https://tools.ietf.org/html/rfc7946" target="_blank">this specification</a>. We recommend testing GeoJSON data with <a href="http://geojson.io" target="_blank">geojson.io</a> before uploading it to FieldDoc. See <a href="https://www.mapbox.com/help/define-geojson/" target="_blank">here</a> for more help with the GeoJSON format.</p>
+            <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
+                GeoJSON files must use the <span class="monospace-highlight">.json</span> or <span class="monospace-highlight">
+                .geojson</span> file extensions and follow the format described in <a
+                    href="https://tools.ietf.org/html/rfc7946" target="_blank">this specification</a>. We recommend
+                testing GeoJSON data with <a href="http://geojson.io" target="_blank">geojson.io</a> before uploading
+                it to FieldDoc. See <a href="https://www.mapbox.com/help/define-geojson/" target="_blank">here</a>
+                for more help with the GeoJSON format.</p>
 
             <p style="font-style: normal; font-size: 1em; margin: 1em 0;">
                 Regardless of type, file uploads cannot exceed 100MB. For shapefile archives, this is the
                 maximum total size of all <strong>un-compressed</strong> files.
             </p>
 
-            <p style="font-style: normal; font-size: 1em; margin: 0 0 2rem;">
-                Batch import is optimized for 100 {{ featureType }}s or fewer. Refer to our help documentation for
-                more guidance on batch imports and upload requirements.
+            <p style="font-style: normal; font-size: 1em;" class="margin-0 margin-b-1">
+                Batch import is optimized for 100 {{ featureType }}s or fewer. Refer to our <a
+                    href="https://help.fielddoc.org/en/articles/2905849-faq-upload-or-add-locations-in-projects"
+                    target="_blank">help documentation</a> for more guidance on batch imports and upload requirements.
             </p>
 
-            <input type="file" class="form-control" id="file-{{ featureType }}-input"
-                   accept=".geojson,.json,.zip"
-                   file-upload file-model="model"/>
+        </div>
 
-            <div class="upload-error" style="margin: 1rem 0; padding: 1rem; border: 1px solid #d70000; border-radius:
+        <form role="form" class="form pad-1 margin-0" id="form-{{ featureType }}-collection"
+              style="position: relative; display:block; width:100%; max-width:1200px;"
+              data-ng-submit="uploadFile()">
+
+            <!-- File input -->
+
+            <div class="form-field" style="width:100%;">
+
+                <input type="file" class="form-control margin-b-1" id="file-{{ featureType }}-input"
+                       accept=".geojson,.json,.zip"
+                       file-upload file-model="model"/>
+
+                <div class="upload-error" style="margin: 1rem 0; padding: 1rem; border: 1px solid #d70000; border-radius:
              4px; background: #ffebeb;" data-ng-if="uploadError">
-                <div style="display: flex; flex-flow: row nowrap; align-items: center;">
+                    <div style="display: flex; flex-flow: row nowrap; align-items: center;">
                     <span class="material-icons" style="color: #d70000;">
                         error
                     </span>
-                    <span>
+                        <span>
                         <strong>&nbsp;Upload error</strong>
                     </span>
+                    </div>
+                    <p style="margin: 1rem 0;">{{ uploadError.message || 'Unable to read file.'}}</p>
+                    <p style="margin: 0; font-size: 0.9rem;">Please double check that your file is supported and
+                        that it contains correctly-formatted data (see instructions above).
+                    </p>
                 </div>
-                <p style="margin: 1rem 0;">{{ uploadError.message || 'Unable to read file.'}}</p>
-                <p style="margin: 0; font-size: 0.9rem;">Please double check that your file is supported and
-                    that it contains correctly-formatted data (see instructions above).
-                </p>
+
             </div>
 
-        </div>
+            <div class="dialog-actions pad-0">
+                <button type="button" class="cancel" data-ng-click="closeChildModal()">
+                    Cancel
+                </button>
+                <button type="submit" class="confirm" data-ng-class="{complete: uploadComplete}"
+                        data-ng-click="uploadFile()">
+                    <span class="material-icons margin-r-50p" data-ng-if="!uploadComplete">
+                        cloud_upload
+                    </span>
+                        <span class="material-icons margin-r-50p" data-ng-if="uploadComplete">
+                        done
+                    </span>
+                    <span data-ng-if="!processing">
+                        Upload
+                    </span>
+                    <span data-ng-if="processing">
+                        {{ progressMessage }}
+                    </span>
+                </button>
+            </div>
 
-        <div class="save--action--wrapper save--action--bottom">
-            <button type="submit" data-ng-disabled="page.status.processing">
-                <i class="material-icons" data-ng-if="page.status.processing">
-                    more_horiz
-                </i>
-                <i class="material-icons" data-ng-if="!page.status.processing">
-                    done
-                </i>
-            </button>
-        </div>
+        </form>
 
-    </form>
+    </div>
 
-</section>
+</div>

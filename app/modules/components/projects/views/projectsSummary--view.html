@@ -331,6 +331,14 @@
                         </span>
                         Create
                     </button>
+                    <button type="button"
+                            data-ng-click="page.presentUploadModal('practice')"
+                            data-ng-if="page.permissions.can_edit">
+                        <span class="material-icons margin-r-50p">
+                            cloud_upload
+                        </span>
+                        Upload file
+                    </button>
                 </div>
 
                 <div class="pad-x-25p">
@@ -535,8 +543,8 @@
 
             <!-- Begin practice batch import -->
 
-            <div batch-upload feature-type="practice" form-action="page.uploadShapefile('practice')"
-                 model="page.fileImport" upload-error="page.uploadError"
+            <div batch-upload feature-type="{{ page.childType }}" form-action="page.uploadShapefile('practice')"
+                 model="page.fileImport" upload-error="page.uploadError" visible="page.showUploadModal"
                  data-ng-if="page.permissions.can_edit"></div>
 
             <!-- End practice batch import -->
@@ -559,6 +567,14 @@
                             add
                         </span>
                         Create
+                    </button>
+                    <button type="button"
+                            data-ng-click="page.presentUploadModal('site')"
+                            data-ng-if="page.permissions.can_edit">
+                        <span class="material-icons margin-r-50p">
+                            cloud_upload
+                        </span>
+                        Upload file
                     </button>
                 </div>
 
@@ -738,8 +754,12 @@
 
             <!-- Begin site batch import -->
 
-            <div batch-upload feature-type="site" form-action="page.uploadShapefile('site')"
-                 model="page.fileImport" upload-error="page.uploadError"
+<!--            <div batch-upload feature-type="site" form-action="page.uploadShapefile('site')"-->
+<!--                 model="page.fileImport" upload-error="page.uploadError"-->
+<!--                 data-ng-if="page.permissions.can_edit"></div>-->
+
+            <div batch-upload feature-type="{{ page.childType }}" form-action="page.uploadShapefile('site')"
+                 model="page.fileImport" upload-error="page.uploadError" visible="page.showUploadModal"
                  data-ng-if="page.permissions.can_edit"></div>
 
             <!-- End site batch import -->

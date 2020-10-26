@@ -410,3 +410,10 @@ a.project--title:visited {
     display: inline;
   }
 }
+
+.monospace-highlight {
+  font-family: $font-monospace;
+  background: #F7DE57;
+  border-radius: 4px;
+  display: inline-block;
+}

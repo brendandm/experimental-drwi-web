@@ -52,6 +52,17 @@ angular.module('FieldDoc')
 
             };
 
+            self.presentUploadModal = function(featureType) {
+
+                if (featureType !== 'practice' &&
+                    featureType !== 'site') return;
+
+                self.showUploadModal = true;
+
+                self.childType = featureType;
+
+            };
+
             self.presentChildModal = function(featureType) {
 
                 if (featureType !== 'practice' &&
