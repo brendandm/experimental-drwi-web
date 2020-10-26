@@ -250,7 +250,7 @@
                             id: self.project.id,
                              limit:  self.limit,
                              page:   self.page,
-                            currentTime: Date.now()
+                            t: Date.now()
                         }).$promise.then(function(successResponse) {
 
                             console.log("PRACTICE RESPONSE");
@@ -356,7 +356,7 @@
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 

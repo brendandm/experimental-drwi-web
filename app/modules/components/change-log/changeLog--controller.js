@@ -8,7 +8,8 @@
 angular.module('FieldDoc')
     .controller('ChangeLogController',
         function(ChangeLog, Account, $location, $log, Notifications, $rootScope,
-            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
+                 $route, $routeParams, user, User, Organization,
+                 SearchService, $timeout, Utility, QueryParamManager) {
 
             var self = this;
 
@@ -67,96 +68,31 @@ angular.module('FieldDoc')
 
             };
 
-            /*START Pagniation vars*/
-            self.limit = 25;
-            self.page = 1;
-
-            self.defaultPaginationLimits = true;
-            self.limitLow = 25;
-            self.limitMedium = 50;
-            self.limitHigh = 100;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh = self.limit;
-
-            self.calculateViewCount = function() {
-
-                if (self.page > 1) {
-
-                    if (self.page == 1) {
-                        self.viewCountHigh = self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit);
-                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-
-                    } else {
-                        self.viewCountHigh = self.summary.feature_count;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-                    }
-                } else {
-                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-                }
-
-            };
-
-            self.changeLimit = function(limit) {
-                self.limit = limit;
-                self.page = 1;
-                self.loadHistory(false);
-            };
-
-            self.getPage = function(page) {
-                console.log('PAGE', page);
-
-                if (page < 1) {
-                    self.page = 1;
-                } else if (page > self.summary.page_count) {
-                    self.page = self.summary.page_count;
-                } else {
-                    self.page = page;
-
-                    self.loadHistory();
-                }
-
-            };
-            /*START Pagniation vars*/
-
-            self.buildFilter = function() {
+            self.loadHistory = function(firstLoad, params) {
 
                 console.log(
-                    'self.buildFilter --> Starting...');
+                    'loadHistory:firstLoad:',
+                    firstLoad
+                );
 
-                var data = {
+                console.log(
+                    'loadHistory:params:',
+                    params
+                );
+
+                var extras = {
                     id: self.featureId,
                     type: self.featureType,
-                    limit: self.limit,
-                    page: self.page
-                };
+                    tz_offset: self.tzOffset
+                }
 
-                //  $location.search(data);
+                params = QueryParamManager.adjustParams(
+                    params,
+                    extras);
 
-                return data;
-            };
+                self.queryParams = QueryParamManager.getParams();
 
-            self.loadHistory = function(firstLoad) {
-
-                ChangeLog.query({
-                    id: self.featureId,
-                    type: self.featureType,
-                    limit: self.limit,
-                    page: self.page,
-                    tz_offset: self.tzOffset,
-                    user_only: self.userOnly ? self.userOnly : false
-                }).$promise.then(function(successResponse) {
+                ChangeLog.query(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
@@ -176,8 +112,6 @@ angular.module('FieldDoc')
                         self.changeLog = successResponse.history;
 
                         self.summary = successResponse.summary;
-
-                        self.calculateViewCount();
 
                         self.parseResponse();
 
@@ -440,73 +374,6 @@ angular.module('FieldDoc')
 
             };
 
-            /*
-            createStaticMapUrls:
-                takes self.sites as self.sites as argument
-                iterates of self.sites
-                checks if project extent exists
-                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to site[] as staticURL property
-                if no site geometry, adds default URL to site[].staticURL
-            */
-            self.createStaticMapURLs = function(arr, feature_type) {
-
-                console.log('createStaticMapURLS -> arr', arr);
-
-                arr.forEach(function(feature, index) {
-
-                    if (feature.geometry != null) {
-
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type);
-
-                        if (feature.staticURL.length >= 4096) {
-
-                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-                        }
-
-                        console.log('feature.staticURL', feature.staticURL);
-
-                        if (feature_type == 'site') {
-
-                            self.changeLog[index].staticURL = feature.staticURL;
-
-                            console.log('self.sites' + index + '.staticURL', self.changeLog[index].staticURL);
-
-                        }
-                        if (feature_type == 'practice') {
-                            self.changeLog[index].staticURL = feature.staticURL;
-
-                            console.log('self.practices' + index + '.staticURL', self.changeLog[index].staticURL);
-
-                        }
-
-                    } else {
-
-                        if (feature_type == 'site') {
-                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-
-
-                        }
-                        if (feature_type == 'practice') {
-                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-
-                        }
-
-                    }
-
-                });
-
-            };
-
             // 
             // Verify Account information for proper UI element display
             //
@@ -536,10 +403,25 @@ angular.module('FieldDoc')
 
                     self.tzOffset = new Date().getTimezoneOffset();
 
-                    self.loadHistory(true);
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    self.loadHistory(true, self.queryParams);
 
                 });
-
 
             } else {
 

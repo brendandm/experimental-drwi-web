@@ -8,11 +8,11 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryController',
+    .controller('ProjectPracticeListController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-                 $scope, $location, mapbox, Site, user, $window, $timeout,
+                 $scope, $location, mapbox, user, $window, $timeout,
                  Practice, project, Utility, $interval, LayerService,
-                 MapManager, Shapefile, Task, QueryParamManager) {
+                 MapManager, Task, QueryParamManager) {
 
             var self = this;
 
@@ -54,8 +54,7 @@ angular.module('FieldDoc')
 
             self.presentChildModal = function(featureType) {
 
-                if (featureType !== 'practice' &&
-                    featureType !== 'site') return;
+                if (featureType !== 'practice') return;
 
                 self.showChildModal = true;
 
@@ -76,16 +75,17 @@ angular.module('FieldDoc')
                     params,
                     {
                         id: self.project.id,
-                        limit: 4,
                         t: Date.now()
                     },
-                    false);
+                    true);
+
+                self.queryParams = QueryParamManager.getParams();
 
                 Project.practices(params).$promise.then(function(successResponse) {
 
                     self.practices = successResponse.features;
 
-                    self.practicesSummary = successResponse.summary;
+                    self.summary = successResponse.summary;
 
                     self.showElements(true);
 
@@ -109,11 +109,7 @@ angular.module('FieldDoc')
 
                     if (createMap) {
 
-                        console.log("CREATE MAP");
-
                         $timeout(function() {
-
-                            console.log("MAKING THE MAP");
 
                             if (!self.mapOptions) {
 
@@ -121,18 +117,10 @@ angular.module('FieldDoc')
 
                             }
 
-                            self.createMap(self.mapOptions);
-
-                            if (self.sites && self.sites.length) {
-                                console.log("A 1");
-                                self.createStaticMapURLs(self.sites, "site", 400, 200);
-                                //       self.addMapPreviews(self.sites);
-
-                            }
                             if (self.practices && self.practices.length) {
-                                console.log("A 2");
-                                self.createStaticMapURLs(self.practices, "practice", 400, 200);
-                                //       self.addMapPreviews(self.sites);
+
+                                self.createStaticMapURLs(
+                                    self.practices, "practice", 400, 200);
 
                             }
 
@@ -141,28 +129,6 @@ angular.module('FieldDoc')
                     }
 
                 }, 500);
-
-            };
-
-            self.buildStaticMapURL = function(geometry) {
-
-                var styledFeature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "marker-size": "small",
-                        "marker-color": "#2196F3",
-                        "stroke": "#2196F3",
-                        "stroke-opacity": 1.0,
-                        "stroke-width": 2,
-                        "fill": "#2196F3",
-                        "fill-opacity": 0.5
-                    }
-                };
-
-                // Build static map URL for Mapbox API
-
-                return 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
 
             };
 
@@ -176,7 +142,7 @@ angular.module('FieldDoc')
 
                     console.log('self.project', successResponse);
 
-                    var project_ = successResponse;
+                    self.permissions = successResponse.permissions;
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
@@ -187,26 +153,11 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
+                        self.project = successResponse;
 
-                        if (project_.extent) {
+                        $rootScope.page.title = 'Project Practices';
 
-                            project_.staticURL = self.buildStaticMapURL(project_.extent);
-
-                        }
-
-                        self.project = project_;
-
-                        $rootScope.page.title = 'Project Summary';
-
-                        self.loadMetrics();
-
-                        self.loadSites();
-
-                        self.loadArea();
-
-                        self.loadPartnerships();
+                        self.loadPractices();
 
                     }
 
@@ -260,12 +211,6 @@ angular.module('FieldDoc')
                     case 'practice':
 
                         targetCollection = Practice;
-
-                        break;
-
-                    case 'site':
-
-                        targetCollection = Site;
 
                         break;
 
@@ -515,70 +460,6 @@ angular.module('FieldDoc')
             };
             /*END COPY LOGIC*/
 
-            /* START SITES PANEL */
-
-            self.loadSites = function(params) {
-
-                console.log(
-                    'loadSites:params:',
-                    params
-                );
-
-                params = QueryParamManager.adjustParams(
-                    params,
-                    {
-                        id: self.project.id,
-                        limit: 4,
-                        t: Date.now()
-                    },
-                    false);
-
-                Project.sites(params).$promise.then(function(successResponse) {
-
-                    console.log('Project sites --> ', successResponse);
-
-                    self.sites = successResponse.features;
-
-                    console.log("self.sites", self.sites);
-
-                    self.summary = successResponse.summary;
-
-                    self.summary.organizations.unshift({
-                        id: 0,
-                        name: 'All organizations'
-                    });
-
-                    self.loadPractices();
-
-                }, function(errorResponse) {
-
-                    console.log('loadSites.errorResponse', errorResponse);
-
-                    self.loadPractices();
-
-                });
-
-            };
-
-            /* END SITES PANEL */
-
-            //            self.processTags = function(arr) {
-            //
-            //                arr.forEach(function(tag) {
-            //
-            //                    if (tag.color &&
-            //                        tag.color.length) {
-            //
-            //                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
-            //
-            //                    }
-            //
-            //                });
-            //
-            //                self.tags = arr;
-            //
-            //            };
-
             self.loadTags = function() {
 
                 Project.tags({
@@ -605,53 +486,6 @@ angular.module('FieldDoc')
                     console.log('errorResponse', errorResponse);
 
                 });
-
-            };
-
-            self.loadArea = function() {
-
-                Project.area({
-                    id: self.project.id
-                }).$promise.then(function(successResponse) {
-
-                    console.log('Project.area', successResponse);
-
-                    self.area = successResponse.area;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-            };
-
-            self.buildFeature = function(geometry) {
-
-                var styleProperties = {
-                    color: "#2196F3",
-                    opacity: 1.0,
-                    weight: 2,
-                    fillColor: "#2196F3",
-                    fillOpacity: 0.5
-                };
-
-                return {
-                    data: {
-                        "type": "Feature",
-                        "geometry": geometry,
-                        "properties": {
-                            "marker-size": "small",
-                            "marker-color": "#2196F3",
-                            "stroke": "#2196F3",
-                            "stroke-opacity": 1.0,
-                            "stroke-width": 2,
-                            "fill": "#2196F3",
-                            "fill-opacity": 0.5
-                        }
-                    },
-                    style: styleProperties
-                };
 
             };
 
@@ -716,8 +550,6 @@ angular.module('FieldDoc')
                             console.log("self.practices" + index + ".staticURL", self.practices[index].staticURL);
 
                         }
-
-
 
                     } else {
 
@@ -808,194 +640,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.addLayers = function(arr) {
-
-                arr.forEach(function(feature) {
-
-                    console.log(
-                        'self.addLayers --> feature',
-                        feature);
-
-                    var spec = feature.layer_spec || {};
-
-                    console.log(
-                        'self.addLayers --> spec',
-                        spec);
-
-                    feature.spec = spec;
-
-                    console.log(
-                        'self.addLayers --> feature.spec',
-                        feature.spec);
-
-                    if (!feature.selected ||
-                        typeof feature.selected === 'undefined') {
-
-                        feature.selected = false;
-
-                    } else {
-
-                        feature.spec.layout.visibility = 'visible';
-
-                    }
-
-                    if (feature.spec.id) {
-
-                        try {
-
-                            self.map.addLayer(feature.spec);
-
-                        } catch (error) {
-
-                            console.log(
-                                'self.addLayers --> error',
-                                error);
-
-                        }
-
-                    }
-
-                });
-
-                return arr;
-
-            };
-
-            self.fetchLayers = function(taskId) {
-
-                LayerService.collection({
-                    program: self.project.program_id,
-                    sort: 'index'
-                }).$promise.then(function(successResponse) {
-
-                    console.log(
-                        'self.fetchLayers --> successResponse',
-                        successResponse);
-
-                    self.addLayers(successResponse.features);
-
-                    self.layers = successResponse.features;
-
-                    console.log(
-                        'self.fetchLayers --> self.layers',
-                        self.layers);
-
-                }, function(errorResponse) {
-
-                    console.log(
-                        'self.fetchLayers --> errorResponse',
-                        errorResponse);
-
-                });
-
-            };
-
-            self.refreshMetricProgress = function () {
-
-                var progressPoll = $interval(function() {
-
-                    self.loadMetrics();
-
-                }, 4000);
-
-                $timeout(function () {
-
-                    $interval.cancel(progressPoll);
-
-                }, 20000);
-
-            };
-
-            self.loadMetrics = function() {
-
-                Project.progress({
-                    id: self.project.id
-                }).$promise.then(function(successResponse) {
-
-                    console.log('Project metrics', successResponse);
-
-                    Utility.processMetrics(successResponse.features);
-
-                    self.metrics = Utility.groupByModel(successResponse.features);
-
-                    console.log('self.metrics', self.metrics);
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-            };
-
-            self.showMetricModal = function(metric) {
-
-                console.log('self.showMetricModal', metric);
-
-                self.selectedMetric = metric;
-
-                self.displayModal = true;
-
-            };
-
-            self.closeMetricModal = function() {
-
-                self.selectedMetric = null;
-
-                self.displayModal = false;
-
-            };
-
-            self.toggleLayer = function(layer) {
-
-                console.log('self.toggleLayer --> layer', layer);
-
-                var layerId = layer.spec.id;
-
-                var visibility = self.map.getLayoutProperty(layerId, 'visibility');
-
-                if (visibility === 'visible') {
-
-                    self.map.setLayoutProperty(layerId, 'visibility', 'none');
-
-                } else {
-
-                    self.map.setLayoutProperty(layerId, 'visibility', 'visible');
-
-                }
-
-            };
-
-            self.switchMapStyle = function(styleId, index) {
-
-                console.log('self.switchMapStyle --> styleId', styleId);
-
-                console.log('self.switchMapStyle --> index', index);
-
-                var center = self.map.getCenter();
-
-                var zoom = self.map.getZoom();
-
-                if (center.lng && center.lat) {
-
-                    self.mapOptions.center = [center.lng, center.lat];
-
-                }
-
-                if (zoom) {
-
-                    self.mapOptions.zoom = zoom;
-
-                }
-
-                self.mapOptions.style = self.mapStyles[index].url;
-
-                self.map.remove();
-
-                self.createMap(self.mapOptions);
-
-            };
-
             self.getMapOptions = function() {
 
                 self.mapStyles = mapbox.baseStyles;
@@ -1032,302 +676,6 @@ angular.module('FieldDoc')
                 }
 
                 return self.mapOptions;
-
-            };
-
-            self.createMap = function(options) {
-
-                console.log("MAP MAP MAP");
-
-                if (!options) return;
-
-                console.log('self.createMap --> Starting...');
-
-                var tgt = document.querySelector('.map');
-
-                console.log(
-                    'self.createMap --> tgt',
-                    tgt);
-
-                console.log('self.createMap --> options', options);
-
-                self.map = new mapboxgl.Map(options);
-
-                self.map.on('load', function() {
-
-                    console.log("Loading Map");
-
-                    var nav = new mapboxgl.NavigationControl();
-
-                    self.map.addControl(nav, 'top-left');
-
-                    var fullScreen = new mapboxgl.FullscreenControl();
-
-                    self.map.addControl(fullScreen, 'top-left');
-
-                    var line = turf.lineString([[-74, 40], [-78, 42], [-82, 35]]);
-                    var bbox = turf.bbox(line);
-                    self.map.fitBounds(bbox, { duration: 0, padding: 40 });
-
-                    var projectExtent = {
-                        'type': 'Feature',
-                        'geometry': self.project.extent,
-                        'properties': {}
-                    };
-
-                    MapManager.addFeature(
-                        self.map,
-                        self.project.extent,
-                        null,
-                        false);
-
-                    if (self.layers && self.layers.length) {
-
-                        self.addLayers(self.layers);
-
-                    } else {
-
-                        self.fetchLayers();
-
-                    }
-
-
-                    /*
-                       MapManager.addFeature(
-                                  self.map,
-                                  {
-                                      "geometry": {"coordinates": [], "type": "Polygon"},
-                                      "properties": {
-                                              "area": 12420.8841916765,
-                                              "calculated_extent": 12420.8841916765,
-                                              "calculating": false,
-                                              "category_id": 787,
-                                              "created_on": null,
-                                              "creator_id": 35,
-                                              "custom_extent": null,
-                                              "description": null,
-                                              "id": 0,
-                                              "last_modified_by_id": 35,
-                                              "legacy_self_id": null,
-                                              "model_inputs": null,
-                                              "modified_on": null,
-                                              "name": "Practice added through a site",
-                                              "organization": {
-                                                  "category_id": null,
-                                                  "created_on": "2019-08-06T17:54:50.661715",
-                                                  "creator_id": 717,
-                                                  "description":null,
-                                                  "email": "info@chesapeakecommons.org"
-                                              },
-                                              "organization_id": 190,
-                                              "practice_type": "Custom",
-                                              "private": false,
-                                              "project": {
-                                                  },
-                                              "project_id": 0,
-                                              "site": {},
-                                              "site_id": 13206
-                                         },
-                                      "type": "Feature"
-                                  },
-                                  'geometry',
-                                  true,
-                                  false);
-                      */
-                    console.log("ADD SITES TO MAP");
-
-                    if (self.sites.length && Array.isArray(self.sites)) {
-                        console.log("There are Sites");
-                        var siteCollection = {
-                            'type': 'FeatureCollection',
-                            'features': self.sites
-                        };
-
-                        self.sites.forEach(function(feature) {
-                            console.log("adding site feature -->", feature);
-                            MapManager.addFeature(
-                                self.map,
-                                feature,
-                                'geometry',
-                                true,
-                                false);
-
-                        });
-
-
-
-                    } else {
-                        console.log("no sites");
-                    }
-
-                    console.log("ADD PRACTICES TO MAP");
-                    console.log("SELF.PRACTIES", self.practices);
-
-                    if (self.practices.length && Array.isArray(self.practices)) {
-                        console.log("There are Practices");
-
-                        var practiceCollection = {
-                            'type': 'FeatureCollection',
-                            'features': self.practices
-                        };
-
-                        self.practices.forEach(function(feature) {
-                            console.log("adding practice feature -->", feature);
-                            MapManager.addFeature(
-
-                                self.map,
-                                feature,
-                                'geometry',
-                                true,
-                                false,
-                                'practice'
-                            );
-
-                        });
-                    } else {
-                        console.log("no practices");
-                    }
-                });
-
-            };
-
-
-            self.loadPartnerships = function() {
-
-                Project.partnerships({
-                    id: self.project.id
-                }).$promise.then(function(successResponse) {
-
-                    self.partnerships = successResponse.features;
-
-                    console.log("self.partnerships", self.partnerships)
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    console.error('Unable to load project partnerships.');
-
-                    self.showElements();
-
-                });
-
-            };
-
-            //
-            // Begin batch import methods
-            //
-
-            self.uploadShapefile = function(featureType) {
-
-                console.log(
-                    'self.uploadShapefile:featureType',
-                    featureType
-                );
-
-                console.log(
-                    'self.uploadShapefile:fileImport',
-                    self.fileImport
-                );
-
-                /*Cast the file into an array
-                could possibly remove this with reworks
-                to the Upload directive
-                */
-
-                var tempFileImport = [];
-
-                tempFileImport.push(self.fileImport);
-
-                self.fileImport = tempFileImport;
-
-                if (!self.fileImport ||
-                    !self.fileImport.length) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Please select a file.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    return false;
-
-                }
-
-                self.progressMessage = 'Uploading your file...';
-
-                var fileData = new FormData();
-
-                fileData.append('file', self.fileImport[0]);
-
-                fileData.append('feature_type', featureType);
-
-                fileData.append('collection', true);
-
-                fileData.append('project_id', self.project.id);
-
-                console.log('fileData', fileData);
-
-                try {
-
-                    Shapefile.upload({}, fileData, function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.uploadError = null;
-
-                        self.fileImport = null;
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Upload complete. Processing data...',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                        if (successResponse.task) {
-
-                            self.pendingTasks = [
-                                successResponse.task
-                            ];
-
-                        }
-
-                        self.taskPoll = $interval(function() {
-
-                            self.fetchTasks(successResponse.task.id, featureType);
-
-                        }, 500);
-
-                    }, function(errorResponse) {
-
-                        console.log('Upload error', errorResponse);
-
-                        self.uploadError = errorResponse;
-
-                        self.fileImport = null;
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'The file could not be processed.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                } catch (error) {
-
-                    console.log('Shapefile upload error', error);
-
-                }
 
             };
 
@@ -1430,6 +778,22 @@ angular.module('FieldDoc')
                         is_manager: false,
                         is_admin: false
                     };
+
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
 
                     self.loadProject();
 

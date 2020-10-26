@@ -23,16 +23,6 @@
                     },
                     link: function(scope, element, attrs) {
 
-                        if (typeof scope.params === 'undefined') {
-
-                            scope.params = QueryParamManager.adjustParams(
-                                null,
-                                null,
-                                false
-                            );
-
-                        }
-
                         // if (!scope.params.hasOwnProperty('page')) {
                         //
                         //     throw 'A `page` parameter is required.';
@@ -67,7 +57,7 @@
                             if (scope.updateParams) QueryParamManager.setParams(scope.params);
 
                             scope.rotate({
-                                _params: scope.params
+                                params: scope.params
                             });
 
                         };
@@ -89,7 +79,7 @@
                                 if (scope.updateParams) QueryParamManager.setParams(scope.params);
 
                                 scope.rotate({
-                                    _params: scope.params
+                                    params: scope.params
                                 });
 
                             }
@@ -122,7 +112,11 @@
 
                         scope.$watch('params', function (newVal) {
 
-                            if (newVal) {
+                            if (typeof newVal === 'undefined') {
+
+                                scope.params = QueryParamManager.getDefaults();
+
+                            } else {
 
                                 scope.params = newVal;
 

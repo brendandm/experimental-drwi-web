@@ -24,7 +24,7 @@ angular.module('FieldDoc')
             };
 
             return {
-                adjustParams: function(params, extras, set) {
+                adjustParams: function (params, extras, set) {
 
                     console.log(
                         'adjustParams:params:',
@@ -43,9 +43,14 @@ angular.module('FieldDoc')
 
                     set = (typeof set === 'boolean') ? set : true;
 
+                    console.log(
+                        'adjustParams:set:2:',
+                        set
+                    );
+
                     if (!params || typeof params === 'undefined') {
 
-                        params = defaults;
+                        params = this.getDefaults();
 
                         console.log(
                             'adjustParams:params:defaults:',
@@ -122,12 +127,12 @@ angular.module('FieldDoc')
                     return params;
 
                 },
-                getDefaults: function() {
+                getDefaults: function () {
 
-                    return defaults;
+                    return JSON.parse(JSON.stringify(defaults));
 
                 },
-                getParams: function() {
+                getParams: function () {
 
                     var params = $location.search();
 
@@ -172,7 +177,7 @@ angular.module('FieldDoc')
                     return params;
 
                 },
-                setParams: function(params, override, callback) {
+                setParams: function (params, override, callback) {
 
                     console.log(
                         'setParams:params:',
@@ -206,7 +211,7 @@ angular.module('FieldDoc')
 
                     if (!keys.length && override) {
 
-                        params = defaults;
+                        params = this.getDefaults();
 
                     }
 

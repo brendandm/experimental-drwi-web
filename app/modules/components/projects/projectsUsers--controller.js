@@ -40,7 +40,7 @@
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 

@@ -71,7 +71,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 

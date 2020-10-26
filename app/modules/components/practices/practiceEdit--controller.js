@@ -54,7 +54,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -176,7 +176,7 @@ angular.module('FieldDoc')
 
                 Project.sites({
                     id: self.practice.project.id,
-                    currentTime: Date.now()
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);

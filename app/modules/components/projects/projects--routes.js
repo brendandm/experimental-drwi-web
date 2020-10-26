@@ -73,10 +73,11 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/collection/new', {
-                templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
-                controller: 'ProjectCreateController',
+            .when('/projects/:projectId/practices', {
+                templateUrl: '/modules/components/projects/views/projectPracticeList--view.html?t=' + environment.version,
+                controller: 'ProjectPracticeListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -87,6 +88,73 @@ angular.module('FieldDoc')
                         }
 
                         return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.getSingle({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
+            .when('/projects/:projectId/sites', {
+                templateUrl: '/modules/components/projects/views/projectSiteList--view.html?t=' + environment.version,
+                controller: 'ProjectSiteListController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.getSingle({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
 
                     }
                 }
@@ -391,29 +459,6 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/targets', {
-                templateUrl: '/modules/components/projects/views/projectTarget--view.html?t=' + environment.version,
-                controller: 'ProjectTargetController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    project: function(Project, $route) {
-                        return Project.get({
-                            'id': $route.current.params.projectId
-                        });
-                    }
-                }
-            })
             .when('/projects/:projectId/batch-delete', {
                     templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
                     controller: 'ProjectsBatchDeleteController',
@@ -463,8 +508,6 @@ angular.module('FieldDoc')
                         },
 
                     }
-                })
-
-            ;
+                });
 
     });

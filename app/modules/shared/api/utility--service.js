@@ -76,7 +76,22 @@ angular.module('FieldDoc')
                 return [];
 
             },
-            buildStaticMapURL: function(geometry, colorScheme = null, width = 400, height = 130) {
+            buildStaticMapURL: function(geometry, colorScheme = null,
+                                        width = 400, height = 130) {
+
+                // var styledFeature = {
+                //     "type": "Feature",
+                //     "geometry": geometry,
+                //     "properties": {
+                //         "marker-size": "small",
+                //         "marker-color": "#2196F3",
+                //         "stroke": "#2196F3",
+                //         "stroke-opacity": 1.0,
+                //         "stroke-width": 2,
+                //         "fill": "#2196F3",
+                //         "fill-opacity": 0.5
+                //     }
+                // };
 
                 var color = "#06aadf";
 

@@ -32,12 +32,13 @@
             </h1>
         </div>
 
-        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0"
+                 data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
-                <i class="material-icons">
+                <span class="material-icons">
                     lock
-                </i>
+                </span>
             </p>
 
             <p>You do not have permission to view this {{ page.feature.breadcrumb[page.feature.breadcrumb.length - 1].type }} history.</p>
@@ -55,7 +56,9 @@
                     <!-- Search element -->
 
                     <div class="collection-search reveal fade-in t0" style="justify-content: left; align-items: left; overflow: auto; flex-wrap: wrap;">
-                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search history">
+                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter"
+                               data-ng-if="!page.status.loading"
+                               data-ng-model="page.queryToken" placeholder="Search history">
                     </div>
 
                     <!-- User filter control -->
@@ -65,20 +68,30 @@
                             <strong>Show only your changes</strong>
                         </div>
                         <label class="switch">
-                            <input class="inputdemo" type="checkbox" data-ng-model="page.userOnly" data-ng-checked="page.userOnly" data-ng-change="page.changeLimit(page.limitLow)">
+                            <input class="inputdemo" type="checkbox"
+                                   data-ng-model="page.queryParams.user_only"
+                                   data-ng-checked="page.queryParams.user_only"
+                                   data-ng-change="page.loadHistory(false, page.queryParams)">
                             <div class="slider round"></div>
                         </label>
                     </div>
 
                     <!-- Pagination controls -->
 
-                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+                    <div data-ng-if="!page.status.loading"
+                         pagination
+                         summary="page.summary"
+                         rotate="page.loadHistory(false, params)"
+                         params="page.queryParams"
+                         update-params="true"></div>
 
                     <!-- Start history -->
 
                     <div class="history-group list-unstyled" style="margin-top: 2em;">
 
-                        <div class="card reveal fade-in pad shadow" style="width: 100%; animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="group in page.changeLog">
+                        <div class="card reveal fade-in pad shadow"
+                             style="width: 100%; animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                             data-ng-repeat="group in page.changeLog">
 
                             <h2>
                                  {{ group.weekday }} &middot; {{ group.date | date:'longDate' }}
@@ -91,7 +104,9 @@
                                     <div class="change-metadata">
 
                                         <div class="icon">
-                                            <i class="material-icons" data-ng-class="{'deletion-highlight': changeLogItem.deletion}"  title="{{ changeLogItem.action_label }}">
+                                            <i class="material-icons"
+                                               data-ng-class="{'deletion-highlight': changeLogItem.deletion}"
+                                               title="{{ changeLogItem.action_label }}">
                                                 {{ changeLogItem.op }}
                                             </i>
                                         </div>
@@ -103,7 +118,8 @@
                                                     {{ changeLogItem.action_label }}
                                                 </span>
                                                 <span>&nbsp;by&nbsp;</span>
-                                                <a href="/profile/{{changeLogItem.creator.id}}" data-ng-if="changeLogItem.link_creator_profile">
+                                                <a href="/profile/{{changeLogItem.creator.id}}"
+                                                   data-ng-if="changeLogItem.link_creator_profile">
                                                     <strong>{{ changeLogItem.creator.first_name }} {{ changeLogItem.creator.last_name }}</strong>
                                                 </a>
                                                 <span data-ng-if="!changeLogItem.link_creator_profile">
@@ -157,11 +173,13 @@
                                                         <strong>{{ key }}</strong>
                                                     </td>
 
-                                                    <td class="empty-val" style="width: 30%;" data-ng-if="item.new_value === null">
+                                                    <td class="empty-val" style="width: 30%;"
+                                                        data-ng-if="item.new_value === null">
                                                         <div class="spacer"></div>
                                                     </td>
 
-                                                    <td class="new-val" style="width: 30%;" data-ng-if="item.new_value !== null">
+                                                    <td class="new-val" style="width: 30%;"
+                                                        data-ng-if="item.new_value !== null">
 
                                                         <!-- Change value -->
 
@@ -183,23 +201,26 @@
 
                                                         <!-- Change label -->
 
-                                                        <span class="value-label" data-ng-if="item.new_value !== null && item.label && item.label.length">
+                                                        <span class="value-label"
+                                                              data-ng-if="item.new_value !== null && item.label && item.label.length">
                                                             {{ item.label }}
                                                         </span>
 
                                                         <!-- Change geometry map (static) -->
 
                                                         <div data-ng-if="item.type === 'geometry'">
-                                                            <img src="{{ item.new_staticURL }}"/>
+                                                            <img data-ng-src="{{ item.new_staticURL }}"/>
                                                         </div>
 
                                                         <div class="spacer"></div>
 
                                                     </td>
 
-                                                    <td class="empty-val" style="width: 30%;" data-ng-if="item.previous_value === null"></td>
+                                                    <td class="empty-val" style="width: 30%;"
+                                                        data-ng-if="item.previous_value === null"></td>
 
-                                                    <td class="prev-val" style="width: 30%;" data-ng-if="item.previous_value !== null">
+                                                    <td class="prev-val" style="width: 30%;"
+                                                        data-ng-if="item.previous_value !== null">
 
                                                         <!-- Change value -->
 
@@ -221,14 +242,15 @@
 
                                                         <!-- Change label -->
 
-                                                        <span class="value-label" data-ng-if="item.previous_value !== null && item.label && item.label.length">
+                                                        <span class="value-label"
+                                                              data-ng-if="item.previous_value !== null && item.label && item.label.length">
                                                             {{ item.label }}
                                                         </span>
 
                                                         <!-- Change geometry map (static) -->
 
                                                         <div data-ng-if="item.type === 'geometry'">
-                                                            <img src="{{ item.previous_staticURL }}"/>
+                                                            <img data-ng-src="{{ item.previous_staticURL }}"/>
                                                         </div>
 
                                                     </td>
@@ -289,7 +311,12 @@
 
                     <!-- Pagination controls -->
 
-                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+                    <div data-ng-if="!page.status.loading"
+                         pagination
+                         summary="page.summary"
+                         rotate="page.loadHistory(false, params)"
+                         params="page.queryParams"
+                         update-params="true"></div>
 
                 </section>
 

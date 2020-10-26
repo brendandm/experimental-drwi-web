@@ -61,7 +61,7 @@
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -226,7 +226,7 @@
 
                                 self.fetchTasks(successResponse.task.id);
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 

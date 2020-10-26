@@ -725,7 +725,7 @@ header .header {
 }
 
 .grow {
-    flex-grow: 1;
+    flex-grow: 1 !important;
 }
 
 .no-grow {
@@ -733,7 +733,7 @@ header .header {
 }
 
 .shrink {
-    flex-shrink: 1;
+    flex-shrink: 1 !important;
 }
 
 .no-shrink {
@@ -741,19 +741,35 @@ header .header {
 }
 
 .flex-align-stretch {
-    align-items: stretch;
+    align-items: stretch !important;
 }
 
 .flex-align-center {
-    align-items: center;
+    align-items: center !important;
 }
 
 .flex-align-start {
-    align-items: flex-start;
+    align-items: flex-start !important;
 }
 
 .flex-align-end {
-    align-items: flex-end;
+    align-items: flex-end !important;
+}
+
+.flex-justify-stretch {
+    justify-content: stretch !important;
+}
+
+.flex-justify-center {
+    justify-content: center !important;
+}
+
+.flex-justify-start {
+    justify-content: flex-start !important;
+}
+
+.flex-justify-end {
+    justify-content: flex-end !important;
 }
 
 .dyad,

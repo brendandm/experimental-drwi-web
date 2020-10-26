@@ -3499,7 +3499,7 @@
             transition: all 250ms ease 0s;
         }
 
-        span {
+        > span {
             display: inline-block;
             margin-right: 10px;
             padding: 4px 8px;
@@ -3515,7 +3515,7 @@
 
         &:hover {
 
-            span {
+            > span {
                 opacity: 1;
                 visibility: visible;
             }

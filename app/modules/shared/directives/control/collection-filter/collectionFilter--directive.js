@@ -76,7 +76,7 @@
                                 QueryParamManager.setParams(scope.params);
 
                                 scope.update({
-                                    _params: scope.params
+                                    params: scope.params
                                 });
 
                             }

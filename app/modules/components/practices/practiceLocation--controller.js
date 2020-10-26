@@ -77,7 +77,7 @@ angular.module('FieldDoc')
 
                     }, 500);
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -227,29 +227,13 @@ angular.module('FieldDoc')
                     t: Date.now()
                 }).$promise.then(function(successResponse) {
 
-                    console.log("PRACTICE RESPONSE");
-
                     self.practices = successResponse.features;
 
                     self.practicesSummary = successResponse.summary;
 
-                    console.log("SUMMARY", self.practicesSummary);
-
-                    console.log('self.practices', successResponse);
-
-
-
-          //          self.showElements(true);
-
-             //       self.practicesCalculateViewCount();
-
-                    //      self.loadMetrics();
-
-                    //       self.tags = Utility.processTags(self.site.tags);
-
                 }, function(errorResponse) {
 
-          //          self.showElements(false);
+                    //
 
                 });
 
@@ -460,7 +444,7 @@ angular.module('FieldDoc')
 
                             self.fetchTasks(successResponse.task.id);
 
-                        }, 1000);
+                        }, 500);
 
                     }, function(errorResponse) {
 

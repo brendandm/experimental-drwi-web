@@ -36,7 +36,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 

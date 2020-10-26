@@ -313,7 +313,7 @@ angular.module('FieldDoc')
                         true);
 
                     //
-                    // Set scoped variable.
+                    // Set scoped query param variable.
                     //
 
                     self.queryParams = QueryParamManager.getParams();

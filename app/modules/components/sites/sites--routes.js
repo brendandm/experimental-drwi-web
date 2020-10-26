@@ -43,6 +43,35 @@ angular.module('FieldDoc')
                         }
                     }
                 })
+                .when('/sites/:siteId/practices', {
+                    templateUrl: '/modules/components/sites/views/sitePracticeList--view.html?t=' + environment.version,
+                    controller: 'SitePracticeListController',
+                    controllerAs: 'page',
+                    reloadOnSearch: false,
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        practices: function(Site, $route) {
+                            return Site.practices({
+                                id: $route.current.params.siteId
+                            });
+                        },
+                        site: function(Site, $route) {
+                            return Site.getSingle({
+                                id: $route.current.params.siteId
+                            });
+                        }
+                    }
+                })
                 .when('/sites/:siteId/geographies', {
                     templateUrl: '/modules/components/sites/views/siteGeography--view.html?t=' + environment.version,
                     controller: 'SiteGeographyController',
@@ -186,10 +215,7 @@ angular.module('FieldDoc')
                             });
                         }
                     }
-                })
-
-
-                ;
+                });
 
         }
     ]);
