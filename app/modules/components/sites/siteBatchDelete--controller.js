@@ -12,8 +12,8 @@
     angular.module('FieldDoc')
         .controller('SiteBatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
-                Notifications, Site, site, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                     Notifications, Site, site, $rootScope, $route, $scope,
+                     $timeout, $interval, user, Utility, Batch, QueryParamManager) {
 
                 var self = this;
 
@@ -46,92 +46,26 @@
 
                 };
 
-
-                /*START Pagniation vars*/
-                self.limit = 12;
-                self.page = 1;
-
-                self.viewCountLow = self.page;
-                self.viewCountHigh =  self.limit;
-
-                self.calculateViewCount = function(){
-                   if(self.page > 1){
-
-                        if(self.page == 1){
-                            self.viewCountHigh = self.limit;
-                             self.viewCountLow = ((self.page-1) * self.limit);
-                        }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                            self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                             self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                        }else{
-                            self.viewCountHigh = self.summary.feature_count;
-                             self.viewCountLow = ((self.page-1) * self.limit)+1;
-                        }
-                   }else{
-                        if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                              self.viewCountLow = 1;
-                              self.viewCountHigh = self.limit;
-                        }else{
-                            self.viewCountLow = 1;
-                            self.viewCountHigh = self.summary.feature_count;
-
-                        }
-
-                   }
-
-                }
-
-                self.changeLimit = function(limit){
-                    self.limit = limit;
-                    self.page = 1;
-                    self.loadPractices();
-
-                     console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-                }
-
-                 self.getPage = function(page){
-                    console.log("PAGE",page);
-
-                    if(page < 1){
-                        self.page = 1;
-                    }else if(page > self.summary.page_count){
-                        self.page = self.summary.page_count;
-                    }else{
-                         self.page   = page;
-
-                         self.loadPractices();
-                    }
-
-                    console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-
-                };
-
                 self.showMarkedForDeletion = function(){
-                      self.availableFeatures.forEach(function(af, af_i) {
-                           self.selectedFeatures.forEach(function(sf, sf_i) {
-                                 var markedKey = "marked_for_deletion";
-                                 var markedVal = true;
+                    self.availableFeatures.forEach(function(af, af_i) {
+                        self.selectedFeatures.forEach(function(sf, sf_i) {
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = true;
 
+                            if(af.properties.id == sf.properties.id){
+                                self.availableFeatures[af_i][markedKey] = markedVal;
+                                console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                            }else{
+                                //     self.availableFeatures[af_i][markedKey] = false;
+                            }
 
-                                 if(af.properties.id == sf.properties.id){
-                                    self.availableFeatures[af_i][markedKey] = markedVal;
-                                     console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
-                                 }else{
-                               //     self.availableFeatures[af_i][markedKey] = false;
-                                 }
+                        });
 
-
-                            });
-
-                      });
+                    });
 
                 };
 
-                 /*END Pagniation vars*/
-
-
-
+                /*END Pagniation vars*/
 
                 self.loadSite = function() {
 
@@ -159,8 +93,6 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                    //    $rootScope.page.title = self.site.name;
-
                         self.project = successResponse.project;
 
                         console.log('self.project', self.project);
@@ -171,60 +103,48 @@
 
                         self.loadPractices();
 
-                   //     self.loadMetrics();
-
-//                        self.loadTags();
-
-                 //       self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
-
                     });
 
                 };
 
                 self.loadPractices = function(){
-                     Site.practices({
-                            id: self.site.id,
-                            limit: self.limit,
-                            page: self.page,
-                            t: Date.now()
-                        }).$promise.then(function(successResponse) {
+                    Site.practices({
+                        id: self.site.id,
+                        limit: self.limit,
+                        page: self.page,
+                        t: Date.now()
+                    }).$promise.then(function(successResponse) {
 
-                            console.log("PRACTICE RESPONSE");
+                        console.log("PRACTICE RESPONSE");
 
-                            self.practices = successResponse.features;
+                        self.practices = successResponse.features;
 
-                            self.summary = successResponse.summary;
+                        self.summary = successResponse.summary;
 
-                            console.log('self.practices', successResponse);
+                        console.log('self.practices', successResponse);
 
-                            self.availableFeatures = self.practices;
+                        self.availableFeatures = self.practices;
 
-                            self.availableFeatures.forEach(function(feature, index) {
-                                console.log("index", index);
-                                var markedKey = "marked_for_deletion";
-                                var markedVal = false;
-                                self.availableFeatures[index][markedKey] = markedVal;
-                            });
-
-                            console.log('self.availableFeatures', self.availableFeatures);
-
-                            self.showElements();
-
-                             self.calculateViewCount();
-
-                            self.showMarkedForDeletion();
-
-                        }, function(errorResponse) {
-
-
-
-                            console.log("PRACTICE ERROR RESPONSE");
-
-                            self.showElements();
-
+                        self.availableFeatures.forEach(function(feature, index) {
+                            console.log("index", index);
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = false;
+                            self.availableFeatures[index][markedKey] = markedVal;
                         });
+
+                        console.log('self.availableFeatures', self.availableFeatures);
+
+                        self.showElements();
+
+                        self.showMarkedForDeletion();
+
+                    }, function(errorResponse) {
+
+                        console.log("PRACTICE ERROR RESPONSE");
+
+                        self.showElements();
+
+                    });
 
                 };
 
@@ -238,18 +158,18 @@
 
                         $timeout(function() {
 
-                        /*
-                            if (!self.mapOptions) {
+                            /*
+                                if (!self.mapOptions) {
 
-                                self.mapOptions = self.getMapOptions();
+                                    self.mapOptions = self.getMapOptions();
 
-                            }
+                                }
 
-                            self.createMap(self.mapOptions);
-                        */
+                                self.createMap(self.mapOptions);
+                            */
                             if (self.practices && self.practices.length) {
 
-                            //    self.addMapPreviews(self.practices);
+                                //    self.addMapPreviews(self.practices);
                                 self.createStaticMapURLs(self.practices);
 
                             }
@@ -260,29 +180,33 @@
 
                 };
 
-            /*  createStaticMapUrls:
-                takes self.sites as self.practices as argument
-                iterates of self.practices
-                checks if project extent exists
-                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to practices[] as staticURL property
-                if no site geometry, adds default URL to practices[].staticURL
-            */
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
                 self.createStaticMapURLs = function(arr){
 
                     arr.forEach(function(feature, index) {
 
-                         if (feature.properties.project.extent) {
+                        if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.geometry,
+                                    'practice',
+                                    400,
+                                    200);
 
                                 if(feature.staticURL.length >= 4096){
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                        '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                        'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                    ].join('');
                                 }
 
                                 self.practices[index].staticURL = feature.staticURL;
@@ -290,9 +214,9 @@
                             }else{
 
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
                             }
 
                         }
@@ -303,70 +227,70 @@
 
                 self.addToDeleteQueue = function(featureId){
                     console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-                      var i = 0
-                      self.availableFeatures.forEach(function(feature){
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = true;
                             var tempFeature = feature;
                             self.selectedFeatures.push(tempFeature);
 
-                          //  self.unselectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         i = i+1;
                     });
 
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.availableFeatures -->",self.availableFeatures);
-                /*
-                    var i = 0
+                    /*
+                        var i = 0
 
-                    self.unselectedFeatures.forEach(function(feature){
-                        if(feature.properties.id == featureId){
-                            console.log(featureId+" found in self.unselectedFeatures");
-                            var tempFeature = feature;
-                            self.selectedFeatures.push(tempFeature);
-                            self.unselectedFeatures.splice(i,1);
-                        }
-                        i = i+1;
-                    });
-                    console.log("self.selectedFeatures -->",self.selectedFeatures);
-                    console.log("self.unselectedFeatures -->",self.unselectedFeatures);
-                 */
+                        self.unselectedFeatures.forEach(function(feature){
+                            if(feature.properties.id == featureId){
+                                console.log(featureId+" found in self.unselectedFeatures");
+                                var tempFeature = feature;
+                                self.selectedFeatures.push(tempFeature);
+                                self.unselectedFeatures.splice(i,1);
+                            }
+                            i = i+1;
+                        });
+                        console.log("self.selectedFeatures -->",self.selectedFeatures);
+                        console.log("self.unselectedFeatures -->",self.unselectedFeatures);
+                     */
                 };
 
                 self.removeFromDeleteQueue = function(featureId){
-                     console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-                     /*below resetting of self.selected features is a hackaround for the
-                     commented out splice below, as it appeared to be
-                      also splicing available features after select all. Cause unknow*/
-                     self.selectedFeatures = [];
-                     var i = 0
-                     self.availableFeatures.forEach(function(feature){
+                    console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
+                    /*below resetting of self.selected features is a hackaround for the
+                    commented out splice below, as it appeared to be
+                     also splicing available features after select all. Cause unknow*/
+                    self.selectedFeatures = [];
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = false;
-                           // self.selectedFeatures.splice(i,1);
-                          //  self.unselectedFeatures.splice(i,1);
+                            // self.selectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         if(self.availableFeatures[i].marked_for_deletion == true){
                             self.selectedFeatures.push(self.availableFeatures[i]);
                         }
                         i = i+1;
                     });
-                  /*  var i2 = 0;
-                    self.selectedFeatures.forEach(function(feature){
-                         console.log("REMOVING PRACTICE "+featureId+" FROM selectedFeatures");
-                         if(feature.properties.id == featureId){
-                           // this line is causing issue
-                            self.selectedFeatures.splice(i2,1);
+                    /*  var i2 = 0;
+                      self.selectedFeatures.forEach(function(feature){
+                           console.log("REMOVING PRACTICE "+featureId+" FROM selectedFeatures");
+                           if(feature.properties.id == featureId){
+                             // this line is causing issue
+                              self.selectedFeatures.splice(i2,1);
 
-                         }
-                         i2 = i2+1;
-                    });
-                    */
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                     console.log("self.availableFeatures -->",self.availableFeatures);
+                           }
+                           i2 = i2+1;
+                      });
+                      */
+                    console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    console.log("self.availableFeatures -->",self.availableFeatures);
 
                 };
 
@@ -381,7 +305,7 @@
                 };
 
                 self.removeAllFromDeleteQueue = function(){
-                   var i = 0
+                    var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = false;
                         i = i+1;
@@ -396,12 +320,12 @@
                 };
 
                 self.batchDelete = function(){
-                     self.status.processing = true;
+                    self.status.processing = true;
 
                     self.toggleConfirmDelete = false;
                     console.log("self.site.id",self.site.id);
 
-                   var data  = {collection: self.selectedFeatures};
+                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
                         featureType: 'site',
@@ -424,7 +348,7 @@
 
                     }, function(errorResponse) {
 
-                         self.alerts = [{
+                        self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
                             'msg': 'Something went wrong and the changes could not be saved.',
@@ -438,14 +362,8 @@
                 };
 
                 self.cancelDelete = function(){
-                     self.toggleConfirmDelete = false;
-
+                    self.toggleConfirmDelete = false;
                 };
-
-                self.inspectSearchParams = function(params) {
-
-                };
-
 
                 //
                 // Verify Account information for proper UI element display
@@ -463,7 +381,6 @@
                             can_edit: false
                         };
 
-
                         site.$promise.then(function(successResponse) {
                             console.log('self.site', successResponse);
                             self.site = successResponse;
@@ -474,7 +391,23 @@
                             }
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-                        //    $rootScope.page.title = self.site.name;
+
+                            //
+                            // Set default query string params.
+                            //
+
+                            var existingParams = QueryParamManager.getParams();
+
+                            QueryParamManager.setParams(
+                                existingParams,
+                                true);
+
+                            //
+                            // Set scoped query param variable.
+                            //
+
+                            self.queryParams = QueryParamManager.getParams();
+
                             self.loadSite();
 
                         }, function(errorResponse) {
@@ -488,16 +421,6 @@
 
                 }
 
-        /*    $scope.$on('$routeUpdate', function() {
-
-              self.params = $location.search();
-
-              self.inspectSearchParams(params);
-
             });
-            */
-
-
-       });
 
 }());

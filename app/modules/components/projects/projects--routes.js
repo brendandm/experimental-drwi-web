@@ -460,54 +460,56 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/batch-delete', {
-                    templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsBatchDeleteController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
+                templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
+                controller: 'ProjectsBatchDeleteController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
 
-                            $rootScope.targetPath = document.location.pathname;
+                        $rootScope.targetPath = document.location.pathname;
 
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
 
-                            return Account.userObject;
+                        return Account.userObject;
 
-                        },
-                        project: function(Project, $route) {
-                            return Project.get({
-                                id: $route.current.params.projectId,
-                                format: 'geojson'
-                            });
-                        },
+                    },
+                    project: function(Project, $route) {
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            format: 'geojson'
+                        });
+                    },
 
-                    }
-                })
-                .when('/projects/:projectId/batch-practice-delete', {
-                    templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsPracticesBatchDeleteController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
+                }
+            })
+            .when('/projects/:projectId/batch-practice-delete', {
+                templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
+                controller: 'ProjectsPracticesBatchDeleteController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
 
-                            $rootScope.targetPath = document.location.pathname;
+                        $rootScope.targetPath = document.location.pathname;
 
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
 
-                            return Account.userObject;
+                        return Account.userObject;
 
-                        },
-                        project: function(Project, $route) {
-                            return Project.get({
-                                id: $route.current.params.projectId,
-                                format: 'geojson'
-                            });
-                        },
+                    },
+                    project: function(Project, $route) {
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            format: 'geojson'
+                        });
+                    },
 
-                    }
-                });
+                }
+            });
 
     });

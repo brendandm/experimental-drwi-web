@@ -740,6 +740,22 @@ header .header {
     flex-shrink: 0 !important;
 }
 
+.flex-dir-row {
+    flex-direction: row !important;
+}
+
+.flex-dir-col {
+    flex-direction: column !important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.flex-nwrap {
+    flex-wrap: nowrap !important;
+}
+
 .flex-align-stretch {
     align-items: stretch !important;
 }

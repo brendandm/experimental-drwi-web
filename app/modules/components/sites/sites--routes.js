@@ -192,10 +192,11 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                 .when('/sites/:siteId/batch-delete', {
+                .when('/sites/:siteId/batch-delete', {
                     templateUrl: '/modules/components/sites/views/siteBatchDelete--view.html?t=' + environment.version,
                     controller: 'SiteBatchDeleteController',
                     controllerAs: 'page',
+                    reloadOnSearch: false,
                     resolve: {
                         user: function(Account, $rootScope, $document) {
 

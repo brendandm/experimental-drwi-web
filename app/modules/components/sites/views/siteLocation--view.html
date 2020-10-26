@@ -26,12 +26,18 @@
 
         <div class="breadcrumb pad-crumb">
             <div>
-                <span>Project:&nbsp;</span>
+                <a href="/projects">Projects</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
                 <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div>
-                <span>Site:&nbsp;</span>
+                <a href="/projects/{{page.site.properties.project.properties.id}}/sites">Sites</a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
                 <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
                 <span>&nbsp;/&nbsp;</span>
             </div>

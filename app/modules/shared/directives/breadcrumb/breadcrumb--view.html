@@ -1,0 +1,47 @@
+<div class="breadcrumb" data-ng-class="{'pad-crumb': pad}">
+    <div class="no-shrink">
+        <a href="/projects">
+            Projects
+        </a>
+        <span>/</span>
+    </div>
+    <div style="max-width: calc(20%);"
+         data-ng-if="project && project.id">
+        <a href="/projects/{{ project.id }}">
+            {{ project.name }}
+        </a>
+        <span>/</span>
+    </div>
+    <div class="no-shrink"
+         data-ng-if="project && project.id && site && site.id">
+        <a href="/projects/{{ project.id }}/sites">
+            Sites
+        </a>
+        <span>/</span>
+    </div>
+    <div style="max-width: calc(20%);"
+         data-ng-if="project && project.id && site && site.id">
+        <a href="/sites/{{ site.id }}">
+            {{ site.name || 'Un-named' }}
+        </a>
+        <span>/</span>
+    </div>
+    <div class="no-shrink"
+         data-ng-if="project && project.id">
+        <a href="/projects/{{ practice.project.id }}/practices">
+            Practices
+        </a>
+        <span>/</span>
+    </div>
+    <div style="max-width: calc(20%);"
+         data-ng-if="project && project.id && practice && practice.id">
+        <a href="/practices/{{ practice.id }}">
+            {{ practice.name || 'Un-named' }}
+        </a>
+        <span data-ng-if="tail && tail.length">/</span>
+    </div>
+    <div class="no-shrink"
+         data-ng-if="tail && tail.length">
+        {{ tail }}
+    </div>
+</div>

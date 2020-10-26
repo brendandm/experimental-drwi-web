@@ -30,12 +30,18 @@
 
                 <div class="breadcrumb">
                     <div>
-                        <span>Project:&nbsp;</span>
+                        <a href="/projects">Projects</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
                         <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
                         <span>&nbsp;/&nbsp;</span>
                     </div>
                     <div>
-                        <span>Site:&nbsp;</span>
+                        <a href="/projects/{{page.site.project.id}}/sites">Sites</a>
+                        <span>&nbsp;/&nbsp;</span>
+                    </div>
+                    <div>
                         <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
                         <span>&nbsp;/&nbsp;</span>
                     </div>
@@ -50,14 +56,14 @@
                 <h2 class="margin-0">
                     Practices
                     <span class="tally">
-                            {{ page.summary.feature_count | number }}
-                        </span>
+                        {{ page.summary.feature_count | number }}
+                    </span>
                 </h2>
                 <button type="button" class="margin-r-1" style="padding: .5rem 1rem .5rem .7rem;"
                         data-ng-click="page.presentChildModal('practice')">
-                        <span class="material-icons margin-r-50p">
-                            add
-                        </span>
+                    <span class="material-icons margin-r-50p">
+                        add
+                    </span>
                     Create
                 </button>
             </div>

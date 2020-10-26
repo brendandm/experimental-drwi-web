@@ -211,13 +211,7 @@ angular.module('FieldDoc')
 
                         $rootScope.page.title = 'Project Summary';
 
-                        self.loadMetrics();
-
                         self.loadSites();
-
-                        self.loadArea();
-
-                        self.loadPartnerships();
 
                     }
 
@@ -702,7 +696,11 @@ angular.module('FieldDoc')
 
                         console.log("THUMB", feature);
 
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+                        feature.staticURL = Utility.buildStaticMapURL(
+                            feature.geometry,
+                            feature_type,
+                            400,
+                            200);
 
                         if (feature.staticURL.length >= 4096) {
 

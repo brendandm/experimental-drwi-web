@@ -26,18 +26,39 @@
 
         <div class="breadcrumb pad-crumb">
             <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{page.practice.project.id }}">{{ page.practice.project.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div data-ng-if="page.practice.site != null">
-                <span>Site:&nbsp;</span>
-                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
+                <a href="/projects">
+                    Projects
+                </a>
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div>
-                <span>Practice:&nbsp;</span>
-                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
+                <a href="/projects/{{ page.practice.project.id }}">
+                    {{ page.practice.project.name }}
+                </a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.site !== null">
+                <a href="/projects/{{page.practice.project.id}}/sites">
+                    Sites
+                </a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div data-ng-if="page.practice.site !== null">
+                <a href="/sites/{{ page.practice.site.id }}">
+                    {{ page.practice.site.name || 'Un-named' }}
+                </a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <a href="/projects/{{page.practice.project.id}}/practices">
+                    Practices
+                </a>
+                <span>&nbsp;/&nbsp;</span>
+            </div>
+            <div>
+                <a href="/practices/{{ page.practice.id }}">
+                    {{ page.practice.name || 'Un-named' }}
+                </a>
                 <span>&nbsp;/&nbsp;</span>
             </div>
             <div>
