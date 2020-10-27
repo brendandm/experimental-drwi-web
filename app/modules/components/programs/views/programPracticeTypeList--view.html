@@ -10,16 +10,9 @@
 
             <div class="module--grid">
 
-                <div class="breadcrumb">
-                    <div>
-                        <span>Program:&nbsp;</span>
-                        <a href="/programs/{{ page.program.id }}">{{ page.program.name }}</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-                    <div>
-                        Practice types
-                    </div>
-                </div>
+                <div breadcrumb class="full-width"
+                     program="page.program"
+                     tail="Practice types"></div>
 
                 <div class="group">
 
