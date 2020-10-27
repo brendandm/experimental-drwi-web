@@ -353,37 +353,37 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
+                if (self.date !== undefined) {
 
-                if(self.date != undefined) {
-                    if (self.date.month !== null &&
-                        typeof self.date.date !== null &&
-                        self.date.year !== null
-                    ) {
+                    if (typeof self.date.month === 'string' &&
+                        typeof self.date.date === 'number' &&
+                        typeof self.date.year === 'number') {
 
                         self.months.forEach(function(m){
 
-                           if(m.name === self.date.month){
+                           if (m.name === self.date.month) {
                                self.date.month = m;
                            }
 
                         });
+
                         console.log("CCC",self.date.month);
 
-
-                            self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
-
+                        self.project.completed_on = [
+                            self.date.year,
+                            self.date.month.numeric,
+                            self.date.date
+                        ].join('-');
 
                     } else {
+
                         self.project.completed_on = null;
 
                     }
+
                 }
 
-
-
                 self.project.partners = self.processRelations(self.tempPartners);
-
-           //     self.project.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',

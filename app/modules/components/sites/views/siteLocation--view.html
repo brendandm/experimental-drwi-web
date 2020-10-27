@@ -24,27 +24,11 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <a href="/projects">Projects</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/projects/{{page.site.properties.project.properties.id}}/sites">Sites</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit location
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             site="page.site.properties"
+             project="page.site.properties.project.properties"
+             tail="Edit location"></div>
 
         <div class="breadcrumb-header-wrapper">
             <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">

@@ -24,19 +24,10 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <a href="/projects">Projects</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Delete practices
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             project="page.project"
+             tail="Delete practices"></div>
 
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
             Delete practices

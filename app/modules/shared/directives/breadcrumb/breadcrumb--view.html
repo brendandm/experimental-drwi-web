@@ -1,46 +1,76 @@
-<div class="breadcrumb" data-ng-class="{'pad-crumb': pad}">
-    <div class="no-shrink">
-        <a href="/projects">
+<div class="breadcrumb"
+     data-ng-class="{'pad-crumb': pad}"
+     data-ng-if="project && project.id">
+    <div class="no-shrink anchor">
+        <a href="/projects"
+           style="color: #616161;">
             Projects
         </a>
         <span>/</span>
     </div>
-    <div style="max-width: calc(20%);"
-         data-ng-if="project && project.id">
+    <div style="max-width: calc({{ basis.ancestor }}%);">
         <a href="/projects/{{ project.id }}">
             {{ project.name }}
         </a>
-        <span>/</span>
+        <span data-ng-if="(tail && tail.length) || (practice && practice.id) || (site && site.id)">
+            /
+        </span>
     </div>
-    <div class="no-shrink"
-         data-ng-if="project && project.id && site && site.id">
-        <a href="/projects/{{ project.id }}/sites">
+    <div class="no-shrink anchor" style="color: #616161;"
+         data-ng-if="site && site.id">
+        <a href="/projects/{{ project.id }}/sites"
+           style="color: #616161;">
             Sites
         </a>
         <span>/</span>
     </div>
-    <div style="max-width: calc(20%);"
-         data-ng-if="project && project.id && site && site.id">
+    <div style="max-width: calc({{ basis.ancestor }}%);"
+         data-ng-if="site && site.id">
         <a href="/sites/{{ site.id }}">
             {{ site.name || 'Un-named' }}
         </a>
-        <span>/</span>
+        <span data-ng-if="(tail && tail.length) || (practice && practice.id)">
+            /
+        </span>
     </div>
-    <div class="no-shrink"
-         data-ng-if="project && project.id">
-        <a href="/projects/{{ practice.project.id }}/practices">
+    <div class="no-shrink anchor" style="color: #616161;"
+         data-ng-if="!site && practice && practice.id">
+        <a href="/projects/{{ project.id }}/practices"
+           style="color: #616161;">
             Practices
         </a>
-        <span>/</span>
+        <span data-ng-if="!site && practice && practice.id">/</span>
     </div>
-    <div style="max-width: calc(20%);"
-         data-ng-if="project && project.id && practice && practice.id">
+    <div class="no-shrink anchor" style="color: #616161;"
+         data-ng-if="site && site.id && practice && practice.id">
+        <a href="/sites/{{ site.id }}/practices"
+           style="color: #616161;">
+            Practices
+        </a>
+        <span data-ng-if="site && site.id && practice && practice.id">/</span>
+    </div>
+    <div style="max-width: calc({{ basis.ancestor }}%);"
+         data-ng-if="practice && practice.id">
         <a href="/practices/{{ practice.id }}">
             {{ practice.name || 'Un-named' }}
         </a>
         <span data-ng-if="tail && tail.length">/</span>
     </div>
-    <div class="no-shrink"
+    <div style="max-width: calc({{ basis.focus }}%);"
+         data-ng-if="report && report.report_date">
+        <a href="/reports/{{ report.id }}/edit">
+            {{ report.name || (report.report_date | date) }}
+        </a>
+        <span>/</span>
+    </div>
+    <div style="max-width: calc({{ basis.focus }}%);"
+         data-ng-if="report && !report.report_date">
+        <a href="/reports/{{ report.id }}/edit">
+            {{ report.measurement_period }}
+        </a>
+        <span>/</span>
+    </div>
+    <div class="no-shrink anchor" style="color: #616161;"
          data-ng-if="tail && tail.length">
         {{ tail }}
     </div>

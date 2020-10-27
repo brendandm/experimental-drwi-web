@@ -28,19 +28,9 @@
 
             <div class="module--grid">
 
-                <div class="breadcrumb">
-                    <div>
-                        <a href="/projects">Projects</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-                    <div>
-                        <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
-                        <span>&nbsp;/&nbsp;</span>
-                    </div>
-                    <div>
-                        Practices
-                    </div>
-                </div>
+                <div breadcrumb class="full-width"
+                     project="page.project"
+                     tail="Practices"></div>
 
                 <div class="create-heading">
                     <h2 class="margin-0">
