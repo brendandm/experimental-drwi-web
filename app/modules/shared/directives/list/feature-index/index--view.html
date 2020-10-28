@@ -106,8 +106,14 @@
 
                         <div class="body">
 
-                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">
-                                {{ feature.description || 'No description provided.' }}
+                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;"
+                               data-ng-if="feature.description">
+                                {{ feature.description | truncate:200 }}
+                            </p>
+
+                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;"
+                               data-ng-if="!feature.description">
+                                No description provided.
                             </p>
 
                             <div class="actions" style="flex: none; flex-grow: 0; flex-shrink: 0;"

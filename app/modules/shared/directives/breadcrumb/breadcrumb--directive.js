@@ -11,7 +11,7 @@
                     restrict: 'EA',
                     scope: {
                         'metric': '=?',
-                        'pad': '@',
+                        'pad': '=?',
                         'practice': '=?',
                         'practiceType': '=?',
                         'program': '=?',
@@ -61,35 +61,6 @@
 
                         };
 
-                        // scope.collapse = function (availWidth) {
-                        //
-                        //     var collapseEls = document.querySelectorAll(
-                        //         '.breadcrumb .collapse');
-                        //
-                        //     var count = collapseEls.length;
-                        //
-                        //     console.log(
-                        //         'collapse:count:',
-                        //         count
-                        //     );
-                        //
-                        //     var width = Math.floor(availWidth / count);
-                        //
-                        //     console.log(
-                        //         'collapse:width:',
-                        //         width
-                        //     );
-                        //
-                        //     for (var i = 0; i < count; i++) {
-                        //
-                        //         var el = collapseEls[i];
-                        //
-                        //         el.style.width = width + 'px';
-                        //
-                        //     }
-                        //
-                        // };
-
                         scope.setBasis = function () {
 
                             //
@@ -102,24 +73,6 @@
 
                             if (scope.site && !scope.project) return;
 
-                            // var ancestors = [
-                            //     scope.practice,
-                            //     scope.site,
-                            //     scope.project
-                            // ];
-                            //
-                            // var ancestorCount = 0;
-                            //
-                            // ancestors.forEach(function (feature) {
-                            //
-                            //     if (feature !== null && feature !== 'undefined') {
-                            //
-                            //         ancestorCount += 1;
-                            //
-                            //     }
-                            //
-                            // });
-
                             $timeout(function () {
 
                                 var collapseEls = document.querySelectorAll(
@@ -127,33 +80,7 @@
 
                                 var count = collapseEls.length;
 
-                                console.log(
-                                    'calcAvailWidth',
-                                    scope.calcAvailWidth()
-                                );
-
-                                // scope.collapse(scope.calcAvailWidth())
-
-                                var availWidth = Math.floor(scope.calcAvailWidth() * 0.75);
-
-                                var focusWidth = Math.floor(scope.calcAvailWidth() * 0.25);
-
-                                console.log(
-                                    'availWidth',
-                                    availWidth
-                                );
-
-                                console.log(
-                                    'focusWidth',
-                                    focusWidth
-                                );
-
                                 scope.basis = Math.floor(scope.calcAvailWidth() / count);
-
-                                // scope.basis = {
-                                //     ancestor: availWidth / ancestorCount,
-                                //     focus: focusWidth
-                                // }
 
                                 console.log(
                                     'scope.basis',
