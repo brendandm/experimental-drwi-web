@@ -39,7 +39,9 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.practice.name || 'Un-named' }}</h1>
+                        <h1 class="margin-0 margin-b-1">
+                            {{ page.practice.name || 'Un-named' }}
+                        </h1>
 
                         <div class="last-modified-summary">
 
@@ -60,16 +62,6 @@
                             </div>
 
                         </div>
-
-                        <p>
-                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{
-                            page.practice.project.name || 'Un-named' }}</a>
-                        </p>
-
-                        <p data-ng-if="page.practice.site != null">
-                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{
-                            page.practice.site.name || 'Un-named' }}</a>
-                        </p>
 
                         <p>
                             <strong>Practice Type:</strong> {{ page.practice.practice_type.name }}
@@ -210,8 +202,7 @@
                  -->
 
                 <div class="group reveal fade-in t2"
-                     data-ng-if="page.next_action == 'edit_targets'"
-                >
+                     data-ng-if="page.next_action == 'edit_targets'">
 
                     <section class="pad shadow">
 
@@ -224,6 +215,19 @@
                                 href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions
                             or need help managing this practice.
                         </p>
+
+                        <div class="empty-block-alert"
+                             data-ng-if="page.metrics && !page.metrics.generic.length && !page.metrics.has_models">
+                            <p class="pad-0 margin-0 margin-t-2">
+                                <span class="material-icons">
+                                    info
+                                </span>
+                            </p>
+                            <p class="pad-0 margin-0 margin-y-2">
+                                No metric progress available.<br><br>This may mean that the practice has not begun
+                                tracking implementation or that progress calculations are being updated.
+                            </p>
+                        </div>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 

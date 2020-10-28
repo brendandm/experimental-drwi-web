@@ -45,7 +45,9 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.project.name }}</h1>
+                        <h1 class="margin-0 margin-b-1">
+                            {{ page.project.name || 'Un-named' }}
+                        </h1>
 
                         <div class="last-modified-summary">
 
@@ -154,9 +156,17 @@
 
                         <h2>Metrics</h2>
 
-                        <div data-ng-if="page.metrics && (!page.metrics.generic && !page.metrics.models)">
-                            No metric progress available. This may mean that the project is not tracking any metrics
-                            yet or that progress calculations are being updated.
+                        <div class="empty-block-alert"
+                             data-ng-if="page.metrics && !page.metrics.generic.length && !page.metrics.has_models">
+                            <p class="pad-0 margin-0 margin-t-2">
+                                <span class="material-icons">
+                                    info
+                                </span>
+                            </p>
+                            <p class="pad-0 margin-0 margin-y-2">
+                                No metric progress available.<br><br>This may mean that the project has not begun tracking
+                                practice implementation or that progress calculations are being updated.
+                            </p>
                         </div>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">

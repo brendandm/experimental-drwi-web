@@ -36,7 +36,9 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.site.name || 'Un-named' }}</h1>
+                        <h1 class="margin-0 margin-b-1">
+                            {{ page.site.name || 'Un-named' }}
+                        </h1>
 
                         <div class="last-modified-summary">
 
@@ -54,14 +56,6 @@
                             </div>
 
                         </div>
-
-                        <p data-ng-if="page.project.id && page.project.program">
-                            <strong>Program:</strong> {{ page.project.program.name }}
-                        </p>
-
-                        <p>
-                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name || 'Un-named' }}</a>
-                        </p>
 
                         <p data-ng-if="page.site.area && page.site.area > 0">
                             <strong>Area:</strong> {{ page.site.area | convertArea:'acre' | number:2 }} acres</a>
@@ -129,6 +123,19 @@
                     <section class="pad shadow">
 
                         <h2>Metrics</h2>
+
+                        <div class="empty-block-alert"
+                             data-ng-if="page.metrics && !page.metrics.generic.length && !page.metrics.has_models">
+                            <p class="pad-0 margin-0 margin-t-2">
+                                <span class="material-icons">
+                                    info
+                                </span>
+                            </p>
+                            <p class="pad-0 margin-0 margin-y-2">
+                                No metric progress available.<br><br>This may mean that the site has not begun tracking
+                                practice implementation or that progress calculations are being updated.
+                            </p>
+                        </div>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
