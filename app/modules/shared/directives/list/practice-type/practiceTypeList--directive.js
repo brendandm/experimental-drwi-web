@@ -63,6 +63,11 @@
 
                         scope.jumpToSelection = function () {
 
+                            console.log(
+                                'jumpToSelection:selectionId',
+                                scope.selectionId
+                            );
+
                             $location.hash('');
 
                             scope.scrollManager.scrollToAnchor(scope.selectionId);

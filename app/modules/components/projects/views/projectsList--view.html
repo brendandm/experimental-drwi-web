@@ -88,7 +88,8 @@
                 <div data-ng-if="!page.projects.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
                 0;">
 
-                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+                    <ul class="selectable-group-items list-unstyled margin-t-2"
+                        style="grid-template-columns: repeat(1, 1fr);">
 
                         <li class="card reveal fade-in">
 
@@ -135,33 +136,26 @@
 
                         <div class="card--content">
 
-                            <!-- <div id="project-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div> -->
-
-                            <div class="status status_{{project.status}}"
-                                 style= "    border-bottom-right-radius: 0px;
-                                                 border-bottom-left-radius: 0px;
-                                                 border-radius: 0px;
-                                                 float:left;
-                                                 border: 0px;
-                                                 margin-right: 0px;
-
-                                            ">
-                                <span>{{project.status | capitalAttribute}}</span>
-
-                                <span ng-if="project.archived">- Archived</span>
-                            </div>
-
                             <img data-ng-if="project.staticURL"
                                  data-ng-src="{{ project.staticURL }}" width="auto" height="auto" />
 
                             <img data-ng-if="!project.extent"
-                                 data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,6/400x130@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+                                 data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,6/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
-                            <div class="name" style="background: #fff; padding: 10px 16px 10px 16px;">
+                            <div class="name"
+                                 style="background: #fff; padding: 10px 16px 10px 16px; border-bottom: none;">
                                 <span>{{ project.name }}</span>
                             </div>
 
+                            <div class="status-wrapper" title="Status: {{ project.status | capitalAttribute }}">
+                                <div class="status status-{{ project.status }}">
+                                    <span class="dot"></span>
+                                    <span>{{ project.status | capitalAttribute }}</span>
+                                </div>
+                            </div>
+
                             <div class="body">
+
                                 <div class="confirm--delete" data-ng-if="page.deletionTarget.id === project.id">
                                     <p>Do you want to delete this project?</p>
                                     <div class="actions" style="flex: 0;">
@@ -175,15 +169,19 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ (project.description || 'No description') | truncate:80 }}</p>
+
+                                <p>
+                                    {{ (project.description || 'No description') | truncate:80 }}
+                                </p>
+
                                 <div class="actions">
+
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
-                                    <!--       <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id">
-                                    -->
+
                                     <a class="snapshot--title" href="/projects/{{ project.id }}/edit"
                                        title="Edit project"
                                        data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id || $root.user.properties.is_manager">
@@ -191,21 +189,23 @@
                                             edit
                                         </i>
                                     </a>
+
                                     <a class="snapshot--title" href="#" title="Delete project"
                                        data-ng-click="page.confirmDelete(project)"
                                        data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id || $root.user.properties.is_manager">
-                                        <!--       <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)" data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id">
-                                        -->
                                         <i class="material-icons">
                                             delete
                                         </i>
                                     </a>
+
                                 </div>
+
                                 <span>
                                     <time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">
                                         Last updated {{ project.modified_on | date : 'mediumDate' }}
                                     </time>
                                 </span>
+
                             </div>
 
                         </div>

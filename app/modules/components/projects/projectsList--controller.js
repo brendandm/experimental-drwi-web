@@ -149,7 +149,11 @@ angular.module('FieldDoc')
 
                         if (feature.extent) {
 
-                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
+                            feature.staticURL = Utility.buildStaticMapURL(
+                                feature.extent,
+                                null,
+                                400,
+                                200);
 
                         }
 

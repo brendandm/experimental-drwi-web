@@ -12,8 +12,8 @@
     angular.module('FieldDoc')
         .controller('ProjectUsersController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, SearchService, Project,
-                Utility, $interval) {
+                     $location, $timeout, project, user, SearchService, Project,
+                     Utility, $interval) {
 
                 var self = this;
 
@@ -95,13 +95,13 @@
 
                     console.log("member item",item);
                     var member = {
-                            "user": item,
-                            "user_id" : item.id,
-                        }
+                        "user": item,
+                        "user_id" : item.id,
+                    }
 
-                 //   var member = item;
-                //    member.user = item;
-                //    member.user_id = item.id;
+                    //   var member = item;
+                    //    member.user = item;
+                    //    member.user_id = item.id;
 
                     self.tempOwners.push(member);
 
@@ -113,26 +113,26 @@
 
                 self.removeOwner = function(index) {
                     self.tempOwners.splice(index, 1);
-                /*    var _index;
+                    /*    var _index;
 
-                    self.tempOwners.forEach(function(item, idx) {
+                        self.tempOwners.forEach(function(item, idx) {
 
-                        if (item.id === id) {
+                            if (item.id === id) {
 
-                            _index = idx;
+                                _index = idx;
+
+                            }
+
+                        });
+
+                        console.log('Remove owner at index', _index);
+
+                        if (typeof _index === 'number') {
+
+                            self.tempOwners.splice(_index, 1);
 
                         }
-
-                    });
-
-                    console.log('Remove owner at index', _index);
-
-                    if (typeof _index === 'number') {
-
-                        self.tempOwners.splice(_index, 1);
-
-                    }
-*/
+    */
                     console.log('Updated owners (removal)', self.tempOwners);
 
                 };
@@ -205,7 +205,7 @@
 
                     self.scrubFeature(self.project);
 
-                 //   self.project.members = self.processOwners(self.tempOwners);
+                    //   self.project.members = self.processOwners(self.tempOwners);
 
                     var exclude = [
                         'centroid',
@@ -228,7 +228,7 @@
 
                     Project.post_members({
                         id: $route.current.params.projectId
-                       // exclude: exclude
+                        // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;
@@ -356,9 +356,9 @@
                         //
                         // Assign project to a scoped variable
                         //
-                       Project.members({
-                        id: $route.current.params.projectId
-                       // exclude: exclude
+                        Project.members({
+                            id: $route.current.params.projectId
+                            // exclude: exclude
                         }).$promise.then(function(successResponse) {
 
                             console.log('self.project', successResponse);

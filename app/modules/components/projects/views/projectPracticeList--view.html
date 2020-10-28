@@ -29,6 +29,7 @@
             <div class="module--grid">
 
                 <div breadcrumb class="full-width"
+                     program="page.project.program"
                      project="page.project"
                      tail="Practices"></div>
 
@@ -52,22 +53,34 @@
 
                 <section class="reveal fade-in t3 pad-0 margin-b-3" style="width: 100%;">
 
-                    <div data-ng-if="page.permissions.write">
-                        <a class="snapshot--title" title="Batch delete practices"
-                           href="/projects/{{ page.project.id }}/batch-practice-delete">
-                            <i class="material-icons" style="color:#666666;">
-                                delete_sweep
-                            </i>
-                        </a>
-                    </div>
+<!--                    <div data-ng-if="page.permissions.write">-->
+<!--                        <a class="snapshot&#45;&#45;title" title="Batch delete practices"-->
+<!--                           href="/projects/{{ page.project.id }}/batch-practice-delete">-->
+<!--                            <i class="material-icons" style="color:#666666;">-->
+<!--                                delete_sweep-->
+<!--                            </i>-->
+<!--                        </a>-->
+<!--                    </div>-->
 
                     <div data-ng-if="!page.status.loading"
-                         class="margin-y-1"
+                         class="margin-t-2 margin-b-1"
                          pagination
                          params="page.queryParams"
                          summary="page.summary"
                          rotate="page.loadPractices(params)"
                          update-params="true"></div>
+
+                    <div class="view-all margin-b-1"
+                         data-ng-if="page.summary && page.summary.feature_count > 4 && page.permissions.write">
+                        <a title="Batch delete"
+                           class="block-link"
+                           href="/projects/{{ page.project.id }}/batch-practice-delete">
+                            <span class="material-icons margin-r-50p">
+                                delete_sweep
+                            </span>
+                            Batch delete
+                        </a>
+                    </div>
 
                     <ul class="snapshot--cards list-unstyled">
 

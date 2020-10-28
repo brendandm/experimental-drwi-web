@@ -568,8 +568,10 @@ header .header {
         }
 
         .shadow {
-            background: #f5f5f5;
-            box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+            //background: #f5f5f5;
+            //box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+            border-radius: $rem-radius-50;
+            border: 1px solid #e0e0e0;
         }
 
         .pad {
@@ -915,3 +917,18 @@ h2 .tally {
     }
 }
 
+//
+// Border radius utilities
+//
+
+.rad-100 {
+    border-radius: $rem-radius-100;
+}
+
+.rad-50 {
+    border-radius: $rem-radius-50;
+}
+
+.rad-25 {
+    border-radius: $rem-radius-25;
+}

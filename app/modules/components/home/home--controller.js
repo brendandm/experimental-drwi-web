@@ -219,7 +219,11 @@
 
                             if (feature.extent) {
 
-                                feature.staticURL = self.buildStaticMapURL(feature.extent);
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.extent,
+                                    null,
+                                    400,
+                                    200);
 
                             }
 

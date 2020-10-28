@@ -12,7 +12,8 @@
             </div>
         </div>
 
-        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0"
+                 data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -24,12 +25,25 @@
 
         </section>
 
-        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+        <div class="main--ui"
+             data-ng-if="!page.status.loading && !page.makePrivate">
 
             <div class="module--grid">
 
                 <div breadcrumb class="full-width"
+                     program="page.project.program"
                      project="page.project"></div>
+
+                <div class="archive-notice" data-ng-if="page.project.archived">
+                    <span class="material-icons">
+                        archive
+                    </span>
+                    <span>This project is archived.</span>
+<!--                    <a href="/projects/{{ page.project.id }}/edit"-->
+<!--                       data-ng-if="page.permissions.write">-->
+<!--                        Click to edit-->
+<!--                    </a>-->
+                </div>
 
                 <div class="group">
 
@@ -45,22 +59,15 @@
                                 page.project.last_modified_by.last_name }} on {{ page.project.modified_on | date:'longDate' }}
                             </div>
 
-                            <div class="status-history-link-wrapper" style="border:0px solid red;">
-
-                                <div class="status_wrapper">
-                                    <div class="status status_{{page.project.status}}"
-                                         style="
-
-                                ">
-                                        {{page.project.status | capitalAttribute}}
-                                    </div>
+                            <div class="status-wrapper margin-0 margin-y-1 pad-0"
+                                 title="Status: {{ page.project.status | capitalAttribute }}">
+                                <div class="status status-{{ page.project.status }}">
+                                    <span class="dot"></span>
+                                    <span>{{ page.project.status | capitalAttribute }}</span>
                                 </div>
-                                <span ng-if="page.project.archived"
-                                    style=" margin-right:10px;
-                                            color: rgb(71,72,74);
-                                            ">
-                                    <i>Archived</i>
-                                </span>
+                            </div>
+
+                            <div class="status-history-link-wrapper">
                                 <span class="material-icons">
                                     history
                                 </span>
@@ -70,11 +77,6 @@
                             </div>
 
                         </div>
-
-                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
-                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{
-                            page.project.program.name }}</a>
-                        </p>
 
                         <div class="summary-warning-link-wrapper"
                              data-ng-if="!page.project.program.id">
@@ -542,7 +544,7 @@
 
             <!-- END PRACTICE PANEL -->
 
-            <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
+            <section class="reveal fade-in t3 pad-0">
 
                 <div class="create-heading margin-t-1 margin-b-2">
                     <h2 class="margin-0">
