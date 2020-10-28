@@ -211,7 +211,13 @@ angular.module('FieldDoc')
 
                         $rootScope.page.title = 'Project Summary';
 
+                        self.loadMetrics();
+
                         self.loadSites();
+
+                        self.loadArea();
+
+                        self.loadPartnerships();
 
                     }
 
