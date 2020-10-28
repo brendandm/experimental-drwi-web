@@ -24,21 +24,11 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <span>Site:&nbsp;</span>
-                <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Geographies
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             site="page.site"
+             project="page.site.project"
+             tail="Geographies"></div>
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 

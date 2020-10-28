@@ -24,21 +24,11 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <span>Site:&nbsp;</span>
-                <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit site
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             site="page.site"
+             project="page.site.project"
+             tail="Edit site"></div>
 
         <div class="breadcrumb-header-wrapper">
             <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">

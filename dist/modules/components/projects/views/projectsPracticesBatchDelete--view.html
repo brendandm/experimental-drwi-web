@@ -24,142 +24,73 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{ page.project.id }}">{{ page.project.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Delete practices
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             program="page.project.program"
+             project="page.project"
+             tail="Delete practices"></div>
 
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
             Delete practices
         </h1>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate" style="overflow:hidden;">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t0" style="padding: 0;">
 
-                   <!--     <h1>{{ page.site.name || 'Un-named' }}</h1> -->
+                <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
+                    Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                </p>
 
-                        <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
-                        </p>
-
-                   <!--     <p data-ng-if="page.project.id && page.project.program">
-                            <strong>Program:</strong> {{ page.site.properties.project.properties.program.name }}
-                        </p>
-                    -->
-                         <p>
-                            <strong>Project:</strong> <a href="/projects/{{ page.project.id }}">{{ page.project.name || 'Un-named' }}</a>
-                        </p>
-
-                    <!--    <p>
-                            <strong>Site:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.properties.name || 'Un-named' }}</a>
-                        </p>
-                    -->
-
-                        <p style="max-width:800px; text-align:justify">
-                           <!-- <strong>Instructions:</strong><br>-->
-                            Select the practices you wish to delete
-                            by clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> on each practice.
-                            After selecting,
-                            click the <sub><i class="material-icons" style="color:#666666; font-size:20px;">delete_sweep</i></sub>
-                            at the bottom right.
-                            Note that deleting practices will also delete associated reports.
-                        </p>
-
-
+                <p style="max-width:800px; text-align:justify">
+                    Select the practices you wish to delete
+                    by clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> on each practice.
+                    After selecting,
+                    click the <sub><i class="material-icons" style="color:#666666; font-size:20px;">delete_sweep</i></sub>
+                    at the bottom right. <strong>Important:</strong> Note that deleting practices will also remove
+                    associated reports and metric targets.
+                </p>
 
             </section>
 
-            <!-- Unselected Sites -->
-            <section class="reveal fade-in t3" style="padding: 0; overflow:auto;" data-ng-if="page.permissions.can_edit">
-                <h2>Practices</h2>
+            <section class="reveal fade-in t0 pad-0"
+                     data-ng-if="page.permissions.can_edit">
+
                 <p>
                     Showing <b>{{ practiceList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in project <b>{{page.project.name}}</b>.
                 </p>
 
+                <div class="collection-search reveal fade-in t0 flex-justify-start flex-dir-row flex-wrap">
 
-                <!--
-                 justify-content:left;
-                                                                        align-items:left;
-                -->
-                 <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
-                                                                       float:left;
-                                                                       display:block;
-                                                                       width: 100%;
-                                                                        overflow: hidden;
-                                                                        flex-wrap: wrap;
-                                                                        min-width:730px;
-                                                                        padding-top: 5px;
-                                                                         "
-                 >
-                 <!--   <div style="border:1px solid pink;">-->
-                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
-               <!--     </div> -->
-                    <div class="collection-filter-group" style="
-                                                            border: 0px solid blue;
-                                                            width: 15%;
-                                                            min-width: 400px;
-                                                            margin-right: 0px;
+                    <input type="text"
+                           class="list-filter margin-r-1 margin-b-0"
+                           data-ng-if="!page.status.loading"
+                           data-ng-model="page.queryToken"
+                           placeholder="Search practices">
 
-                                                            float:left;
-                                                            clear:right;
-                    ">
-                     <!--   <div style="
-                                    float   :  left;
-                                    display :  inline-block;
-                                    border  :   1px solid red;
-                                    width   :   350px;
-                                    "
-                        >-->
-                        <nobr>
-                            <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
-                                <nobr>Deselect All</nobr>
-                            </button>
-                            <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
-                                <nobr>Select All</nobr>
-                            </button>
-                        </nobr>
-                   <!--     </div>
-                   -->
+                    <div class="collection-filter-group margin-0">
+
+                        <button data-ng-click="page.removeAllFromDeleteQueue()"
+                                title="Remove all from batch delete"
+                                class="margin-r-1">
+                            Deselect All
+                        </button>
+                        <button data-ng-click="page.addAllToDeleteQueue()"
+                                title="Add all to batch delete">
+                            Select All
+                        </button>
 
                     </div>
-                   <!--   <div style="    border:1px solid green;
-                                    display:    inline-block;
-                                    float:  right;
-                                    margin-right:30px;
-
-
-
-                                "
-                        >
-                        -->
-                        <div style="
-                                float:right;
-                                display:inline-block;
-                                border: 0px solid red;
-                                height:70px;
-                                width: 35%;
-                                min-width:740px;
-                                right: 0px;
-                                position:relative;
-                                overflow: hidden;
-                                justify-content: right;
-                                margin-top:-15px;
-                                  margin-right:30px;
-
-                                ">
-                                <div data-ng-include="'/templates/pagination-view.html'"></div>
-                        </div>
-                  <!--      </div>
-                  -->
 
                 </div>
+
+                <div data-ng-if="!page.status.loading"
+                     class="margin-t-1 margin-b-2"
+                     pagination
+                     params="page.queryParams"
+                     summary="page.summary"
+                     rotate="page.loadPractices(params)"
+                     update-params="true"></div>
 
                 <ul class="snapshot--cards list-unstyled">
 
@@ -181,19 +112,22 @@
 
                             <div class="body">
 
-
                                 <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
+
                                 <div class="actions">
+
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
+
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
+
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
@@ -203,18 +137,16 @@
                                     <a class="snapshot--title"
                                        data-ng-click="page.addToDeleteQueue(practice.properties.id)"
                                        title="Add to batch delete"
-                                       data-ng-if="!practice.marked_for_deletion"
-                                    >
+                                       data-ng-if="!practice.marked_for_deletion">
                                         <i class="material-icons" style=" padding: 3px; 3px; 0 3px;">
                                             delete
                                         </i>
                                     </a>
-                                     <a class="snapshot--title"
-                                        data-ng-click="page.removeFromDeleteQueue(practice.properties.id)"
-                                        title="Remove from batch delete"
-                                        data-ng-if="practice.marked_for_deletion"
-                                     >
-                                          <i class="material-icons" style="width: 30px;
+                                    <a class="snapshot--title"
+                                       data-ng-click="page.removeFromDeleteQueue(practice.properties.id)"
+                                       title="Remove from batch delete"
+                                       data-ng-if="practice.marked_for_deletion">
+                                        <i class="material-icons" style="width: 30px;
                                                                         height: 30px;
                                                                         background-color:red;
                                                                         border-radius:50%;
@@ -222,65 +154,61 @@
                                                                         padding: 3px; 3px; 0 3px;
                                                                         " >
                                             delete_forever
-                                           </i>
-                                     </a>
-
-
-                                        <!--    -->
+                                        </i>
                                     </a>
+
                                 </div>
+
                                 <span><time datetime="{{ practice.properties.created_on }}" title="{{ practice.properties.created_on }}">
                                         Created on {{ practice.properties.created_on | date }}</time></span>
+
                             </div>
 
                         </div>
 
                     </li>
 
-
-
                 </ul>
 
-                 <div style="   min-width:740px;
-                                margin-top:-10px;
-                                margin-right:30px;
-                                "
-                      data-ng-include="'/templates/pagination-view.html'"></div>
+                <div data-ng-if="!page.status.loading"
+                     class="margin-y-1"
+                     pagination
+                     params="page.queryParams"
+                     summary="page.summary"
+                     rotate="page.loadPractices(params)"
+                     update-params="true"></div>
 
                 <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999; height:210px;">
 
-                        <div style="border:0px solid green;">
-                            <button type="submit" data-ng-if="page.selectedFeatures.length == 0" style="background-color:#cccccc;">
+                    <div style="border:0px solid green;">
+                        <button type="submit" data-ng-if="page.selectedFeatures.length == 0" style="background-color:#cccccc;">
 
-                                <i class="material-icons" style="color:white;">
-                                      delete_sweep
-                                </i>
+                            <i class="material-icons" style="color:white;">
+                                delete_sweep
+                            </i>
 
-                           </button>
+                        </button>
 
-                           <button type="submit" data-ng-if="page.selectedFeatures.length > 0" data-ng-click="page.toggleConfirmDeleteDialog()" title="Batch Delete">
+                        <button type="submit" data-ng-if="page.selectedFeatures.length > 0" data-ng-click="page.toggleConfirmDeleteDialog()" title="Batch Delete">
 
-                                <i class="material-icons" style="color:white;">
-                                      delete_sweep
-                                </i>
+                            <i class="material-icons" style="color:white;">
+                                delete_sweep
+                            </i>
 
-                           </button>
-                             <div class="delete--confirm--delete--popup" style="border: 0px solid purple" data-ng-if="page.toggleConfirmDelete">
+                        </button>
 
-
+                        <div class="delete--confirm--delete--popup" style="border: 0px solid purple" data-ng-if="page.toggleConfirmDelete">
 
                             <p>Do you want to delete
                                 <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'this','other': 'these'}" ></ng-pluralize>
-                                    <strong>{{ (page.selectedFeatures.length | number) || 0 }}</strong>
+                                <strong>{{ (page.selectedFeatures.length | number) || 0 }}</strong>
                                 <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
-                                    ?
-                                   <br> <small>*This action cannot be undone.<br>
+                                ?
+                                <small>*This action cannot be undone.<br>
                                     Any practices and reports under
                                     <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'this','other': 'these'}" ></ng-pluralize>
                                     <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
                                     <br>will also be deleted.
-
-
                                 </small>
                             </p>
                             <div class="actions">
@@ -291,15 +219,14 @@
                                     Cancel
                                 </a>
                             </div>
-                </div>
+
                         </div>
+
+                    </div>
+
                 </div>
-
-
 
             </section>
-
-
 
         </div>
 
@@ -342,21 +269,6 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li> -->
-       <!--     <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">
@@ -364,14 +276,6 @@
                     </i>
                 </a>
             </li>
-     <!--       <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.print()">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li>
-            -->
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
                     <p>Do you want to delete this practice?</p>
@@ -395,7 +299,8 @@
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+            <div data-ng-repeat="alert in page.alerts"
+                 data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>

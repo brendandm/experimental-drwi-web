@@ -12,24 +12,11 @@
             </div>
         </div>
 
-        <div class="breadcrumb pad-crumb" data-ng-if="!page.status.loading">
-            <div>
-                <span>Program:&nbsp;</span>
-                <a href="/programs/{{ page.metricType.program.id }}">{{ page.metricType.program.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/programs/{{ page.metricType.program.id }}/metrics">Metrics</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/metrics/{{ page.metricType.id }}">{{ page.metricType.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             metric="page.metricType"
+             program="page.metricType.program"
+             tail="Edit"></div>
 
         <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
             Edit metric type

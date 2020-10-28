@@ -25,46 +25,50 @@
                 <span>Create project</span>
                 <a class="add--new--btn"
                    data-ng-click="page.showChildModal = !page.showChildModal">
-                    <i class="material-icons">
+                    <span class="material-icons">
                         add
-                    </i>
+                    </span>
                 </a>
             </div>
 
             <div class="collection-filter-group"
                  data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
 
-                <div collection-filter collection="program" features="page.programs"
+                <div collection-filter collection="program"
+                     features="page.programs"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="organization" features="page.summary.organizations"
+                <div collection-filter collection="organization"
+                     features="page.summary.organizations"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="tag" features="page.tags"
+                <div collection-filter collection="tag"
+                     features="page.tags"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="true"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
-                <div collection-filter collection="status" features="page.projectStatuses"
+                <div collection-filter collection="status"
+                     features="page.projectStatuses"
                      display-states="page.showModal"
-                     filters="page.filters"
+                     params="page.queryParams"
                      track-name="false"
-                     update="page.inspectSearchParams(true)"></div>
+                     update="page.loadProjects(page.queryParams)"></div>
 
                 <div class="scope--control">
                     <span></span>
                     <label class="switch">
                         <input class="inputdemo"
                                type="checkbox"
-                               data-ng-model="page.archived"
-                               data-ng-click="page.changeArchivedDisplay(!page.projects_archived)">
+                               data-ng-model="page.queryParams.archived"
+                               data-ng-change="page.loadProjects(page.queryParams)">
                         <div class="slider round"></div>
                     </label>
                     <span data-ng-class="{on: page.archived}" style="color:#616161;">Archived</span>
@@ -73,14 +77,19 @@
             </div>
 
             <div data-ng-if="!page.status.loading"
-                 data-ng-include="'/templates/pagination-view.html'"></div>
+                 pagination
+                 summary="page.summary"
+                 rotate="page.loadProjects(page.queryParams)"
+                 params="page.queryParams"
+                 update-params="true"></div>
 
             <div class="features--container" data-ng-if="!page.status.loading">
 
                 <div data-ng-if="!page.projects.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
                 0;">
 
-                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2rem;">
+                    <ul class="selectable-group-items list-unstyled margin-t-2"
+                        style="grid-template-columns: repeat(1, 1fr);">
 
                         <li class="card reveal fade-in">
 
@@ -98,7 +107,7 @@
                                         <p style="font-style: normal; font-size: 1rem; padding: 0; margin: 1rem 0 0;
                                         text-align: center; display: flex; flex-flow: row nowrap; align-items:
                                         center; width: 100%; justify-content: center; cursor: pointer; color: #0366d6;"
-                                           data-ng-click="page.filters = {}; page.inspectSearchParams(true)">
+                                           data-ng-click="page.loadProjects()">
                                             <span class="material-icons" style="display: inline-block; margin-right:
                                             0.25rem;">
                                                 clear_all
@@ -122,38 +131,31 @@
                 <ul class="snapshot--cards list-unstyled" data-ng-if="page.projects.length" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in"
-                        style="animation-delay: {{ $index * 150 }}ms;"
-                        data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
+                        style="animation-delay: {{ $index * 50 }}ms;"
+                        data-ng-repeat="project in page.projects | filter: page.q">
 
                         <div class="card--content">
-
-                            <!-- <div id="project-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div> -->
-
-                            <div class="status status_{{project.status}}"
-                                 style= "    border-bottom-right-radius: 0px;
-                                                 border-bottom-left-radius: 0px;
-                                                 border-radius: 0px;
-                                                 float:left;
-                                                 border: 0px;
-                                                 margin-right: 0px;
-
-                                            ">
-                                <span>{{project.status | capitalAttribute}}</span>
-
-                                <span ng-if="project.archived">- Archived</span>
-                            </div>
 
                             <img data-ng-if="project.staticURL"
                                  data-ng-src="{{ project.staticURL }}" width="auto" height="auto" />
 
                             <img data-ng-if="!project.extent"
-                                 data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,6/400x130@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+                                 data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,6/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
-                            <div class="name" style="background: #fff; padding: 10px 16px 10px 16px;">
+                            <div class="name"
+                                 style="background: #fff; padding: 10px 16px 10px 16px; border-bottom: none;">
                                 <span>{{ project.name }}</span>
                             </div>
 
+                            <div class="status-wrapper" title="Status: {{ project.status | capitalAttribute }}">
+                                <div class="status status-{{ project.status }}">
+                                    <span class="dot"></span>
+                                    <span>{{ project.status | capitalAttribute }}</span>
+                                </div>
+                            </div>
+
                             <div class="body">
+
                                 <div class="confirm--delete" data-ng-if="page.deletionTarget.id === project.id">
                                     <p>Do you want to delete this project?</p>
                                     <div class="actions" style="flex: 0;">
@@ -167,15 +169,19 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ (project.description || 'No description') | truncate:80 }}</p>
+
+                                <p>
+                                    {{ (project.description || 'No description') | truncate:80 }}
+                                </p>
+
                                 <div class="actions">
+
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
-                                    <!--       <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id">
-                                    -->
+
                                     <a class="snapshot--title" href="/projects/{{ project.id }}/edit"
                                        title="Edit project"
                                        data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id || $root.user.properties.is_manager">
@@ -183,21 +189,23 @@
                                             edit
                                         </i>
                                     </a>
+
                                     <a class="snapshot--title" href="#" title="Delete project"
                                        data-ng-click="page.confirmDelete(project)"
                                        data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id || $root.user.properties.is_manager">
-                                        <!--       <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)" data-ng-if="$root.user.properties.is_admin || project.organization_id == page.user.properties.organization.id">
-                                        -->
                                         <i class="material-icons">
                                             delete
                                         </i>
                                     </a>
+
                                 </div>
+
                                 <span>
                                     <time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">
                                         Last updated {{ project.modified_on | date : 'mediumDate' }}
                                     </time>
                                 </span>
+
                             </div>
 
                         </div>
@@ -220,8 +228,14 @@
                 </ul>
 
             </div>
+
             <div data-ng-if="!page.status.loading"
-                 data-ng-include="'/templates/pagination-view.html'"></div>
+                 pagination
+                 summary="page.summary"
+                 rotate="page.loadProjects(page.queryParams)"
+                 params="page.queryParams"
+                 update-params="true"></div>
+
         </div>
 
     </div>

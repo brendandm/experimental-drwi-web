@@ -12,24 +12,11 @@
             </div>
         </div>
 
-        <div class="breadcrumb pad-crumb" data-ng-if="!page.status.loading">
-            <div>
-                <span>Program:&nbsp;</span>
-                <a href="/programs/{{ page.practiceType.program.id }}">{{ page.practiceType.program.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/programs/{{ page.practiceType.program.id }}/practice-types">Practice types</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <a href="/practice-types/{{ page.practiceType.id }}">{{ page.practiceType.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             practice-type="page.practiceType"
+             program="page.practiceType.program"
+             tail="Edit"></div>
 
         <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
             Edit practice type

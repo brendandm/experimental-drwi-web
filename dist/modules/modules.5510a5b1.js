@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1603313642510})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1603926428076})
 
 ;
 /**
@@ -1179,7 +1179,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -3969,12 +3969,6 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                /*    projects: function($location, Project, $rootScope) {
-
-                        return Project.collection({});
-
-                    },
-                    */
                     user: function(Account, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
@@ -4010,14 +4004,12 @@ angular.module('FieldDoc')
                             'centroid',
                             'creator',
                             'dashboards',
-                            // 'extent',
                             'geometry',
                             'members',
                             'metric_types',
                             'practices',
                             'practice_types',
                             'properties',
-//                            'tags',
                             'targets',
                             'tasks',
                             'type',
@@ -4029,18 +4021,14 @@ angular.module('FieldDoc')
                             exclude: exclude
                         });
 
-                    },
-                    sites: function(Project, $route) {
-                        return Project.sites({
-                            id: $route.current.params.projectId
-                        });
                     }
                 }
             })
-            .when('/projects/collection/new', {
-                templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
-                controller: 'ProjectCreateController',
+            .when('/projects/:projectId/practices', {
+                templateUrl: '/modules/components/projects/views/projectPracticeList--view.html?t=' + environment.version,
+                controller: 'ProjectPracticeListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -4051,6 +4039,73 @@ angular.module('FieldDoc')
                         }
 
                         return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.getSingle({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
+            .when('/projects/:projectId/sites', {
+                templateUrl: '/modules/components/projects/views/projectSiteList--view.html?t=' + environment.version,
+                controller: 'ProjectSiteListController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.getSingle({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
 
                     }
                 }
@@ -4355,10 +4410,11 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/targets', {
-                templateUrl: '/modules/components/projects/views/projectTarget--view.html?t=' + environment.version,
-                controller: 'ProjectTargetController',
+            .when('/projects/:projectId/batch-delete', {
+                templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
+                controller: 'ProjectsBatchDeleteController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -4373,63 +4429,39 @@ angular.module('FieldDoc')
                     },
                     project: function(Project, $route) {
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            format: 'geojson'
                         });
-                    }
+                    },
+
                 }
             })
-            .when('/projects/:projectId/batch-delete', {
-                    templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsBatchDeleteController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
+            .when('/projects/:projectId/batch-practice-delete', {
+                templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
+                controller: 'ProjectsPracticesBatchDeleteController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
 
-                            $rootScope.targetPath = document.location.pathname;
+                        $rootScope.targetPath = document.location.pathname;
 
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
 
-                            return Account.userObject;
+                        return Account.userObject;
 
-                        },
-                        project: function(Project, $route) {
-                            return Project.get({
-                                id: $route.current.params.projectId,
-                                format: 'geojson'
-                            });
-                        },
+                    },
+                    project: function(Project, $route) {
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            format: 'geojson'
+                        });
+                    },
 
-                    }
-                })
-                .when('/projects/:projectId/batch-practice-delete', {
-                    templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsPracticesBatchDeleteController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
-
-                            $rootScope.targetPath = document.location.pathname;
-
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-
-                            return Account.userObject;
-
-                        },
-                        project: function(Project, $route) {
-                            return Project.get({
-                                id: $route.current.params.projectId,
-                                format: 'geojson'
-                            });
-                        },
-
-                    }
-                })
-
-            ;
+                }
+            });
 
     });
 'use strict';
@@ -4443,19 +4475,9 @@ angular.module('FieldDoc')
     .controller('ProjectsController',
         function(Account, $location, $log, Project, Tag,
                  $rootScope, $scope, Site, user, mapbox,
-                 ProjectStore, FilterStore, $interval, $timeout, Utility) {
-
-            $scope.filterStore = FilterStore;
-
-            $scope.projectStore = ProjectStore;
+                 $interval, $timeout, Utility, QueryParamManager) {
 
             var self = this;
-
-            self.dashboardFilters = {
-                geographies: [],
-                grantees: [],
-                practices: []
-            };
 
             $rootScope.viewState = {
                 'project': true
@@ -4469,18 +4491,6 @@ angular.module('FieldDoc')
                 actions: []
             };
 
-            self.projects_archived = false;
-
-            self.changeArchivedDisplay = function(archived){
-
-                self.archived = archived;
-
-                self.projects_archived = archived;
-
-                self.loadProjects();
-
-            };
-
             self.projectStatuses = [
                 'all',
                 'draft',
@@ -4490,74 +4500,9 @@ angular.module('FieldDoc')
 
             self.showModal = {};
 
-            self.filters = {};
-
-            self.numericFilters = [
-                'organization',
-                'program',
-                'tag'
-            ];
-
             self.status = {
                 loading: true
             };
-
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
-
-            self.calculateViewCount = function(){
-                if(self.page > 1){
-
-                    if(self.page == 1){
-                        self.viewCountHigh = self.limit;
-                        self.viewCountLow = ((self.page-1) * self.limit);
-                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                        self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                    }else{
-                        self.viewCountHigh = self.summary.feature_count;
-                        self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
-                }else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    }else{
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-                }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
-                self.page = 1;
-                self.loadProjects();
-            }
-
-            self.getPage = function(page){
-                //       console.log("PAGE",page);
-
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                    self.page   = page;
-
-                    self.loadProjects();
-                }
-
-            };
-            /*END Pagniation vars*/
 
             self.showElements = function() {
 
@@ -4649,61 +4594,20 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
-
-                FilterStore.clearItem(obj);
-
-            };
-
-            self.buildFilter = function() {
+            self.loadProjects = function(params) {
 
                 console.log(
-                    'self.buildFilter --> Starting...');
+                    'loadProjects:params:',
+                    params
+                );
 
-                var data = {
-                    combine: 'true',
-                    limit: self.limit,
-                    page: self.page,
-                    status: self.projects_status,
-                    archived: self.archived
-                };
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        combine: 'true'
+                    });
 
-                for (var key in self.filters) {
-
-                    if (self.filters.hasOwnProperty(key)) {
-
-                        if (self.numericFilters.indexOf(key) >= 0) {
-
-                            var filterVal = +self.filters[key];
-
-                            if (Number.isInteger(filterVal) &&
-                                filterVal > 0) {
-
-                                data[key] = filterVal;
-
-                            }
-
-                        } else {
-
-                            data[key] = self.filters[key];
-
-                        }
-
-                    }
-
-                }
-
-                data.archived = self.archived;
-
-                $location.search(data);
-
-                return data;
-
-            };
-
-            self.loadProjects = function() {
-
-                var params = self.buildFilter();
+                self.queryParams = QueryParamManager.getParams();
 
                 Project.collection(params).$promise.then(function(successResponse) {
 
@@ -4711,7 +4615,11 @@ angular.module('FieldDoc')
 
                         if (feature.extent) {
 
-                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
+                            feature.staticURL = Utility.buildStaticMapURL(
+                                feature.extent,
+                                null,
+                                400,
+                                200);
 
                         }
 
@@ -4723,16 +4631,8 @@ angular.module('FieldDoc')
 
                     self.summary.organizations.unshift({
                         id: 0,
-                        name: 'All organizations'
+                        name: 'All'
                     });
-
-                    if (!$scope.projectStore.projects.length) {
-
-                        $scope.projectStore.setProjects(successResponse.features);
-
-                    }
-
-                    self.calculateViewCount();
 
                     self.showElements();
 
@@ -4746,8 +4646,6 @@ angular.module('FieldDoc')
 
             };
 
-
-
             self.loadTags = function() {
 
                 Tag.collection({}).$promise.then(function(successResponse) {
@@ -4756,14 +4654,10 @@ angular.module('FieldDoc')
 
                     self.tags.unshift({
                         id: 0,
-                        name: 'All tags'
+                        name: 'All'
                     });
 
-                    self.filters.tag = self.tags[0].id;
-
-                    console.log("self.filters.tag", self.filters.tag);
-
-                    self.inspectSearchParams();
+                    self.loadProjects(self.queryParams);
 
                 }, function(errorResponse) {
 
@@ -4854,56 +4748,6 @@ angular.module('FieldDoc')
 
             };
 
-            // 
-            // Observe internal route changes. Note that `reloadOnSearch`
-            // must be set to `false`.
-            // 
-            // See: https://stackoverflow.com/questions/15093916
-            // 
-
-            self.inspectSearchParams = function(forceFilter) {
-
-                var params = $location.search();
-
-                var keys = Object.keys(params);
-
-                if (!keys.length || forceFilter) {
-
-                    params = self.buildFilter();
-
-                }
-
-                for (var key in params) {
-
-                    if (self.filters.hasOwnProperty(key)) {
-
-                        if (self.numericFilters.indexOf(key) >= 0) {
-
-                            var filterVal = +params[key];
-
-                            if (Number.isInteger(filterVal)) {
-
-                                self.filters[key] = filterVal;
-
-                            }
-
-                        } else {
-
-                            self.filters[key] = params[key];
-
-                        }
-
-                    }
-
-                }
-
-                self.projects_status = self.filters['status'];
-                self.archived = self.filters['archived'];
-
-                self.loadProjects(params);
-
-            };
-
             //
             // Verify Account information for proper UI element display
             //
@@ -4923,12 +4767,26 @@ angular.module('FieldDoc')
 
                     programs.unshift({
                         id: 0,
-                        name: 'All programs'
+                        name: 'All'
                     });
 
                     self.programs = programs;
 
-                    self.filters.program = self.programs[0].id;
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
 
                     //
                     // Project functionality
@@ -4958,8 +4816,8 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
                  $scope, $location, mapbox, Site, user, $window, $timeout,
-                 Practice, project, sites, Utility, $interval, LayerService,
-                 MapManager, Shapefile, Task) {
+                 Practice, project, Utility, $interval, LayerService,
+                 MapManager, Shapefile, Task, QueryParamManager) {
 
             var self = this;
 
@@ -4999,6 +4857,17 @@ angular.module('FieldDoc')
 
             };
 
+            self.presentUploadModal = function(featureType) {
+
+                if (featureType !== 'practice' &&
+                    featureType !== 'site') return;
+
+                self.showUploadModal = true;
+
+                self.childType = featureType;
+
+            };
+
             self.presentChildModal = function(featureType) {
 
                 if (featureType !== 'practice' &&
@@ -5010,173 +4879,31 @@ angular.module('FieldDoc')
 
             };
 
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh = self.limit;
-
-            self.calculateViewCount = function() {
-                console.log("A");
-                if (self.page > 1) {
-                    console.log("B");
-
-                    if (self.page == 1) {
-                        console.log("C");
-                        self.viewCountHigh = self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit);
-                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        console.log("D");
-                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-
-                        /*   }else if((self.summary.feature_count < ((self.page-1) * self.limit) + self.limit) && self.page == 1){
-                                 self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                                self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                           */
-                    } else {
-                        console.log("E");
-                        self.viewCountHigh = self.summary.feature_count;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-                    }
-                } else {
-                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        console.log("F");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        console.log("G");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-                }
-
-            }
-
-            self.changeLimit = function(limit) {
-                self.limit = limit;
-                self.page = 1;
-                self.loadSites();
-            }
-
-            self.getPage = function(page) {
-                console.log("PAGE", page);
-                // console.log("LIMIT",limit);
-
-                if (page < 1) {
-                    self.page = 1;
-                } else if (page > self.summary.page_count) {
-                    self.page = self.summary.page_count;
-                } else {
-                    self.page = page;
-
-                    self.loadSites();
-                }
-
-            };
-            /*END Pagniation vars*/
-
-
-
-            /*START Practices Pagination vars*/
-
-            self.practicesLimit = 12;
-            self.practicesPage = 1;
-
-            self.practicesViewCountLow = self.practicesPage;
-            self.practicesViewCountHigh = self.practicesLimit;
-
-            self.practicesCalculateViewCount = function() {
-                //   console.log("A");
-                if (self.page > 1) {
-                    //      console.log("B");
-
-                    if (self.practicesPage == 1) {
-                        //         console.log("C");
-                        self.practicesViewCountHigh = self.practicesLimit;
-                        self.practicesViewCountLow = ((self.practicesPage - 1) * self.practicesLimit);
-                    } else if (self.practicesSummary.feature_count > ((self.practicesPage - 1) * self.practicesLimit) + self.practicesLimit) {
-                        //       console.log("D");
-                        self.practicesViewCountHigh = ((self.page - 1) * self.practicesLimit) + self.practicesLimit;
-                        self.practicesViewCountLow = ((self.page - 1) * self.practicesLimit) + 1;
-
-                    } else {
-                        //     console.log("E");
-                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
-                        self.practicesViewCountLow = ((self.practicesPage - 1) * self.practicesLimit) + 1;
-                    }
-                } else {
-                    if (self.practicesSummary.feature_count > ((self.page - 1) * self.practicesLimit) + self.practicesLimit) {
-                        //      console.log("F");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        //      console.log("G");
-                        self.practicesViewCountLow = 1;
-                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
-
-                    }
-
-                }
-
-            }
-
-            self.practicesChangeLimit = function(limit) {
-                self.practicesLimit = limit;
-                self.practicesPage = 1;
-                self.loadPractices();
-            }
-
-            self.practicesGetPage = function(page) {
-                console.log("PAGE", page);
-                // console.log("LIMIT",limit);
-
-                if (page < 1) {
-                    self.practicesPage = 1;
-                } else if (page > self.practicesSummary.page_count) {
-                    self.page = self.practicesSummary.page_count;
-                } else {
-                    self.practicesPage = page;
-
-                    self.loadPractices();
-                }
-
-            };
-
-
-            /*END Practices Pagination vars*/
-
-
             /* START PRACTICES PANEL */
-            self.loadPractices = function() {
-                Project.practices({
-                    id: self.project.id,
-                    limit: self.practicesLimit,
-                    page: self.practicesPage,
-                    currentTime: Date.now()
-                }).$promise.then(function(successResponse) {
 
-                    console.log("PRACTICE RESPONSE");
+            self.loadPractices = function(params) {
+
+                console.log(
+                    'loadPractices:params:',
+                    params
+                );
+
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        limit: 4,
+                        t: Date.now()
+                    },
+                    false);
+
+                Project.practices(params).$promise.then(function(successResponse) {
 
                     self.practices = successResponse.features;
 
                     self.practicesSummary = successResponse.summary;
 
-                    console.log("SUMMARY", self.practicesSummary);
-
-                    console.log('self.practices', successResponse);
-
                     self.showElements(true);
-
-                    self.practicesCalculateViewCount();
-
-                    //      self.loadMetrics();
-
-                    //       self.tags = Utility.processTags(self.site.tags);
 
                 }, function(errorResponse) {
 
@@ -5185,8 +4912,8 @@ angular.module('FieldDoc')
                 });
 
             };
-            /* END PRACTICES PANEL */
 
+            /* END PRACTICES PANEL */
 
             self.showElements = function(createMap) {
 
@@ -5229,7 +4956,7 @@ angular.module('FieldDoc')
 
                     }
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -5258,6 +4985,7 @@ angular.module('FieldDoc')
             //
             // Assign project to a scoped variable
             //
+
             self.loadProject = function() {
 
                 project.$promise.then(function(successResponse) {
@@ -5299,8 +5027,6 @@ angular.module('FieldDoc')
                     }
 
                     self.tags = Utility.processTags(self.project.tags);
-
-                    // self.showElements();
 
                 }).catch(function(errorResponse) {
 
@@ -5607,20 +5333,25 @@ angular.module('FieldDoc')
 
             /* START SITES PANEL */
 
-            self.loadSites = function() {
+            self.loadSites = function(params) {
 
-                console.log('self.loadSites --> Starting...');
+                console.log(
+                    'loadSites:params:',
+                    params
+                );
 
-                Project.sites({
-                    id: self.project.id,
-                    limit: self.limit,
-                    page: self.page,
-                    currentTime: Date.now()
-                }).$promise.then(function(successResponse) {
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        limit: 4,
+                        t: Date.now()
+                    },
+                    false);
+
+                Project.sites(params).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
-
-                    // console.log();
 
                     self.sites = successResponse.features;
 
@@ -5635,25 +5366,11 @@ angular.module('FieldDoc')
 
                     self.loadPractices();
 
-                    // var siteCollection = {
-                    //     'type': 'FeatureCollection',
-                    //     'features': self.sites
-                    // };
-
-                    // self.showElements(true);
-
-
-                    // self.populateMap(self.map, siteCollection, null, true);
-
-                    // self.addMapPreviews(self.sites);
-
                 }, function(errorResponse) {
 
                     console.log('loadSites.errorResponse', errorResponse);
 
                     self.loadPractices();
-
-                    //     self.showElements(false);
 
                 });
 
@@ -5790,7 +5507,11 @@ angular.module('FieldDoc')
 
                         console.log("THUMB", feature);
 
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+                        feature.staticURL = Utility.buildStaticMapURL(
+                            feature.geometry,
+                            feature_type,
+                            400,
+                            200);
 
                         if (feature.staticURL.length >= 4096) {
 
@@ -6401,7 +6122,7 @@ angular.module('FieldDoc')
 
                             self.fetchTasks(successResponse.task.id, featureType);
 
-                        }, 1000);
+                        }, 500);
 
                     }, function(errorResponse) {
 
@@ -6535,188 +6256,6 @@ angular.module('FieldDoc')
                 });
 
             }
-
-        });
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('ProjectCreateController',
-        function(Account, $location, $log, Project, $rootScope, $route, user, SearchService) {
-
-            var self = this;
-
-            $rootScope.viewState = {
-                'project': true
-            };
-
-            $rootScope.page = {};
-
-            self.project = {};
-
-            $rootScope.page.title = 'Create Project';
-
-            self.tempPartners = [];
-
-            self.tempPrograms = [];
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
-
-                    self.organization = $rootScope.user.properties.organization;
-
-                    self.project.organization_id = self.organization.properties.id;
-
-                });
-
-            }
-
-            self.searchPrograms = function(value) {
-
-                return SearchService.program({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.program response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
-            self.searchOrganizations = function(value) {
-
-                return SearchService.organization({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.organization response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
-            self.addRelation = function(item, model, label, collection, queryAttr) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                collection.push(_datum);
-
-                queryAttr = null;
-
-                console.log('Updated ' + collection + ' (addition)', collection);
-
-            };
-
-            self.removeRelation = function(id, collection) {
-
-                var _index;
-
-                collection.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove item at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    collection.splice(_index, 1);
-
-                }
-
-                console.log('Updated ' + collection + ' (removal)', collection);
-
-            };
-
-            self.processRelations = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.setProgram = function(item, model, label) {
-
-                self.project.program_id = item.id;
-
-            };
-
-            self.unsetProgram = function() {
-
-                self.project.program_id = null;
-
-                self.program = null;
-
-            };
-
-            self.saveProject = function() {
-
-                var project = new Project(self.project);
-
-                project.$save().then(function(successResponse) {
-
-                    $location.path('/projects/' + successResponse.id);
-
-                }).then(function(error) {
-
-                    $log.error('Unable to create project.');
-
-                });
-
-            };
 
         });
 'use strict';
@@ -6863,7 +6402,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -7074,37 +6613,37 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
+                if (self.date !== undefined) {
 
-                if(self.date != undefined) {
-                    if (self.date.month !== null &&
-                        typeof self.date.date !== null &&
-                        self.date.year !== null
-                    ) {
+                    if (typeof self.date.month === 'string' &&
+                        typeof self.date.date === 'number' &&
+                        typeof self.date.year === 'number') {
 
                         self.months.forEach(function(m){
 
-                           if(m.name === self.date.month){
+                           if (m.name === self.date.month) {
                                self.date.month = m;
                            }
 
                         });
+
                         console.log("CCC",self.date.month);
 
-
-                            self.project.completed_on = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
-
+                        self.project.completed_on = [
+                            self.date.year,
+                            self.date.month.numeric,
+                            self.date.date
+                        ].join('-');
 
                     } else {
+
                         self.project.completed_on = null;
 
                     }
+
                 }
 
-
-
                 self.project.partners = self.processRelations(self.tempPartners);
-
-           //     self.project.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',
@@ -7304,556 +6843,6 @@ angular.module('FieldDoc')
             }
 
         });
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('ProjectTargetController',
-        function($scope, Account, $location, $log, Project, project,
-            $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType) {
-
-            var self = this;
-
-            $rootScope.viewState = {
-                'project': true
-            };
-
-            $rootScope.toolbarState = {
-                'editTargets': true
-            };
-
-            $rootScope.page = {};
-
-            self.searchScope = {
-                target: 'metric'
-            };
-
-            self.status = {
-                processing: true
-            };
-
-            self.alerts = [];
-
-            self.closeAlerts = function() {
-
-                self.alerts = [];
-
-            };
-
-            self.closeRoute = function() {
-
-                $location.path('/projects');
-
-            };
-
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            self.loadMatrix = function() {
-
-                //
-                // Assign project to a scoped variable
-                //
-                Project.targetMatrix({
-                    id: $route.current.params.projectId,
-                    simple_bool: 'true',
-                    program: self.project.program_id
-                }).$promise.then(function(successResponse) {
-
-                    self.targets = successResponse;
-
-                }).catch(function(errorResponse) {
-
-                    $log.error('Unable to load project target matrix.');
-
-                });
-
-            };
-
-            self.loadProject = function() {
-
-                var exclude = [
-                    'centroid',
-                    'creator',
-                    'dashboards',
-                    'extent',
-                    'geometry',
-                    'members',
-                    'metric_types',
-                    'partners',
-                    'practices',
-                    'practice_types',
-                    'properties',
-                    'tags',
-                    'targets',
-                    'tasks',
-                    'type',
-                    'sites'
-                ].join(',');
-                
-                Project.get({
-                    id: $route.current.params.projectId,
-                    exclude: exclude
-                }).$promise.then(function(successResponse) {
-
-                    self.processProject(successResponse);
-
-                    if (!successResponse.permissions.read &&
-                        !successResponse.permissions.write) {
-
-                        self.makePrivate = true;
-
-                    }
-
-                    self.permissions.can_edit = successResponse.permissions.write;
-                    self.permissions.can_delete = successResponse.permissions.write;
-
-                    self.loadMatrix();
-
-                }).catch(function(errorResponse) {
-
-                    $log.error('Unable to load project');
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.search = function(value) {
-
-                if (self.searchScope.target === 'metric') {
-
-                    return SearchService.metric({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else {
-
-                    return SearchService.program({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                }
-
-            };
-
-            self.directQuery = function(item, model, label) {
-
-                if (self.searchScope.target === 'program') {
-
-                    self.loadFeatures(item.id);
-
-                } else {
-
-                    self.addMetric(item);
-
-                }
-
-            };
-
-            self.removeAll = function() {
-
-                self.targets.active.forEach(function (item) {
-
-                    self.targets.inactive.unshift(item);
-
-                });
-
-                self.targets.active = [];
-
-            };
-
-            self.addTarget = function(item, idx) {
-
-                if (!item.value ||
-                    typeof item.value !== 'number') {
-
-                    item.value = 0;
-
-                };
-
-                if (typeof idx === 'number') {
-
-                    item.action = 'add';
-
-                    if (!item.metric ||
-                        typeof item.metric === 'undefined') {
-
-                        item.metric_id = item.id;
-
-                        delete item.id;
-
-                    }
-
-                    self.targets.inactive.splice(idx, 1);
-
-                    self.targets.active.push(item);
-
-                }
-
-                console.log('Updated targets (addition)');
-
-            };
-
-            self.removeTarget = function(item, idx) {
-
-                if (typeof idx === 'number') {
-
-                    self.targets.active.splice(idx, 1);
-
-                    item.action = 'remove';
-
-                    item.value = null;
-
-                    self.targets.inactive.unshift(item);
-
-                }
-
-                console.log('Updated targets (removal)');
-
-            };
-
-            self.processTargets = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.loadFeatures = function(programId) {
-
-                var params = {
-                    program: programId
-                };
-
-                MetricType.collection(params).$promise.then(function(successResponse) {
-
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        self.addMetric(feature);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            };
-
-            self.processProject = function(data) {
-
-                self.project = data.properties || data;
-
-                self.tempTargets = self.project.targets || [];
-
-                self.status.processing = false;
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [
-                    'creator',
-                    'extent',
-                    'geometry',
-                    'last_modified_by',
-                    'organization',
-                    'tags',
-                    'tasks'
-                ];
-
-                var reservedProperties = [
-                    'links',
-                    'permissions',
-                    '$promise',
-                    '$resolved'
-                ];
-
-                excludedKeys.forEach(function(key) {
-
-                    if (feature.properties) {
-
-                        delete feature.properties[key];
-
-                    } else {
-
-                        delete feature[key];
-
-                    }
-
-                });
-
-                reservedProperties.forEach(function(key) {
-
-                    delete feature[key];
-
-                });
-
-            };
-
-            self.saveTargets = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.project);
-
-                console.log('self.saveProject.project', self.project);
-
-                console.log('self.saveProject.Project', Project);
-
-                var data = {
-                    targets: self.targets.active.slice(0)
-                };
-
-                self.targets.inactive.forEach(function (item) {
-
-                    if (item.action &&
-                        item.action === 'remove') {
-
-                        data.targets.push(item);
-
-                    }
-
-                });
-
-                Project.updateMatrix({
-                    id: +self.project.id
-                }, data).$promise.then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Target changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                }).catch(function(error) {
-
-                    console.log('saveProject.error', error);
-
-                    // Do something with the error
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Something went wrong and the target changes were not saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.saveProject = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.project);
-
-                self.project.targets = self.processTargets(self.tempTargets);
-
-                console.log('self.saveProject.project', self.project);
-
-                console.log('self.saveProject.Project', Project);
-
-                Project.update({
-                    id: +self.project.id
-                }, self.project).then(function(successResponse) {
-
-                    self.processProject(successResponse);
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Project changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                }).catch(function(error) {
-
-                    console.log('saveProject.error', error);
-
-                    // Do something with the error
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.project.properties) {
-
-                    targetId = self.project.properties.id;
-
-                } else {
-
-                    targetId = self.project.id;
-
-                }
-
-                Project.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this project.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
-
-                    self.loadProject();
-
-//                    self.loadMatrix();
-
-                    //
-                    // Setup page meta data
-                    //
-                    $rootScope.page = {
-                        'title': 'Edit project targets'
-                    };
-
-                });
-
-            } else {
-
-                $location.path('/logout');
-
-            }
-
-        });
 (function() {
 
     'use strict';
@@ -7868,8 +6857,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('ProjectUsersController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, SearchService, Project,
-                Utility, $interval) {
+                     $location, $timeout, project, user, SearchService, Project,
+                     Utility, $interval) {
 
                 var self = this;
 
@@ -7896,7 +6885,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -7951,13 +6940,13 @@ angular.module('FieldDoc')
 
                     console.log("member item",item);
                     var member = {
-                            "user": item,
-                            "user_id" : item.id,
-                        }
+                        "user": item,
+                        "user_id" : item.id,
+                    }
 
-                 //   var member = item;
-                //    member.user = item;
-                //    member.user_id = item.id;
+                    //   var member = item;
+                    //    member.user = item;
+                    //    member.user_id = item.id;
 
                     self.tempOwners.push(member);
 
@@ -7969,26 +6958,26 @@ angular.module('FieldDoc')
 
                 self.removeOwner = function(index) {
                     self.tempOwners.splice(index, 1);
-                /*    var _index;
+                    /*    var _index;
 
-                    self.tempOwners.forEach(function(item, idx) {
+                        self.tempOwners.forEach(function(item, idx) {
 
-                        if (item.id === id) {
+                            if (item.id === id) {
 
-                            _index = idx;
+                                _index = idx;
+
+                            }
+
+                        });
+
+                        console.log('Remove owner at index', _index);
+
+                        if (typeof _index === 'number') {
+
+                            self.tempOwners.splice(_index, 1);
 
                         }
-
-                    });
-
-                    console.log('Remove owner at index', _index);
-
-                    if (typeof _index === 'number') {
-
-                        self.tempOwners.splice(_index, 1);
-
-                    }
-*/
+    */
                     console.log('Updated owners (removal)', self.tempOwners);
 
                 };
@@ -8061,7 +7050,7 @@ angular.module('FieldDoc')
 
                     self.scrubFeature(self.project);
 
-                 //   self.project.members = self.processOwners(self.tempOwners);
+                    //   self.project.members = self.processOwners(self.tempOwners);
 
                     var exclude = [
                         'centroid',
@@ -8084,7 +7073,7 @@ angular.module('FieldDoc')
 
                     Project.post_members({
                         id: $route.current.params.projectId
-                       // exclude: exclude
+                        // exclude: exclude
                     }, self.project).then(function(successResponse) {
 
                         self.project = successResponse;
@@ -8212,9 +7201,9 @@ angular.module('FieldDoc')
                         //
                         // Assign project to a scoped variable
                         //
-                       Project.members({
-                        id: $route.current.params.projectId
-                       // exclude: exclude
+                        Project.members({
+                            id: $route.current.params.projectId
+                            // exclude: exclude
                         }).$promise.then(function(successResponse) {
 
                             console.log('self.project', successResponse);
@@ -8300,7 +7289,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -8915,7 +7904,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -9380,7 +8369,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -9878,8 +8867,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('ProjectsBatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
-                Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                     Notifications, Project, project, $rootScope, $route, $scope,
+                     $timeout, $interval, user, Utility, Batch, QueryParamManager) {
 
                 var self = this;
 
@@ -9908,95 +8897,30 @@ angular.module('FieldDoc')
 
                 self.closeAlerts = function() {
 
-                        self.alerts = [];
+                    self.alerts = [];
 
-                    };
+                };
 
-
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
-
-            self.calculateViewCount = function(){
-               if(self.page > 1){
-
-                    if(self.page == 1){
-                        self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
-                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                    }else{
-                        self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
-               }else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
-                    }else{
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-               }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
-                self.page = 1;
-                self.loadSites();
-
-                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-            }
-
-             self.getPage = function(page){
-                console.log("PAGE",page);
-
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-
-                     self.loadSites();
-                }
-
-                console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-
-            };
-
-            self.showMarkedForDeletion = function(){
-                  self.availableFeatures.forEach(function(af, af_i) {
-                       self.selectedFeatures.forEach(function(sf, sf_i) {
-                             var markedKey = "marked_for_deletion";
-                             var markedVal = true;
+                self.showMarkedForDeletion = function(){
+                    self.availableFeatures.forEach(function(af, af_i) {
+                        self.selectedFeatures.forEach(function(sf, sf_i) {
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = true;
 
 
-                             if(af.properties.id == sf.properties.id){
+                            if(af.properties.id == sf.properties.id){
                                 self.availableFeatures[af_i][markedKey] = markedVal;
-                                 console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
-                             }else{
-                           //     self.availableFeatures[af_i][markedKey] = false;
-                             }
+                                console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                            }else{
+                                //     self.availableFeatures[af_i][markedKey] = false;
+                            }
 
 
                         });
 
-                  });
+                    });
 
-            };
-
-             /*END Pagniation vars*/
-
-
+                };
 
                 self.loadProject = function() {
 
@@ -10004,7 +8928,7 @@ angular.module('FieldDoc')
 
                         console.log('self.project', successResponse);
 
-                         self.project = successResponse;
+                        self.project = successResponse;
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -10026,8 +8950,6 @@ angular.module('FieldDoc')
 
                         self.tags = Utility.processTags(self.project.tags);
 
-                        // self.showElements();
-
                     }).catch(function(errorResponse) {
 
                         console.log('loadProject.errorResponse', errorResponse);
@@ -10038,16 +8960,23 @@ angular.module('FieldDoc')
 
                 };
 
-                self.loadSites = function() {
+                self.loadSites = function(params) {
 
-                    console.log('self.loadSites --> Starting...');
+                    console.log(
+                        'loadSites:params:',
+                        params
+                    );
 
-                    Project.sites({
-                        id: self.project.id,
-                        limit: self.limit,
-                        page: self.page,
-                        currentTime: Date.now()
-                    }).$promise.then(function(successResponse) {
+                    params = QueryParamManager.adjustParams(
+                        params,
+                        {
+                            id: self.project.id,
+                            t: Date.now()
+                        });
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    Project.sites(params).$promise.then(function(successResponse) {
 
                         console.log('Project sites --> ', successResponse);
 
@@ -10055,26 +8984,20 @@ angular.module('FieldDoc')
 
                         self.summary = successResponse.summary;
 
-                        console.log("SUMMARY", self.summary);
-
                         self.availableFeatures = self.sites;
 
                         console.log('self.availableFeatures',self.availableFeatures);
 
                         self.availableFeatures.forEach(function(feature, index) {
-                                console.log("index", index);
-                                var markedKey = "marked_for_deletion";
-                                var markedVal = false;
-                                self.availableFeatures[index][markedKey] = markedVal;
-                            });
+                            console.log("index", index);
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = false;
+                            self.availableFeatures[index][markedKey] = markedVal;
+                        });
 
                         self.showElements(true);
 
-                        self.calculateViewCount();
-
                         self.showMarkedForDeletion();
-
-                       //;
 
                     }, function(errorResponse) {
 
@@ -10107,33 +9030,37 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
-            /*  createStaticMapUrls:
-                takes self.sites as self.practices as argument
-                iterates of self.practices
-                checks if project extent exists
-                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to practices[] as staticURL property
-                if no site geometry, adds default URL to practices[].staticURL
-            */
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
                 self.createStaticMapURLs = function(arr){
 
                     arr.forEach(function(feature, index) {
 
-                         if (feature.properties.project.extent) {
+                        if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.geometry,
+                                    'site',
+                                    400,
+                                    200);
 
                                 if(feature.staticURL.length >= 4096){
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                        '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                        'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                    ].join('');
                                 }
 
                                 self.sites[index].staticURL = feature.staticURL;
@@ -10141,9 +9068,9 @@ angular.module('FieldDoc')
                             }else{
 
                                 self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
                             }
 
                         }
@@ -10154,15 +9081,15 @@ angular.module('FieldDoc')
 
                 self.addToDeleteQueue = function(featureId){
                     console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-                      var i = 0
-                      self.availableFeatures.forEach(function(feature){
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = true;
                             var tempFeature = feature;
                             self.selectedFeatures.push(tempFeature);
 
-                          //  self.unselectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         i = i+1;
                     });
@@ -10173,18 +9100,18 @@ angular.module('FieldDoc')
                 };
 
                 self.removeFromDeleteQueue = function(featureId){
-                     console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-                     /*below resetting of self.selected features is a hackaround for the
-                     commented out splice below, as it appeared to be
-                      also splicing available features after select all. Cause unknow*/
-                     self.selectedFeatures = [];
-                     var i = 0
-                     self.availableFeatures.forEach(function(feature){
+                    console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
+                    /*below resetting of self.selected features is a hackaround for the
+                    commented out splice below, as it appeared to be
+                     also splicing available features after select all. Cause unknow*/
+                    self.selectedFeatures = [];
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = false;
-                           // self.selectedFeatures.splice(i,1);
-                          //  self.unselectedFeatures.splice(i,1);
+                            // self.selectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         if(self.availableFeatures[i].marked_for_deletion == true){
                             self.selectedFeatures.push(self.availableFeatures[i]);
@@ -10192,8 +9119,8 @@ angular.module('FieldDoc')
                         i = i+1;
                     });
 
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                     console.log("self.availableFeatures -->",self.availableFeatures);
+                    console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    console.log("self.availableFeatures -->",self.availableFeatures);
 
                 };
 
@@ -10208,7 +9135,7 @@ angular.module('FieldDoc')
                 };
 
                 self.removeAllFromDeleteQueue = function(){
-                   var i = 0
+                    var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = false;
                         i = i+1;
@@ -10229,7 +9156,7 @@ angular.module('FieldDoc')
                     self.status.processing = true;
 
 
-                   var data  = {collection: self.selectedFeatures};
+                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
                         featureType: 'project',
@@ -10253,14 +9180,14 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
-                         self.alerts = [{
+                        self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
                             'msg': 'Something went wrong and the changes could not be saved.',
                             'prompt': 'OK'
                         }];
 
-                         self.status.processing = false;
+                        self.status.processing = false;
 
                         console.log('errorResponse', errorResponse);
 
@@ -10268,7 +9195,7 @@ angular.module('FieldDoc')
                 };
 
                 self.cancelDelete = function(){
-                     self.toggleConfirmDelete = false;
+                    self.toggleConfirmDelete = false;
 
                 };
 
@@ -10305,11 +9232,24 @@ angular.module('FieldDoc')
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
                             $rootScope.page.title = self.project.name;
+
+                            //
+                            // Set default query string params.
+                            //
+
+                            var existingParams = QueryParamManager.getParams();
+
+                            QueryParamManager.setParams(
+                                existingParams,
+                                true);
+
+                            //
+                            // Set scoped query param variable.
+                            //
+
+                            self.queryParams = QueryParamManager.getParams();
+
                             self.loadProject();
-
-
-
-                          //  self.showElements();
 
                         }, function(errorResponse) {
 
@@ -10325,10 +9265,7 @@ angular.module('FieldDoc')
 
                 }
 
-
-
-
-       });
+            });
 
 }());
 (function() {
@@ -10345,8 +9282,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('ProjectsPracticesBatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
-                Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                     Notifications, Project, project, $rootScope, $route, $scope,
+                     $timeout, $interval, user, Utility, Batch, QueryParamManager) {
 
                 var self = this;
 
@@ -10375,95 +9312,30 @@ angular.module('FieldDoc')
 
                 self.closeAlerts = function() {
 
-                        self.alerts = [];
+                    self.alerts = [];
 
-                    };
+                };
 
-
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
-
-            self.calculateViewCount = function(){
-               if(self.page > 1){
-
-                    if(self.page == 1){
-                        self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
-                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                    }else{
-                        self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
-               }else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
-                    }else{
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-               }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
-                self.page = 1;
-                self.loadSites();
-
-                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-            }
-
-             self.getPage = function(page){
-                console.log("PAGE",page);
-
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-
-                     self.loadSites();
-                }
-
-                console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-
-            };
-
-            self.showMarkedForDeletion = function(){
-                  self.availableFeatures.forEach(function(af, af_i) {
-                       self.selectedFeatures.forEach(function(sf, sf_i) {
-                             var markedKey = "marked_for_deletion";
-                             var markedVal = true;
+                self.showMarkedForDeletion = function(){
+                    self.availableFeatures.forEach(function(af, af_i) {
+                        self.selectedFeatures.forEach(function(sf, sf_i) {
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = true;
 
 
-                             if(af.properties.id == sf.properties.id){
+                            if(af.properties.id == sf.properties.id){
                                 self.availableFeatures[af_i][markedKey] = markedVal;
-                                 console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
-                             }else{
-                           //     self.availableFeatures[af_i][markedKey] = false;
-                             }
+                                console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                            }else{
+                                //     self.availableFeatures[af_i][markedKey] = false;
+                            }
 
 
                         });
 
-                  });
+                    });
 
-            };
-
-             /*END Pagniation vars*/
-
-
+                };
 
                 self.loadProject = function() {
 
@@ -10471,7 +9343,7 @@ angular.module('FieldDoc')
 
                         console.log('self.project', successResponse);
 
-                         self.project = successResponse;
+                        self.project = successResponse;
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -10505,171 +9377,48 @@ angular.module('FieldDoc')
 
                 };
 
-            /*START Pagniation vars*/
-            self.limit = 12;
-            self.page = 1;
+                self.loadPractices = function(params) {
 
-            self.viewCountLow = self.page;
-            self.viewCountHigh =  self.limit;
+                    console.log(
+                        'loadPractices:params:',
+                        params
+                    );
 
-            self.calculateViewCount = function(){
-               console.log("MEOW A");
-               if(self.page > 1){
-                    console.log("MEOW B");
-
-                    if(self.page == 1){
-                         console.log("MEOW C");
-                        self.viewCountHigh = self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit);
-                    }
-                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("MEOW D");
-                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                    }
-                    else{
-                         console.log("MEOW E");
-                        self.viewCountHigh = self.summary.feature_count;
-                         self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
-               }
-               else{
-                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("MEOW F");
-                          self.viewCountLow = 1;
-                          self.viewCountHigh = self.limit;
-                    }
-                    else{
-                         console.log("MEOW G");
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-               }
-
-            }
-
-            self.changeLimit = function(limit){
-                self.limit = limit;
-                self.page = 1;
-                self.loadPractices();
-            }
-
-             self.getPage = function(page){
-                console.log("PAGE",page);
-               // console.log("LIMIT",limit);
-
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-                     //console.log("self.selectedFeatures",)
-                     self.loadPractices();
-                }
-
-            };
-             /*END Pagniation vars*/
-
-
-
-
-                 /* START PRACTICES PANEL */
-                self.loadPractices = function(){
-                     Project.practices({
+                    params = QueryParamManager.adjustParams(
+                        params,
+                        {
                             id: self.project.id,
-                             limit:  self.limit,
-                             page:   self.page,
-                            currentTime: Date.now()
-                        }).$promise.then(function(successResponse) {
+                            t: Date.now()
+                        },
+                        true);
 
-                            console.log("PRACTICE RESPONSE");
+                    self.queryParams = QueryParamManager.getParams();
 
-                            self.practices = successResponse.features;
+                    Project.practices(params).$promise.then(function(successResponse) {
 
-                            self.availableFeatures = self.practices;
+                        console.log("PRACTICE RESPONSE");
 
-                            self.summary = successResponse.summary;
+                        self.practices = successResponse.features;
 
-                            console.log("SUMMARY", self.summary);
-
-                            console.log('self.practices', successResponse);
-
-                            self.showElements(true);
-
-                            self.calculateViewCount();
-
-                             self.showMarkedForDeletion();
-
-                      //      self.loadMetrics();
-
-                     //       self.tags = Utility.processTags(self.site.tags);
-
-                        }, function(errorResponse) {
-
-                            self.showElements();
-
-                        });
-
-                };
-            /* END PRACTICES PANEL */
-
-/*
-                self.loadSites = function() {
-
-                    console.log('self.loadSites --> Starting...');
-
-                    Project.sites({
-
-                        id          : self.project.id,
-                        limit       : self.limit,
-                        page        : self.page,
-                        currentTime : Date.UTC()
-
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('Project sites --> ', successResponse);
-
-                        self.sites = successResponse.features;
+                        self.availableFeatures = self.practices;
 
                         self.summary = successResponse.summary;
 
                         console.log("SUMMARY", self.summary);
 
-                        self.availableFeatures = self.sites;
-
-                        console.log('self.availableFeatures',self.availableFeatures);
-
-                        self.availableFeatures.forEach(function(feature, index) {
-                                console.log("index", index);
-                                var markedKey = "marked_for_deletion";
-                                var markedVal = false;
-                                self.availableFeatures[index][markedKey] = markedVal;
-                            });
+                        console.log('self.practices', successResponse);
 
                         self.showElements(true);
 
-                        self.calculateViewCount();
-
                         self.showMarkedForDeletion();
-
-                       //;
 
                     }, function(errorResponse) {
 
-                        console.log('loadSites.errorResponse', errorResponse);
-
-                        self.showElements(false);
+                        self.showElements();
 
                     });
 
                 };
-
-
-*/
 
                 self.showElements = function() {
 
@@ -10689,44 +9438,48 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
-            /*  createStaticMapUrls:
-                takes self.sites as self.practices as argument
-                iterates of self.practices
-                checks if project extent exists
-                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to practices[] as staticURL property
-                if no site geometry, adds default URL to practices[].staticURL
-            */
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
                 self.createStaticMapURLs = function(arr,feature_type){
-                //    console.log("11");
+                    //    console.log("11");
                     arr.forEach(function(feature, index) {
-                //         console.log("22");
-                         if (feature.properties.project.extent) {
-                //             console.log("33");
+                        //         console.log("22");
+                        if (feature.properties.project.extent) {
+                            //             console.log("33");
                             if(feature.geometry != null){
-                //                 console.log("44");
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
+                                //                 console.log("44");
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.geometry,
+                                    feature_type,
+                                    400,
+                                    200);
 
                                 if(feature.staticURL.length >= 4096){
-                //                        console.log("55");
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    //                        console.log("55");
+                                    feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                        '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                        'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                    ].join('');
                                 }
 
                                 self.practices[index].staticURL = feature.staticURL;
 
                             }else{
-                  //               console.log("66");
+                                //               console.log("66");
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
                             }
 
                         }
@@ -10737,15 +9490,15 @@ angular.module('FieldDoc')
 
                 self.addToDeleteQueue = function(featureId){
                     console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-                      var i = 0
-                      self.availableFeatures.forEach(function(feature){
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = true;
                             var tempFeature = feature;
                             self.selectedFeatures.push(tempFeature);
 
-                          //  self.unselectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         i = i+1;
                     });
@@ -10756,18 +9509,18 @@ angular.module('FieldDoc')
                 };
 
                 self.removeFromDeleteQueue = function(featureId){
-                     console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-                     /*below resetting of self.selected features is a hackaround for the
-                     commented out splice below, as it appeared to be
-                      also splicing available features after select all. Cause unknow*/
-                     self.selectedFeatures = [];
-                     var i = 0
-                     self.availableFeatures.forEach(function(feature){
+                    console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
+                    /*below resetting of self.selected features is a hackaround for the
+                    commented out splice below, as it appeared to be
+                     also splicing available features after select all. Cause unknow*/
+                    self.selectedFeatures = [];
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = false;
-                           // self.selectedFeatures.splice(i,1);
-                          //  self.unselectedFeatures.splice(i,1);
+                            // self.selectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         if(self.availableFeatures[i].marked_for_deletion == true){
                             self.selectedFeatures.push(self.availableFeatures[i]);
@@ -10775,8 +9528,8 @@ angular.module('FieldDoc')
                         i = i+1;
                     });
 
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                     console.log("self.availableFeatures -->",self.availableFeatures);
+                    console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    console.log("self.availableFeatures -->",self.availableFeatures);
 
                 };
 
@@ -10795,7 +9548,7 @@ angular.module('FieldDoc')
                 };
 
                 self.removeAllFromDeleteQueue = function(){
-                   var i = 0
+                    var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = false;
                         i = i+1;
@@ -10816,7 +9569,7 @@ angular.module('FieldDoc')
                     self.status.processing = true;
 
 
-                   var data  = {collection: self.selectedFeatures};
+                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
                         featureType: 'site',
@@ -10840,14 +9593,14 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
-                         self.alerts = [{
+                        self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
                             'msg': 'Something went wrong and the changes could not be saved.',
                             'prompt': 'OK'
                         }];
 
-                         self.status.processing = false;
+                        self.status.processing = false;
 
                         console.log('errorResponse', errorResponse);
 
@@ -10855,14 +9608,9 @@ angular.module('FieldDoc')
                 };
 
                 self.cancelDelete = function(){
-                     self.toggleConfirmDelete = false;
+                    self.toggleConfirmDelete = false;
 
                 };
-
-                self.inspectSearchParams = function(params) {
-
-                };
-
 
                 //
                 // Verify Account information for proper UI element display
@@ -10882,21 +9630,39 @@ angular.module('FieldDoc')
                         };
 
                         project.$promise.then(function(successResponse) {
+
                             console.log('self.project', successResponse);
+
                             self.project = successResponse;
+
                             if (successResponse.permissions.read && successResponse.permissions.write) {
                                 self.makePrivate = false;
                             } else {
                                 self.makePrivate = true;
                             }
+
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
+
                             $rootScope.page.title = self.project.name;
+
+                            //
+                            // Set default query string params.
+                            //
+
+                            var existingParams = QueryParamManager.getParams();
+
+                            QueryParamManager.setParams(
+                                existingParams,
+                                true);
+
+                            //
+                            // Set scoped query param variable.
+                            //
+
+                            self.queryParams = QueryParamManager.getParams();
+
                             self.loadProject();
-
-
-
-                          //  self.showElements();
 
                         }, function(errorResponse) {
 
@@ -10912,12 +9678,1604 @@ angular.module('FieldDoc')
 
                 }
 
-
-
-
-       });
+            });
 
 }());
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name FieldDoc.controller:ProjectviewController
+ * @description
+ * # ProjectviewController
+ * Controller of the FieldDoc
+ */
+angular.module('FieldDoc')
+    .controller('ProjectPracticeListController',
+        function(Account, Notifications, $rootScope, Project, $routeParams,
+                 $scope, $location, mapbox, user, $window, $timeout,
+                 Practice, project, Utility, $interval, LayerService,
+                 MapManager, Task, QueryParamManager) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'project': true
+            };
+
+            $rootScope.toolbarState = {
+                'dashboard': true
+            };
+
+            $rootScope.page = {};
+
+            self.map = undefined;
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/projects');
+
+            }
+
+            self.status = {
+                loading: true
+            };
+
+            self.print = function() {
+
+                $window.print();
+
+            };
+
+            self.presentChildModal = function(featureType) {
+
+                if (featureType !== 'practice') return;
+
+                self.showChildModal = true;
+
+                self.childType = featureType;
+
+            };
+
+            /* START PRACTICES PANEL */
+
+            self.loadPractices = function(params) {
+
+                console.log(
+                    'loadPractices:params:',
+                    params
+                );
+
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        t: Date.now()
+                    },
+                    true);
+
+                self.queryParams = QueryParamManager.getParams();
+
+                Project.practices(params).$promise.then(function(successResponse) {
+
+                    self.practices = successResponse.features;
+
+                    self.summary = successResponse.summary;
+
+                    self.showElements(true);
+
+                }, function(errorResponse) {
+
+                    self.showElements(false);
+
+                });
+
+            };
+
+            /* END PRACTICES PANEL */
+
+            self.showElements = function(createMap) {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                    if (createMap) {
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            if (self.practices && self.practices.length) {
+
+                                self.createStaticMapURLs(
+                                    self.practices, "practice", 400, 200);
+
+                            }
+
+                        }, 500);
+
+                    }
+
+                }, 500);
+
+            };
+
+            //
+            // Assign project to a scoped variable
+            //
+
+            self.loadProject = function() {
+
+                project.$promise.then(function(successResponse) {
+
+                    console.log('self.project', successResponse);
+
+                    self.permissions = successResponse.permissions;
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        self.showElements(false);
+
+                    } else {
+
+                        self.project = successResponse;
+
+                        $rootScope.page.title = 'Project Practices';
+
+                        self.loadPractices();
+
+                    }
+
+                    self.tags = Utility.processTags(self.project.tags);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('loadProject.errorResponse', errorResponse);
+
+                    self.showElements(false);
+
+                });
+
+            };
+
+            /*START DELETE LOGIC*/
+
+            self.confirmDelete = function(obj, targetCollection) {
+
+                console.log('self.confirmDelete', obj, targetCollection);
+
+                if (self.deletionTarget &&
+                    self.deletionTarget.collection === 'project') {
+
+                    self.cancelDelete();
+
+                } else {
+
+                    self.deletionTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.deletionTarget.feature.properties) {
+
+                    targetId = self.deletionTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.deletionTarget.feature.id;
+
+                }
+
+                targetCollection.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    if (featureType === 'practice' ||
+                        featureType === 'site') {
+
+                        self.refreshMetricProgress();
+
+                    }
+
+                    if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'site') {
+
+                        self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                        self.practices.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+                        console.log("CLOSE ROUTE");
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            /*END DELETE LOGIC*/
+
+            self.confirmCopy = function(obj, targetCollection) {
+
+                console.log('self.confirmCopy', obj, targetCollection);
+
+                if (self.copyTarget &&
+                    self.copyTarget.collection === 'project') {
+
+                    self.cancelCopy();
+
+                } else {
+
+                    self.copyTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelCopy = function() {
+
+                self.copyTarget = null;
+
+            };
+
+            self.copyFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.copyTarget.feature.properties) {
+
+                    targetId = self.copyTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.copyTarget.feature.id;
+
+                }
+
+                Practice.copy({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully copied this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    console.log("COPIED PRACTICE DATA", data)
+                    console.log("self.practices-->", self.practices)
+
+                    if (typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                        //   var practice = angular.toJSON(data);
+
+                        data.properties = data;
+
+                        self.practices.unshift(data);
+
+                        if (self.practices.length > self.limit) {
+                            self.practices.pop();
+                        }
+
+                        self.createStaticMapURLs(self.practices, "practice");
+
+                        self.cancelCopy();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.copyFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+            /*END COPY LOGIC*/
+
+            self.loadTags = function() {
+
+                Project.tags({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project.tags', successResponse);
+
+                    successResponse.features.forEach(function(tag) {
+
+                        if (tag.color &&
+                            tag.color.length) {
+
+                            tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                        }
+
+                    });
+
+                    self.tags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.processCollection = function(arr) {
+
+                arr.forEach(function(feature) {
+
+                    if (feature.geometry !== null) {
+
+                        feature.geojson = self.buildFeature(feature.geometry);
+
+                        feature.bounds = turf.bbox(feature.geometry);
+
+                    }
+
+                });
+
+            };
+
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+
+                branch : FD_489-turf.simplify 2020.07.28
+            */
+            self.createStaticMapURLs = function(arr, feature_type) {
+                console.log("createStaticMapURLS -> arr", arr)
+
+                arr.forEach(function(feature, index) {
+
+                    if (feature.geometry != null) {
+
+                        console.log("THUMB", feature);
+
+                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+
+                        if (feature.staticURL.length >= 4096) {
+
+                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
+
+                        console.log('feature.staticURL', feature.staticURL);
+
+                        if (feature_type == "site") {
+
+                            self.sites[index].staticURL = feature.staticURL;
+
+                            console.log("self.sites" + index + ".staticURL", self.sites[index].staticURL);
+
+                        }
+                        if (feature_type == "practice") {
+                            self.practices[index].staticURL = feature.staticURL;
+
+                            console.log("self.practices" + index + ".staticURL", self.practices[index].staticURL);
+
+                        }
+
+                    } else {
+
+                        if (feature_type == "site") {
+                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+
+                        }
+                        if (feature_type == "practice") {
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+                        }
+
+                    }
+
+                    //    }else{
+                    //      console.log("A 7");
+                    //   }
+
+                });
+
+            }
+
+            /*
+            addMapPreviews:
+                this func may now be defunct - review needed...
+            */
+            self.addMapPreviews = function(arr) {
+
+                console.log('self.addMapPreviews --> arr', arr);
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    console.log(
+                        'self.addMapPreviews --> feature, index',
+                        feature,
+                        index);
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'site-geography-preview-' + feature.properties.id;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        console.log(
+                            'self.addMapPreviews --> ',
+                            'Add feature to map preview.');
+
+                        console.log(
+                            'self.addMapPreviews --> previewMap',
+                            previewMap);
+
+                        console.log(
+                            'self.addMapPreviews --> feature',
+                            feature);
+
+                        MapManager.addFeature(previewMap, feature, 'geometry', true);
+
+                    });
+
+                });
+
+            };
+
+            self.getMapOptions = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
+
+                var program = self.project.program;
+
+                if (program &&
+                    program.centroid) {
+
+                    if (program.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = program.centroid.coordinates;
+
+                    }
+
+                }
+
+                return self.mapOptions;
+
+            };
+
+            self.hideTasks = function(featureType) {
+
+                self.pendingTasks = [];
+
+                if (typeof self.taskPoll !== 'undefined') {
+
+                    $interval.cancel(self.taskPoll);
+
+                }
+
+                if (featureType === 'practice') {
+
+                    $timeout(function() {
+
+                        self.loadPractices();
+
+                    }, 100);
+
+                } else {
+
+                    $timeout(function() {
+
+                        self.loadSites();
+
+                    }, 100);
+
+                }
+
+            };
+
+            self.fetchTasks = function(taskId, featureType) {
+
+                if (taskId &&
+                    typeof taskId === 'number') {
+
+                    return Task.get({
+                        id: taskId
+                    }).$promise.then(function(response) {
+
+                        console.log('Task.get response', response);
+
+                        if (response.status && response.status === 'complete') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = null;
+
+                            self.fileImport = null;
+
+                        } else if (response.status && response.status === 'failed') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
+
+                        }
+
+                    });
+
+                } else {
+
+                    //
+
+                }
+
+            };
+
+            //
+            // End batch import methods
+            //
+
+            self.reloadPage = function() {
+                $location.reload();
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
+                    };
+
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    self.loadProject();
+
+                });
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name FieldDoc.controller:ProjectviewController
+ * @description
+ * # ProjectviewController
+ * Controller of the FieldDoc
+ */
+angular.module('FieldDoc')
+    .controller('ProjectSiteListController',
+        function(Account, Notifications, $rootScope, Project, $routeParams,
+                 $scope, $location, mapbox, Site, user, $window, $timeout,
+                 Practice, project, Utility, $interval, LayerService,
+                 MapManager, Shapefile, Task, QueryParamManager) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'project': true
+            };
+
+            $rootScope.toolbarState = {
+                'dashboard': true
+            };
+
+            $rootScope.page = {};
+
+            self.map = undefined;
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/projects');
+
+            }
+
+            self.status = {
+                loading: true
+            };
+
+            self.print = function() {
+
+                $window.print();
+
+            };
+
+            self.presentChildModal = function(featureType) {
+
+                if (featureType !== 'site') return;
+
+                self.showChildModal = true;
+
+                self.childType = featureType;
+
+            };
+
+            /* END PRACTICES PANEL */
+
+            self.showElements = function(createMap) {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                    if (createMap) {
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            if (self.sites && self.sites.length) {
+                                self.createStaticMapURLs(
+                                    self.sites, "site", 400, 200);
+                            }
+
+                        }, 500);
+
+                    }
+
+                }, 200);
+
+            };
+
+            //
+            // Assign project to a scoped variable
+            //
+
+            self.loadProject = function() {
+
+                project.$promise.then(function(successResponse) {
+
+                    console.log('self.project', successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        self.showElements(false);
+
+                    } else {
+
+                        self.permissions = successResponse.permissions;
+
+                        self.project = successResponse;
+
+                        $rootScope.page.title = 'Project Sites';
+
+                        self.loadSites();
+
+                    }
+
+                    self.tags = Utility.processTags(self.project.tags);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('loadProject.errorResponse', errorResponse);
+
+                    self.showElements(false);
+
+                });
+
+            };
+
+            /*START DELETE LOGIC*/
+
+            self.confirmDelete = function(obj, targetCollection) {
+
+                console.log('self.confirmDelete', obj, targetCollection);
+
+                if (self.deletionTarget &&
+                    self.deletionTarget.collection === 'project') {
+
+                    self.cancelDelete();
+
+                } else {
+
+                    self.deletionTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.deletionTarget.feature.properties) {
+
+                    targetId = self.deletionTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.deletionTarget.feature.id;
+
+                }
+
+                targetCollection.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'site') {
+
+                        self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            /*END DELETE LOGIC*/
+
+            self.confirmCopy = function(obj, targetCollection) {
+
+                console.log('self.confirmCopy', obj, targetCollection);
+
+                if (self.copyTarget &&
+                    self.copyTarget.collection === 'project') {
+
+                    self.cancelCopy();
+
+                } else {
+
+                    self.copyTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
+
+            };
+
+            self.cancelCopy = function() {
+
+                self.copyTarget = null;
+
+            };
+
+            self.copyFeature = function(featureType, index) {
+
+                var targetCollection,
+                    targetId;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                if (self.copyTarget.feature.properties) {
+
+                    targetId = self.copyTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.copyTarget.feature.id;
+
+                }
+
+                Practice.copy({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully copied this ' + featureType + '.',
+                        'prompt': 'OK'
+                    });
+
+                    console.log("COPIED PRACTICE DATA", data)
+                    console.log("self.practices-->", self.practices)
+
+                    if (typeof index === 'number' &&
+                        featureType === 'practice') {
+
+                        //   var practice = angular.toJSON(data);
+
+                        data.properties = data;
+
+                        self.practices.unshift(data);
+
+                        if (self.practices.length > self.limit) {
+                            self.practices.pop();
+                        }
+
+                        self.createStaticMapURLs(self.practices, "practice");
+
+                        self.cancelCopy();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+
+                        $timeout(closeRoute, 2000);
+
+                    }
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.copyFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+            /*END COPY LOGIC*/
+
+            /* START SITES PANEL */
+
+            self.loadSites = function(params) {
+
+                console.log(
+                    'loadSites:params:',
+                    params
+                );
+
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        id: self.project.id,
+                        t: Date.now()
+                    },
+                    true);
+
+                self.queryParams = QueryParamManager.getParams();
+
+                Project.sites(params).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+                    self.summary = successResponse.summary;
+
+                    self.showElements(true);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                    self.showElements(false);
+
+                });
+
+            };
+
+            self.buildFeature = function(geometry) {
+
+                var styleProperties = {
+                    color: "#2196F3",
+                    opacity: 1.0,
+                    weight: 2,
+                    fillColor: "#2196F3",
+                    fillOpacity: 0.5
+                };
+
+                return {
+                    data: {
+                        "type": "Feature",
+                        "geometry": geometry,
+                        "properties": {
+                            "marker-size": "small",
+                            "marker-color": "#2196F3",
+                            "stroke": "#2196F3",
+                            "stroke-opacity": 1.0,
+                            "stroke-width": 2,
+                            "fill": "#2196F3",
+                            "fill-opacity": 0.5
+                        }
+                    },
+                    style: styleProperties
+                };
+
+            };
+
+            self.processCollection = function(arr) {
+
+                arr.forEach(function(feature) {
+
+                    if (feature.geometry !== null) {
+
+                        feature.geojson = self.buildFeature(feature.geometry);
+
+                        feature.bounds = turf.bbox(feature.geometry);
+
+                    }
+
+                });
+
+            };
+
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+
+                branch : FD_489-turf.simplify 2020.07.28
+            */
+            self.createStaticMapURLs = function(arr, feature_type) {
+                console.log("createStaticMapURLS -> arr", arr)
+
+                arr.forEach(function(feature, index) {
+
+                    if (feature.geometry != null) {
+
+                        console.log("THUMB", feature);
+
+                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+
+                        if (feature.staticURL.length >= 4096) {
+
+                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
+
+                        console.log('feature.staticURL', feature.staticURL);
+
+                        if (feature_type == "site") {
+
+                            self.sites[index].staticURL = feature.staticURL;
+
+                            console.log("self.sites" + index + ".staticURL", self.sites[index].staticURL);
+
+                        }
+                        if (feature_type == "practice") {
+                            self.practices[index].staticURL = feature.staticURL;
+
+                            console.log("self.practices" + index + ".staticURL", self.practices[index].staticURL);
+
+                        }
+
+
+
+                    } else {
+
+                        if (feature_type == "site") {
+                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+
+                        }
+                        if (feature_type == "practice") {
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+
+                        }
+
+                    }
+
+                    //    }else{
+                    //      console.log("A 7");
+                    //   }
+
+                });
+
+            }
+
+            /*
+            addMapPreviews:
+                this func may now be defunct - review needed...
+            */
+            self.addMapPreviews = function(arr) {
+
+                console.log('self.addMapPreviews --> arr', arr);
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    console.log(
+                        'self.addMapPreviews --> feature, index',
+                        feature,
+                        index);
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'site-geography-preview-' + feature.properties.id;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        console.log(
+                            'self.addMapPreviews --> ',
+                            'Add feature to map preview.');
+
+                        console.log(
+                            'self.addMapPreviews --> previewMap',
+                            previewMap);
+
+                        console.log(
+                            'self.addMapPreviews --> feature',
+                            feature);
+
+                        MapManager.addFeature(previewMap, feature, 'geometry', true);
+
+                    });
+
+                });
+
+            };
+
+            self.getMapOptions = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
+
+                var program = self.project.program;
+
+                if (program &&
+                    program.centroid) {
+
+                    if (program.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = program.centroid.coordinates;
+
+                    }
+
+                }
+
+                return self.mapOptions;
+
+            };
+
+            self.hideTasks = function(featureType) {
+
+                self.pendingTasks = [];
+
+                if (typeof self.taskPoll !== 'undefined') {
+
+                    $interval.cancel(self.taskPoll);
+
+                }
+
+                if (featureType === 'practice') {
+
+                    $timeout(function() {
+
+                        self.loadPractices();
+
+                    }, 100);
+
+                } else {
+
+                    $timeout(function() {
+
+                        self.loadSites();
+
+                    }, 100);
+
+                }
+
+            };
+
+            self.fetchTasks = function(taskId, featureType) {
+
+                if (taskId &&
+                    typeof taskId === 'number') {
+
+                    return Task.get({
+                        id: taskId
+                    }).$promise.then(function(response) {
+
+                        console.log('Task.get response', response);
+
+                        if (response.status && response.status === 'complete') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = null;
+
+                            self.fileImport = null;
+
+                        } else if (response.status && response.status === 'failed') {
+
+                            self.hideTasks(featureType);
+
+                            self.uploadError = {
+                                message: response.error
+                            };
+
+                            self.fileImport = null;
+
+                        }
+
+                    });
+
+                } else {
+
+                    //
+
+                }
+
+            };
+
+            //
+            // End batch import methods
+            //
+
+            self.reloadPage = function() {
+                $location.reload();
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
+                    };
+
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    self.loadProject();
+
+                });
+
+            }
+
+        });
 'use strict';
 
 /**
@@ -10955,7 +11313,8 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ChangeLogController',
         function(ChangeLog, Account, $location, $log, Notifications, $rootScope,
-            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
+                 $route, $routeParams, user, User, Organization,
+                 SearchService, $timeout, Utility, QueryParamManager) {
 
             var self = this;
 
@@ -11014,96 +11373,31 @@ angular.module('FieldDoc')
 
             };
 
-            /*START Pagniation vars*/
-            self.limit = 25;
-            self.page = 1;
-
-            self.defaultPaginationLimits = true;
-            self.limitLow = 25;
-            self.limitMedium = 50;
-            self.limitHigh = 100;
-
-            self.viewCountLow = self.page;
-            self.viewCountHigh = self.limit;
-
-            self.calculateViewCount = function() {
-
-                if (self.page > 1) {
-
-                    if (self.page == 1) {
-                        self.viewCountHigh = self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit);
-                    } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-
-                    } else {
-                        self.viewCountHigh = self.summary.feature_count;
-                        self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-                    }
-                } else {
-                    if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.limit;
-                    } else {
-                        self.viewCountLow = 1;
-                        self.viewCountHigh = self.summary.feature_count;
-
-                    }
-
-                }
-
-            };
-
-            self.changeLimit = function(limit) {
-                self.limit = limit;
-                self.page = 1;
-                self.loadHistory(false);
-            };
-
-            self.getPage = function(page) {
-                console.log('PAGE', page);
-
-                if (page < 1) {
-                    self.page = 1;
-                } else if (page > self.summary.page_count) {
-                    self.page = self.summary.page_count;
-                } else {
-                    self.page = page;
-
-                    self.loadHistory();
-                }
-
-            };
-            /*START Pagniation vars*/
-
-            self.buildFilter = function() {
+            self.loadHistory = function(firstLoad, params) {
 
                 console.log(
-                    'self.buildFilter --> Starting...');
+                    'loadHistory:firstLoad:',
+                    firstLoad
+                );
 
-                var data = {
+                console.log(
+                    'loadHistory:params:',
+                    params
+                );
+
+                var extras = {
                     id: self.featureId,
                     type: self.featureType,
-                    limit: self.limit,
-                    page: self.page
-                };
+                    tz_offset: self.tzOffset
+                }
 
-                //  $location.search(data);
+                params = QueryParamManager.adjustParams(
+                    params,
+                    extras);
 
-                return data;
-            };
+                self.queryParams = QueryParamManager.getParams();
 
-            self.loadHistory = function(firstLoad) {
-
-                ChangeLog.query({
-                    id: self.featureId,
-                    type: self.featureType,
-                    limit: self.limit,
-                    page: self.page,
-                    tz_offset: self.tzOffset,
-                    user_only: self.userOnly ? self.userOnly : false
-                }).$promise.then(function(successResponse) {
+                ChangeLog.query(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
@@ -11123,8 +11417,6 @@ angular.module('FieldDoc')
                         self.changeLog = successResponse.history;
 
                         self.summary = successResponse.summary;
-
-                        self.calculateViewCount();
 
                         self.parseResponse();
 
@@ -11387,73 +11679,6 @@ angular.module('FieldDoc')
 
             };
 
-            /*
-            createStaticMapUrls:
-                takes self.sites as self.sites as argument
-                iterates of self.sites
-                checks if project extent exists
-                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to site[] as staticURL property
-                if no site geometry, adds default URL to site[].staticURL
-            */
-            self.createStaticMapURLs = function(arr, feature_type) {
-
-                console.log('createStaticMapURLS -> arr', arr);
-
-                arr.forEach(function(feature, index) {
-
-                    if (feature.geometry != null) {
-
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type);
-
-                        if (feature.staticURL.length >= 4096) {
-
-                            feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-                        }
-
-                        console.log('feature.staticURL', feature.staticURL);
-
-                        if (feature_type == 'site') {
-
-                            self.changeLog[index].staticURL = feature.staticURL;
-
-                            console.log('self.sites' + index + '.staticURL', self.changeLog[index].staticURL);
-
-                        }
-                        if (feature_type == 'practice') {
-                            self.changeLog[index].staticURL = feature.staticURL;
-
-                            console.log('self.practices' + index + '.staticURL', self.changeLog[index].staticURL);
-
-                        }
-
-                    } else {
-
-                        if (feature_type == 'site') {
-                            self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-
-
-                        }
-                        if (feature_type == 'practice') {
-                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                            ].join('');
-
-                        }
-
-                    }
-
-                });
-
-            };
-
             // 
             // Verify Account information for proper UI element display
             //
@@ -11483,10 +11708,25 @@ angular.module('FieldDoc')
 
                     self.tzOffset = new Date().getTimezoneOffset();
 
-                    self.loadHistory(true);
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    self.loadHistory(true, self.queryParams);
 
                 });
-
 
             } else {
 
@@ -11969,7 +12209,11 @@ angular.module('FieldDoc')
 
                             if (feature.extent) {
 
-                                feature.staticURL = self.buildStaticMapURL(feature.extent);
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.extent,
+                                    null,
+                                    400,
+                                    200);
 
                             }
 
@@ -12540,6 +12784,35 @@ angular.module('FieldDoc')
                         }
                     }
                 })
+                .when('/sites/:siteId/practices', {
+                    templateUrl: '/modules/components/sites/views/sitePracticeList--view.html?t=' + environment.version,
+                    controller: 'SitePracticeListController',
+                    controllerAs: 'page',
+                    reloadOnSearch: false,
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        practices: function(Site, $route) {
+                            return Site.practices({
+                                id: $route.current.params.siteId
+                            });
+                        },
+                        site: function(Site, $route) {
+                            return Site.getSingle({
+                                id: $route.current.params.siteId
+                            });
+                        }
+                    }
+                })
                 .when('/sites/:siteId/geographies', {
                     templateUrl: '/modules/components/sites/views/siteGeography--view.html?t=' + environment.version,
                     controller: 'SiteGeographyController',
@@ -12660,10 +12933,11 @@ angular.module('FieldDoc')
                         }
                     }
                 })
-                 .when('/sites/:siteId/batch-delete', {
+                .when('/sites/:siteId/batch-delete', {
                     templateUrl: '/modules/components/sites/views/siteBatchDelete--view.html?t=' + environment.version,
                     controller: 'SiteBatchDeleteController',
                     controllerAs: 'page',
+                    reloadOnSearch: false,
                     resolve: {
                         user: function(Account, $rootScope, $document) {
 
@@ -12683,10 +12957,7 @@ angular.module('FieldDoc')
                             });
                         }
                     }
-                })
-
-
-                ;
+                });
 
         }
     ]);
@@ -12737,7 +13008,6 @@ angular.module('FieldDoc')
 
                 };
 
-                /**/
                 self.alerts = [];
 
                 function closeAlerts() {
@@ -12745,73 +13015,6 @@ angular.module('FieldDoc')
                     self.alerts = [];
 
                 }
-
-
-                /*START Pagniation vars*/
-                self.limit = 12;
-                self.page = 1;
-
-                self.viewCountLow = self.page;
-                self.viewCountHigh = self.limit;
-
-
-                self.calculateViewCount = function() {
-                    console.log("A");
-                    if (self.page > 1) {
-                        console.log("B");
-
-                        if (self.page == 1) {
-                            console.log("C");
-                            self.viewCountHigh = self.limit;
-                            self.viewCountLow = ((self.page - 1) * self.limit);
-                        } else if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                            console.log("D");
-                            self.viewCountHigh = ((self.page - 1) * self.limit) + self.limit;
-                            self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-
-                        } else {
-                            console.log("E");
-                            self.viewCountHigh = self.summary.feature_count;
-                            self.viewCountLow = ((self.page - 1) * self.limit) + 1;
-                        }
-                    } else {
-                        if (self.summary.feature_count > ((self.page - 1) * self.limit) + self.limit) {
-                            console.log("F");
-                            self.viewCountLow = 1;
-                            self.viewCountHigh = self.limit;
-                        } else {
-                            console.log("G");
-                            self.viewCountLow = 1;
-                            self.viewCountHigh = self.summary.feature_count;
-
-                        }
-
-                    }
-
-                }
-
-                self.changeLimit = function(limit) {
-                    self.limit = limit;
-                    self.page = 1;
-                    self.loadPractices();
-                }
-
-                self.getPage = function(page) {
-                    console.log("PAGE", page);
-                    // console.log("LIMIT",limit);
-
-                    if (page < 1) {
-                        self.page = 1;
-                    } else if (page > self.summary.page_count) {
-                        self.page = self.summary.page_count;
-                    } else {
-                        self.page = page;
-
-                        self.loadPractices();
-                    }
-
-                };
-                /*END Pagniation vars*/
 
                 self.showElements = function() {
 
@@ -12840,7 +13043,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -13169,23 +13372,19 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
-                        //                        self.loadTags();
-
                         self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
 
                     });
 
                 };
 
                 self.loadPractices = function() {
+
                     Site.practices({
                         id: self.site.id,
-                        limit: self.limit,
-                        page: self.page,
-                        currentTime: Date.now()
-
+                        limit: 4,
+                        page: 1,
+                        t: Date.now()
                     }).$promise.then(function(successResponse) {
 
                         console.log("PRACTICE RESPONSE");
@@ -13200,12 +13399,7 @@ angular.module('FieldDoc')
 
                         self.showElements();
 
-                        self.calculateViewCount();
-
-
                         self.loadMetrics();
-
-                        //                          self.loadTags();
 
                         self.tags = Utility.processTags(self.site.tags);
 
@@ -13216,75 +13410,6 @@ angular.module('FieldDoc')
                     });
 
                 };
-
-                /*        self.loadSite = function() {
-
-                    console.log("LOAD SITE");
-
-                    site.$promise.then(function(successResponse) {
-
-                        console.log("SITE RESPONSE");
-
-                        console.log('self.site', successResponse);
-
-                        self.site = successResponse;
-
-                        if (successResponse.permissions.read &&
-                            successResponse.permissions.write) {
-
-                            self.makePrivate = false;
-
-                        } else {
-
-                            self.makePrivate = true;
-
-                        }
-
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
-
-                        $rootScope.page.title = self.site.name;
-
-                        self.project = successResponse.project;
-
-                        console.log('self.project', self.project);
-
-                        //
-                        // Load practices
-                        //
-
-                        practices.$promise.then(function(successResponse) {
-                            console.log("PRACTICE RESPONSE");
-
-                            self.practices = successResponse.features;
-
-                            self.summary = successResponse.summary;
-
-                            console.log("SUMMARY", self.summary);
-
-                            console.log('self.practices', successResponse);
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            self.showElements();
-
-                        });
-
-                        self.loadMetrics();
-
-//                        self.loadTags();
-
-                        self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
-
-                    });
-
-                };
-
-                */
 
                 self.loadTags = function() {
 
@@ -13807,7 +13932,7 @@ angular.module('FieldDoc')
 
                                 self.fetchTasks(successResponse.task.id);
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -13968,7 +14093,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -14269,7 +14394,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -14434,7 +14559,7 @@ angular.module('FieldDoc')
 
                                 self.fetchTasks(successResponse.task.id);
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -14968,7 +15093,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -15503,7 +15628,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -16003,8 +16128,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteBatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
-                Notifications, Site, site, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                     Notifications, Site, site, $rootScope, $route, $scope,
+                     $timeout, $interval, user, Utility, Batch, QueryParamManager) {
 
                 var self = this;
 
@@ -16037,92 +16162,26 @@ angular.module('FieldDoc')
 
                 };
 
-
-                /*START Pagniation vars*/
-                self.limit = 12;
-                self.page = 1;
-
-                self.viewCountLow = self.page;
-                self.viewCountHigh =  self.limit;
-
-                self.calculateViewCount = function(){
-                   if(self.page > 1){
-
-                        if(self.page == 1){
-                            self.viewCountHigh = self.limit;
-                             self.viewCountLow = ((self.page-1) * self.limit);
-                        }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                            self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
-                             self.viewCountLow = ((self.page-1) * self.limit)+1;
-
-                        }else{
-                            self.viewCountHigh = self.summary.feature_count;
-                             self.viewCountLow = ((self.page-1) * self.limit)+1;
-                        }
-                   }else{
-                        if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                              self.viewCountLow = 1;
-                              self.viewCountHigh = self.limit;
-                        }else{
-                            self.viewCountLow = 1;
-                            self.viewCountHigh = self.summary.feature_count;
-
-                        }
-
-                   }
-
-                }
-
-                self.changeLimit = function(limit){
-                    self.limit = limit;
-                    self.page = 1;
-                    self.loadPractices();
-
-                     console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-                }
-
-                 self.getPage = function(page){
-                    console.log("PAGE",page);
-
-                    if(page < 1){
-                        self.page = 1;
-                    }else if(page > self.summary.page_count){
-                        self.page = self.summary.page_count;
-                    }else{
-                         self.page   = page;
-
-                         self.loadPractices();
-                    }
-
-                    console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
-
-                };
-
                 self.showMarkedForDeletion = function(){
-                      self.availableFeatures.forEach(function(af, af_i) {
-                           self.selectedFeatures.forEach(function(sf, sf_i) {
-                                 var markedKey = "marked_for_deletion";
-                                 var markedVal = true;
+                    self.availableFeatures.forEach(function(af, af_i) {
+                        self.selectedFeatures.forEach(function(sf, sf_i) {
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = true;
 
+                            if(af.properties.id == sf.properties.id){
+                                self.availableFeatures[af_i][markedKey] = markedVal;
+                                console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                            }else{
+                                //     self.availableFeatures[af_i][markedKey] = false;
+                            }
 
-                                 if(af.properties.id == sf.properties.id){
-                                    self.availableFeatures[af_i][markedKey] = markedVal;
-                                     console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
-                                 }else{
-                               //     self.availableFeatures[af_i][markedKey] = false;
-                                 }
+                        });
 
-
-                            });
-
-                      });
+                    });
 
                 };
 
-                 /*END Pagniation vars*/
-
-
-
+                /*END Pagniation vars*/
 
                 self.loadSite = function() {
 
@@ -16150,8 +16209,6 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                    //    $rootScope.page.title = self.site.name;
-
                         self.project = successResponse.project;
 
                         console.log('self.project', self.project);
@@ -16162,60 +16219,48 @@ angular.module('FieldDoc')
 
                         self.loadPractices();
 
-                   //     self.loadMetrics();
-
-//                        self.loadTags();
-
-                 //       self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
-
                     });
 
                 };
 
                 self.loadPractices = function(){
-                     Site.practices({
-                            id: self.site.id,
-                            limit: self.limit,
-                            page: self.page,
-                            currentTime: Date.now()
-                        }).$promise.then(function(successResponse) {
+                    Site.practices({
+                        id: self.site.id,
+                        limit: self.limit,
+                        page: self.page,
+                        t: Date.now()
+                    }).$promise.then(function(successResponse) {
 
-                            console.log("PRACTICE RESPONSE");
+                        console.log("PRACTICE RESPONSE");
 
-                            self.practices = successResponse.features;
+                        self.practices = successResponse.features;
 
-                            self.summary = successResponse.summary;
+                        self.summary = successResponse.summary;
 
-                            console.log('self.practices', successResponse);
+                        console.log('self.practices', successResponse);
 
-                            self.availableFeatures = self.practices;
+                        self.availableFeatures = self.practices;
 
-                            self.availableFeatures.forEach(function(feature, index) {
-                                console.log("index", index);
-                                var markedKey = "marked_for_deletion";
-                                var markedVal = false;
-                                self.availableFeatures[index][markedKey] = markedVal;
-                            });
-
-                            console.log('self.availableFeatures', self.availableFeatures);
-
-                            self.showElements();
-
-                             self.calculateViewCount();
-
-                            self.showMarkedForDeletion();
-
-                        }, function(errorResponse) {
-
-
-
-                            console.log("PRACTICE ERROR RESPONSE");
-
-                            self.showElements();
-
+                        self.availableFeatures.forEach(function(feature, index) {
+                            console.log("index", index);
+                            var markedKey = "marked_for_deletion";
+                            var markedVal = false;
+                            self.availableFeatures[index][markedKey] = markedVal;
                         });
+
+                        console.log('self.availableFeatures', self.availableFeatures);
+
+                        self.showElements();
+
+                        self.showMarkedForDeletion();
+
+                    }, function(errorResponse) {
+
+                        console.log("PRACTICE ERROR RESPONSE");
+
+                        self.showElements();
+
+                    });
 
                 };
 
@@ -16229,51 +16274,55 @@ angular.module('FieldDoc')
 
                         $timeout(function() {
 
-                        /*
-                            if (!self.mapOptions) {
+                            /*
+                                if (!self.mapOptions) {
 
-                                self.mapOptions = self.getMapOptions();
+                                    self.mapOptions = self.getMapOptions();
 
-                            }
+                                }
 
-                            self.createMap(self.mapOptions);
-                        */
+                                self.createMap(self.mapOptions);
+                            */
                             if (self.practices && self.practices.length) {
 
-                            //    self.addMapPreviews(self.practices);
+                                //    self.addMapPreviews(self.practices);
                                 self.createStaticMapURLs(self.practices);
 
                             }
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
-            /*  createStaticMapUrls:
-                takes self.sites as self.practices as argument
-                iterates of self.practices
-                checks if project extent exists
-                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
-                adds return to practices[] as staticURL property
-                if no site geometry, adds default URL to practices[].staticURL
-            */
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
                 self.createStaticMapURLs = function(arr){
 
                     arr.forEach(function(feature, index) {
 
-                         if (feature.properties.project.extent) {
+                        if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                                feature.staticURL = Utility.buildStaticMapURL(
+                                    feature.geometry,
+                                    'practice',
+                                    400,
+                                    200);
 
                                 if(feature.staticURL.length >= 4096){
-                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                        '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                        'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                    ].join('');
                                 }
 
                                 self.practices[index].staticURL = feature.staticURL;
@@ -16281,9 +16330,9 @@ angular.module('FieldDoc')
                             }else{
 
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                    '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
                             }
 
                         }
@@ -16294,70 +16343,70 @@ angular.module('FieldDoc')
 
                 self.addToDeleteQueue = function(featureId){
                     console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-                      var i = 0
-                      self.availableFeatures.forEach(function(feature){
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = true;
                             var tempFeature = feature;
                             self.selectedFeatures.push(tempFeature);
 
-                          //  self.unselectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         i = i+1;
                     });
 
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.availableFeatures -->",self.availableFeatures);
-                /*
-                    var i = 0
+                    /*
+                        var i = 0
 
-                    self.unselectedFeatures.forEach(function(feature){
-                        if(feature.properties.id == featureId){
-                            console.log(featureId+" found in self.unselectedFeatures");
-                            var tempFeature = feature;
-                            self.selectedFeatures.push(tempFeature);
-                            self.unselectedFeatures.splice(i,1);
-                        }
-                        i = i+1;
-                    });
-                    console.log("self.selectedFeatures -->",self.selectedFeatures);
-                    console.log("self.unselectedFeatures -->",self.unselectedFeatures);
-                 */
+                        self.unselectedFeatures.forEach(function(feature){
+                            if(feature.properties.id == featureId){
+                                console.log(featureId+" found in self.unselectedFeatures");
+                                var tempFeature = feature;
+                                self.selectedFeatures.push(tempFeature);
+                                self.unselectedFeatures.splice(i,1);
+                            }
+                            i = i+1;
+                        });
+                        console.log("self.selectedFeatures -->",self.selectedFeatures);
+                        console.log("self.unselectedFeatures -->",self.unselectedFeatures);
+                     */
                 };
 
                 self.removeFromDeleteQueue = function(featureId){
-                     console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-                     /*below resetting of self.selected features is a hackaround for the
-                     commented out splice below, as it appeared to be
-                      also splicing available features after select all. Cause unknow*/
-                     self.selectedFeatures = [];
-                     var i = 0
-                     self.availableFeatures.forEach(function(feature){
+                    console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
+                    /*below resetting of self.selected features is a hackaround for the
+                    commented out splice below, as it appeared to be
+                     also splicing available features after select all. Cause unknow*/
+                    self.selectedFeatures = [];
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
                             console.log(featureId+" found in self.availableFeatures");
                             self.availableFeatures[i].marked_for_deletion = false;
-                           // self.selectedFeatures.splice(i,1);
-                          //  self.unselectedFeatures.splice(i,1);
+                            // self.selectedFeatures.splice(i,1);
+                            //  self.unselectedFeatures.splice(i,1);
                         }
                         if(self.availableFeatures[i].marked_for_deletion == true){
                             self.selectedFeatures.push(self.availableFeatures[i]);
                         }
                         i = i+1;
                     });
-                  /*  var i2 = 0;
-                    self.selectedFeatures.forEach(function(feature){
-                         console.log("REMOVING PRACTICE "+featureId+" FROM selectedFeatures");
-                         if(feature.properties.id == featureId){
-                           // this line is causing issue
-                            self.selectedFeatures.splice(i2,1);
+                    /*  var i2 = 0;
+                      self.selectedFeatures.forEach(function(feature){
+                           console.log("REMOVING PRACTICE "+featureId+" FROM selectedFeatures");
+                           if(feature.properties.id == featureId){
+                             // this line is causing issue
+                              self.selectedFeatures.splice(i2,1);
 
-                         }
-                         i2 = i2+1;
-                    });
-                    */
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                     console.log("self.availableFeatures -->",self.availableFeatures);
+                           }
+                           i2 = i2+1;
+                      });
+                      */
+                    console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    console.log("self.availableFeatures -->",self.availableFeatures);
 
                 };
 
@@ -16372,7 +16421,7 @@ angular.module('FieldDoc')
                 };
 
                 self.removeAllFromDeleteQueue = function(){
-                   var i = 0
+                    var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = false;
                         i = i+1;
@@ -16387,12 +16436,12 @@ angular.module('FieldDoc')
                 };
 
                 self.batchDelete = function(){
-                     self.status.processing = true;
+                    self.status.processing = true;
 
                     self.toggleConfirmDelete = false;
                     console.log("self.site.id",self.site.id);
 
-                   var data  = {collection: self.selectedFeatures};
+                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
                         featureType: 'site',
@@ -16415,7 +16464,7 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
-                         self.alerts = [{
+                        self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
                             'msg': 'Something went wrong and the changes could not be saved.',
@@ -16429,14 +16478,8 @@ angular.module('FieldDoc')
                 };
 
                 self.cancelDelete = function(){
-                     self.toggleConfirmDelete = false;
-
+                    self.toggleConfirmDelete = false;
                 };
-
-                self.inspectSearchParams = function(params) {
-
-                };
-
 
                 //
                 // Verify Account information for proper UI element display
@@ -16454,7 +16497,6 @@ angular.module('FieldDoc')
                             can_edit: false
                         };
 
-
                         site.$promise.then(function(successResponse) {
                             console.log('self.site', successResponse);
                             self.site = successResponse;
@@ -16465,7 +16507,23 @@ angular.module('FieldDoc')
                             }
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-                        //    $rootScope.page.title = self.site.name;
+
+                            //
+                            // Set default query string params.
+                            //
+
+                            var existingParams = QueryParamManager.getParams();
+
+                            QueryParamManager.setParams(
+                                existingParams,
+                                true);
+
+                            //
+                            // Set scoped query param variable.
+                            //
+
+                            self.queryParams = QueryParamManager.getParams();
+
                             self.loadSite();
 
                         }, function(errorResponse) {
@@ -16479,19 +16537,714 @@ angular.module('FieldDoc')
 
                 }
 
-        /*    $scope.$on('$routeUpdate', function() {
-
-              self.params = $location.search();
-
-              self.inspectSearchParams(params);
-
             });
-            */
-
-
-       });
 
 }());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name FieldDoc.controller:SiteSummaryController
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('SitePracticeListController',
+            function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
+                     $route, user, Utility, site, mapbox, Site, Project, practices,
+                     $interval, LayerService, MapManager,
+                     Shapefile, Task, QueryParamManager) {
+
+                var self = this;
+
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
+
+                $rootScope.page = {};
+
+                self.map = undefined;
+
+                self.status = {
+                    loading: true,
+                    processing: false
+                };
+
+                self.print = function() {
+
+                    $window.print();
+
+                };
+
+                self.presentChildModal = function(featureType) {
+
+                    if (featureType !== 'practice') return;
+
+                    self.showChildModal = true;
+
+                    self.childType = featureType;
+
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            if (self.practices && self.practices.length) {
+
+                                self.createStaticMapURLs(self.practices);
+
+                            }
+
+                        }, 500);
+
+                    }, 500);
+
+                };
+
+                function closeRoute() {
+
+                    $location.path(self.site.links.project.html);
+
+                }
+                /*DELETE LOGIC*/
+                self.confirmDelete = function(obj, targetCollection) {
+
+                    console.log('self.confirmDelete', obj, targetCollection);
+
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'site') {
+
+                        self.cancelDelete();
+
+                    } else {
+
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.deleteFeature = function(featureType, index) {
+
+                    console.log('self.deleteFeature', featureType, index);
+
+                    var targetCollection,
+                        targetId;
+
+                    switch (featureType) {
+
+                        case 'practice':
+
+                            targetCollection = Practice;
+
+                            break;
+
+                        case 'site':
+
+                            targetCollection = Site;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Project;
+
+                            break;
+
+                    }
+
+                    if (self.deletionTarget.feature.properties) {
+
+                        targetId = self.deletionTarget.feature.properties.id;
+
+                    } else {
+
+                        targetId = self.deletionTarget.feature.id;
+
+                    }
+
+                    targetCollection.delete({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'prompt': 'OK'
+                        });
+
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            self.practices.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.deletionTarget.feature.properties.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+                /*END DELETE LOGIC*/
+
+                /*COPY LOGIC */
+                self.confirmCopy = function(obj, targetCollection) {
+
+                    console.log('self.confirmCopy', obj, targetCollection);
+
+                    if (self.copyTarget &&
+                        self.copyTarget.collection === 'project') {
+
+                        self.cancelCopy();
+
+                    } else {
+
+                        self.copyTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
+
+                };
+
+                self.cancelCopy = function() {
+
+                    self.copyTarget = null;
+
+                };
+
+                self.copyFeature = function(featureType, index) {
+
+                    var targetCollection,
+                        targetId;
+
+                    switch (featureType) {
+
+                        case 'practice':
+
+                            targetCollection = Practice;
+
+                            break;
+
+                        case 'site':
+
+                            targetCollection = Site;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Project;
+
+                            break;
+
+                    }
+
+                    if (self.copyTarget.feature.properties) {
+
+                        targetId = self.copyTarget.feature.properties.id;
+
+                    } else {
+
+                        targetId = self.copyTarget.feature.id;
+
+                    }
+
+                    Practice.copy({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully copied this ' + featureType + '.',
+                            'prompt': 'OK'
+                        });
+
+                        console.log("COPIED PRACTICE DATA", data)
+                        console.log("self.practices-->", self.practices)
+
+                        if (typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            //   var practice = angular.toJSON(data);
+
+                            data.properties = data;
+
+                            self.practices.unshift(data);
+
+                            if (self.practices.length > self.limit) {
+                                self.practices.pop();
+                            }
+                            self.createStaticMapURLs(self.practices, "practice");
+
+                            self.cancelCopy();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+
+                            $timeout(closeRoute, 2000);
+
+                        }
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.copyFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to copy “' + self.copyTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to copy this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to copy this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+                /*END COPY LOGIC*/
+
+                self.cleanName = function(string_) {
+                    return Utility.machineName(string_);
+                };
+
+                self.loadSite = function() {
+
+                    site.$promise.then(function(successResponse) {
+
+                        self.site = successResponse;
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.site.name;
+
+                        self.project = successResponse.project;
+
+                        //
+                        // Load practices
+                        //
+
+                        self.loadPractices();
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                    });
+
+                };
+
+                self.loadPractices = function(params) {
+
+                    console.log(
+                        'loadPractices:params:',
+                        params
+                    );
+
+                    params = QueryParamManager.adjustParams(
+                        params,
+                        {
+                            id: self.site.id,
+                            t: Date.now()
+                        },
+                        true);
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    Site.practices(params).$promise.then(function(successResponse) {
+
+                        self.practices = successResponse.features;
+
+                        self.summary = successResponse.summary;
+
+                        self.showElements(true);
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                    }, function(errorResponse) {
+
+                        self.showElements(false);
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    Site.tags({
+                        id: self.site.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Site.tags', successResponse);
+
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                /*  createStaticMapUrls:
+                    takes self.sites as self.practices as argument
+                    iterates of self.practices
+                    checks if project extent exists
+                    checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                    adds return to practices[] as staticURL property
+                    if no site geometry, adds default URL to practices[].staticURL
+                */
+                self.createStaticMapURLs = function(arr) {
+
+                    arr.forEach(function(feature, index) {
+
+                        //      if (feature.properties.project.extent) {
+
+                        if (feature.geometry != null) {
+
+                            feature.staticURL = Utility.buildStaticMapURL(feature.geometry, 'practice', 400, 200);
+
+                            if (feature.staticURL.length >= 4096) {
+                                feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                    '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
+                                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                ].join('');
+                            }
+
+                            self.practices[index].staticURL = feature.staticURL;
+
+                        } else {
+
+                            self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                '/mapbox/streets-v11/static/-76.8205,38.7069,4.46,0/400x200?access_token=',
+                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                            ].join('');
+                        }
+
+                        //     }
+
+                    });
+                }
+
+                self.addMapPreviews = function(arr) {
+
+                    var interactions = [
+                        'scrollZoom',
+                        'boxZoom',
+                        'dragRotate',
+                        'dragPan',
+                        'keyboard',
+                        'doubleClickZoom',
+                        'touchZoomRotate'
+                    ];
+
+                    arr.forEach(function(feature, index) {
+
+                        console.log(
+                            'self.addMapPreviews --> feature, index',
+                            feature,
+                            index);
+
+                        var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                        localOptions.style = self.mapStyles[0].url;
+
+                        localOptions.container = 'practice-geography-preview-' + feature.properties.id;
+
+                        var previewMap = new mapboxgl.Map(localOptions);
+
+                        previewMap.on('load', function() {
+
+                            interactions.forEach(function(behavior) {
+
+                                previewMap[behavior].disable();
+
+                            });
+
+                            MapManager.addFeature(
+                                previewMap,
+                                feature,
+                                'geometry',
+                                true);
+
+                        });
+
+                    });
+
+                };
+
+                self.getMapOptions = function() {
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.createMap --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.createMap --> accessToken',
+                        mapboxgl.accessToken);
+
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    if (self.site &&
+                        self.site.map_options) {
+
+                        var mapOptions = self.site.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
+
+                            self.mapOptions.center = self.site.map_options.centroid.coordinates;
+
+                        }
+
+                    }
+
+                    return self.mapOptions;
+
+                };
+
+                self.reloadPage = function() {
+                    $location.reload();
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    $timeout(function() {
+
+                        self.loadPractices();
+
+                    }, 100);
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status && response.status === 'complete') {
+
+                                self.hideTasks();
+
+                                self.uploadError = null;
+
+                                self.fileImport = null;
+
+                            } else if (response.status && response.status === 'failed') {
+
+                                self.hideTasks();
+
+                                self.uploadError = {
+                                    message: response.error
+                                };
+
+                                self.fileImport = null;
+
+                            }
+
+                        });
+
+                    } else {
+
+                        //
+
+                    }
+
+                };
+
+                //
+                // End batch import methods
+                //
+
+                //
+                // Verify Account information for proper UI element display
+                //
+
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        //
+                        // Set default query string params.
+                        //
+
+                        var existingParams = QueryParamManager.getParams();
+
+                        QueryParamManager.setParams(
+                            existingParams,
+                            true);
+
+                        //
+                        // Set scoped query param variable.
+                        //
+
+                        self.queryParams = QueryParamManager.getParams();
+
+                        self.loadSite();
+
+                    });
+
+                }
+
+            });
+
+})();
 'use strict';
 
 /**
@@ -16868,7 +17621,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -16990,7 +17743,7 @@ angular.module('FieldDoc')
 
                 Project.sites({
                     id: self.practice.project.id,
-                    currentTime: Date.now()
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
@@ -17315,7 +18068,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -18025,7 +18778,7 @@ angular.module('FieldDoc')
 
                     }, 500);
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -18175,29 +18928,13 @@ angular.module('FieldDoc')
                     t: Date.now()
                 }).$promise.then(function(successResponse) {
 
-                    console.log("PRACTICE RESPONSE");
-
                     self.practices = successResponse.features;
 
                     self.practicesSummary = successResponse.summary;
 
-                    console.log("SUMMARY", self.practicesSummary);
-
-                    console.log('self.practices', successResponse);
-
-
-
-          //          self.showElements(true);
-
-             //       self.practicesCalculateViewCount();
-
-                    //      self.loadMetrics();
-
-                    //       self.tags = Utility.processTags(self.site.tags);
-
                 }, function(errorResponse) {
 
-          //          self.showElements(false);
+                    //
 
                 });
 
@@ -18408,7 +19145,7 @@ angular.module('FieldDoc')
 
                             self.fetchTasks(successResponse.task.id);
 
-                        }, 1000);
+                        }, 500);
 
                     }, function(errorResponse) {
 
@@ -20361,7 +21098,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -21636,7 +22373,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -22449,7 +23186,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 
@@ -22748,7 +23485,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -22960,7 +23697,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -23377,7 +24114,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 
@@ -23858,7 +24595,7 @@ angular.module('FieldDoc')
 
                     self.status.loadingFeatures = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -24217,7 +24954,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -24454,7 +25191,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -25133,7 +25870,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -25448,7 +26185,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -26009,7 +26746,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -26412,7 +27149,7 @@ angular.module('FieldDoc')
 
                                 self.fetchTasks();
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -26727,7 +27464,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -26847,7 +27584,7 @@ angular.module('FieldDoc')
 
                                 self.fetchTasks(successResponse.task.id);
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -28201,7 +28938,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -28525,7 +29262,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -28866,7 +29603,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -29343,7 +30080,7 @@ angular.module('FieldDoc')
 
                                 self.fetchTasks();
 
-                            }, 1000);
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -29730,7 +30467,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -30026,7 +30763,7 @@ angular.module('FieldDoc')
 
                         }, 500);
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -30622,7 +31359,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -30816,7 +31553,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -31229,7 +31966,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -31508,7 +32245,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -32292,7 +33029,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 
@@ -32706,7 +33443,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -33005,7 +33742,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -33428,7 +34165,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                    }, 1000);
+                    }, 500);
 
                 };
 
@@ -33914,7 +34651,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 
@@ -34323,7 +35060,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -34658,7 +35395,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, 500);
 
         };
 
@@ -35067,7 +35804,7 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
-                }, 1000);
+                }, 500);
 
             };
 
@@ -38432,7 +39169,22 @@ angular.module('FieldDoc')
                 return [];
 
             },
-            buildStaticMapURL: function(geometry, colorScheme = null, width = 400, height = 130) {
+            buildStaticMapURL: function(geometry, colorScheme = null,
+                                        width = 400, height = 130) {
+
+                // var styledFeature = {
+                //     "type": "Feature",
+                //     "geometry": geometry,
+                //     "properties": {
+                //         "marker-size": "small",
+                //         "marker-color": "#2196F3",
+                //         "stroke": "#2196F3",
+                //         "stroke-opacity": 1.0,
+                //         "stroke-width": 2,
+                //         "fill": "#2196F3",
+                //         "fill-opacity": 0.5
+                //     }
+                // };
 
                 var color = "#06aadf";
 
@@ -38850,6 +39602,259 @@ angular.module('FieldDoc')
         };
 
     });
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name FieldDoc.template
+ * @description
+ * # template
+ * Provider in the FieldDoc.
+ */
+angular.module('FieldDoc')
+    .service('QueryParamManager', [
+        '$location',
+        function($location) {
+
+            var reservedKeys = [
+                'limit',
+                'page'
+            ];
+
+            var defaults = {
+                limit: 12,
+                page: 1,
+                archived: false
+            };
+
+            return {
+                adjustParams: function (params, extras, set) {
+
+                    console.log(
+                        'adjustParams:params:',
+                        params
+                    );
+
+                    console.log(
+                        'adjustParams:extras:',
+                        extras
+                    );
+
+                    console.log(
+                        'adjustParams:set:',
+                        set
+                    );
+
+                    set = (typeof set === 'boolean') ? set : true;
+
+                    console.log(
+                        'adjustParams:set:2:',
+                        set
+                    );
+
+                    if (!params || typeof params === 'undefined') {
+
+                        params = this.getDefaults();
+
+                        console.log(
+                            'adjustParams:params:defaults:',
+                            defaults
+                        );
+
+                        //
+                        // Remove params that may have persisted on
+                        // the base `defaults` object.
+                        //
+
+                        for (var key in params) {
+
+                            if (params.hasOwnProperty(key) &&
+                                reservedKeys.indexOf(key) < 0) {
+
+                                delete params[key];
+
+                            }
+
+                        }
+
+                        console.log(
+                            'adjustParams:params:defaults:2:',
+                            defaults
+                        );
+
+                    }
+
+                    //
+                    // Ensure that a `page` parameter is always present.
+                    //
+
+                    if (!params.hasOwnProperty('page')) {
+
+                        params.page = 1;
+                    }
+
+                    //
+                    // Ensure that a `limit` parameter is always present.
+                    //
+
+                    if (!params.hasOwnProperty('limit')) {
+
+                        params.limit = 12;
+
+                    }
+
+                    //
+                    // Add optional keys to `params` object.
+                    //
+
+                    if (extras) {
+
+                        for (var key in extras) {
+
+                            if (extras.hasOwnProperty(key)) {
+
+                                params[key] = extras[key];
+
+                            }
+
+                        }
+
+                    }
+
+                    console.log(
+                        'adjustParams:params:2:',
+                        params
+                    );
+
+                    if (set) this.setParams(params);
+
+                    return params;
+
+                },
+                getDefaults: function () {
+
+                    return JSON.parse(JSON.stringify(defaults));
+
+                },
+                getParams: function () {
+
+                    var params = $location.search();
+
+                    console.log(
+                        'getParams:params:',
+                        params
+                    );
+
+                    //
+                    // Parse query params and convert from string
+                    // to desired types.
+                    //
+
+                    for (var key in params) {
+
+                        if (params.hasOwnProperty(key)) {
+
+                            var paramVal = params[key];
+
+                            if (Number.isInteger(+paramVal)) {
+
+                                params[key] = +paramVal;
+
+                            }
+
+                            if (paramVal === 'true') {
+
+                                params[key] = true;
+
+                            }
+
+                            if (paramVal === 'false') {
+
+                                params[key] = false;
+
+                            }
+
+                        }
+
+                    }
+
+                    return params;
+
+                },
+                setParams: function (params, override, callback) {
+
+                    console.log(
+                        'setParams:params:',
+                        params
+                    );
+
+                    var keys = [];
+
+                    try {
+
+                        keys = Object.keys(params);
+
+                    } catch (e) {
+
+                        return;
+
+                    }
+
+                    //
+                    // If params are empty and defaults WERE NOT
+                    // requested (`override`), abort.
+                    //
+
+                    if (!keys.length && !override) return;
+
+                    //
+                    // If params are empty and defaults WERE
+                    // requested (`override`), fall back to
+                    // default settings.
+                    //
+
+                    if (!keys.length && override) {
+
+                        params = this.getDefaults();
+
+                    }
+
+                    //
+                    // Convert param values to strings.
+                    //
+
+                    for (var key in params) {
+
+                        if (params.hasOwnProperty(key)) {
+
+                            var paramVal = params[key];
+
+                            if (paramVal && typeof paramVal !== 'undefined') {
+
+                                params[key] = paramVal.toString();
+
+                            } else {
+
+                                delete params[key];
+
+                            }
+
+                        }
+
+                    }
+
+                    $location.search(params);
+
+                    if (typeof callback === 'function') {
+
+                        callback(params);
+
+                    }
+
+                }
+            };
+
+        }]);
 (function() {
 
     'use strict';
@@ -40267,14 +41272,15 @@ angular.module('FieldDoc')
         .directive('collectionFilter', [
             '$window',
             'environment',
-            function($window, environment) {
+            'QueryParamManager',
+            function($window, environment, QueryParamManager) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'collection': '@collection',
                         'displayStates': '=?',
                         'features': '=?',
-                        'filters': '=?',
+                        'params': '=?',
                         'trackName': '=?',
                         'update': '&'
                     },
@@ -40291,7 +41297,7 @@ angular.module('FieldDoc')
 
                         }
 
-                        scope.toggleModal = function (update, filterValue, resetFilter) {
+                        scope.toggleModal = function (filterValue, resetFilter) {
 
                             resetFilter = resetFilter || false;
 
@@ -40323,28 +41329,175 @@ angular.module('FieldDoc')
                                 if (filterValue && filterValue !== 0 &&
                                     filterValue !== 'all') {
 
-                                    scope.filters[scope.collection] = filterValue;
+                                    scope.params[scope.collection] = filterValue;
 
                                 } else {
 
-                                    scope.filters[scope.collection] = undefined;
+                                    delete scope.params[scope.collection];
+
+                                }
+
+                                scope.params.page = 1;
+
+                                QueryParamManager.setParams(scope.params);
+
+                                scope.update({
+                                    params: scope.params
+                                });
+
+                            }
+
+                            console.log(
+                                'toggleModal:params:',
+                                scope.params
+                            );
+
+                        };
+
+                        scope.$watch('params', function (newVal) {
+
+                            if (newVal) {
+
+                                scope.params = newVal;
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('pagination', [
+            '$window',
+            'environment',
+            'QueryParamManager',
+        function($window, environment, QueryParamManager) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'params': '=?',
+                        'rotate': '&',
+                        'summary': '=?',
+                        'updateParams': '=?'
+                    },
+                    templateUrl: function(elem, attrs) {
+
+                        return 'modules/shared/directives/control/pagination/pagination--view.html?t=' + environment.version;
+
+                    },
+                    link: function(scope, element, attrs) {
+
+                        // if (!scope.params.hasOwnProperty('page')) {
+                        //
+                        //     throw 'A `page` parameter is required.';
+                        // }
+                        //
+                        // if (!scope.params.hasOwnProperty('limit')) {
+                        //
+                        //     throw 'A `limit` parameter is required.';
+                        // }
+
+                        if (typeof scope.updateParams === 'undefined') {
+
+                            scope.updateParams = false;
+
+                        }
+
+                        scope.changeLimit = function (limit) {
+
+                            console.log(
+                                'changeLimit:limit:',
+                                limit
+                            );
+
+                            scope.params.limit = limit;
+                            scope.params.page = 1;
+
+                            console.log(
+                                'changeLimit:params:',
+                                scope.params
+                            );
+
+                            if (scope.updateParams) QueryParamManager.setParams(scope.params);
+
+                            scope.rotate({
+                                params: scope.params
+                            });
+
+                        };
+
+                        scope.getPage = function (page) {
+
+                            if (page < 1) {
+
+                                scope.params.page = 1;
+
+                            } else if (page > scope.summary.page_count) {
+
+                                scope.params.page = scope.summary.page_count;
+
+                            } else {
+
+                                scope.params.page = page;
+
+                                if (scope.updateParams) QueryParamManager.setParams(scope.params);
+
+                                scope.rotate({
+                                    params: scope.params
+                                });
+
+                            }
+
+                        };
+
+                        scope.$watch('summary', function (newVal) {
+
+                            if (newVal) {
+
+                                var featureCount = newVal.feature_count;
+
+                                scope.boundaryLow = scope.params.page === 1 ? 1 : (scope.params.limit * (scope.params.page - 1)) + 1;
+
+                                var maxCount = scope.params.limit * scope.params.page;
+
+                                if (featureCount <= maxCount) {
+
+                                    scope.boundaryHigh = featureCount;
+
+                                } else {
+
+                                    scope.boundaryHigh = maxCount;
 
                                 }
 
                             }
 
-                            console.log(
-                                'toggleModal:filters:',
-                                scope.filters
-                            );
+                        });
 
-                            if (update) {
+                        scope.$watch('params', function (newVal) {
 
-                                scope.update(true);
+                            if (typeof newVal === 'undefined') {
+
+                                scope.params = QueryParamManager.getDefaults();
+
+                            } else {
+
+                                scope.params = newVal;
 
                             }
 
-                        };
+                        });
 
                     }
 
@@ -40393,8 +41546,6 @@ angular.module('FieldDoc')
 
                     },
                     link: function(scope, element, attrs) {
-
-                        scope.label = scope.type.replace(/_/g, ' ');
 
                         if (typeof scope.resetType === 'undefined') {
 
@@ -40576,6 +41727,16 @@ angular.module('FieldDoc')
                             scope.program_id = item.id;
 
                         };
+
+                        scope.$watch('type', function (newVal) {
+
+                            if (typeof newVal === 'string') {
+
+                                scope.label = newVal.replace(/_/g, ' ');
+
+                            }
+
+                        });
 
                     }
 
@@ -40761,7 +41922,7 @@ angular.module('FieldDoc')
                                     //
                                     //     scope.fetchTasks(successResponse.task.id);
                                     //
-                                    // }, 1000);
+                                    // }, 500);
 
                                 }, function(errorResponse) {
 
@@ -41106,6 +42267,11 @@ angular.module('FieldDoc')
 
                         scope.jumpToSelection = function () {
 
+                            console.log(
+                                'jumpToSelection:selectionId',
+                                scope.selectionId
+                            );
+
                             $location.hash('');
 
                             scope.scrollManager.scrollToAnchor(scope.selectionId);
@@ -41319,7 +42485,8 @@ angular.module('FieldDoc')
                         'featureType': '@',
                         'model': '=?',
                         'formAction': '&',
-                        'uploadError': '=?'
+                        'uploadError': '=?',
+                        'visible': '=?'
                     },
                     templateUrl: function (elem, attrs) {
 
@@ -41331,6 +42498,24 @@ angular.module('FieldDoc')
                         //
                         // Additional scope vars.
                         //
+
+                        scope.showTips = false;
+
+                        scope.closeChildModal = function(refresh) {
+
+                            scope.processing = false;
+
+                            scope.uploadComplete = false;
+
+                            scope.uploadError = null;
+
+                            scope.visible = false;
+
+                            if (scope.resetType) scope.type = undefined;
+
+                            // if (refresh) scope.callback();
+
+                        };
 
                         scope.uploadFile = function() {
 
@@ -41839,6 +43024,150 @@ angular.module('FieldDoc')
                             }
 
                         };
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function () {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('breadcrumb', [
+            'environment',
+            '$timeout',
+            function (environment, $timeout) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'metric': '=?',
+                        'pad': '=?',
+                        'practice': '=?',
+                        'practiceType': '=?',
+                        'program': '=?',
+                        'project': '=?',
+                        'report': '=?',
+                        'site': '=?',
+                        'tail': '@'
+                    },
+                    templateUrl: function (elem, attrs) {
+
+                        return 'modules/shared/directives/breadcrumb/breadcrumb--view.html?t=' + environment.version;
+
+                    },
+                    link: function (scope, element, attrs) {
+
+                        //
+                        // Additional scope vars.
+                        //
+
+                        scope.calcAvailWidth = function () {
+
+                            var parent = document.querySelector(
+                                '.breadcrumb');
+
+                            var parentWidth;
+
+                            if (parent) {
+
+                                parentWidth = (parent.clientWidth * 0.90);
+
+                            }
+
+                            var anchorEls = document.querySelectorAll(
+                                '.anchor');
+
+                            var anchorWidth = 0;
+
+                            for (var i = 0; i < anchorEls.length; i++) {
+
+                                var el = anchorEls[i];
+
+                                anchorWidth += el.clientWidth;
+
+                            }
+
+                            return parentWidth - anchorWidth;
+
+                        };
+
+                        scope.setBasis = function () {
+
+                            //
+                            // The following conditions are abortive.
+                            //
+
+                            if (scope.report && !scope.practice) return;
+
+                            if (scope.practice && !scope.project) return;
+
+                            if (scope.site && !scope.project) return;
+
+                            $timeout(function () {
+
+                                var collapseEls = document.querySelectorAll(
+                                    '.breadcrumb div:not(.anchor)');
+
+                                var count = collapseEls.length;
+
+                                scope.basis = Math.floor(scope.calcAvailWidth() / count);
+
+                                console.log(
+                                    'scope.basis',
+                                    scope.basis
+                                );
+
+                            }, 50)
+
+                        };
+
+                        scope.$watch('report', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('practice', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('metric', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('practiceType', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('site', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('program', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
+
+                        scope.$watch('project', function (newVal) {
+
+                            scope.setBasis();
+
+                        });
 
                     }
 

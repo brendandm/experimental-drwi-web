@@ -1,0 +1,90 @@
+<div class="pagination-ctrl">
+
+    <div class="params.limit-ctrl">
+
+        <span>
+            Show:
+        </span>
+
+        <span>
+            <a data-ng-click="changeLimit(12)"
+               data-ng-class="{inactive: params.limit !== 12}"
+               class="margin-l-1">
+                12
+            </a>
+        </span>
+
+        <span>
+            <a data-ng-click="changeLimit(24)"
+               data-ng-class="{inactive: params.limit !== 24}"
+               class="margin-x-1">
+                24
+            </a>
+        </span>
+
+        <span>
+            <a data-ng-click="changeLimit(48)"
+               data-ng-class="{inactive: params.limit !== 48}"
+               class="margin-r-2">
+                48
+            </a>
+        </span>
+
+    </div>
+
+    <div class="prev-ctrl">
+
+        <!-- FIRST PAGE -->
+        <a data-ng-click="getPage(1)"
+           data-ng-class="{inactive: params.page === 1}"
+           title="First page">
+            <span class="material-icons">
+                first_page
+            </span>
+        </a>
+
+        <!-- PREVIOUS PAGE -->
+        <a data-ng-click="getPage(params.page - 1)"
+           data-ng-class="{inactive: params.page === 1}"
+           title="Previous page">
+            <span class="material-icons">
+                chevron_left
+            </span>
+        </a>
+
+    </div>
+
+    <div class="summary-ctrl margin-x-1">
+        <!-- START VIEW COUNT -->
+        <span data-ng-if="summary.feature_count > 0">
+            Showing {{ boundaryLow | number }} - {{ boundaryHigh | number }} of {{ summary.feature_count | number }}
+        </span>
+        <span data-ng-if="summary.feature_count === 0">
+            No matches
+        </span>
+        <!-- END VIEW COUNT -->
+    </div>
+
+    <div class="next-ctrl">
+
+        <!-- NEXT PAGE -->
+        <a data-ng-click="getPage(params.page + 1)"
+           data-ng-class="{inactive: params.page === summary.page_count}"
+           title="Next page">
+            <span class="material-icons" >
+                chevron_right
+            </span>
+        </a>
+
+        <!-- LAST PAGE -->
+        <a data-ng-click="getPage(summary.page_count)"
+           data-ng-class="{inactive: params.page === summary.page_count}"
+           title="Last page">
+            <span class="material-icons">
+                last_page
+            </span>
+        </a>
+
+    </div>
+
+</div>

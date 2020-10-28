@@ -6,26 +6,12 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{page.practice.project.id }}">{{ page.practice.project.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div data-ng-if="page.practice.site !== null">
-                <span>Site:&nbsp;</span>
-                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <span>Practice:&nbsp;</span>
-                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit model inputs
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             practice="page.practice"
+             site="page.practice.site"
+             project="page.practice.project"
+             tail="Edit model inputs"></div>
 
         <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Model inputs</h1>
 

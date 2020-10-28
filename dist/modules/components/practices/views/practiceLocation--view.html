@@ -24,26 +24,12 @@
 
         </section>
 
-        <div class="breadcrumb pad-crumb">
-            <div>
-                <span>Project:&nbsp;</span>
-                <a href="/projects/{{page.practice.project.id }}">{{ page.practice.project.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div data-ng-if="page.practice.site != null">
-                <span>Site:&nbsp;</span>
-                <a href="/sites/{{ page.practice.site.id }}">{{ page.practice.site.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                <span>Practice:&nbsp;</span>
-                <a href="/practices/{{ page.practice.id }}">{{ page.practice.name }}</a>
-                <span>&nbsp;/&nbsp;</span>
-            </div>
-            <div>
-                Edit location
-            </div>
-        </div>
+        <div breadcrumb class="full-width"
+             pad="true"
+             practice="page.practice"
+             site="page.practice.site"
+             project="page.practice.project"
+             tail="Edit location"></div>
 
         <div class="breadcrumb-header-wrapper">
             <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
