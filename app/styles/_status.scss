@@ -45,8 +45,12 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    border-radius: $rem-radius-100;
-    padding: 0.25rem 1rem;
+    border-radius: $rem-radius-50;
+    padding: 0.5rem .75rem;
+    font-size: .8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1rem;
 
     .dot {
         display: block;
@@ -59,8 +63,11 @@
 
 .status-draft {
     //background-color: $color-status-draft;
-    background-color: #fdeadb;
+    //background-color: #fdeadb;
+    background-color: #fef4ed;
     color: #f37e21;
+    //border: 1px solid #fbd5b6;
+    border: 1px solid #f8b47e;
 
     .dot {
         background-color: #f37e21;
@@ -70,8 +77,11 @@
 
 .status-active {
     //background-color: $color-status-active;
-    background-color: #e8f7e8;
+    //background-color: #e8f7e8;
+    background-color: #f4fbf4;
     color: #3AA63A;
+    //border: 1px solid #cbedcb;
+    border: 1px solid #9fde9f;
 
     .dot {
         background-color: #3AA63A;
@@ -81,8 +91,11 @@
 
 .status-complete {
     //background-color: $color-status-complete;
-    background-color: #dbeefd;
+    //background-color: #dbeefd;
+    background-color: #edf7fe;
     color: #2196F3;
+    //border: 1px solid #b6dcfb;
+    border: 1px solid #7ec2f8;
 
     .dot {
         background-color: #2196F3;
@@ -90,20 +103,20 @@
 
 }
 
-.status-history-link-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    padding-bottom: 1em;
-    color: $color-blue-base;
-    margin-bottom: 5px;
-
-    span {
-        display: inline-flex;
-        margin-right: 0.25em;
-    }
-
-}
+//.status-history-link-wrapper {
+//    display: flex;
+//    flex-flow: row nowrap;
+//    align-items: center;
+//    padding-bottom: 1em;
+//    color: $color-blue-base;
+//    margin-bottom: 5px;
+//
+//    span {
+//        display: inline-flex;
+//        margin-right: 0.25em;
+//    }
+//
+//}
 
 //
 // Archive notice.
