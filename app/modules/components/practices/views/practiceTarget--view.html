@@ -43,6 +43,20 @@
                         information.
                     </p>
                 </div>
+
+                <div class="alignment-warning margin-t-1 rad-50"
+                     data-ng-if="page.practice.misaligned">
+                    <div class="pad-1">
+                        <p class="margin-0">
+                            The assigned practice type or practice type version is not tracked by this project's
+                            program. This may lead to inconsistent behavior, including inaccurate or nonexistent
+                            metric calculations. Please choose another practice type from this program or <a
+                                href="mailto:support@fielddoc.org" target="_blank">contact our
+                            support team</a> to upgrade to the latest version of the current selection.
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
             <div data-ng-if="!page.practice.practice_type">
