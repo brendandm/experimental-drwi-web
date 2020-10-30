@@ -67,6 +67,19 @@
                             <strong>Practice Type:</strong> {{ page.practice.practice_type.name }}
                         </p>
 
+                        <div class="alignment-warning margin-b-1 rad-50"
+                             data-ng-if="page.practice.misaligned">
+                            <div class="pad-1">
+                                <p class="margin-0">
+                                    The assigned practice type or practice type version is not tracked by this project's
+                                    program. This may lead to inconsistent behavior, including inaccurate or nonexistent
+                                    metric calculations. Please choose another practice type from this program or <a
+                                        href="mailto:support@fielddoc.org" target="_blank">contact our
+                                    support team</a> to upgrade to the latest version of the current selection.
+                                </p>
+                            </div>
+                        </div>
+
                         <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.practice_type.unit.dimension != 'count'))"
                            style="text-transform:capitalize;">
                             <strong>Practice {{page.practice.practice_type.unit.dimension}} extent:</strong>
@@ -98,7 +111,6 @@
                             <strong>Practice area extent:</strong>
                             {{ page.practice.extent.calculated.converted | number:2 }} Square meters
                         </p>
-
 
                         <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
 
@@ -143,12 +155,6 @@
 
                     <!-- Map -->
 
-                    <!-- <div class="shadow reveal fade-in t1" style="position:relative;">
-
-                        <leaflet id="practice--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults"></leaflet>
-
-                    </div> -->
-
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
                             <div class="mapboxgl-layer-ctrl"
@@ -185,21 +191,6 @@
                     </div>
 
                 </div>
-
-                <!-- <div class="group reveal fade-in t2"
-                      data-ng-if="page.next_action != 'edit_targets'"
-                 >
-                     <section class="pad shadow"
-                              ng-bind-html="page.next_action_lable"
-                              style="min-height:0px;
-                                     background-color: #fff6c6;
-                                     "
-                     >
-                         {{page.next_action_lable}}
-
-                     </section>
-                 </div>
-                 -->
 
                 <div class="group reveal fade-in t2"
                      data-ng-if="page.next_action == 'edit_targets'">

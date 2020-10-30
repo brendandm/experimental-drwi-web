@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1603975805274})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1604068341480})
 
 ;
 /**
@@ -10200,6 +10200,7 @@ angular.module('FieldDoc')
                 branch : FD_489-turf.simplify 2020.07.28
             */
             self.createStaticMapURLs = function(arr, feature_type) {
+
                 console.log("createStaticMapURLS -> arr", arr)
 
                 arr.forEach(function(feature, index) {
@@ -10208,7 +10209,11 @@ angular.module('FieldDoc')
 
                         console.log("THUMB", feature);
 
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+                        feature.staticURL = Utility.buildStaticMapURL(
+                            feature.geometry,
+                            feature_type,
+                            400,
+                            200);
 
                         if (feature.staticURL.length >= 4096) {
 
@@ -21928,13 +21933,12 @@ angular.module('FieldDoc')
             };
 
             self.loadMetrics = function(){
+
                 console.log("LoadMetrics A");
+
                 Practice.metrics({
-
                     id: self.practice.id
-
                 }).$promise.then(function(successResponse){
-
 
                     console.log("loadMetrics",successResponse);
 
@@ -21947,18 +21951,18 @@ angular.module('FieldDoc')
                     * if so so, remove from programMetrics arr (ie Secondary Metrics
                     * */
 
-
                     let i = 0;
 
-                    self.programMetrics.forEach(function(metric){
+                    self.programMetrics.forEach(function(metric) {
+
                         console.log("1");
+
                         if(metric.automated === true && metric.capture_extent === true){
                             console.log("2");
 
                             self.programMetrics.splice(i,1);
 
                             i = i+1;
-
 
                         }
 
@@ -21976,7 +21980,7 @@ angular.module('FieldDoc')
 
                         self.assignedMetrics.forEach(function(aMetric){
 
-                            if(pMetric.id == aMetric.id){
+                            if(pMetric.id === aMetric.id){
                                 metricAssigned = true;
                             }
 
@@ -21999,8 +22003,6 @@ angular.module('FieldDoc')
                         self.programMetrics.splice(0,0,uMetric);
 
                     });
-
-
 
                  //   console.log("self.assignedMetrics",self.assignedMetrics);
                  //   console.log("self.programMetrics",self.programMetrics);

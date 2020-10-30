@@ -181,3 +181,15 @@
     }
 
 }
+
+//
+// Practice type alignment warning
+//
+
+.alignment-warning {
+    display: flex;
+    flex-flow: row nowrap;
+    border: 1px solid #ffd806;
+    background: #fff4b7;
+    font-size: .9rem;
+}

@@ -5,7 +5,11 @@
         <div class="subcategory" data-ng-if="match.model.category">
             <span data-ng-bind-html="match.model.category | uibTypeaheadHighlight:query"></span>
             <span data-ng-if="match.model.category === 'geography'">&middot;</span>
-            <span data-ng-if="match.model.category === 'geography'" data-ng-bind-html="match.model.subcategory"></span>
+            <span data-ng-if="match.model.category === 'geography'"
+                  data-ng-bind-html="match.model.subcategory"></span>
+            <span data-ng-if="match.model.program">&middot;</span>
+            <span data-ng-if="match.model.program"
+                  data-ng-bind-html="match.model.program"></span>
         </div>
     </div>
 </a>

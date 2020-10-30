@@ -376,13 +376,12 @@ angular.module('FieldDoc')
             };
 
             self.loadMetrics = function(){
+
                 console.log("LoadMetrics A");
+
                 Practice.metrics({
-
                     id: self.practice.id
-
                 }).$promise.then(function(successResponse){
-
 
                     console.log("loadMetrics",successResponse);
 
@@ -395,18 +394,18 @@ angular.module('FieldDoc')
                     * if so so, remove from programMetrics arr (ie Secondary Metrics
                     * */
 
-
                     let i = 0;
 
-                    self.programMetrics.forEach(function(metric){
+                    self.programMetrics.forEach(function(metric) {
+
                         console.log("1");
+
                         if(metric.automated === true && metric.capture_extent === true){
                             console.log("2");
 
                             self.programMetrics.splice(i,1);
 
                             i = i+1;
-
 
                         }
 
@@ -424,7 +423,7 @@ angular.module('FieldDoc')
 
                         self.assignedMetrics.forEach(function(aMetric){
 
-                            if(pMetric.id == aMetric.id){
+                            if(pMetric.id === aMetric.id){
                                 metricAssigned = true;
                             }
 
@@ -447,8 +446,6 @@ angular.module('FieldDoc')
                         self.programMetrics.splice(0,0,uMetric);
 
                     });
-
-
 
                  //   console.log("self.assignedMetrics",self.assignedMetrics);
                  //   console.log("self.programMetrics",self.programMetrics);

@@ -93,6 +93,19 @@
                             A practice type is required.
                         </p>
 
+                        <div class="alignment-warning margin-t-1 rad-50"
+                             data-ng-if="page.practice.misaligned">
+                            <div class="pad-1">
+                                <p class="margin-0">
+                                    The assigned practice type or practice type version is not tracked by this project's
+                                    program. This may lead to inconsistent behavior, including inaccurate or nonexistent
+                                    metric calculations. Please choose another practice type from this program or <a
+                                        href="mailto:support@fielddoc.org" target="_blank">contact our
+                                    support team</a> to upgrade to the latest version of the current selection.
+                                </p>
+                            </div>
+                        </div>
+
                         <ul class="selectable-group-items list-unstyled margin-t-2"
                             data-ng-if="page.practiceType && page.practiceType.id">
 

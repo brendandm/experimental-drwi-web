@@ -517,6 +517,7 @@ angular.module('FieldDoc')
                 branch : FD_489-turf.simplify 2020.07.28
             */
             self.createStaticMapURLs = function(arr, feature_type) {
+
                 console.log("createStaticMapURLS -> arr", arr)
 
                 arr.forEach(function(feature, index) {
@@ -525,7 +526,11 @@ angular.module('FieldDoc')
 
                         console.log("THUMB", feature);
 
-                        feature.staticURL = Utility.buildStaticMapURL(feature.geometry, feature_type,400,200);
+                        feature.staticURL = Utility.buildStaticMapURL(
+                            feature.geometry,
+                            feature_type,
+                            400,
+                            200);
 
                         if (feature.staticURL.length >= 4096) {
 
