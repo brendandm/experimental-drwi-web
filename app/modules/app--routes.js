@@ -23,6 +23,8 @@ angular.module('FieldDoc')
 
             $anchorScroll();
 
+            $rootScope.collapseSidebar = false;
+
         });
 
     }]);

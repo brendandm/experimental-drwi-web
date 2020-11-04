@@ -53,7 +53,7 @@
 
                             scope.visible = false;
 
-                            if (scope.resetType) scope.type = undefined;
+                            if (scope.resetType && scope.type !== 'project') scope.type = undefined;
 
                         };
 

@@ -282,6 +282,14 @@ angular.module('FieldDoc')
 
             };
 
+            self.toggleTable = function () {
+
+                $rootScope.collapseSidebar = !$rootScope.collapseSidebar;
+
+                self.viewTable = !self.viewTable;
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //

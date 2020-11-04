@@ -343,8 +343,8 @@
         //width: 24%;
         //min-width: 200px;
         max-width: 240px;
-        padding-left: 2em;
-        padding-top: 2em;
+        //padding-left: 2em;
+        //padding-top: 2em;
         //height: 100%;
         left: 0;
         //background-color: rgb(70,168,223);
@@ -354,10 +354,26 @@
     @media (min-width: 1200px) {
 
         #sidebar {
+            position: relative;
+            display: flex;
+            flex-direction: column;
             flex-grow: 1;
             padding-left: 0;
-            max-width: 240px;
+            height: 100%;
+            left: 0;
+            //max-width: 240px;
         }
+
+        //#sidebar {
+        //    position: relative;
+        //    display: flex;
+        //    flex-direction: column;
+        //    //width: 20%;
+        //    min-width: 240px;
+        //    //min-width: 120px;
+        //    height: 100%;
+        //    left: 0;
+        //}
 
     }
 
@@ -371,32 +387,37 @@
         position: relative;
         display: flex;
         width: 100%;
-        padding: 0;
+        padding: 0.5rem 0.5rem 0;
     }
 
     #sidebar nav ul li a {
         display: flex;
-        flex-flow: column;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
         width: 100%;
-        padding: 1em 1em 1em 0;
-        color: #333;
+        padding: 1rem;
+        color: #616161;
         //font-weight: bold;
         //text-transform: uppercase;
         //letter-spacing: 0.08em;
         //font-size: 0.8em;
         text-decoration: none;
-        text-align: right;
+        //text-align: right;
         border: 0 none;
         outline: 0 none;
-        opacity: 0.5;
+        //opacity: 0.5;
         transition: all 200ms ease 0s;
     }
 
     #sidebar nav ul li a:hover,
     #sidebar nav ul li a.viewing {
-        opacity: 1;
+        //opacity: 1;
         //padding: 1em 1.5em 1em 0;
+        color: #212121;
         text-decoration: none;
+        background: #F5F5F5;
+        border-radius: .25rem;
     }
 
     #toolbar {
@@ -565,17 +586,6 @@
 
     /* Larger than Desktop HD */
     @media (min-width: 1200px) {
-
-        #sidebar {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            //width: 20%;
-            min-width: 240px;
-            //min-width: 120px;
-            height: 100%;
-            left: 0;
-        }
 
         .content--container {
             position: relative;
@@ -4336,6 +4346,16 @@
                     margin-right: 1em;
                 }
 
+                .sub-label {
+                    font-size: .8rem;
+                    text-transform: uppercase;
+                    color: #2196F3;
+                }
+
+                .no-type {
+                    color: #e52e2e !important;
+                }
+
             }
 
             .body {
@@ -4387,7 +4407,7 @@
                 time {
                     font-size: 0.9em;
                     letter-spacing: 0;
-                    color: #888;
+                    color: #616161;
                 }
 
                 .actions {
@@ -4627,7 +4647,7 @@
                     time {
                         font-size: 0.9em;
                         letter-spacing: 0;
-                        color: #888;
+                        color: #616161;
                     }
 
                     .actions {
@@ -4919,7 +4939,7 @@
                 time {
                     font-size: 0.9em;
                     letter-spacing: 0;
-                    color: #888;
+                    color: #616161;
                 }
 
                 .actions {
@@ -5147,6 +5167,16 @@
                         margin-right: 1em;
                     }
 
+                    .sub-label {
+                        font-size: .8rem;
+                        text-transform: uppercase;
+                        color: #2196F3;
+                    }
+
+                    .no-type {
+                        color: #e52e2e !important;
+                    }
+
                 }
 
                 .body {
@@ -5198,7 +5228,7 @@
                     time {
                         font-size: 0.9em;
                         letter-spacing: 0;
-                        color: #888;
+                        color: #616161;
                     }
 
                     .actions {

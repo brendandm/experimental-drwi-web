@@ -82,12 +82,12 @@
 
                         <h2 class="margin-b-1">Practice type</h2>
 
-                        <p data-ng-if="page.invalidType"
+                        <p data-ng-if="!page.practiceType || !page.practiceType.id"
                            class="margin-0"
                            style="color: #f75757; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                             A practice type is required.
                         </p>
-                        <p data-ng-if="!page.invalidType"
+                        <p data-ng-if="page.practiceType && page.practiceType.id"
                            class="margin-0"
                            style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                             A practice type is required.

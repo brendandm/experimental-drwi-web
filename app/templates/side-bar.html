@@ -4,7 +4,13 @@
         <ul class="list-unstyled">
             <li>
                 <a href="/" data-ng-class="{viewing: $root.viewState.home}">
-                    Home
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        home
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Home
+                    </span>
                 </a>
             </li>
             <!--
@@ -16,33 +22,64 @@
             -->
             <!--START Working link for Organization Profile-->
              <li>
-                <a href="/organizations" data-ng-class="{viewing: $root.viewState.organizationProfile || $root.viewState.organization}">
-                    Organization
+                <a href="/organizations"
+                   data-ng-class="{viewing: $root.viewState.organizationProfile || $root.viewState.organization}">
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        group
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Organization
+                    </span>
                 </a>
             </li>
 
              <!--END Working link for Organization Profile-->
-            <li>
+            <li class="margin-b-50p">
                <!-- <a href="/profile/{{page.user.properties.id}}" data-ng-class="{viewing: $root.viewState.profile}">
                -->
                 <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}">
-                    Profile
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        account_circle
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Profile
+                    </span>
                 </a>
             </li>
 
             <li style="border-top: 1px solid #e0e0e0;">
                 <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
-                    Projects
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        apps
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Projects
+                    </span>
                 </a>
             </li>
             <li>
                 <a href="/dashboards" data-ng-class="{viewing: $root.viewState.dashboard}">
-                    Dashboards
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        dashboard
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Dashboards
+                    </span>
                 </a>
             </li>
             <li data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
                 <a href="/tags" data-ng-class="{viewing: $root.viewState.tag}">
-                    Tags
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        local_offer
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Tags
+                    </span>
                 </a>
             </li>
         </ul>

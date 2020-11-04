@@ -280,7 +280,7 @@ angular.module('FieldDoc')
                 self.invalidType = false;
                 self.invalidName = false;
 
-                if (self.practice.name === undefined) {
+                if (typeof self.practice.name === 'undefined') {
 
                     console.log("self.practice.name", self.practice.name);
 
@@ -290,7 +290,7 @@ angular.module('FieldDoc')
 
                 }
 
-                if (self.practice.category_id === undefined) {
+                if (typeof self.practice.practice_type_id === 'undefined') {
 
                     console.log("self.practiceType", self.practiceType);
 

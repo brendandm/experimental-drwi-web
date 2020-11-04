@@ -1,0 +1,115 @@
+//
+// Table view component
+//
+
+.table-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: .5rem;
+
+    .head {
+        font-weight: bold;
+    }
+
+    .row {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .row:last-of-type {
+        border-bottom: none !important;
+    }
+
+    .cell {
+        max-width: 10rem !important;
+        padding: $rem-1;
+        //border-bottom: 1px solid #e0e0e0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        span {
+            display: block;
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+    }
+
+    table {
+        width: 100%;
+
+        tr {
+
+            td {
+                //width: auto !important;
+            }
+
+            th,
+            td {
+                width: auto;
+                //max-width: 10rem !important;
+                padding: $rem-1;
+                border-bottom: 1px solid #e0e0e0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+
+                span {
+                    display: block;
+                    //width: 100%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+            }
+
+            .info-enabled {
+                overflow: visible !important;
+
+                > div {
+                    position: relative;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    align-items: center;
+                }
+
+                .info-tip {
+                    position: absolute;
+                    bottom: 150%;
+                    right: 0;
+                    //width: 100%;
+                    min-width: 240px;
+                    max-width: 320px;
+                    font-size: .9rem;
+                    //padding: $rem-1;
+                    padding: 0 1rem 1rem;
+                    border-radius: $rem-radius-50;
+                    border: 1px solid #e0e0e0;
+                    background: #FFFFFF;
+                    white-space: pre-line;
+                }
+
+            }
+
+        }
+
+        tr:last-of-type {
+
+            td {
+                border-bottom: none !important;
+            }
+
+        }
+
+    }
+
+}

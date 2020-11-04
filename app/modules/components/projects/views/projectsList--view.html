@@ -2,7 +2,9 @@
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+    <div id="sidebar"
+         data-ng-class="{'no-grow': $root.collapseSidebar}"
+         data-ng-include="'/templates/side-bar.html'"></div>
 
     <div class="content--container">
 
@@ -12,23 +14,22 @@
             </div>
         </div>
 
-        <h1 class="inset">
-            Projects
-            <span class="tally" data-ng-if="!page.status.loading">
-                {{ page.summary.feature_count | number }}
-            </span>
-        </h1>
-
         <div class="main--ui">
 
-            <div class="add--new--wrapper">
-                <span>Create project</span>
-                <a class="add--new--btn"
-                   data-ng-click="page.showChildModal = !page.showChildModal">
-                    <span class="material-icons">
+            <div class="create-heading" data-ng-if="!page.status.loading">
+                <h1 class="margin-0">
+                    Projects
+                    <span class="tally">
+                        {{ page.summary.feature_count | number }}
+                    </span>
+                </h1>
+                <button type="button" style="padding: .5rem 1rem .5rem .7rem;"
+                        data-ng-click="page.showChildModal = !page.showChildModal">
+                    <span class="material-icons margin-r-50p">
                         add
                     </span>
-                </a>
+                    Create
+                </button>
             </div>
 
             <div class="collection-filter-group"
@@ -83,6 +84,20 @@
                  params="page.queryParams"
                  update-params="true"></div>
 
+            <div style="display: flex; flex-flow: row nowrap; align-items: center;"
+                 data-ng-if="!page.status.loading">
+                <div data-ng-click="page.toggleTable()">
+                    <span class="material-icons margin-r-1" style="display: inline-block;">
+                        view_module
+                    </span>
+                </div>
+                <div data-ng-click="page.toggleTable()">
+                    <span class="material-icons" style="display: inline-block;">
+                        table_view
+                    </span>
+                </div>
+            </div>
+
             <div class="features--container" data-ng-if="!page.status.loading">
 
                 <div data-ng-if="!page.projects.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
@@ -128,7 +143,190 @@
 
                 </div>
 
-                <ul class="snapshot--cards list-unstyled" data-ng-if="page.projects.length" style="margin-top: 2em;">
+                <div class="table-view margin-t-2"
+                     data-ng-if="page.projects.length && page.viewTable">
+
+<!--                        <div class="head row">-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Name</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Organization</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Created</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Modified</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Practices</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                <strong>Status</strong>-->
+<!--                            </div>-->
+<!--                            <div class="cell"></div>-->
+<!--                        </div>-->
+
+<!--                        <div class="row"-->
+<!--                             data-ng-repeat="project in page.projects | filter: page.q">-->
+<!--                            <div class="cell">-->
+<!--                                <span style="display: block; width: 100%;">-->
+<!--                                    <a href="/projects/{{ project.id }}">-->
+<!--                                        {{ project.name | truncate:100 }}-->
+<!--                                    </a>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                            <div class="cell">-->
+<!--                                {{ project.organization.name }}-->
+<!--                            </div>-->
+<!--                            <div class="cell no-grow">-->
+<!--                                <span>-->
+<!--                                    <time datetime="{{ project.created_on }}"-->
+<!--                                          title="{{ project.created_on }}">-->
+<!--                                        {{ project.created_on | date : 'mediumDate' }}-->
+<!--                                    </time>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                            <div class="cell no-grow">-->
+<!--                                <span>-->
+<!--                                    <time datetime="{{ project.modified_on }}"-->
+<!--                                          title="{{ project.modified_on }}">-->
+<!--                                        {{ project.modified_on | date : 'mediumDate' }}-->
+<!--                                    </time>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                            <div class="cell no-grow">-->
+<!--                                <a href="/projects/{{ project.id }}/practices">-->
+<!--                                    {{ project.practice_count | number }}-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="cell no-grow">-->
+<!--                                <div class="status-wrapper pad-0"-->
+<!--                                     title="Status: {{ project.status | capitalAttribute }}">-->
+<!--                                    <div class="status status-{{ project.status }}">-->
+<!--                                        <span class="dot"></span>-->
+<!--                                        <span>{{ project.status | capitalAttribute }}</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="cell no-grow">-->
+<!--                                <span class="material-icons">-->
+<!--                                    more_horiz-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Name</strong>
+                                </th>
+                                <th>
+                                    <strong>Organization</strong>
+                                </th>
+                                <th>
+                                    <strong>Created</strong>
+                                </th>
+                                <th>
+                                    <strong>Modified</strong>
+                                </th>
+                                <th>
+                                    <strong>Practices</strong>
+                                </th>
+                                <th>
+                                    <strong>Status</strong>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr data-ng-repeat="project in page.projects | filter: page.q">
+                                <td style="max-width: 20rem;">
+                                    <span style="display: block; width: 100%;">
+                                        <a href="/projects/{{ project.id }}">{{ project.name | truncate:100 }}</a>
+                                    </span>
+                                </td>
+                                <td style="max-width: 20rem;">
+                                    {{ project.organization.name }}
+                                </td>
+                                <td class="info-enabled" style="width: auto;">
+                                    <div>
+                                        <div class="info-tip" data-ng-if="page.creationTip === project.id">
+                                            This project was added to FieldDoc by {{ project.creator.first_name }} {{
+                                            project.creator.last_name }} on {{ project.created_on | date : 'fullDate' }}.
+                                        </div>
+                                        <span>
+                                            <time datetime="{{ project.created_on }}"
+                                                  title="{{ project.created_on }}">
+                                                {{ project.created_on | date : 'mediumDate' }}
+                                            </time>
+                                        </span>
+                                        <span class="material-icons margin-l-50p"
+                                              style="display: inline-block;"
+                                              data-ng-click="page.creationTip = project.id;">
+                                            info
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="info-enabled" style="width: auto;">
+                                    <div>
+                                        <div class="info-tip" data-ng-if="page.modifiedTip === project.id">
+                                            This project was last edited by {{ project.last_modified_by.first_name
+                                            }} {{
+                                            project.last_modified_by.last_name }} on {{ project.modified_on | date : 'fullDate' }}.
+                                        </div>
+                                        <span>
+                                            <time datetime="{{ project.modified_on }}"
+                                                  title="{{ project.modified_on }}">
+                                                {{ project.modified_on | date : 'mediumDate' }}
+                                            </time>
+                                        </span>
+                                        <span class="material-icons margin-l-50p"
+                                              style="display: inline-block;"
+                                              data-ng-click="page.modifiedTip = project.id;">
+                                            info
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width: auto;">
+                                    <a href="/projects/{{ project.id }}/practices"
+                                       style="display: flex; flex-flow: row nowrap; align-items: center;">
+                                        <span>
+                                            {{ project.practice_count | number }}
+                                        </span>
+                                        <span class="material-icons margin-l-50p"
+                                              style="display: inline-block;">
+                                            open_in_new
+                                        </span>
+                                    </a>
+                                </td>
+                                <td style="width: auto;">
+                                    <div class="status-wrapper pad-0"
+                                         title="Status: {{ project.status | capitalAttribute }}">
+                                        <div class="status status-{{ project.status }}">
+                                            <span class="dot"></span>
+                                            <span>{{ project.status | capitalAttribute }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 56px;">
+                                    <span class="material-icons">
+                                        more_horiz
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <ul class="snapshot--cards list-unstyled"
+                    data-ng-if="page.projects.length && !page.viewTable" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in"
                         style="animation-delay: {{ $index * 50 }}ms;"

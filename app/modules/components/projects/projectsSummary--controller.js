@@ -88,6 +88,7 @@ angular.module('FieldDoc')
                     {
                         id: self.project.id,
                         limit: 4,
+                        origin: 'primary',
                         t: Date.now()
                     },
                     false);
@@ -320,7 +321,9 @@ angular.module('FieldDoc')
                         typeof index === 'number' &&
                         featureType === 'site') {
 
-                        self.sites.splice(index, 1);
+                        // self.sites.splice(index, 1);
+
+                        self.loadSites();
 
                         self.cancelDelete();
 
@@ -330,14 +333,16 @@ angular.module('FieldDoc')
                         typeof index === 'number' &&
                         featureType === 'practice') {
 
-                        self.practices.splice(index, 1);
+                        // self.practices.splice(index, 1);
+
+                        self.loadPractices();
 
                         self.cancelDelete();
 
                         $timeout(closeAlerts, 2000);
 
                     } else {
-                        console.log("CLOSE ROUTE");
+
                         $timeout(closeRoute, 2000);
 
                     }
