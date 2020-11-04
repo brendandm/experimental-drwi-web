@@ -106,10 +106,62 @@
                         </div>
                     </div>
                 </td>
-                <td class="pad-1" style="width: 56px;">
-                    <span class="material-icons">
-                        more_horiz
-                    </span>
+                <td class="pad-1 more-actions" style="width: 56px; overflow: visible;">
+                    <div class="action-modal-container">
+                        <div class="action-modal" data-ng-if="modalManager.action === project.id">
+                            <ul>
+                                <li data-ng-click="editProject(project.id)">
+                                    <span class="material-icons margin-r-1">
+                                        edit
+                                    </span>
+                                    <span>
+                                        Edit
+                                    </span>
+                                </li>
+                                <li data-ng-if="!project.archived">
+                                    <span class="material-icons margin-r-1">
+                                        archive
+                                    </span>
+                                    <span>
+                                        Archive
+                                    </span>
+                                </li>
+                                <li data-ng-if="project.archived">
+                                    <span class="material-icons margin-r-1">
+                                        unarchive
+                                    </span>
+                                    <span>
+                                        Restore
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="material-icons margin-r-1">
+                                        cloud_download
+                                    </span>
+                                    <span>
+                                        Export data
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="material-icons margin-r-1">
+                                        delete
+                                    </span>
+                                    <span>
+                                        Delete
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="action-modal-icon" data-ng-click="toggleActionModal(project.id)">
+                            <div class="halo"></div>
+                            <span class="material-icons">
+                                more_horiz
+                            </span>
+                        </div>
+                    </div>
+<!--                    <span class="material-icons">-->
+<!--                        more_horiz-->
+<!--                    </span>-->
                 </td>
             </tr>
         

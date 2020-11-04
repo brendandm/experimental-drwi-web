@@ -17,14 +17,31 @@ angular.module('FieldDoc')
         $locationProvider.hashPrefix('!');
 
     })
-    .run(['$rootScope', '$window', '$location', '$anchorScroll', function($rootScope, $window, $location, $anchorScroll) {
+    .run([
+        '$rootScope',
+        '$window',
+        '$location',
+        '$anchorScroll',
+        '$document',
+        function($rootScope, $window, $location, $anchorScroll, $document) {
 
-        $rootScope.$on('$routeChangeSuccess', function() {
+            $rootScope.$on('$routeChangeSuccess', function() {
 
-            $anchorScroll();
+                $anchorScroll();
 
-            $rootScope.collapseSidebar = false;
+                $rootScope.collapseSidebar = false;
 
-        });
+            });
 
-    }]);
+            $document.on('click', function(event) {
+
+                console.log(
+                    'globalClick:event:',
+                    event
+                );
+
+                $rootScope.$broadcast('globalClick', event.target);
+
+            });
+
+        }]);

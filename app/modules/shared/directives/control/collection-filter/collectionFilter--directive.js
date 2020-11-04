@@ -31,6 +31,8 @@
 
                         }
 
+                        scope.modalVisible = false;
+
                         scope.toggleModal = function (filterValue, resetFilter) {
 
                             resetFilter = resetFilter || false;
@@ -42,21 +44,23 @@
                                 collection
                             );
 
-                            var visible = scope.displayStates[collection] || false;
+                            scope.modalVisible = !scope.modalVisible;
+
+                            // var visible = scope.displayStates[collection] || false;
 
                             console.log(
                                 'toggleModal:visible:',
-                                visible
+                                scope.visible
                             );
 
-                            scope.displayStates = {};
+                            // scope.displayStates = {};
+                            //
+                            // scope.displayStates[collection] = !visible;
 
-                            scope.displayStates[collection] = !visible;
-
-                            console.log(
-                                'toggleModal:displayStates:',
-                                scope.displayStates
-                            );
+                            // console.log(
+                            //     'toggleModal:displayStates:',
+                            //     scope.displayStates
+                            // );
 
                             if (resetFilter) {
 
@@ -93,6 +97,34 @@
                             if (newVal) {
 
                                 scope.params = newVal;
+
+                            }
+
+                        });
+
+                        scope.$on('globalClick', function (event, target) {
+
+                            console.log(
+                                'globalClick:tableView:event:',
+                                event
+                            );
+
+                            console.log(
+                                'globalClick:collectionFilter:target:',
+                                target
+                            );
+
+                            if (!element[0].contains(target)) {
+
+                                scope.$apply(function () {
+
+                                    console.log(
+                                        'globalClick:collectionFilter:event:$apply'
+                                    );
+
+                                    scope.modalVisible = false;
+
+                                });
 
                             }
 
