@@ -10,8 +10,8 @@ $base-font-size: 1em;
 
 
 body {
-  font-family: $font-sans;
-  font-size: 100.00%; // This makes $base-font-size 16px
+    font-family: $font-sans;
+    font-size: 100.00%; // This makes $base-font-size 16px
 }
 
 
@@ -58,171 +58,179 @@ h5,
 h6,
 p,
 li {
-  font-family: $font-sans;
-  color: $color-black-base;
-  line-height: 1.5;
-  //letter-spacing: 0.025em;
+    font-family: $font-sans;
+    color: $color-black-base;
+    line-height: 1.5;
+    //letter-spacing: 0.025em;
 
-  .label {
-    background-color: transparent;
-    color: $color-black-lightest;
-    display: inline-block;
-    font-size: 90%;
-    margin-right: 2px;
-    margin-top: 1px;
-    padding: 2px 6px;
+    .label {
+        background-color: transparent;
+        color: $color-black-lightest;
+        display: inline-block;
+        font-size: 90%;
+        margin-right: 2px;
+        margin-top: 1px;
+        padding: 2px 6px;
 
-    &.label-info {
-      background: $color-blue-base;
-      color: $color-white-base;
+        &.label-info {
+            background: $color-blue-base;
+            color: $color-white-base;
+        }
+        &.label-static {
+            background: $color-darkBlue-base;
+            color: $color-white-base;
+        }
+        &.label-success {
+            background: $color-green-base;
+            color: $color-white-base;
+        }
+        &.label-warning {
+            background: darken($color-gold-base, 15%);
+            color: $color-white-base;
+        }
+        &.label-danger {
+            background: $color-red-base;
+            color: $color-white-base;
+        }
     }
-    &.label-static {
-      background: $color-darkBlue-base;
-      color: $color-white-base;
-    }
-    &.label-success {
-      background: $color-green-base;
-      color: $color-white-base;
-    }
-    &.label-warning {
-      background: darken($color-gold-base, 15%);
-      color: $color-white-base;
-    }
-    &.label-danger {
-      background: $color-red-base;
-      color: $color-white-base;
-    }
-  }
 }
 
 h1 {
-  font-size: 3em;
-  font-weight: 500;
-  line-height: 1;
-  margin-bottom: 16px;
-  margin-top: 0;
+    font-size: 3em;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 16px;
+    margin-top: 0;
 
-  .creation-date {
-    color: $color-black-lightest;
-    display: block;
-    font-size: 0.6125em;
-    font-style: italic;
-    font-weight: 400;
-    margin-top: 4px;
-  }
+    .creation-date {
+        color: $color-black-lightest;
+        display: block;
+        font-size: 0.6125em;
+        font-style: italic;
+        font-weight: 400;
+        margin-top: 4px;
+    }
 }
 
 h2,
 p.lead {
-  font-size: 1.8em;
-  line-height: 1.3;
-  margin-bottom: 16px;
-  margin-top: 0;
+    font-size: 1.8em;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    margin-top: 0;
 }
 
 h2.with-icon {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
 
-  span {
-      margin-right: 0.5rem;
-  }
+    span {
+        margin-right: 0.5rem;
+    }
 
 }
 
 p.introduction {
-  font-size: 2em;
-  line-height: 1.4;
-  max-width: 70%;
-  margin: 0 auto;
-  text-align: center;
+    font-size: 2em;
+    line-height: 1.4;
+    max-width: 70%;
+    margin: 0 auto;
+    text-align: center;
 }
 
 h2.sans {
-  font-family: $font-sans;
-  font-weight: 700;
-  text-transform: uppercase;
+    font-family: $font-sans;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 h3 {
-  font-family: $font-sans;
-  font-size: 1.000em;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 0 0 16px;
+    font-family: $font-sans;
+    font-size: 1.000em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 16px;
 }
 
 h3.alt {
-  color: $color-blue-base;
-  font-family: $font-sans;
-  font-size: 1.250em;
-  font-weight: 300;
-  text-transform: uppercase;
+    color: $color-blue-base;
+    font-family: $font-sans;
+    font-size: 1.250em;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
 h4 {
-  font-size: 1.250em;
-  font-weight: 100;
-  margin: 0 0 24px;
+    font-size: 1.250em;
+    font-weight: 100;
+    margin: 0 0 24px;
 }
 
 h5 {
-  font-size: 1.000em;
-  font-weight: 500;
-  margin: 0 0 24px;
+    font-size: 1.000em;
+    font-weight: 500;
+    margin: 0 0 24px;
 }
 
 h6 {
-  font-size: 0.6875em;
-  font-weight: 300;
-  margin: 0;
-  padding: 32px 0 16px;
-  text-transform: uppercase;
-  strong {
-    font-weight: 700;
-  }
-  &.rule-above {
-    clear: both;
-    padding-bottom: 32px;
-  }
+    font-size: 0.6875em;
+    font-weight: 300;
+    margin: 0;
+    padding: 32px 0 16px;
+    text-transform: uppercase;
+    strong {
+        font-weight: 700;
+    }
+    &.rule-above {
+        clear: both;
+        padding-bottom: 32px;
+    }
 }
 
 p,
 address {
-  font-size: 1em;
-  //font-weight: 300;
-  font-style: normal;
-  letter-spacing: 0;
-  margin: 0 0 16px;
+    font-size: 1em;
+    //font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0;
+    margin: 0 0 16px;
 }
 
 em {
-  font-style: italic;
+    font-style: italic;
 }
 
 ul {
-  list-style-type: square;
-  margin: 0 0 32px;
+    list-style-type: square;
+    margin: 0 0 32px;
 }
 
 ol {
-  // default settings
+    // default settings
 }
 
 li {
-  font-size: 1.000em;
+    font-size: 1.000em;
 }
 
 hr {
-  border: 0;
-  border-top: 1px solid rgb(225,225,225);
-  clear: both;
-  float: left;
-  margin-top: 32px;
-  margin-bottom: 32px;
-  width: 100%;
+    border: 0;
+    border-top: 1px solid rgb(225,225,225);
+    clear: both;
+    float: left;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    width: 100%;
 }
+
+//
+// Rules for sizing Google material icons.
+//
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
 
 
 //
@@ -232,14 +240,14 @@ a,
 a:active,
 a:link,
 a:visited {
-  color: $color-brightBlue;
-  cursor: pointer;
-  text-decoration: none;
+    color: $color-brightBlue;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 a:hover {
-  //color: darken($color-brightBlue, 5%);
-  text-decoration: underline;
+    //color: darken($color-brightBlue, 5%);
+    text-decoration: underline;
 }
 
 
@@ -247,15 +255,15 @@ a:hover {
 // Convenience Selectors
 //
 .align-left {
-  text-align: left;
+    text-align: left;
 }
 
 .align-center {
-  text-align: center;
+    text-align: center;
 }
 
 .align-right {
-  text-align: right;
+    text-align: right;
 }
 
 
@@ -263,16 +271,16 @@ a:hover {
 //
 //
 .page-content-form > h1 {
-  text-align: center;
+    text-align: center;
 }
 
 .page-content-form > p {
-  font-family: $font-sans;
-  font-size: 1.2em;
-  line-height: 1.5;
-  margin: 0 auto 2em;
-  text-align: center;
-  max-width: 46.25em;
+    font-family: $font-sans;
+    font-size: 1.2em;
+    line-height: 1.5;
+    margin: 0 auto 2em;
+    text-align: center;
+    max-width: 46.25em;
 }
 
 
@@ -280,46 +288,46 @@ a:hover {
 // Site Footer Typography
 //
 p {
-  color: $color-black-base;
-  font-family: $font-sans;
-  font-size: 1em;
-  //font-weight: 300;
-  line-height: 1.25;
+    color: $color-black-base;
+    font-family: $font-sans;
+    font-size: 1em;
+    //font-weight: 300;
+    line-height: 1.25;
 }
 
 .site--footer,
 .site--legal {
-  hr {
-    border: 0;
-    border-top: 1px solid rgb(225,225,225);
-    clear: both;
-    float: left;
-    margin-top: 0em;
-    margin-bottom: 1em;
-    width: 100%;
-  }
+    hr {
+        border: 0;
+        border-top: 1px solid rgb(225,225,225);
+        clear: both;
+        float: left;
+        margin-top: 0em;
+        margin-bottom: 1em;
+        width: 100%;
+    }
 
-  h2 {
-    font-size: 0.75em;
-    letter-spacing: 0.025em;
-    text-transform: uppercase;
-  }
+    h2 {
+        font-size: 0.75em;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+    }
 
-  p {
-    color: $color-black-light;
-    font-family: $font-sans;
-    //font-size: 0.6875em;
-    font-size: 0.9em;
-    //font-weight: 300;
-    line-height: 1.25;
-  }
+    p {
+        color: $color-black-light;
+        font-family: $font-sans;
+        //font-size: 0.6875em;
+        font-size: 0.9em;
+        //font-weight: 300;
+        line-height: 1.25;
+    }
 }
 
 .site--footer {
-  p {
-    color: #fff;
-    opacity: 0.8;
-  }
+    p {
+        color: #fff;
+        opacity: 0.8;
+    }
 }
 
 
@@ -332,88 +340,88 @@ a.project--title,
 a.project--title:active,
 a.project--title:link,
 a.project--title:visited {
-  color: $color-black-light;
-  font-size: 15px;
-  font-weight: 500;
-  border-bottom: 1px dashed #898989;
-  text-decoration: none;
-
-  &:hover {
-    border-bottom: none;
+    color: $color-black-light;
+    font-size: 15px;
+    font-weight: 500;
+    border-bottom: 1px dashed #898989;
     text-decoration: none;
-  }
+
+    &:hover {
+        border-bottom: none;
+        text-decoration: none;
+    }
 }
 
 .project--state {
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 0.0125em;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.0125em;
 
-  .project--state--highlight {
-    border-radius: 16px;
-    -moz-border-radius: 16px;
-    -webkit-border-radius: 16px;
-    background-color: $color-gray-light;
-    display: inline-block;
-    height: 8px;
-    width: 8px;
+    .project--state--highlight {
+        border-radius: 16px;
+        -moz-border-radius: 16px;
+        -webkit-border-radius: 16px;
+        background-color: $color-gray-light;
+        display: inline-block;
+        height: 8px;
+        width: 8px;
 
-    &.project--state--draft {
-      background-color: $color-gray-light;
+        &.project--state--draft {
+            background-color: $color-gray-light;
+        }
+        &.project--state--submitted {
+            background-color: $color-gold-base;
+        }
+        &.project--state--funded {
+            background-color: $color-green-base;
+        }
+        &.project--state--completed {
+            background-color: $color-brightBlue;
+        }
     }
-    &.project--state--submitted {
-      background-color: $color-gold-base;
-    }
-    &.project--state--funded {
-      background-color: $color-green-base;
-    }
-    &.project--state--completed {
-      background-color: $color-brightBlue;
-    }
-  }
 
 }
 
 .project--funder {
-  font-size: 13px;
+    font-size: 13px;
 }
 
 .column--state {
-  width: 10%;
+    width: 10%;
 }
 
 .column--programType {
-  width: 10%;
+    width: 10%;
 }
 
 .column--titleDescription {
-  width: 40%;
+    width: 40%;
 }
 
 .column--funder {
-  width: 20%;
+    width: 20%;
 }
 
 .column--contact {
-  width: 10%;
+    width: 10%;
 }
 
 .column--lastUpdated {
-  width: 10%;
+    width: 10%;
 }
 
 
 .column--vertialCenter {
-  vertical-align: middle !important;
+    vertical-align: middle !important;
 
-  p {
-    display: inline;
-  }
+    p {
+        display: inline;
+    }
 }
 
 .monospace-highlight {
-  font-family: $font-monospace;
-  background: #F7DE57;
-  border-radius: 4px;
-  display: inline-block;
+    font-family: $font-monospace;
+    background: #F7DE57;
+    border-radius: 4px;
+    display: inline-block;
 }
