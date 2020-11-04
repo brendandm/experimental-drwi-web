@@ -118,7 +118,8 @@
                                         Edit
                                     </span>
                                 </li>
-                                <li data-ng-if="!project.archived">
+                                <li data-ng-if="!project.archived"
+                                    data-ng-click="archiveProject(project, true)">
                                     <span class="material-icons margin-r-1">
                                         archive
                                     </span>
@@ -126,7 +127,8 @@
                                         Archive
                                     </span>
                                 </li>
-                                <li data-ng-if="project.archived">
+                                <li data-ng-if="project.archived"
+                                    data-ng-click="archiveProject(project, false)">
                                     <span class="material-icons margin-r-1">
                                         unarchive
                                     </span>

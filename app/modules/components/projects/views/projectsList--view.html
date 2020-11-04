@@ -145,6 +145,8 @@
 
                 <div style="width: 100%;"
                      table-view
+                     alerts="page.alerts"
+                     callback="page.loadProjects(page.queryParams)"
                      index="page.projects"
                      visible="page.viewTable"
                      data-ng-if="page.projects.length"></div>

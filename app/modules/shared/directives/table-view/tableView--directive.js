@@ -14,6 +14,8 @@
                 return {
                     restrict: 'EA',
                     scope: {
+                        'alerts': '=?',
+                        'callback': '&',
                         'featureType': '=?',
                         'index': '=?',
                         'visible': '=?'
@@ -26,6 +28,12 @@
                     link: function (scope, element, attrs) {
 
                         $window.scrollTo(0, 0);
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
 
                         //
                         // Additional scope vars.
@@ -73,6 +81,64 @@
 
                             $location.path('/projects/' + projectId + '/edit');
 
+                        };
+                        
+                        scope.archiveProject = function (project, archived) {
+
+                            archived = archived || false;
+                            
+                            var data = {
+                                archived: archived,
+                                private: project.private ? project.private : false
+                            };
+
+                            var successMsg,
+                                errorMsg;
+
+                            if (archived) {
+
+                                successMsg = 'Project moved to archive.';
+
+                                errorMsg = 'Something went wrong and the project was not archived.';
+
+                            } else {
+
+                                successMsg = 'Project restored from archive.';
+
+                                errorMsg = 'Something went wrong and the project was not restored from the archive.';
+
+                            }
+
+                            Project.update({
+                                id: project.id
+                            }, data).$promise.then(function(successResponse) {
+                                
+                                scope.callback();
+
+                                scope.alerts = [{
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': successMsg,
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            }).catch(function(error) {
+
+                                // Do something with the error
+
+                                scope.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': errorMsg,
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+                            
                         };
 
                         scope.$watch('index', function (newVal) {
