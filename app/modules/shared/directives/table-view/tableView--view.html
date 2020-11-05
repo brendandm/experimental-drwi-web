@@ -144,11 +144,12 @@
                                         Export data
                                     </span>
                                 </li>
-                                <li>
-                                    <span class="material-icons margin-r-1">
+                                <li class="delete-trigger" data-ng-click="presentDeletionDialog(project)">
+                                    <span class="material-icons margin-r-1"
+                                          style="pointer-events: none;">
                                         delete
                                     </span>
-                                    <span>
+                                    <span style="pointer-events: none;">
                                         Delete
                                     </span>
                                 </li>
@@ -172,3 +173,10 @@
     </table>
 
 </div>
+
+<div deletion-dialog
+     alerts="alerts"
+     callback="callback()"
+     feature="project"
+     feature-type="'project'"
+     visible="showDeletionDialog"></div>

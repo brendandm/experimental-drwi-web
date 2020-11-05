@@ -82,6 +82,16 @@
                             $location.path('/projects/' + projectId + '/edit');
 
                         };
+
+                        scope.presentDeletionDialog = function (project) {
+
+                            scope.project = project;
+
+                            scope.showDeletionDialog = true;
+
+                            scope.modalManager = {};
+
+                        };
                         
                         scope.archiveProject = function (project, archived) {
 
