@@ -190,6 +190,22 @@
                 border: 1px solid #33992E !important;
             }
 
+            .confirm-delete {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                justify-content: center;
+                background: #e52e2e;
+                color: #fff;
+                border: 1px solid #e52e2e;
+
+                &:hover {
+                    background: #d21a1a;
+                    border: 1px solid #d21a1a;
+                }
+
+            }
+
         }
 
     }

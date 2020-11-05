@@ -172,35 +172,35 @@
 
                         });
 
-                        scope.$on('globalClick', function (event, target) {
-
-                            console.log(
-                                'globalClick:deletionDialog:event:',
-                                event
-                            );
-
-                            console.log(
-                                'globalClick:deletionDialog:target:',
-                                target
-                            );
-
-                            if (scope.visible &&
-                                !target.classList.contains('delete-trigger') &&
-                                !element[0].contains(target)) {
-
-                                scope.$apply(function () {
-
-                                    console.log(
-                                        'globalClick:deletionDialog:event:$apply'
-                                    );
-
-                                    scope.visible = false;
-
-                                });
-
-                            }
-
-                        });
+                        // scope.$on('globalClick', function (event, target) {
+                        //
+                        //     console.log(
+                        //         'globalClick:deletionDialog:event:',
+                        //         event
+                        //     );
+                        //
+                        //     console.log(
+                        //         'globalClick:deletionDialog:target:',
+                        //         target
+                        //     );
+                        //
+                        //     if (scope.visible &&
+                        //         !target.classList.contains('delete-trigger') &&
+                        //         !element[0].contains(target)) {
+                        //
+                        //         scope.$apply(function () {
+                        //
+                        //             console.log(
+                        //                 'globalClick:deletionDialog:event:$apply'
+                        //             );
+                        //
+                        //             scope.visible = false;
+                        //
+                        //         });
+                        //
+                        //     }
+                        //
+                        // });
 
                     }
 
