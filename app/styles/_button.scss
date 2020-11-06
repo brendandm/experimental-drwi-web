@@ -11,206 +11,211 @@
 //
 // Buttons
 //
+
+button {
+    font-family: $font-sans;
+}
+
 a.button,
 .button {
-  background-color: $color-green-base;
-  border: 0;
-  -webkit-border-radius: 4em;
-  -moz-border-radius: 4em;
-  border-radius: 4em;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
-  color: rgb(255, 255, 255);
-  cursor: pointer;
-  display: inline-block;
-  font-family: $font-sans;
-  font-size: 0.6125em;
-  font-weight: 400;
-  font-style: normal;
-  letter-spacing: 0.125em;
-  padding: 0.6875em 2em;
-  text-decoration: none;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: nowrap;
-
-  &:hover {
     background-color: $color-green-base;
-  }
+    border: 0;
+    -webkit-border-radius: 4em;
+    -moz-border-radius: 4em;
+    border-radius: 4em;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: inline-block;
+    font-family: $font-sans;
+    font-size: 0.6125em;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.125em;
+    padding: 0.6875em 2em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
 
-  &.button-large {
-    font-size: 1em;
-  }
-
-  em {
-    font-style: italic;
-
-    &.fancy {
-      font-family: $font-serif;
-      font-weight: 300;
-      text-transform: none;
-      -webkit-font-smoothing: antialiased;
+    &:hover {
+        background-color: $color-green-base;
     }
-  }
+
+    &.button-large {
+        font-size: 1em;
+    }
+
+    em {
+        font-style: italic;
+
+        &.fancy {
+            font-family: $font-serif;
+            font-weight: 300;
+            text-transform: none;
+            -webkit-font-smoothing: antialiased;
+        }
+    }
 
 }
 
 a.button-outline,
 .button-outline {
-  background-color: $color-white-base;
-  border: 1px solid $color-green-base;
-  color: $color-green-base;
-  font-weight: 600;
-  text-shadow: none;
+    background-color: $color-white-base;
+    border: 1px solid $color-green-base;
+    color: $color-green-base;
+    font-weight: 600;
+    text-shadow: none;
 
-  &:hover {
-    background-color: rgb(252,252,252);
-  }
+    &:hover {
+        background-color: rgb(252,252,252);
+    }
 }
 
 
 a.button-warning,
 .button-warning {
-  background-color: $color-gold-base;
-  font-weight: 600;
-  text-shadow: none;
-
-  &:hover {
     background-color: $color-gold-base;
-  }
+    font-weight: 600;
+    text-shadow: none;
 
-  &.button-outline {
-    background-color: $color-white-base;
-    border-color: $color-gold-base;
-    color: $color-gold-base;
-  }
+    &:hover {
+        background-color: $color-gold-base;
+    }
+
+    &.button-outline {
+        background-color: $color-white-base;
+        border-color: $color-gold-base;
+        color: $color-gold-base;
+    }
 }
 
 a.button-danger,
 .button-danger {
-  background-color: $color-red-base;
-  font-weight: 600;
-  text-shadow: none;
-
-  &:hover {
     background-color: $color-red-base;
-  }
+    font-weight: 600;
+    text-shadow: none;
 
-  &.button-outline {
-    background-color: $color-white-base;
-    border-color: $color-red-base;
-    color: $color-red-base;
-  }
+    &:hover {
+        background-color: $color-red-base;
+    }
+
+    &.button-outline {
+        background-color: $color-white-base;
+        border-color: $color-red-base;
+        color: $color-red-base;
+    }
 }
 
 a.button-reverse,
 .button-reverse {
-  background-color: $color-white-base;
-  font-weight: 600;
-  text-shadow: none;
-
-  &:hover {
     background-color: $color-white-base;
-  }
+    font-weight: 600;
+    text-shadow: none;
 
-  &.button-outline {
-    background-color: transparent;
-    border-color: $color-white-base;
-    color: $color-white-base;
-  }
+    &:hover {
+        background-color: $color-white-base;
+    }
+
+    &.button-outline {
+        background-color: transparent;
+        border-color: $color-white-base;
+        color: $color-white-base;
+    }
 }
 
 a.button-link,
 .button-link {
-  background-color: transparent;
-  color: $color-gray-light;
-  box-shadow: none;
-  letter-spacing: 0.025em;
-  text-shadow: none;
-
-  &:hover {
     background-color: transparent;
-  }
+    color: $color-gray-light;
+    box-shadow: none;
+    letter-spacing: 0.025em;
+    text-shadow: none;
 
-  &.button-outline {
-    border-color: $color-gray-light;
-  }
+    &:hover {
+        background-color: transparent;
+    }
+
+    &.button-outline {
+        border-color: $color-gray-light;
+    }
 }
 
 .button-success.button-link,
 a.button-success.button-link {
-  color: $color-green-base;
+    color: $color-green-base;
 }
 
 .button-danger.button-link,
 a.button-danger.button-link {
-  color: $color-red-base;
+    color: $color-red-base;
 }
 
 
 a.button:focus,
 .button:focus {
-  outline: none;
+    outline: none;
 }
 
 a.button:active,
 .button:active {
-  position:relative;
-  top: 1px;
+    position:relative;
+    top: 1px;
 }
 
 
 .button.button-info,
 a.button.button-info {
-  background-color: $color-blue-bright;
-
-  &:hover {
-    background-color: darken($color-blue-bright, 3%);
-  }
-
-  &.button-outline {
-    background-color: $color-white-base;
-    border: 1px solid $color-blue-bright;
-    color: $color-blue-bright;
-    font-weight: 600;
-    text-shadow: none;
+    background-color: $color-blue-bright;
 
     &:hover {
-      background-color: rgb(252,252,252);
+        background-color: darken($color-blue-bright, 3%);
     }
 
-  }
+    &.button-outline {
+        background-color: $color-white-base;
+        border: 1px solid $color-blue-bright;
+        color: $color-blue-bright;
+        font-weight: 600;
+        text-shadow: none;
+
+        &:hover {
+            background-color: rgb(252,252,252);
+        }
+
+    }
 }
 
 .button.button-center,
 a.button.button-center {
-  display: block;
-  margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .button.button-delete,
 a.button.button-delete {
-  background-color: transparent;
-  box-shadow: none;
-  color: rgb(161, 162, 166);
-  text-shadow: none;
-
-  &:hover {
     background-color: transparent;
-    text-decoration: underline;
-  }
+    box-shadow: none;
+    color: rgb(161, 162, 166);
+    text-shadow: none;
+
+    &:hover {
+        background-color: transparent;
+        text-decoration: underline;
+    }
 }
 
 a.button-delete.button-outline,
 .button-delete.button-outline {
-  background-color: rgb(242,242,242);
-  border: 1px solid rgb(161, 162, 166);
-  color: rgb(161, 162, 166);
-  font-weight: 600;
-  text-shadow: none;
+    background-color: rgb(242,242,242);
+    border: 1px solid rgb(161, 162, 166);
+    color: rgb(161, 162, 166);
+    font-weight: 600;
+    text-shadow: none;
 
-  &:hover {
-    background-color: rgb(252,252,252);
-  }
+    &:hover {
+        background-color: rgb(252,252,252);
+    }
 }
 
 
@@ -219,91 +224,91 @@ a.button-delete.button-outline,
 //
 //
 .button-left {
-  float: left;
+    float: left;
 }
 
 .button-center {
-  display: block;
-  margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .button-right {
-  float: right;
+    float: right;
 }
 
 .button-indent {
-  margin-left: 10%;
+    margin-left: 10%;
 }
 
 .fab {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-
-  button {
-    appearance: none;
-    border: 0 none;
-    outline: none;
-    height: 56px;
-    width: 56px;
     display: flex;
-    flex-flow: column;
-    color: #fff;
-    background: rgb(41,204,130);
-    font-size: 2em;
-    border-radius: 50%;
-    justify-content: center;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
     align-items: center;
-    align-content: center;
-    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-    transition: all 250ms ease 0s;
-    cursor: pointer;
+    width: 100%;
 
-    &:hover {
-      background: rgb(37,183,116);
-      color: #fff;
-      outline: 0 none;
-      text-decoration: none;
+    button {
+        appearance: none;
+        border: 0 none;
+        outline: none;
+        height: 56px;
+        width: 56px;
+        display: flex;
+        flex-flow: column;
+        color: #fff;
+        background: rgb(41,204,130);
+        font-size: 2em;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        transition: all 250ms ease 0s;
+        cursor: pointer;
+
+        &:hover {
+            background: rgb(37,183,116);
+            color: #fff;
+            outline: 0 none;
+            text-decoration: none;
+        }
+
     }
 
-  }
+    button[disabled] {
+        background: #9E9E9E;
+        cursor: not-allowed;
 
-  button[disabled] {
-    background: #9E9E9E;
-    cursor: not-allowed;
+        &:hover {
+            background: #9E9E9E;
+            cursor: not-allowed;
+        }
 
-    &:hover {
-      background: #9E9E9E;
-      cursor: not-allowed;
     }
-
-  }
-
-  span {
-    display: inline-block;
-    margin-right: 10px;
-    padding: 4px 8px;
-    background: rgba(0,0,0,0.75);
-    border-radius: 4px;
-    font-size: 14px;
-    color: #fff;
-    opacity: 0;
-    visibility: hidden;
-    whitespace: nowrap;
-    transition: all 250ms ease 0s;
-  }
-
-  &:hover {
 
     span {
-      opacity: 1;
-      visibility: visible;
+        display: inline-block;
+        margin-right: 10px;
+        padding: 4px 8px;
+        background: rgba(0,0,0,0.75);
+        border-radius: 4px;
+        font-size: 14px;
+        color: #fff;
+        opacity: 0;
+        visibility: hidden;
+        whitespace: nowrap;
+        transition: all 250ms ease 0s;
     }
 
-  }
+    &:hover {
+
+        span {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    }
 
 }
