@@ -3,39 +3,39 @@
     'use strict';
 
     angular.module('FieldDoc')
-        .directive('creationDialog', [
+        .directive('exportDialog', [
+            'environment',
             '$routeParams',
             '$filter',
             '$parse',
             '$location',
-            'Project',
-            'Site',
-            'Practice',
-            'Report',
-            'MetricType',
-            'PracticeType',
-            'SearchService',
+            'Export',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Project,
-                     Site, Practice, Report, MetricType, PracticeType,
-                     SearchService, $timeout) {
+            function(environment, $routeParams, $filter, $parse, $location, Export, $timeout) {
                 return {
                     restrict: 'EA',
                     scope: {
                         'alerts': '=?',
-                        'organization': '=?',
-                        'parent': '=?',
+                        'feature': '=?',
                         'resetType': '=?',
-                        'site': '=?',
                         'type': '=?',
                         'visible': '=?'
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/dialog/creationDialog--view.html';
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/export/exportDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
+
+                        scope.format = 'csv';
 
                         if (typeof scope.resetType === 'undefined') {
 
@@ -53,160 +53,42 @@
 
                             scope.visible = false;
 
-                            if (scope.resetType && scope.type !== 'project') scope.type = undefined;
+                            if (scope.resetType) scope.type = undefined;
 
                         };
 
-                        scope.createChild = function(name) {
+                        scope.createExport = function(name, format) {
 
-                            if (scope.type !== 'metric' &&
-                                scope.type !== 'report' &&
-                                scope.type !== 'practice' &&
-                                scope.type !== 'practice_type' &&
-                                scope.type !== 'site' &&
-                                scope.type !== 'project') return;
-
-                            if (!name || typeof name === 'undefined') return;
-
-                            var newFeature;
-
-                            var data;
-
-                            if (scope.type === 'practice' ||
-                                scope.type === 'site') {
-
-                                data = {
-                                    'name': name,
-                                    'project_id': scope.parent,
-                                    'organization_id': scope.organization
-                                };
-
-                                if (scope.type === 'site') {
-
-                                    newFeature = new Site(data);
-
-                                } else {
-
-                                    if (scope.site) {
-
-                                        data.site_id = scope.site;
-                                    }
-
-                                    newFeature = new Practice(data);
-
-                                }
-
-                            } else if (scope.type === 'project') {
-
-                                data = {
-                                    'name': name,
-                                    'program_id': scope.program_id,
-                                    'organization_id': scope.organization
-                                };
-
-                                newFeature = new Project(data);
-
-                            } else if (scope.type === 'metric') {
-
-                                data = {
-                                    'name': name,
-                                    'program_id': scope.parent,
-                                    'organization_id': scope.organization
-                                };
-
-                                newFeature = new MetricType(data);
-
-                            } else if (scope.type === 'practice_type') {
-
-                                data = {
-                                    'name': name,
-                                    'program_id': scope.parent,
-                                    'organization_id': scope.organization
-                                };
-
-                                newFeature = new PracticeType(data);
-
-                            } else {
-
-                                data = {
-                                    'measurement_period': name,
-                                    'name': name,
-                                    'report_date': new Date(),
-                                    'practice_id': scope.parent,
-                                    'organization_id': scope.organization
-                                };
-
-                                newFeature = new Report(data);
-
-                            }
+                            var newFeature = new Export({
+                                'feature_id': scope.feature.id,
+                                'name': name,
+                                'scope': scope.type,
+                                'format': format
+                            });
 
                             newFeature.$save(function(successResponse) {
 
-                                var nextPath = [
-                                    '/',
-                                    scope.type.replace(/_/g, '-'),
-                                    's/',
-                                    successResponse.id,
-                                    '/edit'
-                                ].join('');
+                                scope.alerts = [{
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': 'Successfully exported this ' + scope.type + '.',
+                                    'prompt': 'OK'
+                                }];
 
-                                if (scope.type === 'report') {
+                                $timeout(closeAlerts, 2000);
 
-                                    Report.prepare({
-                                        id: +successResponse.id
-                                    }, {}).$promise.then(function(successResponse) {
-
-                                        $location.path(nextPath);
-
-                                    }).catch(function(error) {
-
-                                        scope.alerts = [{
-                                            'type': 'error',
-                                            'flag': 'Error!',
-                                            'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
-                                            'prompt': 'OK'
-                                        }];
-
-                                        $timeout(closeAlerts, 2000);
-
-                                    });
-
-                                } else {
-
-                                    $location.path(nextPath);
-
-                                }
+                                scope.closeChildModal();
 
                             }, function(errorResponse) {
 
                                 scope.alerts = [{
                                     'type': 'error',
                                     'flag': 'Error!',
-                                    'msg': 'Something went wrong while attempting to create this ' + scope.type + '.',
+                                    'msg': 'Something went wrong while exporting this ' + scope.type + '.',
                                     'prompt': 'OK'
                                 }];
 
                                 $timeout(closeAlerts, 2000);
-
-                            });
-
-                        };
-
-                        scope.searchPrograms = function(value) {
-
-                            return SearchService.program({
-                                q: value
-                            }).$promise.then(function(response) {
-
-                                console.log('SearchService.program response', response);
-
-                                response.results.forEach(function(result) {
-
-                                    result.category = null;
-
-                                });
-
-                                return response.results.slice(0, 3);
 
                             });
 

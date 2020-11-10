@@ -25,7 +25,14 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/toolbar/practice/practiceToolbar--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'toolbar/practice/practiceToolbar--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {

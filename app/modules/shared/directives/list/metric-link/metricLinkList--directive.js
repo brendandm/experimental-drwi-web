@@ -23,7 +23,14 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/metric-link/metricLinkList--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/metric-link/metricLinkList--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {

@@ -29,7 +29,14 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/feature-index/index--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/feature-index/index--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {

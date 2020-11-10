@@ -26,7 +26,14 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/practice-type/practiceTypeList--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/practice-type/practiceTypeList--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {

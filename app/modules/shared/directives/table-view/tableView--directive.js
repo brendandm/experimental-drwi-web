@@ -22,7 +22,14 @@
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/table-view/tableView--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'table-view/tableView--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -88,6 +95,16 @@
                             scope.project = project;
 
                             scope.showDeletionDialog = true;
+
+                            scope.modalManager = {};
+
+                        };
+
+                        scope.presentExportDialog = function (project) {
+
+                            scope.project = project;
+
+                            scope.showExportDialog = true;
 
                             scope.modalManager = {};
 

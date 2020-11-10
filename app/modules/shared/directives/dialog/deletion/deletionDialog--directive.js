@@ -4,6 +4,7 @@
 
     angular.module('FieldDoc')
         .directive('deletionDialog', [
+            'environment',
             '$routeParams',
             '$filter',
             '$parse',
@@ -16,7 +17,7 @@
             'PracticeType',
             'SearchService',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Project,
+            function(environment, $routeParams, $filter, $parse, $location, Project,
                      Site, Practice, Report, MetricType, PracticeType,
                      SearchService, $timeout) {
                 return {
@@ -30,7 +31,14 @@
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/dialog/deletion/deletionDialog--view.html';
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/deletion/deletionDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {

@@ -4,6 +4,7 @@
 
     angular.module('FieldDoc')
         .directive('importDialog', [
+            'environment',
             '$routeParams',
             '$filter',
             '$parse',
@@ -11,7 +12,7 @@
             'ImportTpl',
             '$timeout',
             'Program',
-            function($routeParams, $filter, $parse, $location,
+            function(environment, $routeParams, $filter, $parse, $location,
                      ImportTpl, $timeout, Program) {
                 return {
                     restrict: 'EA',
@@ -25,7 +26,14 @@
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/dialog/import/importDialog--view.html';
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/import/importDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {

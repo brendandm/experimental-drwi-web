@@ -208,6 +208,60 @@
 
         }
 
+        .radio-options {
+
+            label {
+                position: relative;
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                flex-grow: 1;
+                flex-shrink: 1;
+                padding: 1rem;
+                //background: #fff;
+                border-radius: $rem-radius-25;
+                color: inherit;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+                user-select: none;
+                overflow: hidden;
+
+                span {
+                    display: inline-flex;
+                }
+
+                .input-mask {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0;
+                    margin-right: .75rem;
+                    color: #BDBDBD;
+                }
+
+                input {
+                    position: absolute;
+                    right: 100%;
+                    top: 0;
+                }
+
+            }
+
+            label:hover,
+            .active {
+                background: #edf7fe;
+                color: #0c83e1;
+                //color: #2196F3;
+                //background: #edf7fe;
+
+                .input-mask {
+                    color: #0c83e1;
+                }
+
+            }
+
+        }
+
     }
 
 }

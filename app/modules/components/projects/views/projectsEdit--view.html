@@ -51,9 +51,7 @@
                     </span>
 
                     <div class="status_dropdown">
-<!--                        <strong>Status</strong>-->
-                        <div class="collection-filter drop-down"
-                             style="float:left; display:inline-block;">
+                        <div class="collection-filter drop-down">
                             <button type="button"
                                     style="padding: .5rem .25rem .5rem .75rem; font-size: 1rem; background:
                                     transparent; border: 1px solid #e0e0e0; color: #212121;"
@@ -69,11 +67,9 @@
                                     arrow_drop_up
                                 </span>
                             </button>
-                            <div name="collection-filter-form"
-                                 class="collection-filter-modal"
+                            <div class="collection-filter-modal"
                                  style="width: auto;"
                                  data-ng-if="page.showModal.status">
-
                                 <label data-ng-repeat="status in page.project_status"
                                        data-ng-class="{'active': page.project_status == status}"
                                        title="{{ status }}">
@@ -107,7 +103,6 @@
                     </span>
 
                     <div class="scope--control margin-0">
-<!--                        <span>Archived</span>-->
                         <label class="switch">
                             <input class="inputdemo"
                                    type="checkbox"
@@ -115,7 +110,6 @@
                                    data-ng-checked="page.project.archived">
                             <div class="slider round"></div>
                         </label>
-<!--                        <span data-ng-class="{on: page.site.archived}">Archived</span>-->
                     </div>
 
                 </div>

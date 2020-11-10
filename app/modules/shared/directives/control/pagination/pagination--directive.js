@@ -18,7 +18,14 @@
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/control/pagination/pagination--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'control/pagination/pagination--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {

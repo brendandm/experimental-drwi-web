@@ -20,7 +20,14 @@
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/control/alphabet/alphabetControl--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'control/alphabet/alphabetControl--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {

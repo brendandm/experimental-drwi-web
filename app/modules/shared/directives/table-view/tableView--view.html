@@ -136,7 +136,7 @@
                                         Restore
                                     </span>
                                 </li>
-                                <li>
+                                <li data-ng-click="presentExportDialog(project)">
                                     <span class="material-icons margin-r-1">
                                         cloud_download
                                     </span>
@@ -180,3 +180,9 @@
      feature="project"
      feature-type="'project'"
      visible="showDeletionDialog"></div>
+
+<div export-dialog
+     alerts="alerts"
+     feature="project"
+     type="'project'"
+     visible="showExportDialog"></div>
