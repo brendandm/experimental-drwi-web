@@ -71,7 +71,7 @@
                                 scope.alerts = [{
                                     'type': 'success',
                                     'flag': 'Success!',
-                                    'msg': 'Successfully exported this ' + scope.type + '.',
+                                    'msg': 'Successfully exported this ' + scope.label + '.',
                                     'prompt': 'OK'
                                 }];
 
@@ -84,7 +84,7 @@
                                 scope.alerts = [{
                                     'type': 'error',
                                     'flag': 'Error!',
-                                    'msg': 'Something went wrong while exporting this ' + scope.type + '.',
+                                    'msg': 'Something went wrong while exporting this ' + scope.label + '.',
                                     'prompt': 'OK'
                                 }];
 
