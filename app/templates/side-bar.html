@@ -61,6 +61,17 @@
                 </a>
             </li>
             <li>
+                <a href="/exports" data-ng-class="{viewing: $root.viewState.export}">
+                    <span class="material-icons"
+                          data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">
+                        cloud_download
+                    </span>
+                    <span data-ng-if="!$root.collapseSidebar">
+                        Exports
+                    </span>
+                </a>
+            </li>
+            <li>
                 <a href="/dashboards" data-ng-class="{viewing: $root.viewState.dashboard}">
                     <span class="material-icons"
                           data-ng-class="{'margin-0': $root.collapseSidebar, 'margin-r-1': !$root.collapseSidebar}">

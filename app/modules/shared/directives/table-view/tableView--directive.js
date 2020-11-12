@@ -17,6 +17,8 @@
                         'alerts': '=?',
                         'callback': '&',
                         'featureType': '=?',
+                        'includeMod': '=?',
+                        'includeOrg': '=?',
                         'index': '=?',
                         'visible': '=?'
                     },
