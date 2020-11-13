@@ -5,41 +5,11 @@
 
         <!-- Summary -->
         
-        <li data-ng-class="{active: toolbarState === 'summary'}">
+        <li data-ng-class="{active: toolbarState === 'summary'}"
+            data-ng-if="toolbarState !== 'summary'">
             <a href="/practices/{{ practice.id }}" title="Summary">
                 <i class="material-icons">
                     dashboard
-                </i>
-            </a>
-        </li>
-
-        <!-- Edit -->
-        
-        <li data-ng-if="practice.permissions.write"
-            data-ng-class="{active: toolbarState === 'edit'}">
-            <div class="action-prompt"
-                 data-ng-if="nextAction === 'add_type' && toolbarState === 'summary' && showPrompt === true">
-                <div class="step-icon">
-                    <span class="material-icons">
-                        next_plan
-                    </span>
-                </div>
-                <div class="copy">
-
-                    <span>
-                        This practice isn’t linked to a practice type.
-                    </span>
-                    <a href="/practices/{{ practice.id }}/edit">
-                        Click here to select one.
-                    </a>
-
-                </div>
-
-            </div>
-            <a href="/practices/{{ practice.id }}/edit" title="Edit">
-                <i data-ng-class="{glow: !practice.practice_type}"
-                   class="material-icons">
-                    edit
                 </i>
             </a>
         </li>
@@ -157,6 +127,38 @@
             </a>
         </li>
 
+        <!-- Edit -->
+
+        <li style="border-top: 1px solid #e0e0e0;"
+            data-ng-if="practice.permissions.write"
+            data-ng-class="{active: toolbarState === 'edit'}">
+            <div class="action-prompt"
+                 data-ng-if="nextAction === 'add_type' && toolbarState === 'summary' && showPrompt === true">
+                <div class="step-icon">
+                    <span class="material-icons">
+                        next_plan
+                    </span>
+                </div>
+                <div class="copy">
+
+                    <span>
+                        This practice isn’t linked to a practice type.
+                    </span>
+                    <a href="/practices/{{ practice.id }}/edit">
+                        Click here to select one.
+                    </a>
+
+                </div>
+
+            </div>
+            <a href="/practices/{{ practice.id }}/edit" title="Edit">
+                <i data-ng-class="{glow: !practice.practice_type}"
+                   class="material-icons">
+                    edit
+                </i>
+            </a>
+        </li>
+
         <!-- Copy -->
         
         <li data-ng-if="practice.permissions.write && states.has_type && states.has_geometry">
@@ -179,6 +181,18 @@
             <a href="#" data-ng-click="confirmCopy()" title="Copy">
                 <i class="material-icons">
                     file_copy
+                </i>
+            </a>
+        </li>
+
+        <!-- Export -->
+
+        <li data-ng-if="practice.permissions.write && states.has_type && states.has_geometry">
+            <a href="#"
+               title="Export"
+               data-ng-click="toggleExportModal()">
+                <i class="material-icons">
+                    cloud_download
                 </i>
             </a>
         </li>
@@ -226,3 +240,10 @@
 <div creation-dialog alerts="alerts" parent="practice.id"
      organization="practice.project.organization_id"
      reset-type="false" type="'report'" visible="showChildModal"></div>
+
+<div export-dialog
+     alerts="alerts"
+     feature="practice"
+     reset-type="false"
+     type="'practice'"
+     visible="showExportDialog"></div>

@@ -82,6 +82,16 @@
                         };
 
                         //
+                        // Handling for export modal.
+                        //
+
+                        scope.toggleExportModal = function() {
+
+                            scope.showExportDialog = !scope.showExportDialog;
+
+                        };
+
+                        //
                         // Handling for report creation modal.
                         //
 

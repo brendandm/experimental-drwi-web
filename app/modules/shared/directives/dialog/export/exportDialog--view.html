@@ -72,6 +72,7 @@
                     <div style="width: 1rem;"></div>
 
                     <label data-ng-class="{'active': format === 'geojson'}"
+                           data-ng-if="type !== 'program'"
                            style="flex-basis: 50%;"
                            title="GeoJSON">
                         <div class="input-mask" data-ng-if="format === 'geojson'">

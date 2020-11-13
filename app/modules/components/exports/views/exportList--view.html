@@ -135,13 +135,6 @@
                                 <span>{{ export.name }}</span>
                             </div>
 
-                            <div class="status-wrapper" title="Status: {{ export.status | capitalAttribute }}">
-                                <div class="status status-{{ export.status }}">
-                                    <span class="dot"></span>
-                                    <span>{{ export.status | capitalAttribute }}</span>
-                                </div>
-                            </div>
-
                             <div class="body">
 
                                 <div class="confirm--delete" data-ng-if="page.deletionTarget.id === export.id">
@@ -185,8 +178,8 @@
                                 </div>
 
                                 <span>
-                                    <time datetime="{{ export.modified_on }}" title="{{ export.modified_on }}">
-                                        Last updated {{ export.modified_on | date : 'mediumDate' }}
+                                    <time datetime="{{ export.created_on }}" title="{{ export.created_on }}">
+                                        {{ export.created_on | date : 'mediumDate' }}
                                     </time>
                                 </span>
 

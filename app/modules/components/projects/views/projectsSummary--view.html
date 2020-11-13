@@ -844,20 +844,13 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/projects/{{ page.project.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
+<!--            <li data-ng-class="{active: $root.toolbarState.dashboard}">-->
+<!--                <a href="/projects/{{ page.project.id }}" title="Summary">-->
+<!--                    <i class="material-icons">-->
+<!--                        dashboard-->
+<!--                    </i>-->
+<!--                </a>-->
+<!--            </li>-->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
                 <a href="/projects/{{ page.project.id }}/grant" title="Program">
                     <i class="material-icons">
@@ -883,6 +876,23 @@
                 <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">
                         local_offer
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit"
+                style="border-top: 1px solid #e0e0e0;">
+                <a href="/projects/{{ page.project.id }}/edit" title="Edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#"
+                   title="Export"
+                   data-ng-click="page.showExportDialog = !page.showExportDialog">
+                    <i class="material-icons">
+                        cloud_download
                     </i>
                 </a>
             </li>
@@ -927,6 +937,13 @@
 
     <div creation-dialog alerts="page.alerts" parent="page.project.id" organization="page.project.organization_id"
          type="page.childType" visible="page.showChildModal"></div>
+
+    <div export-dialog
+         alerts="page.alerts"
+         feature="page.project"
+         reset-type="false"
+         type="'project'"
+         visible="page.showExportDialog"></div>
 
 </main>
 
