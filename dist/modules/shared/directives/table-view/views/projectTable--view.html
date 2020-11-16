@@ -1,0 +1,189 @@
+<div class="table-view margin-t-2"
+     data-ng-if="index.length && visible">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th class="pad-1">
+                    <strong>Name</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Organization</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Created</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Modified</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Practices</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Status</strong>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr data-ng-repeat="project in index | filter: q">
+                <td class="pad-1" style="max-width: 20rem;">
+                    <span style="display: block; width: 100%;">
+                        <a href="/projects/{{ project.id }}">{{ project.name | truncate:100 }}</a>
+                    </span>
+                </td>
+                <td class="pad-1" style="max-width: 20rem;">
+                    {{ project.organization.name }}
+                </td>
+                <td class="info-enabled pad-1" style="width: 1%;">
+                    <div>
+                        <div class="info-tip" data-ng-if="tipManager.created === project.id">
+                            This project was added to FieldDoc by {{ project.creator.first_name }} {{
+                            project.creator.last_name }} on {{ project.created_on | date : 'fullDate' }}.
+                        </div>
+                        <span>
+                            <time datetime="{{ project.created_on }}"
+                                  title="{{ project.created_on }}">
+                                {{ project.created_on | date : 'mediumDate' }}
+                            </time>
+                        </span>
+                        <button type="button" class="margin-l-50p"
+                                data-ng-click="resetTip('created', project.id)">
+                            <span class="material-icons md-18">
+                                info
+                            </span>
+                        </button>
+                    </div>
+                </td>
+                <td class="info-enabled pad-1" style="width: 1%;">
+                    <div>
+                        <div class="info-tip" data-ng-if="tipManager.modified === project.id">
+                            This project was last edited by {{ project.last_modified_by.first_name
+                            }} {{
+                            project.last_modified_by.last_name }} on {{ project.modified_on | date : 'fullDate' }}.
+                        </div>
+                        <span>
+                            <time datetime="{{ project.modified_on }}"
+                                  title="{{ project.modified_on }}">
+                                {{ project.modified_on | date : 'mediumDate' }}
+                            </time>
+                        </span>
+                        <button type="button" class="margin-l-50p"
+                                data-ng-click="resetTip('modified', project.id)">
+                            <span class="material-icons md-18">
+                                info
+                            </span>
+                        </button>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center flex-justify-end">
+                        <span>
+                            {{ project.practice_count | number }}
+                        </span>
+                        <a href="/projects/{{ project.id }}/practices"
+                           class="margin-l-50p"
+                           style="display: flex; flex-flow: row nowrap; align-items: center;
+                           justify-content:
+                           flex-end;
+                           text-decoration: none;">
+                            <span class="material-icons md-18"
+                                  style="display: inline-block;">
+                                open_in_new
+                            </span>
+                        </a>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="status-wrapper pad-0"
+                         title="Status: {{ project.status | capitalAttribute }}">
+                        <div class="status status-{{ project.status }}">
+                            <span class="dot"></span>
+                            <span>{{ project.status | capitalAttribute }}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="pad-1 more-actions" style="width: 56px; overflow: visible;">
+                    <div class="action-modal-container">
+                        <div class="action-modal" data-ng-if="modalManager.action === project.id">
+                            <ul>
+                                <li data-ng-click="editProject(project.id)">
+                                    <span class="material-icons margin-r-1">
+                                        edit
+                                    </span>
+                                    <span>
+                                        Edit
+                                    </span>
+                                </li>
+                                <li data-ng-if="!project.archived"
+                                    data-ng-click="archiveProject(project, true)">
+                                    <span class="material-icons margin-r-1">
+                                        archive
+                                    </span>
+                                    <span>
+                                        Archive
+                                    </span>
+                                </li>
+                                <li data-ng-if="project.archived"
+                                    data-ng-click="archiveProject(project, false)">
+                                    <span class="material-icons margin-r-1">
+                                        unarchive
+                                    </span>
+                                    <span>
+                                        Restore
+                                    </span>
+                                </li>
+                                <li data-ng-click="presentExportDialog(project)">
+                                    <span class="material-icons margin-r-1">
+                                        cloud_download
+                                    </span>
+                                    <span>
+                                        Export data
+                                    </span>
+                                </li>
+                                <li class="delete-trigger" data-ng-click="presentDeletionDialog(project)">
+                                    <span class="material-icons margin-r-1"
+                                          style="pointer-events: none;">
+                                        delete
+                                    </span>
+                                    <span style="pointer-events: none;">
+                                        Delete
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="action-modal-icon" data-ng-click="toggleActionModal(project.id)">
+                            <div class="halo"></div>
+                            <span class="material-icons">
+                                more_horiz
+                            </span>
+                        </div>
+                    </div>
+<!--                    <span class="material-icons">-->
+<!--                        more_horiz-->
+<!--                    </span>-->
+                </td>
+            </tr>
+        
+        </tbody>
+
+    </table>
+
+</div>
+
+<div deletion-dialog
+     alerts="alerts"
+     callback="callback()"
+     feature="project"
+     feature-type="'project'"
+     visible="showDeletionDialog"></div>
+
+<div export-dialog
+     alerts="alerts"
+     feature="project"
+     reset-type="false"
+     type="'project'"
+     visible="showExportDialog"></div>

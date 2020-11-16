@@ -16,19 +16,25 @@
                     scope: {
                         'alerts': '=?',
                         'callback': '&',
-                        'featureType': '=?',
+                        'featureType': '@',
                         'includeMod': '=?',
-                        'includeOrg': '=?',
                         'index': '=?',
                         'visible': '=?'
                     },
                     templateUrl: function (elem, attrs) {
 
+                        console.log(
+                            'tableView:attrs:',
+                            attrs
+                        );
+
                         return [
                             // Base path
                             'modules/shared/directives/',
                             // Directive path
-                            'table-view/tableView--view.html',
+                            'table-view/views/',
+                            // Template file
+                            attrs.featureType + 'Table--view.html',
                             // Query string
                             '?t=' + environment.version
                         ].join('');

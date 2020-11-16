@@ -8,13 +8,13 @@
                 <th class="pad-1">
                     <strong>Name</strong>
                 </th>
-                <th class="pad-1" data-ng-if="includeOrg">
+                <th class="pad-1">
                     <strong>Organization</strong>
                 </th>
                 <th class="pad-1">
                     <strong>Created</strong>
                 </th>
-                <th class="pad-1" data-ng-if="includeMod">
+                <th class="pad-1">
                     <strong>Modified</strong>
                 </th>
                 <th class="pad-1">
@@ -35,7 +35,7 @@
                         <a href="/projects/{{ project.id }}">{{ project.name | truncate:100 }}</a>
                     </span>
                 </td>
-                <td class="pad-1" style="max-width: 20rem;" data-ng-if="includeOrg">
+                <td class="pad-1" style="max-width: 20rem;">
                     {{ project.organization.name }}
                 </td>
                 <td class="info-enabled pad-1" style="width: 1%;">
@@ -58,7 +58,7 @@
                         </button>
                     </div>
                 </td>
-                <td class="info-enabled pad-1" style="width: 1%;" data-ng-if="includeMod">
+                <td class="info-enabled pad-1" style="width: 1%;">
                     <div>
                         <div class="info-tip" data-ng-if="tipManager.modified === project.id">
                             This project was last edited by {{ project.last_modified_by.first_name

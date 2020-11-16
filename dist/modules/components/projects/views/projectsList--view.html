@@ -2,7 +2,9 @@
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+    <div id="sidebar"
+         data-ng-class="{'no-grow': $root.collapseSidebar}"
+         data-ng-include="'/templates/side-bar.html'"></div>
 
     <div class="content--container">
 
@@ -12,23 +14,22 @@
             </div>
         </div>
 
-        <h1 class="inset">
-            Projects
-            <span class="tally" data-ng-if="!page.status.loading">
-                {{ page.summary.feature_count | number }}
-            </span>
-        </h1>
-
         <div class="main--ui">
 
-            <div class="add--new--wrapper">
-                <span>Create project</span>
-                <a class="add--new--btn"
-                   data-ng-click="page.showChildModal = !page.showChildModal">
-                    <span class="material-icons">
+            <div class="create-heading" data-ng-if="!page.status.loading">
+                <h1 class="margin-0">
+                    Projects
+                    <span class="tally">
+                        {{ page.summary.feature_count | number }}
+                    </span>
+                </h1>
+                <button type="button" style="padding: .5rem 1rem .5rem .7rem;"
+                        data-ng-click="page.showChildModal = !page.showChildModal">
+                    <span class="material-icons margin-r-50p">
                         add
                     </span>
-                </a>
+                    Create
+                </button>
             </div>
 
             <div class="collection-filter-group"
@@ -76,12 +77,84 @@
 
             </div>
 
-            <div data-ng-if="!page.status.loading"
-                 pagination
-                 summary="page.summary"
-                 rotate="page.loadProjects(page.queryParams)"
-                 params="page.queryParams"
-                 update-params="true"></div>
+            <div class="dyad" data-ng-if="!page.status.loading">
+
+                <div class="table-view-ctrl"
+                     data-ng-if="!page.status.loading">
+                    <button type="button"
+                            title="Card mode"
+                            class="margin-r-50p"
+                            data-ng-class="{active: !page.viewTable}"
+                            data-ng-click="page.toggleTable()">
+                        <span class="material-icons margin-r-50p">
+                            view_module
+                        </span>
+                        <span>
+                            Card
+                        </span>
+                    </button>
+                    <button type="button"
+                            title="Table mode"
+                            data-ng-class="{active: page.viewTable}"
+                            data-ng-click="page.toggleTable()">
+                        <span class="material-icons margin-r-50p">
+                            table_view
+                        </span>
+                        <span>
+                            Table
+                        </span>
+                    </button>
+                </div>
+
+                <div style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-end;
+                flex-grow: 1;"
+                     data-ng-if="!page.status.loading">
+
+                    <div data-ng-if="!page.status.loading"
+                         pagination
+                         summary="page.summary"
+                         rotate="page.loadProjects(page.queryParams)"
+                         params="page.queryParams"
+                         update-params="true"></div>
+
+                </div>
+
+<!--                <div style="display: flex; flex-flow: row nowrap; align-items: center;"-->
+<!--                     data-ng-if="!page.status.loading">-->
+<!--                    <div data-ng-click="page.toggleTable()">-->
+<!--                    <span class="material-icons margin-r-1" style="display: inline-block;">-->
+<!--                        view_module-->
+<!--                    </span>-->
+<!--                    </div>-->
+<!--                    <div data-ng-click="page.toggleTable()">-->
+<!--                    <span class="material-icons" style="display: inline-block;">-->
+<!--                        table_view-->
+<!--                    </span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+            </div>
+
+<!--            <div data-ng-if="!page.status.loading"-->
+<!--                 pagination-->
+<!--                 summary="page.summary"-->
+<!--                 rotate="page.loadProjects(page.queryParams)"-->
+<!--                 params="page.queryParams"-->
+<!--                 update-params="true"></div>-->
+
+<!--            <div style="display: flex; flex-flow: row nowrap; align-items: center;"-->
+<!--                 data-ng-if="!page.status.loading">-->
+<!--                <div data-ng-click="page.toggleTable()">-->
+<!--                    <span class="material-icons margin-r-1" style="display: inline-block;">-->
+<!--                        view_module-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--                <div data-ng-click="page.toggleTable()">-->
+<!--                    <span class="material-icons" style="display: inline-block;">-->
+<!--                        table_view-->
+<!--                    </span>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div class="features--container" data-ng-if="!page.status.loading">
 
@@ -128,7 +201,17 @@
 
                 </div>
 
-                <ul class="snapshot--cards list-unstyled" data-ng-if="page.projects.length" style="margin-top: 2em;">
+                <div style="width: 100%;"
+                     table-view
+                     alerts="page.alerts"
+                     callback="page.loadProjects(page.queryParams)"
+                     feature-type="project"
+                     index="page.projects"
+                     visible="page.viewTable"
+                     data-ng-if="page.projects.length"></div>
+
+                <ul class="snapshot--cards list-unstyled"
+                    data-ng-if="page.projects.length && !page.viewTable" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in"
                         style="animation-delay: {{ $index * 50 }}ms;"

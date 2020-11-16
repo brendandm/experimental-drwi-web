@@ -31,13 +31,89 @@
              project="page.project"
              tail="Edit project"></div>
 
-        <div class="breadcrumb-header-wrapper">
-            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
-                Edit project
-            </h1>
-        </div>
+        <!--        <div class="breadcrumb-header-wrapper">-->
+        <!--            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">-->
+        <!--                Edit project-->
+        <!--            </h1>-->
+        <!--        </div>-->
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+
+            <div class="create-heading" data-ng-if="!page.status.loading">
+                <h1 class="margin-0">
+                    Edit project
+                </h1>
+                <div class="collection-filter-group status_group margin-0"
+                     data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+
+                    <span class="margin-r-1">
+                        <strong>Status</strong>
+                    </span>
+
+                    <div class="status_dropdown">
+                        <div class="collection-filter drop-down">
+                            <button type="button"
+                                    style="padding: .5rem .25rem .5rem .75rem; font-size: 1rem; background:
+                                    transparent; border: 1px solid #e0e0e0; color: #212121;"
+                                    data-ng-class="{'open-btn': page.showModal.status }"
+                                    data-ng-click="page.showModal.status = !page.showModal.status">
+                                <span style="font-weight: 500;">
+                                    {{ page.project.status | capitalAttribute}}&nbsp;
+                                </span>
+                                <span class="material-icons" data-ng-if="!page.showModal.status">
+                                    arrow_drop_down
+                                </span>
+                                <span class="material-icons" data-ng-if="page.showModal.status">
+                                    arrow_drop_up
+                                </span>
+                            </button>
+                            <div class="collection-filter-modal"
+                                 style="width: auto;"
+                                 data-ng-if="page.showModal.status">
+                                <label data-ng-repeat="status in page.project_status"
+                                       data-ng-class="{'active': page.project_status == status}"
+                                       title="{{ status }}">
+                                    <span class="input-mask"
+                                          data-ng-if="page.project.status == status">
+                                        <i class="material-icons">
+                                            radio_button_checked
+                                        </i>
+                                    </span>
+                                    <span class="input-mask"
+                                          data-ng-if="page.project.status != status">
+                                        <i class="material-icons">
+                                            radio_button_unchecked
+                                        </i>
+                                    </span>
+                                    <input type="radio"
+                                           id="status-option-{{ status }}"
+                                           name="active-program" data-ng-model="page.project.status"
+                                           data-ng-click="page.showModal.status = !page.showModal.status"
+                                           data-ng-value="status"/>
+                                    <span>
+                                        {{ status | capitalAttribute}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="margin-r-1 margin-l-1">
+                        <strong>Archived</strong>
+                    </span>
+
+                    <div class="scope--control margin-0">
+                        <label class="switch">
+                            <input class="inputdemo"
+                                   type="checkbox"
+                                   data-ng-model="page.project.archived"
+                                   data-ng-checked="page.project.archived">
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
 
             <article class="feature-detail">
 
@@ -51,80 +127,81 @@
 
                         <section class="reveal fade-in t0" style="padding: 2em 0 0;">
 
-                            <h2>Profile</h2>
+                            <!--                            <h2>Profile</h2>-->
 
-                            <div class="collection-filter-group status_group"
-                                 data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+                            <!--                            <div class="collection-filter-group status_group"-->
+                            <!--                                 data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">-->
 
-                                <div class="scope--control status_dropdown_label">
+                            <!--&lt;!&ndash;                                <div class="scope&#45;&#45;control status_dropdown_label">&ndash;&gt;-->
 
-                                    <span>
-                                        Project Status:
-                                    </span>
-                                </div>
+                            <!--&lt;!&ndash;                                    <span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                        Project Status:&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                    </span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;                                </div>&ndash;&gt;-->
 
-                                <div class="status_dropdown">
-                                    <div class="collection-filter drop-down"
-                                         style="float:left; display:inline-block;">
-                                        <button type="button"
-                                                data-ng-class="{'open-btn': page.showModal.status }"
-                                                data-ng-click="page.showModal.status = !page.showModal.status">
-                                            <b> {{ page.project.status | capitalAttribute}}&nbsp;</b>
-                                            <i class="material-icons">
-                                                arrow_drop_down
-                                            </i>
-                                        </button>
-                                        <div name="collection-filter-form"
-                                             class="collection-filter-modal"
-                                             style="width: auto;"
-                                             data-ng-if="page.showModal.status">
+                            <!--                                <div class="status_dropdown">-->
+                            <!--                                    <strong>Status</strong>-->
+                            <!--                                    <div class="collection-filter drop-down"-->
+                            <!--                                         style="float:left; display:inline-block;">-->
+                            <!--                                        <button type="button"-->
+                            <!--                                                data-ng-class="{'open-btn': page.showModal.status }"-->
+                            <!--                                                data-ng-click="page.showModal.status = !page.showModal.status">-->
+                            <!--                                            <b> {{ page.project.status | capitalAttribute}}&nbsp;</b>-->
+                            <!--                                            <i class="material-icons">-->
+                            <!--                                                arrow_drop_down-->
+                            <!--                                            </i>-->
+                            <!--                                        </button>-->
+                            <!--                                        <div name="collection-filter-form"-->
+                            <!--                                             class="collection-filter-modal"-->
+                            <!--                                             style="width: auto;"-->
+                            <!--                                             data-ng-if="page.showModal.status">-->
 
-                                            <label data-ng-repeat="status in page.project_status"
-                                                   data-ng-class="{'active': page.project_status == status}"
-                                                   title="{{ status }}">
-                                                <span class="input-mask"
-                                                      data-ng-if="page.project.status == status">
-                                                    <i class="material-icons">
-                                                    radio_button_checked
-                                                    </i>
-                                                </span>
-                                                <span class="input-mask"
-                                                      data-ng-if="page.project.status != status">
-                                                    <i class="material-icons">
-                                                    radio_button_unchecked
-                                                    </i>
-                                                </span>
-                                                <input type="radio"
-                                                       id="status-option-{{ status }}"
-                                                       name="active-program" data-ng-model="page.project.status"
-                                                       data-ng-click="page.showModal.status = !page.showModal.status"
-                                                       data-ng-value="status"/>
-                                                <span>
-                                                    {{ status | capitalAttribute}}
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!--                                            <label data-ng-repeat="status in page.project_status"-->
+                            <!--                                                   data-ng-class="{'active': page.project_status == status}"-->
+                            <!--                                                   title="{{ status }}">-->
+                            <!--                                                <span class="input-mask"-->
+                            <!--                                                      data-ng-if="page.project.status == status">-->
+                            <!--                                                    <i class="material-icons">-->
+                            <!--                                                    radio_button_checked-->
+                            <!--                                                    </i>-->
+                            <!--                                                </span>-->
+                            <!--                                                <span class="input-mask"-->
+                            <!--                                                      data-ng-if="page.project.status != status">-->
+                            <!--                                                    <i class="material-icons">-->
+                            <!--                                                    radio_button_unchecked-->
+                            <!--                                                    </i>-->
+                            <!--                                                </span>-->
+                            <!--                                                <input type="radio"-->
+                            <!--                                                       id="status-option-{{ status }}"-->
+                            <!--                                                       name="active-program" data-ng-model="page.project.status"-->
+                            <!--                                                       data-ng-click="page.showModal.status = !page.showModal.status"-->
+                            <!--                                                       data-ng-value="status"/>-->
+                            <!--                                                <span>-->
+                            <!--                                                    {{ status | capitalAttribute}}-->
+                            <!--                                                </span>-->
+                            <!--                                            </label>-->
+                            <!--                                        </div>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
 
-                                <div class="scope--control"
-                                     style=" border:0px solid red;
-                                        margin-top: 10px;
-                                        float: right;
-                                        width:150px;
-                                    ">
-                                    <span></span>
-                                    <label class="switch">
-                                        <input class="inputdemo"
-                                               type="checkbox"
-                                               data-ng-model="page.project.archived"
-                                               data-ng-checked="page.project.archived">
-                                        <div class="slider round"></div>
-                                    </label>
-                                    <span data-ng-class="{on: page.site.archived}">Archived</span>
-                                </div>
+                            <!--                                <div class="scope&#45;&#45;control"-->
+                            <!--                                     style=" border:0px solid red;-->
+                            <!--                                        margin-top: 10px;-->
+                            <!--                                        float: right;-->
+                            <!--                                        width:150px;-->
+                            <!--                                    ">-->
+                            <!--                                    <span></span>-->
+                            <!--                                    <label class="switch">-->
+                            <!--                                        <input class="inputdemo"-->
+                            <!--                                               type="checkbox"-->
+                            <!--                                               data-ng-model="page.project.archived"-->
+                            <!--                                               data-ng-checked="page.project.archived">-->
+                            <!--                                        <div class="slider round"></div>-->
+                            <!--                                    </label>-->
+                            <!--                                    <span data-ng-class="{on: page.site.archived}">Archived</span>-->
+                            <!--                                </div>-->
 
-                            </div>
+                            <!--                            </div>-->
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Name</b></span>

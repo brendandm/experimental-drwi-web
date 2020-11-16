@@ -1,5 +1,5 @@
 <div class="creation-dialog-container" data-ng-if="visible">
-    <div class="dialog">
+    <form class="dialog" style="width: auto;" data-ng-submit="createChild(name)">
         <div class="title">
             <span class="title-text">Create {{ label }}</span>
             <div class="dismiss-container">
@@ -38,14 +38,14 @@
             <button type="button" class="cancel" data-ng-click="closeChildModal()">
                 Cancel
             </button>
-            <button type="button" class="confirm" data-ng-if="type !== 'project'" data-ng-click="createChild(name)"
+            <button type="submit" class="confirm" data-ng-if="type !== 'project'"
                     data-ng-disabled="!name">
                 OK
             </button>
-            <button type="button" class="confirm" data-ng-if="type === 'project'" data-ng-click="createChild(name)"
+            <button type="submit" class="confirm" data-ng-if="type === 'project'"
                     data-ng-disabled="!name || !program_id">
                 OK
             </button>
         </div>
-    </div>
+    </form>
 </div>

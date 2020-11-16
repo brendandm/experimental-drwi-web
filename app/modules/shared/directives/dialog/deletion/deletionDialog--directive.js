@@ -9,6 +9,7 @@
             '$filter',
             '$parse',
             '$location',
+            'Export',
             'Project',
             'Site',
             'Practice',
@@ -17,8 +18,8 @@
             'PracticeType',
             'SearchService',
             '$timeout',
-            function(environment, $routeParams, $filter, $parse, $location, Project,
-                     Site, Practice, Report, MetricType, PracticeType,
+            function(environment, $routeParams, $filter, $parse, $location, Export,
+                     Project, Site, Practice, Report, MetricType, PracticeType,
                      SearchService, $timeout) {
                 return {
                     restrict: 'EA',
@@ -44,6 +45,7 @@
                     link: function(scope, element, attrs) {
 
                         var modelIdx = {
+                            'export': Export,
                             'metric-type': MetricType,
                             'practice': Practice,
                             'practice-type': PracticeType,

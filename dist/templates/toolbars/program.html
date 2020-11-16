@@ -7,13 +7,6 @@
                 </i>
             </a>
         </li>
-        <li data-ng-if="page.permissions.write">
-            <a href="/programs/{{ page.program.id }}/edit" title="Edit">
-                <i class="material-icons">
-                    edit
-                </i>
-            </a>
-        </li>
         <li data-ng-if="page.permissions.write" data-ng-class="{active: $root.toolbarState.viewPracticeTypes}">
             <a href="/programs/{{ page.program.id  }}/practice-types" title="Practice types">
                 <i class="material-icons">
@@ -35,5 +28,29 @@
                 </i>
             </a>
         </li>
+        <li style="border-top: 1px solid #e0e0e0;"
+            data-ng-if="page.permissions.write">
+            <a href="/programs/{{ page.program.id }}/edit" title="Edit">
+                <i class="material-icons">
+                    edit
+                </i>
+            </a>
+        </li>
+        <li data-ng-if="page.permissions.write">
+            <a href="#"
+               title="Export"
+               data-ng-click="page.showExportDialog = !page.showExportDialog">
+                <i class="material-icons">
+                    cloud_download
+                </i>
+            </a>
+        </li>
     </ul>
 </nav>
+
+<div export-dialog
+     alerts="page.alerts"
+     feature="page.program"
+     reset-type="false"
+     type="'program'"
+     visible="page.showExportDialog"></div>

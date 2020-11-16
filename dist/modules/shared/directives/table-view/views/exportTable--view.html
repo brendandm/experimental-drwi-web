@@ -1,0 +1,158 @@
+<div class="table-view margin-t-2"
+     data-ng-if="index.length && visible">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th class="pad-1">
+                    <strong>Name</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Created</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Detail</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Practices</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>File size</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Format</strong>
+                </th>
+                <th class="pad-1">
+                    <strong>Link</strong>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr data-ng-repeat="export in index | filter: q">
+                <td class="pad-1" style="max-width: 20rem;">
+                    <span style="display: block; width: 100%;">
+                        {{ export.name | truncate:100 }}
+                    </span>
+                </td>
+                <td class="info-enabled pad-1" style="width: 1%;">
+                    <div>
+                        <div class="info-tip" data-ng-if="tipManager.created === export.id">
+                            Created by you on {{ export.created_on | date : 'fullDate' }}.
+                        </div>
+                        <span>
+                            <time datetime="{{ export.created_on }}"
+                                  title="{{ export.created_on }}">
+                                {{ export.created_on | date : 'mediumDate' }}
+                            </time>
+                        </span>
+                        <button type="button" class="margin-l-50p"
+                                data-ng-click="resetTip('created', export.id)">
+                            <span class="material-icons md-18">
+                                info
+                            </span>
+                        </button>
+                    </div>
+                </td>
+                <td class="pad-1" style="max-width: 20rem;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center">
+                        <span data-ng-if="export.site && export.site.name">
+                            This export includes data on {{ export.practice_count | number }} <ng-pluralize
+                                count="export.practice_count"
+                                when="{'one': 'practice','other': 'practices'}"></ng-pluralize> grouped under the <a
+                                href="sites/{{ export.site.id }}">{{
+                            export.site.name | truncate:50 }}</a> site.
+                        </span>
+                        <span data-ng-if="!export.site && export.project && export.project.name">
+                            This export includes data on {{ export.practice_count | number }} <ng-pluralize
+                                count="export.practice_count"
+                                when="{'one': 'practice','other': 'practices'}"></ng-pluralize> grouped under the <a
+                                href="projects/{{ export.project.id }}">{{
+                            export.project.name | truncate:50 }}</a> project.
+                        </span>
+                        <span data-ng-if="!export.project && export.program && export.program.name">
+                            This export includes data on {{ export.practice_count | number }} <ng-pluralize
+                                count="export.practice_count"
+                                when="{'one': 'practice','other': 'practices'}"></ng-pluralize> grouped under the <a
+                                href="programs/{{ export.program.id }}">{{
+                            export.program.name }}</a> program.
+                        </span>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center flex-justify-end">
+                        <span>
+                            {{ export.practice_count | number }}
+                        </span>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center flex-justify-end">
+                        <span>
+                            {{ export.file_size | fileSize }}
+                        </span>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center">
+                        <span>
+                            {{ export.format }}
+                        </span>
+                    </div>
+                </td>
+                <td class="pad-1" style="width: 1%;">
+                    <div class="flex flex-dir-row flex-nwrap flex-align-center">
+                        <span data-ng-if="!export.url || !export.url.length">
+                            Generating link&hellip;
+                        </span>
+                        <a class="snapshot--title"
+                           href="{{ export.url }}"
+                           target="_blank"
+                           title="File link"
+                           data-ng-if="export.url && export.url.length">
+                            <span class="material-icons">
+                                attachment
+                            </span>
+                        </a>
+                    </div>
+                </td>
+                <td class="pad-1 more-actions" style="width: 56px; overflow: visible;">
+                    <div class="action-modal-container">
+                        <div class="action-modal" data-ng-if="modalManager.action === export.id">
+                            <ul>
+                                <li class="delete-trigger" data-ng-click="presentDeletionDialog(export)">
+                                    <span class="material-icons margin-r-1"
+                                          style="pointer-events: none;">
+                                        delete
+                                    </span>
+                                    <span style="pointer-events: none;">
+                                        Delete
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="action-modal-icon" data-ng-click="toggleActionModal(export.id)">
+                            <div class="halo"></div>
+                            <span class="material-icons">
+                                more_horiz
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div deletion-dialog
+     alerts="alerts"
+     callback="callback()"
+     feature="project"
+     feature-type="'export'"
+     visible="showDeletionDialog"></div>

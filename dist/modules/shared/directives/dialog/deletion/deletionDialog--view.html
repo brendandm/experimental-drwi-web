@@ -1,0 +1,74 @@
+<div class="creation-dialog-container import-dialog-container"
+     data-ng-if="visible">
+    <div class="dialog">
+        <div class="title">
+            <span class="title-text">Delete {{ label }}</span>
+            <div class="dismiss-container">
+                <div class="dismiss" data-ng-click="closeChildModal()">
+                    <div class="halo"></div>
+                    <span class="material-icons">
+                        close
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="inputs">
+
+                <p class="prompt" style="word-break: break-word;">
+                    You’re about to permanently delete <strong>{{ feature.name }}</strong>. Deleting this
+                    {{
+                    label }}
+                    will also remove all associated sites, practices, reports, and metrics. Once deleted there is no way
+                    to recover this data. Do you want to proceed?
+                </p>
+
+<!--                <div class="upload-error" style="margin: 1rem 0 0;"-->
+<!--                     data-ng-if="uploadError">-->
+<!--                    <div style="display: flex; flex-flow: row nowrap; align-items: center;">-->
+<!--                        <span class="material-icons" style="color: #d70000;">-->
+<!--                            error-->
+<!--                        </span>-->
+<!--                        <span>-->
+<!--                            <strong>&nbsp;Upload error</strong>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <p style="margin: 1rem 0; font-size: 0.9rem;">-->
+<!--                        {{ uploadError.message || 'Unable to read file.'}}-->
+<!--                    </p>-->
+<!--                    <p style="margin: 0; font-size: 0.9rem;">-->
+<!--                        Please double check that your file is supported and that it contains correctly-formatted-->
+<!--                        data (download a sample template to see the accepted columns).-->
+<!--                    </p>-->
+<!--                </div>-->
+
+        </div>
+        <div class="dyad">
+            <div class="download-wrapper">
+                <button type="button" class="download-tpl"
+                     data-ng-click="closeChildModal()">
+<!--                    <span class="material-icons margin-r-50p">-->
+<!--                        dismiss-->
+<!--                    </span>-->
+                    No, keep all data.
+                </button>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="confirm-delete" data-ng-class="{complete: uploadComplete}"
+                        data-ng-click="deleteFeature()">
+<!--                    <span class="material-icons margin-r-50p" data-ng-if="!uploadComplete">-->
+<!--                        cloud_upload-->
+<!--                    </span>-->
+<!--                    <span class="material-icons margin-r-50p" data-ng-if="uploadComplete">-->
+<!--                        done-->
+<!--                    </span>-->
+                    <span data-ng-if="!processing">
+                        Yes, delete all {{ label }} data.
+                    </span>
+                    <span data-ng-if="processing">
+                        {{ progressMessage }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

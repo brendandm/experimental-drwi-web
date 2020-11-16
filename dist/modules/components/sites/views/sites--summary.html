@@ -586,20 +586,13 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
-            <li class="active">
-                <a href="/sites/{{ page.site.id }}" title="Summary">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/sites/{{ page.site.id }}/edit" title="Edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
+<!--            <li class="active">-->
+<!--                <a href="/sites/{{ page.site.id }}" title="Summary">-->
+<!--                    <i class="material-icons">-->
+<!--                        dashboard-->
+<!--                    </i>-->
+<!--                </a>-->
+<!--            </li>-->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/sites/{{ page.site.id }}/location" title="Location">
                     <i class="material-icons">
@@ -618,6 +611,24 @@
                 <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">
                         local_offer
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit"
+                data-ng-class="{active: $root.toolbarState.edit}"
+                style="border-top: 1px solid #e0e0e0;">
+                <a href="/sites/{{ page.site.id }}/edit" title="Edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#"
+                   title="Export"
+                   data-ng-click="page.showExportDialog = !page.showExportDialog">
+                    <i class="material-icons">
+                        cloud_download
                     </i>
                 </a>
             </li>
@@ -660,6 +671,13 @@
 
     <div creation-dialog alerts="page.alerts" site="page.site.id" parent="page.site.project.id"
          organization="page.site.project.organization_id" type="page.childType" visible="page.showChildModal"></div>
+
+    <div export-dialog
+         alerts="page.alerts"
+         feature="page.site"
+         reset-type="false"
+         type="'site'"
+         visible="page.showExportDialog"></div>
 
 </main>
 

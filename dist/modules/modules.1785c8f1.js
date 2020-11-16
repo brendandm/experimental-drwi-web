@@ -112,20 +112,39 @@ angular.module('FieldDoc')
         $locationProvider.hashPrefix('!');
 
     })
-    .run(['$rootScope', '$window', '$location', '$anchorScroll', function($rootScope, $window, $location, $anchorScroll) {
+    .run([
+        '$rootScope',
+        '$window',
+        '$location',
+        '$anchorScroll',
+        '$document',
+        function($rootScope, $window, $location, $anchorScroll, $document) {
 
-        $rootScope.$on('$routeChangeSuccess', function() {
+            $rootScope.$on('$routeChangeSuccess', function() {
 
-            $anchorScroll();
+                $anchorScroll();
 
-        });
+                $rootScope.collapseSidebar = false;
 
-    }]);
+            });
+
+            $document.on('click', function(event) {
+
+                console.log(
+                    'globalClick:event:',
+                    event
+                );
+
+                $rootScope.$broadcast('globalClick', event.target);
+
+            });
+
+        }]);
 "use strict";
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1604095455298})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1605551531854})
 
 ;
 /**
@@ -4748,6 +4767,14 @@ angular.module('FieldDoc')
 
             };
 
+            self.toggleTable = function () {
+
+                $rootScope.collapseSidebar = !$rootScope.collapseSidebar;
+
+                self.viewTable = !self.viewTable;
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //
@@ -4893,6 +4920,7 @@ angular.module('FieldDoc')
                     {
                         id: self.project.id,
                         limit: 4,
+                        origin: 'primary',
                         t: Date.now()
                     },
                     false);
@@ -5125,7 +5153,9 @@ angular.module('FieldDoc')
                         typeof index === 'number' &&
                         featureType === 'site') {
 
-                        self.sites.splice(index, 1);
+                        // self.sites.splice(index, 1);
+
+                        self.loadSites();
 
                         self.cancelDelete();
 
@@ -5135,14 +5165,16 @@ angular.module('FieldDoc')
                         typeof index === 'number' &&
                         featureType === 'practice') {
 
-                        self.practices.splice(index, 1);
+                        // self.practices.splice(index, 1);
+
+                        self.loadPractices();
 
                         self.cancelDelete();
 
                         $timeout(closeAlerts, 2000);
 
                     } else {
-                        console.log("CLOSE ROUTE");
+
                         $timeout(closeRoute, 2000);
 
                     }
@@ -17852,7 +17884,7 @@ angular.module('FieldDoc')
                 self.invalidType = false;
                 self.invalidName = false;
 
-                if (self.practice.name === undefined) {
+                if (typeof self.practice.name === 'undefined') {
 
                     console.log("self.practice.name", self.practice.name);
 
@@ -17862,7 +17894,7 @@ angular.module('FieldDoc')
 
                 }
 
-                if (self.practice.category_id === undefined) {
+                if (typeof self.practice.practice_type_id === 'undefined') {
 
                     console.log("self.practiceType", self.practiceType);
 
@@ -36233,6 +36265,364 @@ angular.module('FieldDoc')
 
 /**
  * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
+            .when('/exports', {
+                templateUrl: '/modules/components/exports/views/exportList--view.html?t=' + environment.version,
+                controller: 'ExportsController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
+            .when('/exports/:exportId', {
+                templateUrl: '/modules/components/exports/views/exportSummary--view.html?t=' + environment.version,
+                controller: 'ExportSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    export: function(Export, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Export.getSingle({
+                            id: $route.current.params.exportId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
+            .when('/exports/:exportId/practices', {
+                templateUrl: '/modules/components/exports/views/exportPracticeList--view.html?t=' + environment.version,
+                controller: 'ExportPracticeListController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    export: function(Export, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Export.getSingle({
+                            id: $route.current.params.exportId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ExportsController',
+        function(Account, $location, $log, Export, Tag,
+                 $rootScope, $scope, Site, user, mapbox,
+                 $interval, $timeout, Utility, QueryParamManager) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'export': true
+            };
+
+            //
+            // Setup basic page variables
+            //
+            $rootScope.page = {
+                title: 'Exports',
+                actions: []
+            };
+
+            self.showModal = {};
+
+            self.status = {
+                loading: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 250);
+
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj, index) {
+
+                Export.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this export.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.exports.splice(index, 1);
+
+                    $timeout(closeAlerts, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this export.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this export.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this export.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.loadExports = function(params) {
+
+                console.log(
+                    'loadExports:params:',
+                    params
+                );
+
+                params = QueryParamManager.adjustParams(
+                    params,
+                    {
+                        combine: 'true'
+                    });
+
+                self.queryParams = QueryParamManager.getParams();
+
+                Export.query(params).$promise.then(function(successResponse) {
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.extent) {
+
+                            feature.staticURL = Utility.buildStaticMapURL(
+                                feature.extent,
+                                null,
+                                400,
+                                200);
+
+                        }
+
+                    });
+
+                    self.exports = successResponse.features;
+
+                    self.summary = successResponse.summary;
+
+                    self.summary.organizations.unshift({
+                        id: 0,
+                        name: 'All'
+                    });
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.toggleTable = function () {
+
+                $rootScope.collapseSidebar = !$rootScope.collapseSidebar;
+
+                self.viewTable = !self.viewTable;
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+
+                    var programs = Utility.extractUserPrograms($rootScope.user);
+
+                    programs.unshift({
+                        id: 0,
+                        name: 'All'
+                    });
+
+                    self.programs = programs;
+
+                    //
+                    // Set default query string params.
+                    //
+
+                    var existingParams = QueryParamManager.getParams();
+
+                    QueryParamManager.setParams(
+                        existingParams,
+                        true);
+
+                    //
+                    // Set scoped query param variable.
+                    //
+
+                    self.queryParams = QueryParamManager.getParams();
+
+                    //
+                    // Export functionality
+                    //
+
+                    self.loadExports(self.queryParams);
+
+                });
+
+            } else {
+
+                $location.path('/logout');
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc overview
  * @name WaterReporter
  * @description
  *     The WaterReporter Website and associated User/Manager Site
@@ -40504,6 +40894,29 @@ angular.module('FieldDoc')
 
     'use strict';
 
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Export', function(environment, $resource) {
+
+            return $resource(environment.apiUrl.concat('/v1/export/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                }
+            });
+
+        });
+
+}());
+(function() {
+
+    'use strict';
+
     angular.module('FieldDoc')
         .factory('FilterStore', function() {
 
@@ -41240,7 +41653,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/control/alphabet/alphabetControl--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'control/alphabet/alphabetControl--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
@@ -41288,7 +41708,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/control/collection-filter/collectionFilter--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'control/collection-filter/collectionFilter--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
@@ -41298,6 +41725,8 @@ angular.module('FieldDoc')
                             scope.trackName = true;
 
                         }
+
+                        scope.modalVisible = false;
 
                         scope.toggleModal = function (filterValue, resetFilter) {
 
@@ -41310,21 +41739,23 @@ angular.module('FieldDoc')
                                 collection
                             );
 
-                            var visible = scope.displayStates[collection] || false;
+                            scope.modalVisible = !scope.modalVisible;
+
+                            // var visible = scope.displayStates[collection] || false;
 
                             console.log(
                                 'toggleModal:visible:',
-                                visible
+                                scope.visible
                             );
 
-                            scope.displayStates = {};
+                            // scope.displayStates = {};
+                            //
+                            // scope.displayStates[collection] = !visible;
 
-                            scope.displayStates[collection] = !visible;
-
-                            console.log(
-                                'toggleModal:displayStates:',
-                                scope.displayStates
-                            );
+                            // console.log(
+                            //     'toggleModal:displayStates:',
+                            //     scope.displayStates
+                            // );
 
                             if (resetFilter) {
 
@@ -41366,6 +41797,34 @@ angular.module('FieldDoc')
 
                         });
 
+                        scope.$on('globalClick', function (event, target) {
+
+                            console.log(
+                                'globalClick:tableView:event:',
+                                event
+                            );
+
+                            console.log(
+                                'globalClick:collectionFilter:target:',
+                                target
+                            );
+
+                            if (!element[0].contains(target)) {
+
+                                scope.$apply(function () {
+
+                                    console.log(
+                                        'globalClick:collectionFilter:event:$apply'
+                                    );
+
+                                    scope.modalVisible = false;
+
+                                });
+
+                            }
+
+                        });
+
                     }
 
                 };
@@ -41395,7 +41854,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/control/pagination/pagination--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'control/pagination/pagination--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
@@ -41516,6 +41982,7 @@ angular.module('FieldDoc')
 
     angular.module('FieldDoc')
         .directive('creationDialog', [
+            'environment',
             '$routeParams',
             '$filter',
             '$parse',
@@ -41528,7 +41995,7 @@ angular.module('FieldDoc')
             'PracticeType',
             'SearchService',
             '$timeout',
-            function($routeParams, $filter, $parse, $location, Project,
+            function(environment, $routeParams, $filter, $parse, $location, Project,
                      Site, Practice, Report, MetricType, PracticeType,
                      SearchService, $timeout) {
                 return {
@@ -41544,7 +42011,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/dialog/creationDialog--view.html';
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/creationDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
@@ -41565,7 +42039,7 @@ angular.module('FieldDoc')
 
                             scope.visible = false;
 
-                            if (scope.resetType) scope.type = undefined;
+                            if (scope.resetType && scope.type !== 'project') scope.type = undefined;
 
                         };
 
@@ -41755,6 +42229,7 @@ angular.module('FieldDoc')
 
     angular.module('FieldDoc')
         .directive('importDialog', [
+            'environment',
             '$routeParams',
             '$filter',
             '$parse',
@@ -41762,7 +42237,7 @@ angular.module('FieldDoc')
             'ImportTpl',
             '$timeout',
             'Program',
-            function($routeParams, $filter, $parse, $location,
+            function(environment, $routeParams, $filter, $parse, $location,
                      ImportTpl, $timeout, Program) {
                 return {
                     restrict: 'EA',
@@ -41776,12 +42251,17 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function(elem, attrs) {
 
-                        return 'modules/shared/directives/dialog/import/importDialog--view.html';
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/import/importDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function(scope, element, attrs) {
-
-                        scope.label = scope.type.replace(/_/g, ' ');
 
                         if (scope.resetType === 'undefined') {
 
@@ -41946,6 +42426,16 @@ angular.module('FieldDoc')
 
                         };
 
+                        scope.$watch('type', function (newVal) {
+
+                            if (typeof newVal === 'string') {
+
+                                scope.label = newVal.replace(/_/g, ' ');
+
+                            }
+
+                        });
+
                     }
 
                 };
@@ -41982,7 +42472,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/toolbar/practice/practiceToolbar--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'toolbar/practice/practiceToolbar--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -42028,6 +42525,16 @@ angular.module('FieldDoc')
                         scope.print = function() {
 
                             $window.print();
+
+                        };
+
+                        //
+                        // Handling for export modal.
+                        //
+
+                        scope.toggleExportModal = function() {
+
+                            scope.showExportDialog = !scope.showExportDialog;
 
                         };
 
@@ -42232,7 +42739,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/practice-type/practiceTypeList--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/practice-type/practiceTypeList--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -42492,7 +43006,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/batch-upload/batchUpload--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'batch-upload/batchUpload--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -42567,7 +43088,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/feature-index/index--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/feature-index/index--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -42816,7 +43344,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/list/metric-link/metricLinkList--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'list/metric-link/metricLinkList--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -43060,7 +43595,14 @@ angular.module('FieldDoc')
                     },
                     templateUrl: function (elem, attrs) {
 
-                        return 'modules/shared/directives/breadcrumb/breadcrumb--view.html?t=' + environment.version;
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'breadcrumb/breadcrumb--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
 
                     },
                     link: function (scope, element, attrs) {
@@ -43168,6 +43710,598 @@ angular.module('FieldDoc')
                         scope.$watch('project', function (newVal) {
 
                             scope.setBasis();
+
+                        });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function () {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('tableView', [
+            'environment',
+            '$window',
+            '$timeout',
+            '$location',
+            'AnchorScroll',
+            'Project',
+            function (environment, $window, $timeout, $location, AnchorScroll, Project) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'alerts': '=?',
+                        'callback': '&',
+                        'featureType': '@',
+                        'includeMod': '=?',
+                        'index': '=?',
+                        'visible': '=?'
+                    },
+                    templateUrl: function (elem, attrs) {
+
+                        console.log(
+                            'tableView:attrs:',
+                            attrs
+                        );
+
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'table-view/views/',
+                            // Template file
+                            attrs.featureType + 'Table--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
+
+                    },
+                    link: function (scope, element, attrs) {
+
+                        $window.scrollTo(0, 0);
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
+
+                        //
+                        // Additional scope vars.
+                        //
+
+                        scope.tipManager = {};
+
+                        scope.modalManager = {
+                            action: undefined
+                        };
+
+                        scope.resetTip = function (key, projectId) {
+
+                            var existing = scope.tipManager[key];
+
+                            scope.tipManager = {};
+
+                            if (existing === projectId) return;
+
+                            if (key && projectId) {
+                                scope.tipManager[key] = projectId;
+                            }
+
+                        };
+
+                        scope.toggleActionModal = function (projectId) {
+
+                            var existing = scope.modalManager.action;
+
+                            scope.modalManager = {};
+
+                            if (existing === projectId) return;
+
+                            if (projectId) {
+                                scope.modalManager.action = projectId;
+                            }
+
+                        };
+
+                        scope.processIndex = function () {
+
+                        };
+
+                        scope.editProject = function (projectId) {
+
+                            $location.path('/projects/' + projectId + '/edit');
+
+                        };
+
+                        scope.presentDeletionDialog = function (project) {
+
+                            scope.project = project;
+
+                            scope.showDeletionDialog = true;
+
+                            scope.modalManager = {};
+
+                        };
+
+                        scope.presentExportDialog = function (project) {
+
+                            scope.project = project;
+
+                            scope.showExportDialog = true;
+
+                            scope.modalManager = {};
+
+                        };
+                        
+                        scope.archiveProject = function (project, archived) {
+
+                            archived = archived || false;
+                            
+                            var data = {
+                                archived: archived,
+                                private: project.private ? project.private : false
+                            };
+
+                            var successMsg,
+                                errorMsg;
+
+                            if (archived) {
+
+                                successMsg = 'Project moved to archive.';
+
+                                errorMsg = 'Something went wrong and the project was not archived.';
+
+                            } else {
+
+                                successMsg = 'Project restored from archive.';
+
+                                errorMsg = 'Something went wrong and the project was not restored from the archive.';
+
+                            }
+
+                            Project.update({
+                                id: project.id
+                            }, data).$promise.then(function(successResponse) {
+                                
+                                scope.callback();
+
+                                scope.alerts = [{
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': successMsg,
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            }).catch(function(error) {
+
+                                // Do something with the error
+
+                                scope.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': errorMsg,
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+                            
+                        };
+
+                        scope.$watch('index', function (newVal) {
+
+                            if (newVal) {
+
+                                scope.processIndex();
+
+                            }
+
+                        });
+
+                        scope.$on('globalClick', function (event, target) {
+
+                            console.log(
+                                'globalClick:tableView:event:',
+                                event
+                            );
+
+                            console.log(
+                                'globalClick:tableView:target:',
+                                target
+                            );
+
+                            if (!element[0].contains(target)) {
+
+                                scope.$apply(function () {
+
+                                    console.log(
+                                        'globalClick:tableView:event:$apply'
+                                    );
+
+                                    if (typeof scope.tipManager.created !== 'undefined' ||
+                                        typeof scope.tipManager.modified !== 'undefined') {
+
+                                        console.log(
+                                            'globalClick:tableView:event:$apply:closeTip',
+                                            scope.tipManager
+                                        );
+
+                                        scope.tipManager = {};
+
+                                    }
+
+                                    if (typeof scope.modalManager.action !== 'undefined') {
+
+                                        console.log(
+                                            'globalClick:tableView:event:$apply:closeModal',
+                                            scope.modalManager
+                                        );
+
+                                        scope.modalManager = {
+                                            action: undefined
+                                        };
+
+                                    }
+
+                                });
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('deletionDialog', [
+            'environment',
+            '$routeParams',
+            '$filter',
+            '$parse',
+            '$location',
+            'Export',
+            'Project',
+            'Site',
+            'Practice',
+            'Report',
+            'MetricType',
+            'PracticeType',
+            'SearchService',
+            '$timeout',
+            function(environment, $routeParams, $filter, $parse, $location, Export,
+                     Project, Site, Practice, Report, MetricType, PracticeType,
+                     SearchService, $timeout) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'alerts': '=?',
+                        'callback': '&',
+                        'feature': '=?',
+                        'featureType': '=?',
+                        'visible': '=?'
+                    },
+                    templateUrl: function(elem, attrs) {
+
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/deletion/deletionDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
+
+                    },
+                    link: function(scope, element, attrs) {
+
+                        var modelIdx = {
+                            'export': Export,
+                            'metric-type': MetricType,
+                            'practice': Practice,
+                            'practice-type': PracticeType,
+                            'project': Project,
+                            'report': Report,
+                            'site': Site
+                        };
+
+                        scope.model = modelIdx[scope.featureType];
+
+                        if (typeof scope.model === 'undefined') {
+
+                            throw 'Un-recognized `featureType` parameter.';
+
+                        }
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
+
+                        function closeRoute() {
+
+                            var path;
+
+                            switch(scope.featureType) {
+
+                                case 'practice':
+
+                                    path = '/projects/' + scope.feature.project_id;
+
+                                    $location.path('/projects');
+
+                            }
+
+                            $location.path('/projects');
+
+                        }
+
+                        scope.closeChildModal = function(refresh) {
+
+                            scope.processing = false;
+
+                            scope.deletionError = null;
+
+                            scope.visible = false;
+
+                            if (scope.resetType) scope.type = undefined;
+
+                            if (refresh && scope.callback) scope.callback();
+
+                        };
+
+                        scope.deleteFeature = function() {
+
+                            var targetId;
+
+                            if (scope.feature.properties) {
+
+                                targetId = scope.feature.properties.id;
+
+                            } else {
+
+                                targetId = scope.feature.id;
+
+                            }
+
+                            scope.model.delete({
+                                id: +targetId
+                            }).$promise.then(function(data) {
+
+                                scope.alerts.push({
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': 'Successfully deleted this ' + scope.featureType + '.',
+                                    'prompt': 'OK'
+                                });
+
+                                scope.closeChildModal(true);
+
+                                $timeout(closeAlerts, 2000);
+
+                                // $timeout(closeRoute, 2000);
+
+                            }).catch(function(errorResponse) {
+
+                                console.log(
+                                    'scope.deleteFeature.errorResponse',
+                                    errorResponse);
+
+                                if (errorResponse.status === 409) {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Unable to delete “' + scope.feature.name + '”. There are pending tasks affecting this ' + scope.label + '.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                } else if (errorResponse.status === 403) {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'You don’t have permission to delete this ' + scope.label + '.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                } else {
+
+                                    scope.alerts = [{
+                                        'type': 'error',
+                                        'flag': 'Error!',
+                                        'msg': 'Something went wrong while attempting to delete this ' + scope.label + '.',
+                                        'prompt': 'OK'
+                                    }];
+
+                                }
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+
+                        };
+
+                        scope.$watch('featureType', function (newVal) {
+
+                            if (typeof newVal === 'string') {
+
+                                scope.label = newVal.replace(/_/g, ' ').replace(/-/g, ' ');
+
+                            }
+
+                        });
+
+                        // scope.$on('globalClick', function (event, target) {
+                        //
+                        //     console.log(
+                        //         'globalClick:deletionDialog:event:',
+                        //         event
+                        //     );
+                        //
+                        //     console.log(
+                        //         'globalClick:deletionDialog:target:',
+                        //         target
+                        //     );
+                        //
+                        //     if (scope.visible &&
+                        //         !target.classList.contains('delete-trigger') &&
+                        //         !element[0].contains(target)) {
+                        //
+                        //         scope.$apply(function () {
+                        //
+                        //             console.log(
+                        //                 'globalClick:deletionDialog:event:$apply'
+                        //             );
+                        //
+                        //             scope.visible = false;
+                        //
+                        //         });
+                        //
+                        //     }
+                        //
+                        // });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('exportDialog', [
+            'environment',
+            '$routeParams',
+            '$filter',
+            '$parse',
+            '$location',
+            'Export',
+            '$timeout',
+            function(environment, $routeParams, $filter, $parse, $location, Export, $timeout) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'alerts': '=?',
+                        'feature': '=?',
+                        'resetType': '=?',
+                        'type': '=?',
+                        'visible': '=?'
+                    },
+                    templateUrl: function(elem, attrs) {
+
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/export/exportDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
+
+                    },
+                    link: function(scope, element, attrs) {
+
+                        scope.format = 'csv';
+
+                        if (typeof scope.resetType === 'undefined') {
+
+                            scope.resetType = true;
+
+                        }
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
+
+                        scope.closeChildModal = function() {
+
+                            scope.visible = false;
+
+                            if (scope.resetType) scope.type = undefined;
+
+                        };
+
+                        scope.createExport = function(name, format) {
+
+                            var newFeature = new Export({
+                                'feature_id': scope.feature.id,
+                                'name': name,
+                                'scope': scope.type,
+                                'format': format
+                            });
+
+                            newFeature.$save(function(successResponse) {
+
+                                scope.alerts = [{
+                                    'type': 'success',
+                                    'flag': 'Success!',
+                                    'msg': 'Successfully exported this ' + scope.label + '.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                                scope.closeChildModal();
+
+                            }, function(errorResponse) {
+
+                                scope.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Something went wrong while exporting this ' + scope.label + '.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+
+                        };
+
+                        scope.setProgram = function(item, model, label) {
+
+                            scope.program_id = item.id;
+
+                        };
+
+                        scope.$watch('type', function (newVal) {
+
+                            if (typeof newVal === 'string') {
+
+                                scope.label = newVal.replace(/_/g, ' ');
+
+                            }
 
                         });
 
@@ -43510,3 +44644,49 @@ angular.module('FieldDoc')
         };
 
     }]);
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .filter('fileSize', ['$filter', function($filter) {
+
+            return function(value) {
+
+                var size;
+
+                var precision = 0;
+
+                var notation = 'kB';
+
+                if (value >= 1e6) {
+
+                    size = value / 1e6;
+
+                    precision = 1;
+
+                    notation = 'MB';
+
+                } else if (value >= 1e9) {
+
+                    size = value / 1e9;
+
+                    precision = 2;
+
+                    notation = 'GB';
+
+                } else {
+
+                    size = value / 1e3;
+
+                }
+
+                size = $filter('number')(size, precision);
+
+                return size + ' ' + notation;
+
+            };
+
+        }]);
+
+}());

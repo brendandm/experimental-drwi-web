@@ -1,7 +1,7 @@
 <div class="collection-filter drop-down">
     <button type="button"
             data-ng-class="{'open-btn': (displayStates[collection] || params[collection])}"
-            data-ng-click="toggleModal(false)"
+            data-ng-click="toggleModal(null, false)"
             title="{{ collection | capitalAttribute }}">
         {{ collection | capitalAttribute }}&nbsp;
         <i class="material-icons" data-ng-if="!displayStates[collection]">
@@ -14,7 +14,7 @@
     <form name="collection-filter-form"
           class="collection-filter-modal"
           style="width: auto;"
-          data-ng-if="displayStates[collection]">
+          data-ng-if="modalVisible">
         <label data-ng-repeat="feature in features  | orderBy: 'name'"
                data-ng-class="{'active': params[collection] === feature.id}"
                data-ng-click="toggleModal(feature.id, true)"
