@@ -152,8 +152,27 @@
                                     </div>
                                 </div>
 
-                                <p class="pad-0 margin-0">
-                                    {{ (export.description || 'No description') | truncate:80 }}
+                                <p class="pad-0 margin-0"
+                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                                   data-ng-if="export.site && export.site.name">
+                                    Site: <a href="sites/{{ export.site.id }}">{{ export.site.name | truncate:50 }}</a>
+                                </p>
+                                <p class="pad-0 margin-0"
+                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                                   data-ng-if="!export.site && export.project && export.project.name">
+                                    Project: <a href="projects/{{ export.project.id }}">{{ export.project.name | truncate:50
+                                    }}</a>
+                                </p>
+                                <p class="pad-0 margin-0"
+                                   style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                                   data-ng-if="!export.project && export.program && export.program.name">
+                                    Program: <a href="programs/{{ export.program.id }}">{{ export.program.name }}</a>
+                                </p>
+
+                                <p class="pad-0 margin-0 margin-t-1">
+                                    {{ export.practice_count | number }} <ng-pluralize
+                                        count="export.practice_count"
+                                        when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
                                 </p>
 
                                 <div class="actions">
@@ -180,7 +199,7 @@
 
                                 <span>
                                     <time datetime="{{ export.created_on }}" title="{{ export.created_on }}">
-                                        {{ export.created_on | date : 'mediumDate' }}
+                                        {{ export.created_on | date : 'mediumDate' }} @ {{ export.created_on | localTime | date:'h:mma' }}
                                     </time>
                                 </span>
 
