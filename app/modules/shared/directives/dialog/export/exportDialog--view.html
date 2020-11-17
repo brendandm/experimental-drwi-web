@@ -1,6 +1,6 @@
 <div class="creation-dialog-container" data-ng-if="visible">
 
-    <form class="dialog" style="width: auto;" data-ng-submit="createExport(name, format)">
+    <form class="dialog" style="width: auto;" data-ng-submit="createExport(name, fileFormat)">
 
         <div class="title">
             <span class="title-text">Export {{ label }} data</span>
@@ -22,7 +22,7 @@
                     Exported files contain practice and metric data along with a limited amount of site,
                     project, and program information where available. Exports are point-in-time snapshots of practice
                     data and are not guaranteed to be accurate if practice edits are currently in progress. Files are
-                    subject to removal after 30 days and are not intended to serve as data backups.
+                    retained for 30 days and are not intended to serve as data backups.
                 </span>
 
             </div>
@@ -46,24 +46,24 @@
 
                 <div class="radio-options margin-t-1 flex flex-dir-row flex-align-center flex-justify-start">
 
-                    <label data-ng-class="{'active': format === 'csv'}"
+                    <label data-ng-class="{'active': activeRadio.csv}"
+                           for="csv-format-option"
                            style="flex-basis: 50%;"
                            title="Comma-separated values">
-                        <div class="input-mask" data-ng-if="format === 'csv'">
-                            <span class="material-icons">
-                                radio_button_checked
-                            </span>
-                        </div>
-                        <div class="input-mask" data-ng-if="format !== 'csv'">
-                            <span class="material-icons">
-                                radio_button_unchecked
-                            </span>
-                        </div>
+                        <span class="input-mask material-icons"
+                              data-ng-if="activeRadio.csv">
+                            radio_button_checked
+                        </span>
+                        <span class="input-mask material-icons"
+                              data-ng-if="!activeRadio.csv">
+                            radio_button_unchecked
+                        </span>
                         <input type="radio"
                                id="csv-format-option"
-                               name="'csv-format-option'"
-                               data-ng-model="format"
-                               data-ng-value="'csv'">
+                               name="frmt"
+                               data-ng-model="fileFormat"
+                               data-ng-click="setFormat('csv')"
+                               value="csv">
                         <span>
                             Comma-separated values (.csv)
                         </span>
@@ -71,25 +71,25 @@
 
                     <div style="width: 1rem;"></div>
 
-                    <label data-ng-class="{'active': format === 'geojson'}"
+                    <label data-ng-class="{'active': activeRadio.geojson}"
                            data-ng-if="type !== 'program'"
+                           for="geojson-format-option"
                            style="flex-basis: 50%;"
                            title="GeoJSON">
-                        <div class="input-mask" data-ng-if="format === 'geojson'">
-                            <span class="material-icons">
-                                radio_button_checked
-                            </span>
-                        </div>
-                        <div class="input-mask" data-ng-if="format !== 'geojson'">
-                            <span class="material-icons">
-                                radio_button_unchecked
-                            </span>
-                        </div>
+                        <span class="input-mask material-icons"
+                              data-ng-if="activeRadio.geojson">
+                            radio_button_checked
+                        </span>
+                        <span class="input-mask material-icons"
+                              data-ng-if="!activeRadio.geojson">
+                            radio_button_unchecked
+                        </span>
                         <input type="radio"
                                id="geojson-format-option"
-                               name="'geojson-format-option'"
-                               data-ng-model="format"
-                               data-ng-value="'geojson'">
+                               name="frmt"
+                               data-ng-model="fileFormat"
+                               data-ng-click="setFormat('geojson')"
+                               value="geojson">
                         <span>
                             GeoJSON (.geojson)
                         </span>
@@ -106,7 +106,7 @@
                 Cancel
             </button>
             <button type="submit" class="confirm"
-                    data-ng-disabled="!name || !format">
+                    data-ng-disabled="!name">
                 OK
             </button>
         </div>

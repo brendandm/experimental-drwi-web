@@ -144,7 +144,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1605555092015})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1605572985887})
 
 ;
 /**
@@ -44230,7 +44230,11 @@ angular.module('FieldDoc')
                     },
                     link: function(scope, element, attrs) {
 
-                        scope.format = 'csv';
+                        scope.fileFormat = 'csv';
+
+                        scope.activeRadio = {
+                            csv: true
+                        };
 
                         if (typeof scope.resetType === 'undefined') {
 
@@ -44289,9 +44293,23 @@ angular.module('FieldDoc')
 
                         };
 
-                        scope.setProgram = function(item, model, label) {
+                        scope.setFormat = function(format) {
 
-                            scope.program_id = item.id;
+                            console.log(
+                                'exportDialog:fileFormat:',
+                                scope.fileFormat
+                            );
+
+                            scope.fileFormat = format;
+
+                            scope.activeRadio = {}
+
+                            scope.activeRadio[format] = true;
+
+                            console.log(
+                                'exportDialog:fileFormat[2]:',
+                                scope.fileFormat
+                            );
 
                         };
 

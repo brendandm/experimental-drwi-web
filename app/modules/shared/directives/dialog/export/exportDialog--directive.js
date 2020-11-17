@@ -35,7 +35,11 @@
                     },
                     link: function(scope, element, attrs) {
 
-                        scope.format = 'csv';
+                        scope.fileFormat = 'csv';
+
+                        scope.activeRadio = {
+                            csv: true
+                        };
 
                         if (typeof scope.resetType === 'undefined') {
 
@@ -94,9 +98,23 @@
 
                         };
 
-                        scope.setProgram = function(item, model, label) {
+                        scope.setFormat = function(format) {
 
-                            scope.program_id = item.id;
+                            console.log(
+                                'exportDialog:fileFormat:',
+                                scope.fileFormat
+                            );
+
+                            scope.fileFormat = format;
+
+                            scope.activeRadio = {}
+
+                            scope.activeRadio[format] = true;
+
+                            console.log(
+                                'exportDialog:fileFormat[2]:',
+                                scope.fileFormat
+                            );
 
                         };
 
