@@ -57,6 +57,12 @@
 
                             scope.visible = false;
 
+                            scope.fileFormat = 'csv';
+
+                            scope.activeRadio = {
+                                csv: true
+                            };
+
                             if (scope.resetType) scope.type = undefined;
 
                         };

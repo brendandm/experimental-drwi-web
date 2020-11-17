@@ -1,6 +1,7 @@
 <div class="creation-dialog-container" data-ng-if="visible">
 
-    <form class="dialog" style="width: auto;" data-ng-submit="createExport(name, fileFormat)">
+    <form class="dialog" style="width: auto; max-width: 640px;"
+          data-ng-submit="createExport(name, fileFormat)">
 
         <div class="title">
             <span class="title-text">Export {{ label }} data</span>
@@ -44,11 +45,11 @@
                     Select a data format. (<strong>required</strong>)
                 </span>
 
-                <div class="radio-options margin-t-1 flex flex-dir-row flex-align-center flex-justify-start">
+                <div class="radio-options margin-t-1 flex flex-dir-col flex-align-center flex-justify-start flex-wrap">
 
                     <label data-ng-class="{'active': activeRadio.csv}"
                            for="csv-format-option"
-                           style="flex-basis: 50%;"
+                           style="width: 100%;"
                            title="Comma-separated values">
                         <span class="input-mask material-icons"
                               data-ng-if="activeRadio.csv">
@@ -69,12 +70,53 @@
                         </span>
                     </label>
 
-                    <div style="width: 1rem;"></div>
+                    <p class="pad-0 margin-0 margin-t-1"
+                       style="font-size: .9rem;"
+                       data-ng-if="activeRadio.csv">
+                        A delimited text file that uses a comma to separate values. Each line of the file is a practice
+                        record. Compatible with Google Sheets, Microsoft Excel and other spreadsheet software.
+                    </p>
+
+                    <label data-ng-class="{'active': activeRadio.gpkg}"
+                           for="gpkg-format-option"
+                           class="margin-t-1"
+                           style="width: 100%;"
+                           title="ESRI Shapefile">
+                        <span class="input-mask material-icons"
+                              data-ng-if="activeRadio.gpkg">
+                            radio_button_checked
+                        </span>
+                        <span class="input-mask material-icons"
+                              data-ng-if="!activeRadio.gpkg">
+                            radio_button_unchecked
+                        </span>
+                        <input type="radio"
+                               id="gpkg-format-option"
+                               name="frmt"
+                               data-ng-model="fileFormat"
+                               data-ng-click="setFormat('gpkg')"
+                               value="gpkg">
+                        <span>
+                            GeoPackage (.gpkg)
+                        </span>
+                    </label>
+
+                    <p class="pad-0 margin-0 margin-t-1"
+                       style="font-size: .9rem;"
+                       data-ng-if="activeRadio.gpkg">
+                        An <a href="https://www.geopackage.org" target="_blank">open</a>, non-proprietary,
+                        platform-independent and standards-based geographic data format implemented as an <a
+                            href="https://sqlite.org/index.html" target="_blank">SQLite database</a> container.
+                        Compatible with <a href="https://www.qgis.org/en/site/" target="_blank">QGIS</a> and <a
+                            href="https://www.esri.com/en-us/arcgis/products/index" target="_blank">Esri ArcGIS</a>
+                        software.
+                    </p>
 
                     <label data-ng-class="{'active': activeRadio.geojson}"
                            data-ng-if="type !== 'program'"
                            for="geojson-format-option"
-                           style="flex-basis: 50%;"
+                           class="margin-t-1"
+                           style="width: 100%;"
                            title="GeoJSON">
                         <span class="input-mask material-icons"
                               data-ng-if="activeRadio.geojson">
@@ -94,6 +136,14 @@
                             GeoJSON (.geojson)
                         </span>
                     </label>
+
+                    <p class="pad-0 margin-0 margin-t-1"
+                       style="font-size: .9rem;"
+                       data-ng-if="activeRadio.geojson">
+                        An open standard format designed for representing simple geographical features, along with
+                        their non-spatial attributes. GeoJSON is a subset of the JSON format supported by FieldDoc
+                        and other modern software.
+                    </p>
 
                 </div>
 
