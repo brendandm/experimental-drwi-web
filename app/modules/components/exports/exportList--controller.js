@@ -80,6 +80,8 @@ angular.module('FieldDoc')
 
                     self.exports.splice(index, 1);
 
+                    self.summary.feature_count--;
+
                     $timeout(closeAlerts, 2000);
 
                 }).catch(function(errorResponse) {

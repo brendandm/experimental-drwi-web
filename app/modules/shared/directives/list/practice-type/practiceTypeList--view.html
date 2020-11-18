@@ -20,7 +20,7 @@
         practice types by name or use the letters to browse the list alphabetically.
     </p>
 
-    <div data-ng-if="practiceType && selectionId" style="padding-bottom: 2rem;">
+    <div data-ng-if="practiceType && selectionId && !practice.misaligned" style="padding-bottom: 2rem;">
         <span>The current type assignment for this practice is <strong>{{ practiceType.name }}</strong>.</span>
         <a href="#{{ selectionId }}" data-ng-click="scrollManager.scrollToAnchor(selectionId)">Jump to selection. &rarr;</a>
     </div>

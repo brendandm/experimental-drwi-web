@@ -4349,7 +4349,7 @@
                 .sub-label {
                     font-size: .8rem;
                     text-transform: uppercase;
-                    color: #2196F3;
+                    color: #757575;
                 }
 
                 .no-type {
@@ -5018,7 +5018,7 @@
         grid-gap: 2rem;
         gap: 2rem;
         grid-template-rows: auto;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(1, 1fr);
         align-items: stretch;
         justify-items: stretch;
         align-content: stretch;
@@ -5301,6 +5301,16 @@
         }
 
     }
+
+    /* Larger than Desktop HD */
+    @media (min-width: 1600px) {
+
+        .selectable-group-items {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
 }
 
 .summary-warning-link-wrapper {
