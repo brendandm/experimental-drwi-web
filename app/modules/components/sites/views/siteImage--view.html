@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading photo collection&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading image collection&hellip;</p>
             </div>
         </div>
 
@@ -29,46 +29,46 @@
              practice="page.practice"
              site="page.practice.site"
              project="page.practice.project"
-             tail="Photos"></div>
+             tail="Images"></div>
 
         <div class="breadcrumb-header-wrapper">
-            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Practice photos</h1>
+            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Practice images</h1>
         </div>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
             <div class="privacy-message reveal fade-in t0">
-                 <p>
+                <p>
                     <i class="material-icons">
                         lock
                     </i>
                 </p>
 
                 <p>This feature is currently not available.</p>
-                </div>
+            </div>
 
-        <!-- START COMMENT OUT UNTIL FUNCTIONAL -->
-         <!--
-            <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()" autocomplete="off">
+            <!-- START COMMENT OUT UNTIL FUNCTIONAL -->
+            <!--
+               <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()" autocomplete="off">
 
-                <h2>Add photo</h2>
+                   <h2>Add photo</h2>
 
-                <div class="form-field">
-                    <input type="file" class="form-control" id="images" name="images" file-upload file-model="page.files.images" multiple="multiple" />
-                </div>
+                   <div class="form-field">
+                       <input type="file" class="form-control" id="images" name="images" file-upload file-model="page.files.images" multiple="multiple" />
+                   </div>
 
-                <div class="save--action--wrapper save--action--bottom">
-                    <button type="submit" data-ng-disabled="page.status.processing">
-                        <i class="material-icons" data-ng-if="page.status.processing">
-                            more_horiz
-                        </i>
-                        <i class="material-icons" data-ng-if="!page.status.processing">
-                            done
-                        </i>
-                    </button>
-                </div>
+                   <div class="save--action--wrapper save--action--bottom">
+                       <button type="submit" data-ng-disabled="page.status.processing">
+                           <i class="material-icons" data-ng-if="page.status.processing">
+                               more_horiz
+                           </i>
+                           <i class="material-icons" data-ng-if="!page.status.processing">
+                               done
+                           </i>
+                       </button>
+                   </div>
 
-            </form>
-            -->
+               </form>
+               -->
             <!-- END COMMENT OUT UNTIL FUNCTIONAL-->
 
             <div style="position: relative; min-height: 640px; width: 100%;">
@@ -124,7 +124,7 @@
 
                 <!-- <div class="progress--modal reveal fade-in t0" style="align-items: flex-start;" data-ng-if="page.status.processing && page.practice.images.length">
                     <div class="progress--container">
-                        <p style="font-weight: bold;" class="color-pulse">Updating photos&hellip;</p>
+                        <p style="font-weight: bold;" class="color-pulse">Updating images&hellip;</p>
                     </div>
                 </div> -->
 

@@ -128,8 +128,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/practices/:practiceId/photos', {
-                templateUrl: '/modules/components/practices/views/practicePhoto--view.html?t=' + environment.version,
+            .when('/practices/:practiceId/images', {
+                templateUrl: '/modules/components/practices/views/practiceImage--view.html?t=' + environment.version,
                 controller: 'PracticePhotoController',
                 controllerAs: 'page',
                 resolve: {

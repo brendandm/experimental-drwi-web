@@ -6,10 +6,10 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticePhotoController', function(
-        Account, Image, $location, $log, mapbox, Media, Practice,
-        practice, $q, $rootScope, $route, $scope, $timeout,
-        $interval, site, user, Utility) {
+    .controller('SitePhotoController', function(
+        Account, Image, $location, $log, Media, Site,
+        site, $q, $rootScope, $route, $scope, $timeout,
+        $interval, user, Utility) {
 
         var self = this;
 
@@ -49,19 +49,19 @@ angular.module('FieldDoc')
 
         };
 
-       function closeRoute() {
+        function closeRoute() {
 
-                    if(self.practice.site != null){
-                         $location.path(self.practice.links.site.html);
-                    }else{
+            if(self.site.site != null){
+                $location.path(self.site.links.site.html);
+            }else{
 
-                    } $location.path("/projects/"+self.practice.project.id);
+            } $location.path("/projects/"+self.site.project.id);
 
-            }
+        }
 
-        self.processPractice = function(data) {
+        self.processSite = function(data) {
 
-            self.practice = data;
+            self.site = data;
 
             if (data.permissions) {
 
@@ -77,15 +77,15 @@ angular.module('FieldDoc')
 
             }
 
-            delete self.practice.organization;
-      //      delete self.practice.project;
-      //      delete self.practice.site;
+            delete self.site.organization;
+            //      delete self.site.project;
+            //      delete self.site.site;
 
-            self.practiceType = data.category;
+            self.siteType = data.category;
 
-            $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
+            $rootScope.page.title = self.site.name ? self.site.name : 'Un-named Site';
 
-            self.practice.images.sort(function(a, b) {
+            self.site.images.sort(function(a, b) {
 
                 return a.id < b.id;
 
@@ -93,13 +93,13 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadPractice = function() {
+        self.loadSite = function() {
 
-            practice.$promise.then(function(successResponse) {
+            site.$promise.then(function(successResponse) {
 
-                console.log('self.practice', successResponse);
+                console.log('self.site', successResponse);
 
-                self.processPractice(successResponse);
+                self.processSite(successResponse);
 
                 self.showElements();
 
@@ -111,7 +111,7 @@ angular.module('FieldDoc')
 
         };
 
-        self.savePractice = function() {
+        self.saveSite = function() {
 
             self.status.processing = true;
 
@@ -119,7 +119,7 @@ angular.module('FieldDoc')
                 images: []
             };
 
-            self.practice.images.forEach(function(image) {
+            self.site.images.forEach(function(image) {
 
                 imageCollection.images.push({
                     id: image.id
@@ -145,11 +145,11 @@ angular.module('FieldDoc')
 
                     });
 
-                    Practice.update({
-                        id: self.practice.id
+                    Site.update({
+                        id: self.site.id
                     }, imageCollection).$promise.then(function(successResponse) {
 
-                        self.processPractice(successResponse);
+                        self.processSite(successResponse);
 
                         self.files.images = [];
 
@@ -180,11 +180,11 @@ angular.module('FieldDoc')
 
             } else {
 
-                Practice.update({
-                        id: self.practice.id
-                    }, imageCollection).$promise.then(function(successResponse) {
+                Site.update({
+                    id: self.site.id
+                }, imageCollection).$promise.then(function(successResponse) {
 
-                    self.processPractice(successResponse);
+                    self.processSite(successResponse);
 
                     self.files.images = [];
 
@@ -214,7 +214,7 @@ angular.module('FieldDoc')
             console.log('self.confirmDelete', obj, targetCollection);
 
             if (self.deletionTarget &&
-                self.deletionTarget.collection === 'practice') {
+                self.deletionTarget.collection === 'site') {
 
                 self.cancelDelete();
 
@@ -243,11 +243,11 @@ angular.module('FieldDoc')
 
             if (featureType === 'image') {
 
-                self.practice.images.splice(index, 1);
+                self.site.images.splice(index, 1);
 
                 self.cancelDelete();
 
-                self.savePractice();
+                self.saveSite();
 
                 return;
 
@@ -263,7 +263,7 @@ angular.module('FieldDoc')
 
                 default:
 
-                    targetCollection = Practice;
+                    targetCollection = Site;
 
                     break;
 
@@ -337,7 +337,7 @@ angular.module('FieldDoc')
                     can_edit: false
                 };
 
-                self.loadPractice();
+                self.loadSite();
 
             });
 

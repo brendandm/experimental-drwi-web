@@ -147,6 +147,29 @@ angular.module('FieldDoc')
                         }
                     }
                 })
+                .when('/sites/:siteId/images', {
+                    templateUrl: '/modules/components/sites/views/siteImage--view.html?t=' + environment.version,
+                    controller: 'SitePhotoController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        site: function(Site, $route) {
+                            return Site.get({
+                                id: $route.current.params.siteId
+                            });
+                        }
+                    }
+                })
                 .when('/sites/:siteId/tags', {
                     templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
                     controller: 'SiteTagController',
