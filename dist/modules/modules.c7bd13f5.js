@@ -144,7 +144,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1605646478574})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1605744450927})
 
 ;
 /**
@@ -4571,6 +4571,8 @@ angular.module('FieldDoc')
                     }];
 
                     self.projects.splice(index, 1);
+
+                    self.summary.feature_count--;
 
                     $timeout(closeAlerts, 2000);
 
@@ -9981,6 +9983,8 @@ angular.module('FieldDoc')
 
                         self.practices.splice(index, 1);
 
+                        self.summary.feature_count--;
+
                         self.cancelDelete();
 
                         $timeout(closeAlerts, 2000);
@@ -10735,6 +10739,8 @@ angular.module('FieldDoc')
                         featureType === 'site') {
 
                         self.sites.splice(index, 1);
+
+                        self.summary.feature_count--;
 
                         self.cancelDelete();
 
@@ -16747,6 +16753,8 @@ angular.module('FieldDoc')
                             featureType === 'practice') {
 
                             self.practices.splice(index, 1);
+
+                            self.summary.feature_count--;
 
                             self.cancelDelete();
 
@@ -36462,6 +36470,8 @@ angular.module('FieldDoc')
                     }];
 
                     self.exports.splice(index, 1);
+
+                    self.summary.feature_count--;
 
                     $timeout(closeAlerts, 2000);
 

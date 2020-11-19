@@ -14,13 +14,18 @@
         </div>
         <div class="inputs">
 
-                <p class="prompt" style="word-break: break-word;">
-                    You’re about to permanently delete <strong>{{ feature.name }}</strong>. Deleting this
-                    {{
-                    label }}
-                    will also remove all associated sites, practices, reports, and metrics. Once deleted there is no way
-                    to recover this data. Do you want to proceed?
-                </p>
+            <p class="prompt" style="word-break: break-word;" data-ng-if="label !== 'project'">
+                You’re about to permanently delete <strong>{{ feature.name }}</strong>. Once deleted there is no way
+                to recover this data. Do you want to proceed?
+            </p>
+
+            <p class="prompt" style="word-break: break-word;" data-ng-if="label === 'project'">
+                You’re about to permanently delete <strong>{{ feature.name }}</strong>. Deleting this
+                {{
+                label }}
+                will also remove all associated sites, practices, reports, and metrics. Once deleted there is no way
+                to recover this data. Do you want to proceed?
+            </p>
 
 <!--                <div class="upload-error" style="margin: 1rem 0 0;"-->
 <!--                     data-ng-if="uploadError">-->

@@ -33,7 +33,7 @@
         <tbody>
 
             <tr data-ng-repeat="export in index | filter: q">
-                <td class="pad-1" style="max-width: 20rem;">
+                <td class="pad-1" style="width: 1%; max-width: 20rem;">
                     <span style="display: block; width: 100%;">
                         {{ export.name | truncate:100 }}
                     </span>
@@ -43,7 +43,7 @@
                         <span>
                             <time datetime="{{ export.created_on }}"
                                   title="{{ export.created_on }}">
-                                {{ export.created_on | date : 'mediumDate' }} @ {{ export.created_on | localTime | date:'h:mma' }}
+                                {{ export.created_on | date : 'mediumDate' }} &middot; {{ export.created_on | localTime | date:'h:mma' }}
                             </time>
                         </span>
                     </div>
@@ -99,7 +99,7 @@
                         </a>
                     </div>
                 </td>
-                <td class="pad-1 more-actions" style="width: 56px; overflow: visible;">
+                <td class="pad-1 more-actions" style="width: .01%; overflow: visible;">
                     <div class="action-modal-container">
                         <div class="action-modal" data-ng-if="modalManager.action === export.id">
                             <ul>
