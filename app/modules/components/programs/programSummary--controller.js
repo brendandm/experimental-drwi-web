@@ -319,33 +319,23 @@
 
                         Utility.processMetrics(successResponse.features);
 
+                        if (successResponse.hasOwnProperty('timestamp')) {
+
+                            self.progressTimestamp = successResponse.timestamp;
+
+                        }
+
                         self.metrics = successResponse.features;
 
                         self.metrics.forEach(function(metric) {
 
                             Utility.calcProgress(metric, true);
 
-                            // if (metric.target && metric.target > 0) {
-                            //
-                            //     metric.percentComplete = Math.ceil((metric.total_reported / metric.target) * 100);
-                            //
-                            // } else if (metric.agg_target > 0) {
-                            //
-                            //     metric.percentComplete = Math.ceil(metric.total_reported / metric.agg_target);
-                            //
-                            // } else {
-                            //
-                            //     metric.percentComplete = 0;
-                            //
-                            // }
-
                         });
 
                         self.metrics = Utility.groupByModel(successResponse.features);
 
                         console.log('self.metrics', self.metrics);
-
-
 
                     }, function(errorResponse) {
 

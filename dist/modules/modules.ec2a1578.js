@@ -144,7 +144,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1605794939921})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1605803029673})
 
 ;
 /**
@@ -31043,33 +31043,23 @@ angular.module('FieldDoc')
 
                         Utility.processMetrics(successResponse.features);
 
+                        if (successResponse.hasOwnProperty('timestamp')) {
+
+                            self.progressTimestamp = successResponse.timestamp;
+
+                        }
+
                         self.metrics = successResponse.features;
 
                         self.metrics.forEach(function(metric) {
 
                             Utility.calcProgress(metric, true);
 
-                            // if (metric.target && metric.target > 0) {
-                            //
-                            //     metric.percentComplete = Math.ceil((metric.total_reported / metric.target) * 100);
-                            //
-                            // } else if (metric.agg_target > 0) {
-                            //
-                            //     metric.percentComplete = Math.ceil(metric.total_reported / metric.agg_target);
-                            //
-                            // } else {
-                            //
-                            //     metric.percentComplete = 0;
-                            //
-                            // }
-
                         });
 
                         self.metrics = Utility.groupByModel(successResponse.features);
 
                         console.log('self.metrics', self.metrics);
-
-
 
                     }, function(errorResponse) {
 

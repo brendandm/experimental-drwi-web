@@ -27,7 +27,8 @@
                                  class="modtime">
                                 Last modified by {{ page.program.last_modified_by.first_name }} {{
                                 page.program.last_modified_by.last_name }} on {{ page.program.modified_on |
-                                date:'fullDate' }} at <span class="lowercase">{{ page.program.modified_on | localTime | date:'h:mma' }}</span>
+                                date:'fullDate' }} at {{ page.program.modified_on | localTime | date:'h:mm' }} {{
+                                page.program.modified_on | localTime | date:'a' }}
                             </div>
 
                             <div class="history-link-wrapper">
@@ -120,7 +121,21 @@
 
                     <section class="pad shadow">
 
-                        <h2>Metrics</h2>
+                        <h2 class="margin-0 margin-b-50p">Metrics</h2>
+
+                        <p class="pad-0 margin-b-1" data-ng-if="page.progressTimestamp">
+                            <span style="font-size: .9rem; color: #757575;">
+                                Last updated on {{ page.progressTimestamp | date : 'mediumDate' }} at {{
+                                page.progressTimestamp | localTime | date:'h:mm' }} {{
+                                page.progressTimestamp | localTime | date:'a' }}
+                            </span>
+                        </p>
+
+                        <p class="pad-0 margin-b-1">
+                            <span style="font-size: .9rem; color: #E65100;">
+                                Program-level metric calculations exclude data from draft projects.
+                            </span>
+                        </p>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 

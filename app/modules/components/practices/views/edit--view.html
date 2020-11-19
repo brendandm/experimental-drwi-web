@@ -52,7 +52,7 @@
                                  class="modtime">
                                 Last modified by {{ page.report.last_modified_by.first_name }} {{
                                 page.report.last_modified_by.last_name }} on {{ page.report.modified_on |
-                                date:'fullDate' }} at <span class="lowercase">{{ page.report.modified_on | localTime | date:'h:mma' }}</span>
+                                date:'fullDate' }} at {{ page.report.modified_on | localTime | date:'h:mm' }} {{ page.report.modified_on | localTime | date:'a' }}
                             </div>
 
                             <div class="history-link-wrapper">

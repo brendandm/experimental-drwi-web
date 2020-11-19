@@ -43,7 +43,8 @@
                         <span>
                             <time datetime="{{ export.created_on }}"
                                   title="{{ export.created_on }}">
-                                {{ export.created_on | date : 'mediumDate' }} &middot; {{ export.created_on | localTime | date:'h:mma' }}
+                                {{ export.created_on | date : 'mediumDate' }} &middot; {{ export.created_on |
+                                localTime | date:'h:mm' }} {{ export.created_on | localTime | date:'a' }}
                             </time>
                         </span>
                     </div>

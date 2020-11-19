@@ -24,7 +24,7 @@
                          class="modtime">
                         Last modified by {{ page.metricType.last_modified_by.first_name }} {{
                         page.metricType.last_modified_by.last_name }} on {{ page.metricType.modified_on |
-                        date:'fullDate' }} at <span class="lowercase">{{ page.metricType.modified_on | localTime | date:'h:mma' }}</span>
+                        date:'fullDate' }} at {{ page.metricType.modified_on | localTime | date:'h:mm' }} {{ page.metricType.modified_on | localTime | date:'a' }}
                     </div>
 
                     <div class="history-link-wrapper margin-t-50p">

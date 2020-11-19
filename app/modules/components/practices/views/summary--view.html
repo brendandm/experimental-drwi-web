@@ -49,7 +49,7 @@
                                  class="modtime">
                                 Last modified by {{ page.practice.last_modified_by.first_name }} {{
                                 page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on |
-                                date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                                date:'fullDate' }} at {{ page.practice.modified_on | localTime | date:'h:mm' }} {{ page.practice.modified_on | localTime | date:'a' }}
                             </div>
 
                             <div class="history-link-wrapper">

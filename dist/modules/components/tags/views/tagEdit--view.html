@@ -25,7 +25,8 @@
                         <div class="last-modified-summary">
 
                             <div data-ng-if="page.tag.id && page.tag.last_modified_by.first_name && page.tag.last_modified_by.last_name" class="modtime">
-                                Last modified by {{ page.tag.last_modified_by.first_name }} {{ page.tag.last_modified_by.last_name }} on {{ page.tag.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.tag.modified_on | localTime | date:'h:mma' }}</span>
+                                Last modified by {{ page.tag.last_modified_by.first_name }} {{
+                                page.tag.last_modified_by.last_name }} on {{ page.tag.modified_on | date:'fullDate' }} at {{ page.tag.modified_on | localTime | date:'h:mm' }} {{ page.tag.modified_on | localTime | date:'a' }}
                             </div>
 
                             <div class="history-link-wrapper">

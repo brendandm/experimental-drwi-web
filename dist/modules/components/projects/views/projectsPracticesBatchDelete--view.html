@@ -39,7 +39,8 @@
             <section class="reveal fade-in t0" style="padding: 0;">
 
                 <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
-                    Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
+                    Last modified by {{ page.practice.last_modified_by.first_name }} {{
+                    page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at {{ page.practice.modified_on | localTime | date:'h:mm' }} {{ page.practice.modified_on | localTime | date:'a' }}
                 </p>
 
                 <p style="max-width:800px; text-align:justify">

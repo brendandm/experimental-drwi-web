@@ -90,18 +90,6 @@
                                         text-align: center;">
                                             <em>You don’t have any exports.</em>
                                         </p>
-                                        <p style="font-style: normal; font-size: 1rem; padding: 0; margin: 1rem 0 0;
-                                        text-align: center; display: flex; flex-flow: row nowrap; align-items:
-                                        center; width: 100%; justify-content: center; cursor: pointer; color: #0366d6;"
-                                           data-ng-click="page.loadExports()">
-                                            <span class="material-icons" style="display: inline-block; margin-right:
-                                            0.25rem;">
-                                                clear_all
-                                            </span>
-                                            <a href="#">
-                                                Clear filters
-                                            </a>
-                                        </p>
                                     </div>
 
                                 </div>
@@ -199,7 +187,8 @@
 
                                 <span>
                                     <time datetime="{{ export.created_on }}" title="{{ export.created_on }}">
-                                        {{ export.created_on | date : 'mediumDate' }} &middot; {{ export.created_on | localTime | date:'h:mma' }}
+                                        {{ export.created_on | date : 'mediumDate' }} &middot; {{ export.created_on |
+                                        localTime | date:'h:mm' }} {{ export.created_on | localTime | date:'a' }}
                                     </time>
                                 </span>
 
