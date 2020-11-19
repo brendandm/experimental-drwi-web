@@ -266,6 +266,8 @@ angular.module('FieldDoc')
 
                         self.practices.splice(index, 1);
 
+                        self.summary.feature_count--;
+
                         self.cancelDelete();
 
                         $timeout(closeAlerts, 2000);
