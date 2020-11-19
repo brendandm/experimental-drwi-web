@@ -17,7 +17,7 @@
         <p style="font-style: normal; font-size: 1em;" class="margin-0 pad-1">
             The batch import feature allows you to upload geometries for multiple {{ featureType }}s
             simultaneously. After upload, each new record will appear as a separate {{ featureType }} tile.
-            FieldDoc accepts spatial data in the <strong>GeoJSON</strong> and <strong>ESRI Shapefile</strong>
+            FieldDoc accepts spatial data in the <strong>GeoJSON</strong> and <strong>Esri Shapefile</strong>
             formats.
         </p>
 
@@ -32,7 +32,8 @@
             </span>, and <span class="monospace-highlight">.dbf</span> files, shapefile archives must include a
                 <span class="monospace-highlight">.prj</span> file that describes the coordinate system and
                 projection. All files must be compressed into a <span class="monospace-highlight">.zip</span>
-                file before uploading.
+                file before uploading. To ensure that FieldDoc reads the archive correctly, the archive itself and
+                the files it contains should share the same name. File names must not contain spaces.
             </p>
 
             <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
