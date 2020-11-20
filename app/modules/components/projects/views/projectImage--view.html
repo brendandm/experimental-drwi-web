@@ -30,10 +30,6 @@
              project="page.project"
              tail="Images"></div>
 
-        <div class="breadcrumb-header-wrapper">
-            <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Project images</h1>
-        </div>
-
         <div class="main--ui reveal fade-in t0"
              data-ng-if="!page.status.loading && page.makePrivate">
 
@@ -54,42 +50,95 @@
         <div class="main--ui reveal fade-in t0"
              data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <form role="form" class="form"
-                  style="position:relative;"
-                  id="form--ProjectEdit"
-                  name="form--ProjectEdit"
-                  data-ng-submit="page.saveImage()"
-                  autocomplete="off">
+            <div class="create-heading" data-ng-if="!page.status.loading">
+                <h1 class="margin-0">
+                    Project images
+                    <span class="tally">
+                        {{ page.project.images.length | number }}
+                    </span>
+                </h1>
+                <button type="button" style="padding: .5rem 1rem .5rem .7rem;"
+                        data-ng-click="page.showUploadModal = !page.showUploadModal">
+                    <span class="material-icons margin-r-50p">
+                        add
+                    </span>
+                    Add
+                </button>
+            </div>
 
-                <h2>Add image</h2>
+<!--            <form role="form" class="form"-->
+<!--                  style="position:relative;"-->
+<!--                  id="form&#45;&#45;ProjectEdit"-->
+<!--                  name="form&#45;&#45;ProjectEdit"-->
+<!--                  data-ng-submit="page.saveImage()"-->
+<!--                  autocomplete="off">-->
 
-                <div class="form-field">
-                    <input type="file"
-                           class="form-control"
-                           id="images"
-                           name="images"
-                           file-upload
-                           file-model="page.mediaManager.images[0]"
-                           accept=".png,.jpg,.jpeg"/>
+<!--                <h2>Add image</h2>-->
+
+<!--                <div class="form-field">-->
+<!--                    <input type="file"-->
+<!--                           class="form-control"-->
+<!--                           id="images"-->
+<!--                           name="images"-->
+<!--                           file-upload-->
+<!--                           file-model="page.mediaManager.images[0]"-->
+<!--                           accept=".png,.jpg,.jpeg"/>-->
+<!--                </div>-->
+
+<!--                <div class="save&#45;&#45;action&#45;&#45;wrapper save&#45;&#45;action&#45;&#45;bottom">-->
+<!--                    <button type="submit"-->
+<!--                            data-ng-disabled="page.status.processing">-->
+<!--                        <span class="material-icons"-->
+<!--                           data-ng-if="page.status.processing">-->
+<!--                            more_horiz-->
+<!--                        </span>-->
+<!--                        <span class="material-icons"-->
+<!--                           data-ng-if="!page.status.processing">-->
+<!--                            done-->
+<!--                        </span>-->
+<!--                    </button>-->
+<!--                </div>-->
+
+<!--            </form>-->
+
+            <div class="margin-t-2" style="position: relative; min-height: 640px; width: 100%;">
+
+                <div data-ng-if="!page.project.images.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
+                0;">
+
+                    <ul class="selectable-group-items list-unstyled margin-t-2"
+                        style="grid-template-columns: repeat(1, 1fr);">
+
+                        <li class="card reveal fade-in">
+
+                            <div class="card--content"
+                                 style="display: flex; flex-flow: row nowrap; box-shadow: none; border: none;
+                                 border-radius: 4px; overflow: hidden;">
+
+                                <div class="description" style="width: 100%; border-right: none;">
+
+                                    <div class="pad-0 margin-t-2 margin-b-1 center">
+                                        <span class="material-icons md-36">
+                                            image
+                                        </span>
+                                    </div>
+
+                                    <div class="pad-0">
+                                        <p style="font-style: normal; font-size: 1.2em; padding: 0; margin: 0;
+                                        text-align: center;">
+                                            <em>This project does not contain any images.</em>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+
+                    </ul>
+
                 </div>
-
-                <div class="save--action--wrapper save--action--bottom">
-                    <button type="submit"
-                            data-ng-disabled="page.status.processing">
-                        <span class="material-icons"
-                           data-ng-if="page.status.processing">
-                            more_horiz
-                        </span>
-                        <span class="material-icons"
-                           data-ng-if="!page.status.processing">
-                            done
-                        </span>
-                    </button>
-                </div>
-
-            </form>
-
-            <div style="position: relative; min-height: 640px; width: 100%;">
 
                 <ul class="snapshot--cards list-unstyled"
                     data-ng-if="page.project.images.length">
@@ -238,6 +287,14 @@
             </div>
         </div>
     </div>
+
+    <div image-upload-dialog=""
+         alerts="page.alerts"
+         parent="page.project"
+         file-input="image-file-input"
+         callback="page.loadProject()"
+         feature-type="project"
+         visible="page.showUploadModal"></div>
 
 </main>
 

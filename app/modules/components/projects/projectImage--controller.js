@@ -7,19 +7,15 @@
  */
 angular.module('FieldDoc')
     .controller('ProjectPhotoController', function(
-        Account, Image, $location, $log, Media, Project,
-        project, $q, $rootScope, $route, $scope, $timeout,
-        $interval, user, Utility) {
+        Account, Image, $location, $log, Project,
+        project, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
 
         var self = this;
 
         $rootScope.toolbarState = {
             'editPhotos': true
         };
-
-        self.mediaManager = Media;
-
-        self.mediaManager.images = [];
 
         $rootScope.page = {};
 
@@ -94,7 +90,30 @@ angular.module('FieldDoc')
 
         self.loadProject = function() {
 
-            project.$promise.then(function(successResponse) {
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Project.get({
+                id: $route.current.params.projectId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
 
                 console.log('self.project', successResponse);
 
@@ -107,118 +126,6 @@ angular.module('FieldDoc')
                 self.showElements();
 
             });
-
-        };
-
-        self.saveImage = function() {
-
-            console.log(
-                'ProjectPhotoController:saveImage:self.mediaManager.images:',
-                self.mediaManager.images
-            );
-
-            self.status.processing = true;
-
-            var imageCollection = {
-                images: []
-            };
-
-            self.project.images.forEach(function(image) {
-
-                imageCollection.images.push({
-                    id: image.id
-                });
-
-            });
-
-            if (self.mediaManager.images) {
-
-                var savedQueries = self.mediaManager.preupload(
-                    self.mediaManager.images,
-                    'image',
-                    'project',
-                    self.project.id);
-
-                console.log(
-                    'ProjectPhotoController:saveImage:savedQueries:',
-                    savedQueries
-                );
-
-                $q.all(savedQueries).then(function(successResponse) {
-
-                    $log.log('Images::successResponse', successResponse);
-
-                    angular.forEach(successResponse, function(image) {
-
-                        imageCollection.images.push({
-
-                            id: image.id
-
-                        });
-
-                    });
-
-                    Project.update({
-                        id: self.project.id
-                    }, imageCollection).$promise.then(function(successResponse) {
-
-                        self.processProject(successResponse);
-
-                        self.mediaManager.images = [];
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Photo library updated.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(self.closeAlerts, 2000);
-
-                        self.showElements(0);
-
-                    }, function(errorResponse) {
-
-                        self.showElements(0);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    $log.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            } else {
-
-                Project.update({
-                    id: self.project.id
-                }, imageCollection).$promise.then(function(successResponse) {
-
-                    self.processProject(successResponse);
-
-                    self.mediaManager.images = [];
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Photo library updated.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    self.showElements();
-
-                });
-
-            }
 
         };
 
@@ -277,7 +184,7 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this ' + featureType + '.',
+                    'msg': 'Successfully deleted ' + featureType + '.',
                     'prompt': 'OK'
                 }];
 
@@ -287,7 +194,9 @@ angular.module('FieldDoc')
 
                     self.cancelDelete();
 
-                    self.saveImage();
+                    self.loadProject();
+
+                    $timeout(self.closeAlerts, 1500);
 
                 } else {
 
@@ -304,7 +213,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
                         'prompt': 'OK'
                     }];
 
