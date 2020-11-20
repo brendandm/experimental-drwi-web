@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectPhotoController', function(
+    .controller('ProjectImageController', function(
         Account, Image, $location, $log, Project,
         project, $q, $rootScope, $route, $scope,
         $timeout, $interval, user) {
@@ -14,7 +14,7 @@ angular.module('FieldDoc')
         var self = this;
 
         $rootScope.toolbarState = {
-            'editPhotos': true
+            'editImages': true
         };
 
         $rootScope.page = {};

@@ -51,7 +51,7 @@
         <div class="dyad">
             <div class="dialog-actions">
                 <button type="button" class="confirm" data-ng-class="{complete: uploadComplete}"
-                        data-ng-click="uploadImage()">
+                        data-ng-click="uploadImage()" data-ng-disabled="!mediaManager.images.length">
                     <span class="material-icons margin-r-50p" data-ng-if="!uploadComplete">
                         cloud_upload
                     </span>

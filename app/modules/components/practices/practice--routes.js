@@ -130,7 +130,7 @@ angular.module('FieldDoc')
             })
             .when('/practices/:practiceId/images', {
                 templateUrl: '/modules/components/practices/views/practiceImage--view.html?t=' + environment.version,
-                controller: 'PracticePhotoController',
+                controller: 'PracticeImageController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {

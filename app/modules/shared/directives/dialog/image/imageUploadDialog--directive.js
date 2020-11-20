@@ -81,6 +81,8 @@
 
                             scope.uploadError = null;
 
+                            scope.mediaManager.images = [];
+
                             scope.visible = false;
 
                             if (refresh) scope.callback();
@@ -158,7 +160,7 @@
                                 scope.parent.id);
 
                             console.log(
-                                'ProjectPhotoController:saveImage:savedQueries:',
+                                'ProjectImageController:saveImage:savedQueries:',
                                 savedQueries
                             );
 
@@ -189,13 +191,6 @@
                                         scope.closeChildModal(true);
 
                                     }, 1500);
-
-                                    // scope.alerts = [{
-                                    //     'type': 'success',
-                                    //     'flag': 'Success!',
-                                    //     'msg': 'Photo library updated.',
-                                    //     'prompt': 'OK'
-                                    // }];
 
                                 }, function(errorResponse) {
 

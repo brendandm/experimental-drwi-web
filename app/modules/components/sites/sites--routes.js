@@ -149,7 +149,7 @@ angular.module('FieldDoc')
                 })
                 .when('/sites/:siteId/images', {
                     templateUrl: '/modules/components/sites/views/siteImage--view.html?t=' + environment.version,
-                    controller: 'SitePhotoController',
+                    controller: 'SiteImageController',
                     controllerAs: 'page',
                     resolve: {
                         user: function(Account, $rootScope, $document) {

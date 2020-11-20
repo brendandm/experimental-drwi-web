@@ -6,19 +6,16 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticePhotoController', function(
-        Account, Image, $location, $log, mapbox, Media, Practice,
-        practice, $q, $rootScope, $route, $scope, $timeout,
-        $interval, site, user, Utility) {
+    .controller('PracticeImageController', function(
+        Account, Image, $location, $log, Practice,
+        practice, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
 
         var self = this;
 
         $rootScope.toolbarState = {
-            'editPhotos': true
+            'editImages': true
         };
-
-        self.files = Media;
-        self.files.images = [];
 
         $rootScope.page = {};
 
@@ -49,15 +46,11 @@ angular.module('FieldDoc')
 
         };
 
-        function closeRoute() {
+        self.closeRoute = function () {
 
-            if(self.practice.site != null){
-                $location.path(self.practice.links.site.html);
-            }else{
+            $location.path('practices');
 
-            } $location.path("/projects/"+self.practice.project.id);
-
-        }
+        };
 
         self.processPractice = function(data) {
 
@@ -78,24 +71,49 @@ angular.module('FieldDoc')
             }
 
             delete self.practice.organization;
-            //      delete self.practice.project;
-            //      delete self.practice.site;
 
             self.practiceType = data.category;
 
             $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-            self.practice.images.sort(function(a, b) {
+            if (Array.isArray(self.practice.images)) {
 
-                return a.id < b.id;
+                self.practice.images.sort(function (a, b) {
 
-            });
+                    return a.id < b.id;
+
+                });
+
+            }
 
         };
 
         self.loadPractice = function() {
 
-            practice.$promise.then(function(successResponse) {
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Practice.get({
+                id: $route.current.params.practiceId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
 
                 console.log('self.practice', successResponse);
 
@@ -111,110 +129,12 @@ angular.module('FieldDoc')
 
         };
 
-        self.savePractice = function() {
-
-            self.status.processing = true;
-
-            var imageCollection = {
-                images: []
-            };
-
-            self.practice.images.forEach(function(image) {
-
-                imageCollection.images.push({
-                    id: image.id
-                });
-
-            });
-
-            if (self.files.images.length) {
-
-                var savedQueries = self.files.preupload(self.files.images);
-
-                $q.all(savedQueries).then(function(successResponse) {
-
-                    $log.log('Images::successResponse', successResponse);
-
-                    angular.forEach(successResponse, function(image) {
-
-                        imageCollection.images.push({
-
-                            id: image.id
-
-                        });
-
-                    });
-
-                    Practice.update({
-                        id: self.practice.id
-                    }, imageCollection).$promise.then(function(successResponse) {
-
-                        self.processPractice(successResponse);
-
-                        self.files.images = [];
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Photo library updated.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(self.closeAlerts, 2000);
-
-                        self.showElements(0);
-
-                    }, function(errorResponse) {
-
-                        self.showElements(0);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    $log.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            } else {
-
-                Practice.update({
-                    id: self.practice.id
-                }, imageCollection).$promise.then(function(successResponse) {
-
-                    self.processPractice(successResponse);
-
-                    self.files.images = [];
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Photo library updated.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    self.showElements();
-
-                });
-
-            }
-
-        };
-
         self.confirmDelete = function(obj, targetCollection) {
 
             console.log('self.confirmDelete', obj, targetCollection);
 
             if (self.deletionTarget &&
-                self.deletionTarget.collection === 'project') {
+                self.deletionTarget.collection === 'practice') {
 
                 self.cancelDelete();
 
@@ -241,18 +161,6 @@ angular.module('FieldDoc')
 
             var targetCollection;
 
-            if (featureType === 'image') {
-
-                self.practice.images.splice(index, 1);
-
-                self.cancelDelete();
-
-                self.savePractice();
-
-                return;
-
-            }
-
             switch (featureType) {
 
                 case 'image':
@@ -276,11 +184,25 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this ' + featureType + '.',
+                    'msg': 'Successfully deleted ' + featureType + '.',
                     'prompt': 'OK'
                 }];
 
-                $timeout(self.closeRoute, 2000);
+                if (featureType === 'image') {
+
+                    self.practice.images.splice(index, 1);
+
+                    self.cancelDelete();
+
+                    self.loadPractice();
+
+                    $timeout(self.closeAlerts, 1500);
+
+                } else {
+
+                    $timeout(self.closeRoute, 1500);
+
+                }
 
             }).catch(function(errorResponse) {
 
@@ -291,7 +213,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
                         'prompt': 'OK'
                     }];
 

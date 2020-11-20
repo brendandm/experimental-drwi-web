@@ -66,41 +66,6 @@
                 </button>
             </div>
 
-<!--            <form role="form" class="form"-->
-<!--                  style="position:relative;"-->
-<!--                  id="form&#45;&#45;ProjectEdit"-->
-<!--                  name="form&#45;&#45;ProjectEdit"-->
-<!--                  data-ng-submit="page.saveImage()"-->
-<!--                  autocomplete="off">-->
-
-<!--                <h2>Add image</h2>-->
-
-<!--                <div class="form-field">-->
-<!--                    <input type="file"-->
-<!--                           class="form-control"-->
-<!--                           id="images"-->
-<!--                           name="images"-->
-<!--                           file-upload-->
-<!--                           file-model="page.mediaManager.images[0]"-->
-<!--                           accept=".png,.jpg,.jpeg"/>-->
-<!--                </div>-->
-
-<!--                <div class="save&#45;&#45;action&#45;&#45;wrapper save&#45;&#45;action&#45;&#45;bottom">-->
-<!--                    <button type="submit"-->
-<!--                            data-ng-disabled="page.status.processing">-->
-<!--                        <span class="material-icons"-->
-<!--                           data-ng-if="page.status.processing">-->
-<!--                            more_horiz-->
-<!--                        </span>-->
-<!--                        <span class="material-icons"-->
-<!--                           data-ng-if="!page.status.processing">-->
-<!--                            done-->
-<!--                        </span>-->
-<!--                    </button>-->
-<!--                </div>-->
-
-<!--            </form>-->
-
             <div class="margin-t-2" style="position: relative; min-height: 640px; width: 100%;">
 
                 <div data-ng-if="!page.project.images.length" style="width: 100%; display: flex; flex-grow: 1; flex-shrink:
@@ -184,8 +149,13 @@
                                     </a>
                                 </div>
 
-                                <span><time datetime="{{ image.created_on }}" title="{{ image.created_on }}">
-                                        Added on {{ image.created_on | date }}</time></span>
+                                <span>
+                                    <time datetime="{{ image.created_on }}" title="{{ image.created_on }}">
+                                        {{ image.created_on | localTime | date:'mediumDate' }} &middot; {{
+                                    image.created_on |
+                                        localTime | date:'h:mm' }} {{ image.created_on | localTime | date:'a'
+                                    }}</time>
+                                </span>
                             </div>
 
                         </div>
@@ -193,12 +163,6 @@
                     </li>
 
                 </ul>
-
-                <!-- <div class="progress--modal reveal fade-in t0" style="align-items: flex-start;" data-ng-if="page.status.processing && page.practice.images.length">
-                    <div class="progress--container">
-                        <p style="font-weight: bold;" class="color-pulse">Updating images&hellip;</p>
-                    </div>
-                </div> -->
 
             </div>
 
@@ -288,7 +252,7 @@
         </div>
     </div>
 
-    <div image-upload-dialog=""
+    <div image-upload-dialog
          alerts="page.alerts"
          parent="page.project"
          file-input="image-file-input"

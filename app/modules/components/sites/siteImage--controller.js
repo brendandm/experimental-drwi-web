@@ -6,19 +6,16 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('SitePhotoController', function(
-        Account, Image, $location, $log, Media, Site,
-        site, $q, $rootScope, $route, $scope, $timeout,
-        $interval, user, Utility) {
+    .controller('SiteImageController', function(
+        Account, Image, $location, $log, Site,
+        site, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
 
         var self = this;
 
         $rootScope.toolbarState = {
-            'editPhotos': true
+            'editImages': true
         };
-
-        self.files = Media;
-        self.files.images = [];
 
         $rootScope.page = {};
 
@@ -49,15 +46,11 @@ angular.module('FieldDoc')
 
         };
 
-        function closeRoute() {
+        self.closeRoute = function () {
 
-            if(self.site.site != null){
-                $location.path(self.site.links.site.html);
-            }else{
+            $location.path('sites');
 
-            } $location.path("/projects/"+self.site.project.id);
-
-        }
+        };
 
         self.processSite = function(data) {
 
@@ -78,24 +71,49 @@ angular.module('FieldDoc')
             }
 
             delete self.site.organization;
-            //      delete self.site.project;
-            //      delete self.site.site;
 
             self.siteType = data.category;
 
             $rootScope.page.title = self.site.name ? self.site.name : 'Un-named Site';
 
-            self.site.images.sort(function(a, b) {
+            if (Array.isArray(self.site.images)) {
 
-                return a.id < b.id;
+                self.site.images.sort(function (a, b) {
 
-            });
+                    return a.id < b.id;
+
+                });
+
+            }
 
         };
 
         self.loadSite = function() {
 
-            site.$promise.then(function(successResponse) {
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Site.get({
+                id: $route.current.params.siteId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
 
                 console.log('self.site', successResponse);
 
@@ -108,104 +126,6 @@ angular.module('FieldDoc')
                 self.showElements();
 
             });
-
-        };
-
-        self.saveSite = function() {
-
-            self.status.processing = true;
-
-            var imageCollection = {
-                images: []
-            };
-
-            self.site.images.forEach(function(image) {
-
-                imageCollection.images.push({
-                    id: image.id
-                });
-
-            });
-
-            if (self.files.images.length) {
-
-                var savedQueries = self.files.preupload(self.files.images);
-
-                $q.all(savedQueries).then(function(successResponse) {
-
-                    $log.log('Images::successResponse', successResponse);
-
-                    angular.forEach(successResponse, function(image) {
-
-                        imageCollection.images.push({
-
-                            id: image.id
-
-                        });
-
-                    });
-
-                    Site.update({
-                        id: self.site.id
-                    }, imageCollection).$promise.then(function(successResponse) {
-
-                        self.processSite(successResponse);
-
-                        self.files.images = [];
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Photo library updated.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(self.closeAlerts, 2000);
-
-                        self.showElements(0);
-
-                    }, function(errorResponse) {
-
-                        self.showElements(0);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    $log.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            } else {
-
-                Site.update({
-                    id: self.site.id
-                }, imageCollection).$promise.then(function(successResponse) {
-
-                    self.processSite(successResponse);
-
-                    self.files.images = [];
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Photo library updated.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    self.showElements();
-
-                });
-
-            }
 
         };
 
@@ -241,18 +161,6 @@ angular.module('FieldDoc')
 
             var targetCollection;
 
-            if (featureType === 'image') {
-
-                self.site.images.splice(index, 1);
-
-                self.cancelDelete();
-
-                self.saveSite();
-
-                return;
-
-            }
-
             switch (featureType) {
 
                 case 'image':
@@ -276,11 +184,25 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this ' + featureType + '.',
+                    'msg': 'Successfully deleted ' + featureType + '.',
                     'prompt': 'OK'
                 }];
 
-                $timeout(self.closeRoute, 2000);
+                if (featureType === 'image') {
+
+                    self.site.images.splice(index, 1);
+
+                    self.cancelDelete();
+
+                    self.loadSite();
+
+                    $timeout(self.closeAlerts, 1500);
+
+                } else {
+
+                    $timeout(self.closeRoute, 1500);
+
+                }
 
             }).catch(function(errorResponse) {
 
@@ -291,7 +213,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
                         'prompt': 'OK'
                     }];
 

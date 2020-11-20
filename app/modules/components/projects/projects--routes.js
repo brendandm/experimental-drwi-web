@@ -303,7 +303,7 @@ angular.module('FieldDoc')
             })
             .when('/projects/:projectId/images', {
                 templateUrl: '/modules/components/projects/views/projectImage--view.html?t=' + environment.version,
-                controller: 'ProjectPhotoController',
+                controller: 'ProjectImageController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
