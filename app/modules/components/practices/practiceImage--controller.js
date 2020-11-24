@@ -161,11 +161,17 @@ angular.module('FieldDoc')
 
             var targetCollection;
 
+            var requestConfig = {
+                id: +self.deletionTarget.feature.id
+            };
+
             switch (featureType) {
 
                 case 'image':
 
                     targetCollection = Image;
+
+                    requestConfig.target = 'practice:' + self.practice.id;
 
                     break;
 
@@ -177,9 +183,7 @@ angular.module('FieldDoc')
 
             }
 
-            targetCollection.delete({
-                id: +self.deletionTarget.feature.id
-            }).$promise.then(function(data) {
+            targetCollection.delete(requestConfig).$promise.then(function(data) {
 
                 self.alerts = [{
                     'type': 'success',

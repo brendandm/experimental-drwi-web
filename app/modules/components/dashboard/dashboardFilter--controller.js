@@ -425,6 +425,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'creator',
                     'geographies',
+                    'images',
                     'last_modified_by',
                     'metrics'
                 ];

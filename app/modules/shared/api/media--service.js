@@ -56,14 +56,16 @@
 
                     fileData.append(field, file);
 
-                    if (typeof parent === 'string' &&
-                        typeof parentId === 'number') {
+                    // if (typeof parent === 'string' &&
+                    //     typeof parentId === 'number') {
+                    //
+                    //     fileData.append(parent, parentId);
+                    //
+                    // }
 
-                        fileData.append(parent, parentId);
-
-                    }
-
-                    var request = Image.upload({}, fileData, function() {
+                    var request = Image.upload({
+                        target: parent + ':' + parentId
+                    }, fileData, function() {
                         defer.resolve(request);
                     });
 

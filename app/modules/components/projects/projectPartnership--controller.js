@@ -193,6 +193,7 @@ angular.module('FieldDoc')
                     'creator',
                     'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organization',
                     'tags',

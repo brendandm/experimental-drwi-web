@@ -109,6 +109,7 @@ angular.module('FieldDoc')
                     'creator',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'metrics',
                     'organization',

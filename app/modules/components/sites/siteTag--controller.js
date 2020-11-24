@@ -220,6 +220,7 @@ angular.module('FieldDoc')
                     'extent',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
