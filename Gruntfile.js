@@ -476,7 +476,7 @@ module.exports = function(grunt) {
             'autoprefixer:server',
             'connect:livereload',
             'watch',
-            'removelogging'
+            'removelogging:dist'
         ]);
     });
 
@@ -504,7 +504,9 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin'
+        'usemin',
+        'removelogging:dist'
+
     ];
 
     grunt.registerTask('build', buildTasks);
