@@ -491,7 +491,6 @@ module.exports = function(grunt) {
     // command prompt
     //
     var buildTasks = [
-        'removelogging:dist',
         'clean:dist',
         'ngconstant:' + environment,
         'wiredep',
