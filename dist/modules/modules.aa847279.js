@@ -144,7 +144,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1605803029673})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1606761168983})
 
 ;
 /**
@@ -1477,6 +1477,7 @@ angular.module('FieldDoc')
                     'creator',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'metrics',
                     'organization',
@@ -2078,6 +2079,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'creator',
                     'geographies',
+                    'images',
                     'last_modified_by',
                     'metrics'
                 ];
@@ -2554,6 +2556,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'creator',
                     'geometry',
+                    'images',
                     'metrics',
                     'last_modified_by',
                     'organizations',
@@ -3046,6 +3049,7 @@ angular.module('FieldDoc')
                     'creator',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -4253,6 +4257,52 @@ angular.module('FieldDoc')
                             // 'members',
                             'metric_types',
                             'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
+            .when('/projects/:projectId/images', {
+                templateUrl: '/modules/components/projects/views/projectImage--view.html?t=' + environment.version,
+                controller: 'ProjectImageController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_progress',
+                            'metric_types',
+                            // 'partners',
                             'practices',
                             'practice_types',
                             'properties',
@@ -6605,6 +6655,7 @@ angular.module('FieldDoc')
                     'creator',
                     'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organization',
                     'program',
@@ -7042,6 +7093,7 @@ angular.module('FieldDoc')
                         'creator',
                         'extent',
                         'geometry',
+                        'images',
                         'last_modified_by',
                         'organization',
                         'program',
@@ -7478,6 +7530,7 @@ angular.module('FieldDoc')
                     'creator',
                     'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organization',
                     'tags',
@@ -8161,6 +8214,7 @@ angular.module('FieldDoc')
                     'creator',
                     'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organization',
                     'program',
@@ -8328,6 +8382,282 @@ angular.module('FieldDoc')
             };
 
         });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ProjectImageController', function(
+        Account, Image, $location, $log, Project,
+        project, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
+
+        var self = this;
+
+        $rootScope.toolbarState = {
+            'editImages': true
+        };
+
+        $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: false
+        };
+
+        self.showElements = function(delay) {
+
+            var ms = delay || 1000;
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, ms);
+
+        };
+
+        self.alerts = [];
+
+        self.closeAlerts = function() {
+
+            self.alerts = [];
+
+        };
+
+        self.closeRoute = function () {
+
+            $location.path('projects');
+
+        };
+
+        self.processProject = function(data) {
+
+            self.project = data;
+
+            if (data.permissions) {
+
+                if (!data.permissions.read &&
+                    !data.permissions.write) {
+
+                    self.makePrivate = true;
+
+                }
+
+                self.permissions.can_edit = data.permissions.write;
+                self.permissions.can_delete = data.permissions.write;
+
+            }
+
+            delete self.project.organization;
+
+            self.projectType = data.category;
+
+            $rootScope.page.title = self.project.name ? self.project.name : 'Un-named Project';
+
+            if (Array.isArray(self.project.images)) {
+
+                self.project.images.sort(function (a, b) {
+
+                    return a.id < b.id;
+
+                });
+
+            }
+
+        };
+
+        self.loadProject = function() {
+
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Project.get({
+                id: $route.current.params.projectId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
+
+                console.log('self.project', successResponse);
+
+                self.processProject(successResponse);
+
+                self.showElements();
+
+            }, function(errorResponse) {
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.confirmDelete = function(obj, targetCollection) {
+
+            console.log('self.confirmDelete', obj, targetCollection);
+
+            if (self.deletionTarget &&
+                self.deletionTarget.collection === 'project') {
+
+                self.cancelDelete();
+
+            } else {
+
+                self.deletionTarget = {
+                    'collection': targetCollection,
+                    'feature': obj
+                };
+
+            }
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.deleteFeature = function(featureType, index) {
+
+            console.log('self.deleteFeature', featureType, index);
+
+            var targetCollection;
+
+            var requestConfig = {
+                id: +self.deletionTarget.feature.id
+            };
+
+            switch (featureType) {
+
+                case 'image':
+
+                    targetCollection = Image;
+
+                    requestConfig.target = 'project:' + self.project.id;
+
+                    break;
+
+                default:
+
+                    targetCollection = Project;
+
+                    break;
+
+            }
+
+            targetCollection.delete(requestConfig).$promise.then(function(data) {
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted ' + featureType + '.',
+                    'prompt': 'OK'
+                }];
+
+                if (featureType === 'image') {
+
+                    self.project.images.splice(index, 1);
+
+                    self.cancelDelete();
+
+                    self.loadProject();
+
+                    $timeout(self.closeAlerts, 1500);
+
+                } else {
+
+                    $timeout(self.closeRoute, 1500);
+
+                }
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(self.closeAlerts, 2000);
+
+            });
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.loadProject();
+
+            });
+
+        } else {
+
+            $location.path('/logout');
+
+        }
+
+    });
 'use strict';
 
 /**
@@ -8549,6 +8879,7 @@ angular.module('FieldDoc')
                     'dashboards',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -12931,6 +13262,29 @@ angular.module('FieldDoc')
                         }
                     }
                 })
+                .when('/sites/:siteId/images', {
+                    templateUrl: '/modules/components/sites/views/siteImage--view.html?t=' + environment.version,
+                    controller: 'SiteImageController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        site: function(Site, $route) {
+                            return Site.get({
+                                id: $route.current.params.siteId
+                            });
+                        }
+                    }
+                })
                 .when('/sites/:siteId/tags', {
                     templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
                     controller: 'SiteTagController',
@@ -14148,6 +14502,7 @@ angular.module('FieldDoc')
                         'dashboards',
                         'geographies',
                         'geometry',
+                        'images',
                         'last_modified_by',
                         'members',
                         'metrics',
@@ -14641,6 +14996,7 @@ angular.module('FieldDoc')
                         'extent',
                         'geographies',
                         // 'geometry',
+                        'images',
                         'last_modified_by',
                         'members',
                         'metrics',
@@ -15604,6 +15960,282 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
+    .controller('SiteImageController', function(
+        Account, Image, $location, $log, Site,
+        site, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
+
+        var self = this;
+
+        $rootScope.toolbarState = {
+            'editImages': true
+        };
+
+        $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: false
+        };
+
+        self.showElements = function(delay) {
+
+            var ms = delay || 1000;
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, ms);
+
+        };
+
+        self.alerts = [];
+
+        self.closeAlerts = function() {
+
+            self.alerts = [];
+
+        };
+
+        self.closeRoute = function () {
+
+            $location.path('sites');
+
+        };
+
+        self.processSite = function(data) {
+
+            self.site = data;
+
+            if (data.permissions) {
+
+                if (!data.permissions.read &&
+                    !data.permissions.write) {
+
+                    self.makePrivate = true;
+
+                }
+
+                self.permissions.can_edit = data.permissions.write;
+                self.permissions.can_delete = data.permissions.write;
+
+            }
+
+            delete self.site.organization;
+
+            self.siteType = data.category;
+
+            $rootScope.page.title = self.site.name ? self.site.name : 'Un-named Site';
+
+            if (Array.isArray(self.site.images)) {
+
+                self.site.images.sort(function (a, b) {
+
+                    return a.id < b.id;
+
+                });
+
+            }
+
+        };
+
+        self.loadSite = function() {
+
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Site.get({
+                id: $route.current.params.siteId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
+
+                console.log('self.site', successResponse);
+
+                self.processSite(successResponse);
+
+                self.showElements();
+
+            }, function(errorResponse) {
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.confirmDelete = function(obj, targetCollection) {
+
+            console.log('self.confirmDelete', obj, targetCollection);
+
+            if (self.deletionTarget &&
+                self.deletionTarget.collection === 'site') {
+
+                self.cancelDelete();
+
+            } else {
+
+                self.deletionTarget = {
+                    'collection': targetCollection,
+                    'feature': obj
+                };
+
+            }
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.deleteFeature = function(featureType, index) {
+
+            console.log('self.deleteFeature', featureType, index);
+
+            var targetCollection;
+
+            var requestConfig = {
+                id: +self.deletionTarget.feature.id
+            };
+
+            switch (featureType) {
+
+                case 'image':
+
+                    targetCollection = Image;
+
+                    requestConfig.target = 'site:' + self.site.id;
+
+                    break;
+
+                default:
+
+                    targetCollection = Site;
+
+                    break;
+
+            }
+
+            targetCollection.delete(requestConfig).$promise.then(function(data) {
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted ' + featureType + '.',
+                    'prompt': 'OK'
+                }];
+
+                if (featureType === 'image') {
+
+                    self.site.images.splice(index, 1);
+
+                    self.cancelDelete();
+
+                    self.loadSite();
+
+                    $timeout(self.closeAlerts, 1500);
+
+                } else {
+
+                    $timeout(self.closeRoute, 1500);
+
+                }
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(self.closeAlerts, 2000);
+
+            });
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.loadSite();
+
+            });
+
+        } else {
+
+            $location.path('/logout');
+
+        }
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
     .controller('SiteTagController',
         function(Account, Image, $location, $log, Site, site, $q,
             $rootScope, $route, $scope, $timeout, $interval, user,
@@ -15818,6 +16450,7 @@ angular.module('FieldDoc')
                     'extent',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -16970,6 +17603,8 @@ angular.module('FieldDoc')
 
                         }
 
+                        self.permissions = successResponse.permissions;
+
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
@@ -17420,9 +18055,9 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/practices/:practiceId/photos', {
+            .when('/practices/:practiceId/images', {
                 templateUrl: '/modules/components/practices/views/practiceImage--view.html?t=' + environment.version,
-                controller: 'PracticePhotoController',
+                controller: 'PracticeImageController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -17826,6 +18461,7 @@ angular.module('FieldDoc')
                     'dashboards',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -19229,6 +19865,7 @@ angular.module('FieldDoc')
                     'dashboards',
                     'geographies',
                     // 'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -20480,6 +21117,7 @@ angular.module('FieldDoc')
                     'creator',
                     'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'organization',
                     'project',
@@ -20736,19 +21374,16 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticePhotoController', function(
-        Account, Image, $location, $log, mapbox, Media, Practice,
-        practice, $q, $rootScope, $route, $scope, $timeout,
-        $interval, site, user, Utility) {
+    .controller('PracticeImageController', function(
+        Account, Image, $location, $log, Practice,
+        practice, $q, $rootScope, $route, $scope,
+        $timeout, $interval, user) {
 
         var self = this;
 
         $rootScope.toolbarState = {
-            'editPhotos': true
+            'editImages': true
         };
-
-        self.files = Media;
-        self.files.images = [];
 
         $rootScope.page = {};
 
@@ -20779,15 +21414,11 @@ angular.module('FieldDoc')
 
         };
 
-       function closeRoute() {
+        self.closeRoute = function () {
 
-                    if(self.practice.site != null){
-                         $location.path(self.practice.links.site.html);
-                    }else{
+            $location.path('practices');
 
-                    } $location.path("/projects/"+self.practice.project.id);
-
-            }
+        };
 
         self.processPractice = function(data) {
 
@@ -20808,24 +21439,49 @@ angular.module('FieldDoc')
             }
 
             delete self.practice.organization;
-      //      delete self.practice.project;
-      //      delete self.practice.site;
 
             self.practiceType = data.category;
 
             $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-            self.practice.images.sort(function(a, b) {
+            if (Array.isArray(self.practice.images)) {
 
-                return a.id < b.id;
+                self.practice.images.sort(function (a, b) {
 
-            });
+                    return a.id < b.id;
+
+                });
+
+            }
 
         };
 
         self.loadPractice = function() {
 
-            practice.$promise.then(function(successResponse) {
+            var exclude = [
+                'centroid',
+                'creator',
+                'dashboards',
+                'extent',
+                'geometry',
+                'members',
+                'metric_progress',
+                'metric_types',
+                // 'partners',
+                'practices',
+                'practice_types',
+                'properties',
+                'tags',
+                'targets',
+                'tasks',
+                'type',
+                'sites'
+            ].join(',');
+
+            Practice.get({
+                id: $route.current.params.practiceId,
+                exclude: exclude
+            }).$promise.then(function(successResponse) {
 
                 console.log('self.practice', successResponse);
 
@@ -20838,104 +21494,6 @@ angular.module('FieldDoc')
                 self.showElements();
 
             });
-
-        };
-
-        self.savePractice = function() {
-
-            self.status.processing = true;
-
-            var imageCollection = {
-                images: []
-            };
-
-            self.practice.images.forEach(function(image) {
-
-                imageCollection.images.push({
-                    id: image.id
-                });
-
-            });
-
-            if (self.files.images.length) {
-
-                var savedQueries = self.files.preupload(self.files.images);
-
-                $q.all(savedQueries).then(function(successResponse) {
-
-                    $log.log('Images::successResponse', successResponse);
-
-                    angular.forEach(successResponse, function(image) {
-
-                        imageCollection.images.push({
-
-                            id: image.id
-
-                        });
-
-                    });
-
-                    Practice.update({
-                        id: self.practice.id
-                    }, imageCollection).$promise.then(function(successResponse) {
-
-                        self.processPractice(successResponse);
-
-                        self.files.images = [];
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Photo library updated.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(self.closeAlerts, 2000);
-
-                        self.showElements(0);
-
-                    }, function(errorResponse) {
-
-                        self.showElements(0);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    $log.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            } else {
-
-                Practice.update({
-                        id: self.practice.id
-                    }, imageCollection).$promise.then(function(successResponse) {
-
-                    self.processPractice(successResponse);
-
-                    self.files.images = [];
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Photo library updated.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    self.showElements();
-
-                });
-
-            }
 
         };
 
@@ -20971,23 +21529,17 @@ angular.module('FieldDoc')
 
             var targetCollection;
 
-            if (featureType === 'image') {
-
-                self.practice.images.splice(index, 1);
-
-                self.cancelDelete();
-
-                self.savePractice();
-
-                return;
-
-            }
+            var requestConfig = {
+                id: +self.deletionTarget.feature.id
+            };
 
             switch (featureType) {
 
                 case 'image':
 
                     targetCollection = Image;
+
+                    requestConfig.target = 'practice:' + self.practice.id;
 
                     break;
 
@@ -20999,18 +21551,30 @@ angular.module('FieldDoc')
 
             }
 
-            targetCollection.delete({
-                id: +self.deletionTarget.feature.id
-            }).$promise.then(function(data) {
+            targetCollection.delete(requestConfig).$promise.then(function(data) {
 
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this ' + featureType + '.',
+                    'msg': 'Successfully deleted ' + featureType + '.',
                     'prompt': 'OK'
                 }];
 
-                $timeout(self.closeRoute, 2000);
+                if (featureType === 'image') {
+
+                    self.practice.images.splice(index, 1);
+
+                    self.cancelDelete();
+
+                    self.loadPractice();
+
+                    $timeout(self.closeAlerts, 1500);
+
+                } else {
+
+                    $timeout(self.closeRoute, 1500);
+
+                }
 
             }).catch(function(errorResponse) {
 
@@ -21021,7 +21585,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
+                        'msg': 'Unable to delete ' + featureType + '. There are pending tasks affecting this feature.',
                         'prompt': 'OK'
                     }];
 
@@ -21309,6 +21873,7 @@ angular.module('FieldDoc')
                     'dashboards',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -21834,6 +22399,7 @@ angular.module('FieldDoc')
                     'creator',
                     //        'extent',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'organization',
@@ -30553,6 +31119,7 @@ angular.module('FieldDoc')
                     'creator',
                     'dashboards',
                     'geographies',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -31668,6 +32235,7 @@ angular.module('FieldDoc')
                     'dashboards',
                     'geographies',
                     'geometry',
+                    'images',
                     'last_modified_by',
                     'members',
                     'metrics',
@@ -38404,7 +38972,7 @@ angular
                 },
                 'delete': {
                     method: 'DELETE',
-                    url: environment.apiUrl.concat('/v1/data/image/:id')
+                    url: environment.apiUrl.concat('/v1/image/:id')
                 }
             });
 
@@ -38423,51 +38991,62 @@ angular
     angular.module('FieldDoc')
         .service('Media', function(Image, $q) {
             return {
-                images: new Array(), // empty image array for handling files
-                preupload: function(filesList, fieldName) {
+                images: [], // empty image array for handling files
+                preupload: function(filesList, fieldName, parent, parentId) {
                     /**Process all media prior to uploading to server.
 
-                    Create a usable array of deferred requests that will allow
-                    us to keep tabs on uploads, so that we know when all
-                    uploads have completed with an HTTP Response.
+                     Create a usable array of deferred requests that will allow
+                     us to keep tabs on uploads, so that we know when all
+                     uploads have completed with an HTTP Response.
 
-                    @param (array) filesList
-                        A list of files to process
+                     @param (array) filesList
+                     A list of files to process
 
-                    @return (array) savedQueries
-                        A list of deferred upload requests
-                    */
+                     @return (array) savedQueries
+                     A list of deferred upload requests
+                     */
 
                     var self = this,
                         savedQueries = [],
                         field = (fieldName) ? fieldName : 'image';
 
                     angular.forEach(filesList, function(_file) {
-                        savedQueries.push(self.upload(_file, field));
+                        savedQueries.push(
+                            self.upload(_file, field, parent, parentId)
+                        );
                     });
 
                     return savedQueries;
                 },
-                upload: function(file, field) {
+                upload: function(file, field, parent, parentId) {
                     /**Upload a single file to the server.
 
-                    Create a single deferred request that enables us to keep
-                    better track of all of the things that are happening so
-                    that we are defining in what order things happen.
+                     Create a single deferred request that enables us to keep
+                     better track of all of the things that are happening so
+                     that we are defining in what order things happen.
 
-                    @param (file) file
-                        A qualified Javascript `File` object
+                     @param (file) file
+                     A qualified Javascript `File` object
 
-                    @return (object) defer.promise
-                        A promise
-                    */
+                     @return (object) defer.promise
+                     A promise
+                     */
 
                     var defer = $q.defer(),
                         fileData = new FormData();
 
                     fileData.append(field, file);
 
-                    var request = Image.upload({}, fileData, function() {
+                    // if (typeof parent === 'string' &&
+                    //     typeof parentId === 'number') {
+                    //
+                    //     fileData.append(parent, parentId);
+                    //
+                    // }
+
+                    var request = Image.upload({
+                        target: parent + ':' + parentId
+                    }, fileData, function() {
                         defer.resolve(request);
                     });
 
@@ -44328,6 +44907,231 @@ angular.module('FieldDoc')
                             }
 
                         });
+
+                    }
+
+                };
+
+            }
+
+        ]);
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('imageUploadDialog', [
+            'environment',
+            '$routeParams',
+            '$filter',
+            '$parse',
+            '$location',
+            '$timeout',
+            '$q',
+            'Dashboard',
+            'Program',
+            'Project',
+            'Site',
+            'Practice',
+            'Report',
+            'Media',
+            'Image',
+            function(environment, $routeParams, $filter, $parse, $location,
+                     $timeout, $q, Dashboard, Program, Project, Site, Practice,
+                     Report, Media, Image) {
+                return {
+                    restrict: 'EA',
+                    scope: {
+                        'alerts': '=?',
+                        'callback': '&',
+                        'featureType': '@featureType',
+                        'fileInput': '@fileInput',
+                        'parent': '=?',
+                        'visible': '=?'
+                    },
+                    templateUrl: function(elem, attrs) {
+
+                        return [
+                            // Base path
+                            'modules/shared/directives/',
+                            // Directive path
+                            'dialog/image/imageUploadDialog--view.html',
+                            // Query string
+                            '?t=' + environment.version
+                        ].join('');
+
+                    },
+                    link: function(scope, element, attrs) {
+
+                        var modelIdx = {
+                            'dashboard': Dashboard,
+                            'practice': Practice,
+                            'program': Program,
+                            'project': Project,
+                            'report': Report,
+                            'site': Site
+                        };
+
+                        scope.model = modelIdx[scope.featureType];
+
+                        if (typeof scope.model === 'undefined') {
+
+                            throw 'Un-recognized `featureType` parameter.';
+
+                        }
+
+                        scope.mediaManager = Media;
+
+                        scope.mediaManager.images = [];
+
+                        function closeAlerts() {
+
+                            scope.alerts = [];
+
+                        }
+
+                        scope.closeChildModal = function(refresh) {
+
+                            scope.processing = false;
+
+                            scope.uploadComplete = false;
+
+                            scope.uploadError = null;
+
+                            scope.mediaManager.images = [];
+
+                            scope.visible = false;
+
+                            if (refresh) scope.callback();
+
+                        };
+
+                        scope.resetFileInput = function(element) {
+
+                            element.value = null;
+
+                            scope.processing = false;
+
+                            scope.uploadComplete = false;
+
+                        };
+
+                        scope.hideTasks = function() {
+
+                            scope.pendingTasks = [];
+
+                            if (typeof scope.taskPoll !== 'undefined') {
+
+                                $interval.cancel(scope.taskPoll);
+
+                            }
+
+                        };
+
+                        scope.uploadImage = function() {
+
+                            console.log(
+                                'imageUploadDialog:uploadImage:mediaManager.images:',
+                                scope.mediaManager.images
+                            );
+
+                            var input = document.getElementById(scope.fileInput);
+
+                            scope.processing = true;
+
+                            var imageCollection = {
+                                images: []
+                            };
+
+                            scope.parent.images.forEach(function(image) {
+
+                                imageCollection.images.push({
+                                    id: image.id
+                                });
+
+                            });
+
+                            if (!scope.mediaManager.images) {
+
+                                scope.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Please select an image.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                                return false;
+
+                            }
+
+                            scope.processing = true;
+
+                            scope.progressMessage = 'Uploading…';
+
+                            var savedQueries = scope.mediaManager.preupload(
+                                scope.mediaManager.images,
+                                'image',
+                                scope.featureType,
+                                scope.parent.id);
+
+                            console.log(
+                                'ProjectImageController:saveImage:savedQueries:',
+                                savedQueries
+                            );
+
+                            $q.all(savedQueries).then(function(successResponse) {
+
+                                console.log('Images::successResponse', successResponse);
+
+                                angular.forEach(successResponse, function(image) {
+
+                                    imageCollection.images.push({
+                                        id: image.id
+                                    });
+
+                                });
+
+                                scope.model.update({
+                                    id: scope.parent.id
+                                }, imageCollection).$promise.then(function(successResponse) {
+
+                                    scope.progressMessage = 'Complete';
+
+                                    scope.uploadComplete = true;
+
+                                    scope.uploadError = null;
+
+                                    $timeout(function () {
+
+                                        scope.closeChildModal(true);
+
+                                    }, 1500);
+
+                                }, function(errorResponse) {
+
+                                    console.log('errorResponse', errorResponse);
+
+                                    scope.uploadError = errorResponse.data;
+
+                                    scope.resetFileInput(input);
+
+                                });
+
+                            }, function(errorResponse) {
+
+                                console.log('errorResponse', errorResponse);
+
+                                scope.uploadError = errorResponse.data;
+
+                                scope.resetFileInput(input);
+
+                            });
+
+                        };
 
                     }
 
