@@ -1,7 +1,9 @@
 {
   "name": "practicemonitoringassessment",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "grunt-remove-logging": "^0.2.0"
+  },
   "devDependencies": {
     "connect-modrewrite": "^0.8.1",
     "grunt": "^0.4.5",
