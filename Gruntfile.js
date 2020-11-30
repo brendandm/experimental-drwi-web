@@ -39,7 +39,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         removelogging: {
             dist: {
-                src: "dist/**/*.js" // Each file will be overwritten with the output!
+                src: "dist/**/modules.*.js" // Each file will be overwritten with the output!
             }
         },
         //
@@ -503,8 +503,8 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin'
-//        'removelogging:dist'
+        'usemin',
+        'removelogging:dist'
 
 
     ];
