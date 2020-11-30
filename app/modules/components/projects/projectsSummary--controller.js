@@ -14,6 +14,9 @@ angular.module('FieldDoc')
                  Practice, project, Utility, $interval, LayerService,
                  MapManager, Shapefile, Task, QueryParamManager) {
 
+            /*Remove console.log()s*/
+            console.log = function() {}
+
             var self = this;
 
             $rootScope.viewState = {
