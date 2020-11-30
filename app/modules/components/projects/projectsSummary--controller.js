@@ -16,7 +16,7 @@ angular.module('FieldDoc')
 
             /*Remove console.log()s*/
 
-        //    console.log = function() {}
+           // console.log = function() {}
 
             var self = this;
 
