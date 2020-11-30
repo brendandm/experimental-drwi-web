@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 
                 // when the logging statement is ended by a semicolon ';'
                 // include it in the 'consoleStatement' given to the strategy
-                removeSemicolonIfPossible: false
+                removeSemicolonIfPossible: true
 
             }
         },
