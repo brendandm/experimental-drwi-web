@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                 strategy: function(consoleStatement) {
                     // comments console calls statements
                 //    return '/* ' + consoleStatement + '*/';
-                    return '0;';
+                    return '0';
 
                     // return ''; // to remove
                 },
