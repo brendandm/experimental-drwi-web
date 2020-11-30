@@ -531,8 +531,9 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin',
-        'removeLoggingCalls'
+        'usemin'
+        //,
+        //'removeLoggingCalls'
 
 
     ];
