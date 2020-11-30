@@ -484,6 +484,7 @@ module.exports = function(grunt) {
         grunt.task.run(['serve:' + target]);
     });
 
+
     //
     // BUILD TASKS
     //
@@ -511,4 +512,6 @@ module.exports = function(grunt) {
         'newer:jshint',
         'build'
     ]);
+
+    grunt.registerTask('removelogging');
 };
