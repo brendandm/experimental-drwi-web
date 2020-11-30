@@ -504,7 +504,6 @@ module.exports = function(grunt) {
         'cssmin',
         'filerev',
         'usemin',
-        'removelogging:dist'
 
 
     ];
@@ -515,6 +514,7 @@ module.exports = function(grunt) {
         'newer:jshint',
         'build'
     ]);
+
 
     // grunt.registerTask('removelogging',[]);
 };
