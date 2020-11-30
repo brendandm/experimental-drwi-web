@@ -15,8 +15,8 @@ angular.module('FieldDoc')
                  MapManager, Shapefile, Task, QueryParamManager) {
 
             /*Remove console.log()s*/
-            
-            console.log = function() {}
+
+        //    console.log = function() {}
 
             var self = this;
 
