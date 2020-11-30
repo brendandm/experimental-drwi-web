@@ -35,8 +35,8 @@ angular.module('FieldDoc')
 
                 var _user = new User({
                     'id': self.user.id,
-                    'first_name': self.user.properties.first_name,
-                    'last_name': self.user.properties.last_name,
+                    'first_name': self.user.first_name,
+                    'last_name': self.user.last_name,
                     'organization_id': organization.id
                 });
 
@@ -58,10 +58,6 @@ angular.module('FieldDoc')
                         Account.getUser().$promise.then(function(userResponse) {
 
                             Account.userObject = userResponse;
-
-                            $rootScope.user = Account.userObject;
-                            $rootScope.isLoggedIn = Account.hasToken();
-                            $rootScope.isAdmin = Account.hasRole('admin');
 
                             $location.path('/');
 
@@ -154,11 +150,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = self.user = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
+                    self.permissions = {};
 
                     //
                     // Setup page meta data

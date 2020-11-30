@@ -136,7 +136,7 @@ angular.module('FieldDoc')
 
                 self.metricType = new MetricType({
                     // 'program_id': self.programId,
-                    'organization_id': $rootScope.user.properties.organization_id
+                    'organization_id': $rootScope.user.organization_id
                 });
 
                 self.metricType.$save(function(successResponse) {
@@ -287,9 +287,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     var programs = Utility.extractUserPrograms($rootScope.user);
 

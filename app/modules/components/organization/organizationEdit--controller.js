@@ -50,11 +50,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = self.user = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
+                    self.permissions = {};
 
                     //
                     // Setup page meta data
@@ -67,9 +63,9 @@ angular.module('FieldDoc')
                     // Load organization data
                     //
 
-                    if (self.user.properties.organization) {
+                    if (self.user.organization) {
 
-                        self.loadOrganization(self.user.properties.organization_id);
+                        self.loadOrganization(self.user.organization_id);
 
                     } else {
 
@@ -271,8 +267,8 @@ angular.module('FieldDoc')
 
                 var _user = new User({
                     'id': self.user.id,
-                    'first_name': self.user.properties.first_name,
-                    'last_name': self.user.properties.last_name,
+                    'first_name': self.user.first_name,
+                    'last_name': self.user.last_name,
                     'organization_id': organizationId
                 });
 
@@ -282,9 +278,9 @@ angular.module('FieldDoc')
 
                     self.user = successResponse;
 
-                    if (self.user.properties.organization) {
+                    if (self.user.organization) {
 
-                        self.loadOrganization(self.user.properties.organization_id, true);
+                        self.loadOrganization(self.user.organization_id, true);
 
                     }
 

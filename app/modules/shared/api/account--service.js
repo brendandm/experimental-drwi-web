@@ -22,7 +22,7 @@
                     return false;
                 }
 
-                var $promise = User.get({
+                var $promise = User.single({
                     id: userId
                 });
 

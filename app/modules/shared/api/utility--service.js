@@ -412,9 +412,9 @@ angular.module('FieldDoc')
 
                 var _programs = [];
 
-                user.properties.programs.forEach(function(program) {
+                user.programs.forEach(function(program) {
 
-                    _programs.push(program.properties);
+                    _programs.push(program);
 
                 });
 

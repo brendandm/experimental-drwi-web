@@ -133,9 +133,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     programs.$promise.then(function(successResponse) {
 

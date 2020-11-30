@@ -122,7 +122,7 @@ angular.module('FieldDoc')
 
                 self.fundingSource = new FundingSource({
                     'program_id': self.programId,
-                    'agent_id': $rootScope.user.properties.organization_id
+                    'agent_id': $rootScope.user.organization_id
                 });
 
                 self.fundingSource.$save(function(successResponse) {
@@ -196,9 +196,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     self.loadFeatures();
 

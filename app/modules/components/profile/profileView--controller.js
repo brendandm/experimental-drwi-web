@@ -52,11 +52,7 @@ angular.module('FieldDoc')
 
                         $rootScope.user = Account.userObject = self.user = userResponse;
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                        };
+                        self.permissions = {};
                         console.log(" self.permissions", self.permissions);
                         //
                         // Setup page meta data
@@ -65,7 +61,7 @@ angular.module('FieldDoc')
                             'title': 'Profile'
                         };
 
-                        if(featureId && featureId != self.user.properties.id){
+                        if(featureId && featureId != self.user.id){
                                self.actions.getMember();
                         }else{
                             self.member = self.user.properties;

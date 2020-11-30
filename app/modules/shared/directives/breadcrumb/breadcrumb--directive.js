@@ -17,6 +17,7 @@
                         'program': '=?',
                         'project': '=?',
                         'report': '=?',
+                        'rootPath': '@',
                         'site': '=?',
                         'tail': '@'
                     },

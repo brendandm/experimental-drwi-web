@@ -8,12 +8,12 @@
 angular.module('FieldDoc')
     .controller('OrganizationProfileViewController',
         function(Project, Account, $location, $log, Notifications, $rootScope,
-            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
+                 $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
 
             var self = this;
 
             $rootScope.viewState = {
-                'organizationProfile': true
+                'feature': true
             };
 
             self.status = {
@@ -31,83 +31,7 @@ angular.module('FieldDoc')
 
             var featureId = $routeParams.id;
 
-            //
-            // Assign project to a scoped variable
-            //
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = self.user = userResponse;
-                    console.log('userResponse',userResponse);
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
-                    console.log(" self.permissions", self.permissions);
-                    //
-                    // Setup page meta data
-                    //
-                    $rootScope.page = {
-                        'title': 'Organization Profile'
-                    };
-
-                    //
-                    // Load organization data
-                    //
-                    if(featureId && featureId != self.user.properties.organization) {
-                         console.log(0);
-
-                         self.loadOrganization(featureId);
-
-                         self.loadOrganizationProjects(featureId);
-
-                         self.loadOrganizationMembers(featureId);
-                    }
-
-                    else if (self.user.properties.organization) {
-                         console.log(1);
-
-                        self.loadOrganization(self.user.properties.organization_id);
-
-                        self.loadOrganizationProjects(self.user.properties.organization_id);
-
-                        self.loadOrganizationMembers(self.user.properties.organization_id);
-
-                    } else {
-                         console.log(2);
-
-                        self.status.loading = false;
-
-                    }
-
-
-
-                });
-
-
-            } else {
-
-                $location.path('/logout');
-
-            }
-
-            self.parseFeature = function(data) {
-
-                self.organizationProfile = data;
-                console.log(self.organizationProfile.description)
-                console.log('self.organizationProfile', self.organizationProfile);
-
-                     console.log("page.organizationProfile.id", self.organizationProfile.id);
-                    console.log("page.user.properties.organization",self.user.properties.organization.id);
-
-            };
-
-           self.loadOrganization = function(organizationId, postAssigment) {
+            self.loadOrganization = function(organizationId, postAssigment) {
 
                 Organization.profile({
                     id: organizationId
@@ -115,14 +39,16 @@ angular.module('FieldDoc')
 
                     console.log('self.organization', successResponse);
 
-                    self.parseFeature(successResponse);
+                    self.feature = successResponse;
+
+                    self.permissions = successResponse.permissions;
 
                     if (postAssigment) {
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'msg': 'Successfully added you to ' + self.feature.name + '.',
                             'prompt': 'OK'
                         }];
 
@@ -140,7 +66,7 @@ angular.module('FieldDoc')
 
                 });
 
-           };
+            };
 
             self.loadOrganizationProjects = function(organizationId, postAssigment) {
 
@@ -175,7 +101,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'msg': 'Successfully added you to ' + self.feature.name + '.',
                             'prompt': 'OK'
                         }];
 
@@ -193,22 +119,22 @@ angular.module('FieldDoc')
 
                 });
 
-           };
+            };
 
 
             self.parseMembers = function(members){
-                     console.log('members', members);
-                     var i = 0;
-                     for (var m in members) {
-                        if(  self.organizationMembers[i].picture != null){
-                            var picture =   self.members[i].picture;
-                            console.log(self.members[i].picture);
-                            self.members[i].picture = picture.replace("original", "square");
-                            console.log(self.members[i].picture);
+                console.log('members', members);
+                var i = 0;
+                for (var m in members) {
+                    if(  self.organizationMembers[i].picture != null){
+                        var picture =   self.members[i].picture;
+                        console.log(self.members[i].picture);
+                        self.members[i].picture = picture.replace("original", "square");
+                        console.log(self.members[i].picture);
 
-                         }
-                        i++;
-                      }
+                    }
+                    i++;
+                }
             }
 
             self.loadOrganizationMembers = function(organizationId, postAssigment) {
@@ -219,20 +145,20 @@ angular.module('FieldDoc')
 
                     console.log('self.organizationMembers', successResponse);
 
-                     self.organizationMembers = successResponse.features;
+                    self.organizationMembers = successResponse.features;
 
-                     self.members = successResponse.features;
+                    self.members = successResponse.features;
 
-                     self.parseMembers(self.members);
+                    self.parseMembers(self.members);
 
-                     self.memberCount = successResponse.count;
+                    self.memberCount = successResponse.count;
 
                     if (postAssigment) {
 
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'msg': 'Successfully added you to ' + self.feature.name + '.',
                             'prompt': 'OK'
                         }];
 
@@ -250,10 +176,10 @@ angular.module('FieldDoc')
 
                 });
 
-           };
+            };
 
 
-           self.confirmDelete = function(obj) {
+            self.confirmDelete = function(obj) {
 
                 self.deletionTarget = obj;
 
@@ -322,5 +248,47 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    self.permissions = {};
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Organization'
+                    };
+
+                    //
+                    // Load organization data
+                    //
+                    if (featureId) {
+
+                        self.loadOrganization(featureId);
+
+                        self.loadOrganizationMembers(featureId);
+
+                    } else {
+
+                        self.status.loading = false;
+
+                    }
+
+                });
+
+
+            } else {
+
+                $location.path('/logout');
+
+            }
 
         });

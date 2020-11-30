@@ -98,9 +98,9 @@
 
                                     $rootScope.user = Account.userObject;
                                     $rootScope.isLoggedIn = Account.hasToken();
-                                    $rootScope.isAdmin = Account.hasRole('admin');
+                                    $rootScope.isAdmin = userResponse.is_admin;
 
-                                    if ($rootScope.user.properties.organization) {
+                                    if ($rootScope.user.organization) {
 
                                         if ($rootScope.targetPath &&
                                             typeof $rootScope.targetPath === 'string') {

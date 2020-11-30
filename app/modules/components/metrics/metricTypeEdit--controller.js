@@ -306,7 +306,7 @@ angular.module('FieldDoc')
 
             var _programs = [];
 
-            user.properties.programs.forEach(function(program) {
+            user.programs.forEach(function(program) {
 
                 _programs.push(program.properties);
 
@@ -325,11 +325,7 @@ angular.module('FieldDoc')
 
                 $rootScope.user = Account.userObject = userResponse;
 
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                };
+                self.permissions = {};
 
                 self.programs = self.extractPrograms($rootScope.user);
 

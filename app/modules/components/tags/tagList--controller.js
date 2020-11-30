@@ -274,9 +274,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     self.loadTags();
 

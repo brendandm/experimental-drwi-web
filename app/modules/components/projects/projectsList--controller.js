@@ -303,9 +303,7 @@ angular.module('FieldDoc')
 
                     self.user = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     var programs = Utility.extractUserPrograms($rootScope.user);
 

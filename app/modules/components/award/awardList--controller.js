@@ -122,7 +122,7 @@ angular.module('FieldDoc')
 
                 self.award = new Award({
                     // 'program_id': self.programId,
-                    'funder_id': $rootScope.user.properties.organization_id
+                    'funder_id': $rootScope.user.organization_id
                 });
 
                 self.award.$save(function(successResponse) {
@@ -196,13 +196,11 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
-                    if ($rootScope.user.properties.programs.length) {
+                    if ($rootScope.user.programs.length) {
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                        self.selectedProgram = $rootScope.user.programs[0];
 
                     }
 

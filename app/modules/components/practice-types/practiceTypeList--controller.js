@@ -134,7 +134,7 @@ angular.module('FieldDoc')
 
                 self.practiceType = new PracticeType({
                     // 'program_id': self.programId,
-                    'organization_id': $rootScope.user.properties.organization_id
+                    'organization_id': $rootScope.user.organization_id
                 });
 
                 self.practiceType.$save(function(successResponse) {
@@ -283,9 +283,7 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
+                    self.permissions = {};
 
                     var programs = Utility.extractUserPrograms($rootScope.user);
 

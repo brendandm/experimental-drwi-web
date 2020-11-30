@@ -206,7 +206,7 @@
 
                     // self.layer = new LayerService({
                     //     'program_id': self.programId,
-                    //     'organization_id': $rootScope.user.properties.organization_id
+                    //     'organization_id': $rootScope.user.organization_id
                     // });
 
                     // self.layer.$save(function(successResponse) {
@@ -542,7 +542,7 @@
 
                     var _programs = [];
 
-                    user.properties.programs.forEach(function(program) {
+                    user.programs.forEach(function(program) {
 
                         _programs.push(program.properties);
 
@@ -561,17 +561,13 @@
 
                         $rootScope.user = Account.userObject = userResponse;
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                        };
+                        self.permissions = {};
 
                         self.programs = self.extractPrograms($rootScope.user);
 
-                        if ($rootScope.user.properties.programs.length) {
+                        if ($rootScope.user.programs.length) {
 
-                            self.selectedProgram = $rootScope.user.properties.programs[0];
+                            self.selectedProgram = $rootScope.user.programs[0];
 
                         }
 

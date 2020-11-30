@@ -12,7 +12,7 @@
 
             $routeProvider
                 .when('/organizations/:id/edit', {
-                    templateUrl: '/modules/components/organization/views/organizationEdit--view.html?t=' + environment.version,
+                    templateUrl: '/modules/components/organization/views/orgEdit--view.html?t=' + environment.version,
                     controller: 'OrganizationEditViewController',
                     controllerAs: 'page',
                     resolve: {
@@ -21,28 +21,28 @@
                         }
                     }
                 }),
-            $routeProvider
-                .when('/organizations', {
-                    templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
-                    controller: 'OrganizationProfileViewController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account) {
-                            return Account.getUser();
+                $routeProvider
+                    .when('/organizations', {
+                        templateUrl: '/modules/components/organization/views/orgList--view.html?t=' + environment.version,
+                        controller: 'OrganizationListController',
+                        controllerAs: 'page',
+                        resolve: {
+                            user: function(Account) {
+                                return Account.getUser();
+                            }
                         }
-                    }
-                }),
-             $routeProvider
-                .when('/organizations/:id', {
-                    templateUrl: '/modules/components/organization/views/organizationProfile--view.html?t=' + environment.version,
-                    controller: 'OrganizationProfileViewController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account) {
-                            return Account.getUser();
+                    }),
+                $routeProvider
+                    .when('/organizations/:id', {
+                        templateUrl: '/modules/components/organization/views/orgProfile--view.html?t=' + environment.version,
+                        controller: 'OrganizationProfileViewController',
+                        controllerAs: 'page',
+                        resolve: {
+                            user: function(Account) {
+                                return Account.getUser();
+                            }
                         }
-                    }
-                });
+                    });
 
         });
 

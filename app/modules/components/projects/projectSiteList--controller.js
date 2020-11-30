@@ -760,12 +760,7 @@ angular.module('FieldDoc')
                     self.user = Account.userObject = userResponse;
 
                     self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        is_manager: false,
-                        is_admin: false
+                        can_edit: false
                     };
 
                     //
