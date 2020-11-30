@@ -503,7 +503,8 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin'
+        'usemin',
+        'removelogging'
     ];
 
     grunt.registerTask('build', buildTasks);
