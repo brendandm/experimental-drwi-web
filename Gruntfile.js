@@ -64,8 +64,8 @@ module.exports = function(grunt) {
             }
         },
         remove_comments: {
-            src: 'dist/modules/modules.*.js'
-          //  dest: 'test/dest/'
+            src: 'dist/modules/modules.*.js',
+            dest: 'dist/modules/modules.*.js'
         },
     /*    removelogging: {
             dist: {
