@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
     grunt.loadNpmTasks("grunt-remove-logging");
-
+    
     //
     // To get this working with the most recent 0.8.0 angular generator we needed to following the tips
     // at the following links and SO articles
