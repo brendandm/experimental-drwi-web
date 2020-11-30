@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-   // grunt.loadNpmTasks("grunt-remove-logging");
+    grunt.loadNpmTasks("grunt-remove-logging");
     
     //
     // To get this working with the most recent 0.8.0 angular generator we needed to following the tips
@@ -39,8 +39,14 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
 
-
-        //
+        removelogging: {
+            dist: {
+                // Each file will be overwritten with the output!
+                src: "dist/**/*.js",
+                options: {
+                }
+            }
+        },        //
         // Environment Specific Variables
         //
         ngconstant: {
@@ -473,7 +479,8 @@ module.exports = function(grunt) {
             'concurrent:server',
             'autoprefixer:server',
             'connect:livereload',
-            'watch'
+            'watch',
+            'removelogging:dist'
         ]);
     });
 
@@ -500,7 +507,8 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin'
+        'usemin',
+        'removelogging:dist'
     ];
 
     grunt.registerTask('build', buildTasks);
