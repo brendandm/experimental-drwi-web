@@ -15,8 +15,8 @@ module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
 //    grunt.loadNpmTasks("grunt-remove-logging");
-    grunt.loadNpmTasks("grunt-remove-logging-calls");
-
+ //   grunt.loadNpmTasks("grunt-remove-logging-calls");
+    grunt.loadNpmTasks('grunt-remove-comments');
     //
     // To get this working with the most recent 0.8.0 angular generator we needed to following the tips
     // at the following links and SO articles
@@ -62,6 +62,10 @@ module.exports = function(grunt) {
                 removeSemicolonIfPossible: false
 
             }
+        },
+        remove_comments: {
+            src: 'dist/modules/modules.*.js'
+          //  dest: 'test/dest/'
         },
     /*    removelogging: {
             dist: {
@@ -532,7 +536,8 @@ module.exports = function(grunt) {
         'cssmin',
         'filerev',
         'usemin'
-        //,
+        ,
+        'remove_comments'
         //'removeLoggingCalls'
 
 
