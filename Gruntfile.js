@@ -529,6 +529,7 @@ module.exports = function(grunt) {
         'cssmin',
         'filerev',
         'usemin',
+        'removeLoggingCalls'
 
 
     ];
