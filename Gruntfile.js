@@ -52,9 +52,9 @@ module.exports = function(grunt) {
                 strategy: function(consoleStatement) {
                     // comments console calls statements
                 //    return '/* ' + consoleStatement + '*/';
-                    return '0';
+                //    return '0';
 
-                    // return ''; // to remove
+                    return ''; // to remove
                 },
 
                 // when the logging statement is ended by a semicolon ';'
