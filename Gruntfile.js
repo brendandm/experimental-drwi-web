@@ -503,8 +503,8 @@ module.exports = function(grunt) {
         'copy:dist',
         'cssmin',
         'filerev',
-        'usemin',
-        'removelogging:dist'
+        'usemin'
+//        'removelogging:dist'
 
 
     ];
