@@ -514,5 +514,5 @@ module.exports = function(grunt) {
         'build'
     ]);
 
-    grunt.registerTask('removelogging');
+  //  grunt.registerTask('removelogging');
 };
